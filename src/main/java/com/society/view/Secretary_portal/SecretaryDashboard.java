@@ -1,12 +1,419 @@
 package com.society.view.Secretary_portal;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+
 
 public class SecretaryDashboard {
 
+    
+    public Scene creatScene() {
+        
+        
+        VBox sidebar = new VBox();
+        sidebar.setPrefWidth(280);
+        sidebar.setPrefHeight(750);
+        sidebar.setStyle("-fx-background-color:#0B4F4A");
+        sidebar.setSpacing(14);
+        sidebar.setPadding(new Insets(20));
+
+        Label logo = new Label("Society360");
+        logo.setLineSpacing(10);
+        logo.setAlignment(Pos.CENTER_LEFT);
+        logo.setStyle("-fx-text-fill:white;-fx-font-size:24px;-fx-font-weight:bold");
+
+        Label panel = new Label("Secretary Panel");
+        panel.setStyle("-fx-text-fill:lightgray;-fx-font-size:14px;-fx-padding:5px");
 
 
-   
-       
+        //sidebar menu buttons
+
+        Button dashboardBtn = new Button("Dashboard");
+        dashboardBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        Button residentsBtn = new Button("Manage Residents");
+        residentsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+           
+        Button ownersBtn = new Button("Manage Owners");
+        ownersBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        Button guardsBtn = new Button("Manage Guards");
+        guardsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        
+        Button noticesBtn = new Button("Manage Notices");
+        noticesBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        
+        Button complaintsBtn = new Button("Manage Complaints");
+        complaintsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        
+        Button maintenanceBtn = new Button("Manage Maintenance");
+        maintenanceBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        
+        Button paymentsBtn = new Button("Manage Payments");
+        paymentsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        Button sosBtn = new Button("View SOS Alerts");
+        sosBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        Button eventsBtn = new Button("Manage Events");
+        eventsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        Button reportsBtn = new Button("Generate Reports");
+        reportsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        Button profileBtn = new Button("Profile");
+        profileBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        Button logoutBtn = new Button("Logout");
+        logoutBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+
+        sidebar.getChildren().addAll(logo,
+                                    panel,
+                                    dashboardBtn,
+                                    residentsBtn,
+                                    ownersBtn,
+                                    guardsBtn,
+                                    noticesBtn,
+                                    complaintsBtn,
+                                    maintenanceBtn,
+                                    paymentsBtn,
+                                    sosBtn,
+                                    eventsBtn,
+                                    reportsBtn,
+                                    profileBtn,
+                                    logoutBtn
+        );
+     
+
+
+        HBox header = new HBox();
+        header.setPrefWidth(900);
+        header.setPrefHeight(80);
+        header.setPadding(new Insets(20));
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setStyle("-fx-background-color:white");
+
+        Label greeting = new Label("Good Morning, Secretary");
+        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#123C36;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Label notification = new Label("🔔");
+        notification.setStyle("-fx-font-size:20px;");
+
+        Label dateTime = new Label("1 september 2026 \n 11:40 PM");
+        dateTime.setStyle("-fx-font-size:14px;-fx-text-fill:#555555");
+
+
+        header.getChildren().addAll(greeting,
+                                 spacer,
+                                 notification,
+                                 dateTime
+        );
+        
+        // cards
+
+        VBox residentsCard = new VBox();
+
+        residentsCard.setPrefWidth(200);
+        residentsCard.setPrefHeight(130);
+        residentsCard.setPadding(new Insets(20));
+
+        //residents cards
+        residentsCard.setStyle("-fx-background-color: white;-fx-background-radius: 10;");
+
+        Label residentsTitle = new Label("Residents");
+        residentsTitle.setStyle("-fx-font-size: 14px;-fx-text-fill: #666666;");
+
+        Label residentsCount = new Label("248");
+        residentsCount.setStyle("-fx-font-size: 28px;-fx-font-weight: bold;-fx-text-fill: #123C36;");
+
+        Label residentText = new Label("Total Residents");
+        residentText.setStyle("-fx-font-size: 13px;-fx-text-fill: #777777;");
+
+        residentsCard.getChildren().addAll(
+            residentsTitle,
+            residentsCount,
+            residentText
+        );
+
+        //owner cards
+
+        VBox ownersCard = new VBox();
+        ownersCard.setPrefWidth(200);
+        ownersCard.setPrefHeight(130);
+        ownersCard.setPadding(new Insets(20));
+        ownersCard.setStyle("-fx-background-color: white;-fx-background-radius: 10;");
+
+        Label ownersTitle = new Label("Owners");
+        ownersTitle.setStyle("-fx-font-size: 14px;-fx-text-fill: #666666;");
+
+        Label ownersCount = new Label("128");
+        ownersCount.setStyle("-fx-font-size: 28px;-fx-font-weight: bold;-fx-text-fill: #123C36;");
+
+        Label ownerText = new Label("Total Owners");
+        ownerText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
+
+        ownersCard.getChildren().addAll(
+            ownersTitle,
+            ownersCount,
+            ownerText
+        );
+
+        //guard card
+
+        VBox guardsCard = new VBox();
+        guardsCard.setPrefWidth(200);
+        guardsCard.setPrefHeight(130);
+        guardsCard.setPadding(new Insets(20));
+        guardsCard.setStyle("-fx-background-color: white;-fx-background-radius: 10;");
+
+        Label guardsTitle = new Label("Guards");
+        guardsTitle.setStyle("-fx-font-size: 14px;-fx-text-fill: #666666;");
+
+        Label guardsCount = new Label("12");
+        guardsCount.setStyle("-fx-font-size: 28px;-fx-font-weight: bold;-fx-text-fill: #123C36;");
+
+        Label guardText = new Label("On Duty");
+        guardText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
+
+        guardsCard.getChildren().addAll(
+            guardsTitle,
+            guardsCount,
+            guardText
+        );
+
+
+        //complaint card
+
+        VBox complaintsCard = new VBox();
+        complaintsCard.setPrefWidth(200);
+        complaintsCard.setPrefHeight(130);
+        complaintsCard.setPadding(new Insets(20));
+        complaintsCard.setStyle("-fx-background-color: white;-fx-background-radius: 10;");
+
+        Label complaintsTitle = new Label("Complaints");
+        complaintsTitle.setStyle("-fx-font-size: 14px;-fx-text-fill: #666666;");
+
+        Label complaintsCount = new Label("18");
+        complaintsCount.setStyle("-fx-font-size: 28px;-fx-font-weight: bold;-fx-text-fill: #123C36;");
+
+        Label complaintText = new Label("Open");
+        complaintText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
+
+        complaintsCard.getChildren().addAll(
+            complaintsTitle,
+            complaintsCount,
+            complaintText
+        );
+
+        //card - maintenance
+
+        VBox maintenanceCard = new VBox();
+
+        maintenanceCard.setPrefWidth(200);
+        maintenanceCard.setPrefHeight(130);
+        maintenanceCard.setPadding(new Insets(20));
+
+        maintenanceCard.setStyle("-fx-background-color: white;-fx-background-radius: 10;");
+
+        Label maintenanceTitle = new Label("Maintenance");
+        maintenanceTitle.setStyle("-fx-font-size: 14px;-fx-text-fill: #666666;");
+
+        Label maintenanceAmount = new Label("₹ 1.25 L");
+        maintenanceAmount.setStyle("-fx-font-size: 28px;-fx-font-weight: bold;-fx-text-fill: #123C36;");
+
+        Label maintenanceText = new Label("Collected (May)");
+        maintenanceText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
+
+        maintenanceCard.getChildren().addAll(
+            maintenanceTitle,
+            maintenanceAmount,
+            maintenanceText
+        );
+
+        HBox cardsRow = new HBox(50,residentsCard,ownersCard,guardsCard,complaintsCard,maintenanceCard);
+        cardsRow.setSpacing(30);
+        cardsRow.setPadding(new Insets(20));
+
+
+        //quick Actions
+
+         VBox quickActions = new VBox();
+        quickActions.setPrefWidth(350);
+        quickActions.setMinWidth(350);
+        quickActions.setPrefHeight(280);
+        quickActions.setSpacing(10);
+        quickActions.setPadding(new Insets(20));
+        quickActions.setStyle("-fx-background-color:white;-fx-border-color:#E5E7EB;-fx-border-radius:10;-fx-background-radius:10");
+
+        Label quickTitle = new Label("Quick Actions");
+        quickTitle.setStyle("-fx-font-size: 17px;-fx-font-weight: bold;-fx-text-fill: #183B56;");
+
+        Label addResident = new Label("👥   Add Resident\n  New Registration");
+        addResident.setPrefWidth(260);
+        addResident.setStyle("-fx-font-size: 13px;-fx-text-fill: #183B56;-fx-padding: 8px;");
+
+        Label addNotice = new Label("▣   Add Notice\n    Create Notice");
+        addNotice.setPrefWidth(260);
+        addNotice.setStyle("-fx-font-size: 14px;-fx-text-fill: #183B56;-fx-padding: 12px;");
+
+        Label viewPayments = new Label("▣   View Payments\n    Collection Status");
+        viewPayments.setPrefWidth(260);
+        viewPayments.setStyle("-fx-font-size: 14px;-fx-text-fill: #183B56;-fx-padding: 12px;");
+
+        quickActions.getChildren().addAll(
+            quickTitle,
+            addResident,
+            addNotice,
+            viewPayments
+        );
+
+        //Todays overview
+
+        VBox todayOverview = new VBox();
+        todayOverview.setPrefWidth(350);
+        todayOverview.setPrefHeight(400);
+        todayOverview.setSpacing(10);
+        todayOverview.setPadding(new Insets(18));
+        todayOverview.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
+
+        Label todayTitle = new Label("Today's Overview");
+        todayTitle.setStyle("-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #183B56;");
+
+        Label newResidents = new Label("New Residents                                  02");
+        newResidents.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 7px;");
+
+        Label dailyVisitors = new Label("Daily Visitors                                     35");
+        dailyVisitors.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 7px;");
+
+        Label complaintsReceived = new Label("Complaints Received                       06");
+        complaintsReceived.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 7px;");
+
+        Label maintenanceRequests = new Label("Maintenance Requests                    04");
+        maintenanceRequests.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 7px;");
+
+        Label paymentsReceived = new Label("Payments Received                    ₹18,750");
+        paymentsReceived.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 7px");
+
+        Label viewAllreports = new Label("View All Reports");
+        viewAllreports.setStyle("-fx-font-size: 13px;-fx-font-weight: bold;-fx-text-fill: #4169A1;-fx-padding: 10px;");
+
+        todayOverview.getChildren().addAll(todayTitle,
+                                        newResidents,
+                                        dailyVisitors,
+                                        complaintsReceived,
+                                        maintenanceRequests,
+                                        paymentsReceived,
+                                        viewAllreports
+                                            
+        );
+
+        //upcoming Events
+        VBox upcomingEvents = new VBox();
+        upcomingEvents.setPrefWidth(350);
+        upcomingEvents.setPrefHeight(400);
+        upcomingEvents.setSpacing(12);
+        upcomingEvents.setPadding(new Insets(18));
+        upcomingEvents.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
+
+        Label eventsTitle = new Label("Upcoming Events");
+        eventsTitle.setStyle("-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #183B56;");
+
+        Label event1 = new Label("Society Meeting\n10 May 2026");
+        event1.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 8px;");
+
+        Label event2 = new Label("Blood Donation camp\n18 May 2025\n09:00 AM");
+        event2.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 8px;");
+
+        Label viewAllEvents = new Label("View All Events");
+        viewAllEvents.setStyle("-fx-font-size: 13px;-fx-font-weight: bold;-fx-text-fill: #4169A1;-fx-padding: 10px;");
+
+
+        upcomingEvents.getChildren().addAll(
+                       eventsTitle,
+                       event1,
+                       event2,
+                       viewAllEvents           
+        );
+
+        HBox hb1 = new HBox(50,quickActions,todayOverview,upcomingEvents);
+
+
+        //sos Alerts
+
+        VBox recentSOS = new VBox();
+        recentSOS.setPrefWidth(350);
+        recentSOS.setMinWidth(350);
+        recentSOS.setPrefHeight(150);
+        recentSOS.setSpacing(8);
+        recentSOS.setPadding(new Insets(18));
+        recentSOS.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
+
+        Label sosTitle = new Label("Recent SOS Alerts");
+        sosTitle.setStyle("-fx-font-size: 17px;-fx-font-weight: bold;-fx-text-fill: #D9534F;");
+
+        Label viewAll = new Label("View All");
+        viewAll.setStyle("-fx-font-size: 13px;-fx-text-fill: #4169A1;");
+
+
+         HBox sosHeader = new HBox(10);
+        sosHeader.setSpacing(120);
+        sosHeader.getChildren().addAll(
+            sosTitle,
+            viewAll
+        );
+
+
+        Label sosAlert = new Label(
+            "🔴   Block B, 402 (Medical)            2 min ago"
+        );
+        sosAlert.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 8px;");
+
+        recentSOS.getChildren().addAll(
+            sosHeader,
+            sosAlert
+        );
+
+
+        //main content Area
+        VBox mainContent = new VBox();
+        mainContent.setPrefWidth(920);
+        mainContent.setPrefHeight(700);
+        mainContent.setMaxWidth(Double.MAX_VALUE);
+        mainContent.setStyle("-fx-background-color:#F5F7FA");
+        mainContent.getChildren().addAll(header,
+                                         cardsRow,
+                                         hb1,
+                                         recentSOS
+        );
+
+
+        //add sidebar and main content to body
+        //body Dashboard
+
+        HBox body = new HBox(10);
+        body.getChildren().addAll(sidebar,mainContent);
+        HBox.setHgrow(mainContent, Priority.ALWAYS);
+
+         // main layout
+        VBox mainvb = new VBox();
+        mainvb.getChildren().addAll();
+        mainvb.setStyle("-fx-background-color:white");
+
+        mainvb.getChildren().add(body);
+
+        Scene scene = new Scene(mainvb,1500,750);
+        return scene;
     }
     
-
+}
