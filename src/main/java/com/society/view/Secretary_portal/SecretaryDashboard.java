@@ -13,12 +13,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 
 
 public class SecretaryDashboard {
  private Scene SecretaryDash;
     
-    public Scene creatScene() {
+    public Scene createScene(Stage stage) {
         
         
         VBox sidebar = new VBox();
@@ -46,41 +48,98 @@ public class SecretaryDashboard {
         Button residentsBtn = new Button("Manage Residents");
         residentsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         residentsBtn.setOnAction(e -> {
+           ManageResidents residents = new ManageResidents();
+          stage.setScene(residents.createScene(stage));
            
         });
            
         Button ownersBtn = new Button("Manage Owners");
         ownersBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        ownersBtn.setOnAction(e -> {
+           ManageOwner owners = new ManageOwner();
+          stage.setScene(owners.createScene(stage));
+           
+        });
 
         Button guardsBtn = new Button("Manage Guards");
         guardsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        guardsBtn.setOnAction(e -> {
+           ManageGuard guards = new ManageGuard();
+          stage.setScene(guards.createScene(stage));
+           
+        });
         
         Button noticesBtn = new Button("Manage Notices");
         noticesBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        noticesBtn.setOnAction(e -> {
+           ManageNotices notices = new ManageNotices();
+          stage.setScene(notices.createScene(stage));
+           
+        });
         
         Button complaintsBtn = new Button("Manage Complaints");
         complaintsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        complaintsBtn.setOnAction(e -> {
+           ManageComplaints complaints = new ManageComplaints();
+          stage.setScene(complaints.createScene(stage));
+           
+        });
         
         Button maintenanceBtn = new Button("Manage Maintenance");
         maintenanceBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        maintenanceBtn.setOnAction(e -> {
+           ManageMaintenance maintenance = new ManageMaintenance();
+          stage.setScene(maintenance.createScene(stage));
+           
+        });
         
         Button paymentsBtn = new Button("Manage Payments");
         paymentsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        paymentsBtn.setOnAction(e -> {
+           ManagePayment payment = new ManagePayment();
+          stage.setScene(payment.createScene(stage));
+           
+        });
 
         Button sosBtn = new Button("View SOS Alerts");
         sosBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        sosBtn.setOnAction(e -> {
+           ViewSos sos = new ViewSos();
+          stage.setScene(sos.createScene(stage));
+           
+        });
 
         Button eventsBtn = new Button("Manage Events");
         eventsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        eventsBtn.setOnAction(e -> {
+           ManageEvents events = new ManageEvents();
+          stage.setScene(events.createScene(stage));
+           
+        });
 
         Button reportsBtn = new Button("Generate Reports");
         reportsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        reportsBtn.setOnAction(e -> {
+           GenerateReports report = new GenerateReports();
+          stage.setScene(report.createScene(stage));
+           
+        });
 
         Button profileBtn = new Button("Profile");
         profileBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        profileBtn.setOnAction(e -> {
+           Profile profile = new Profile();
+          stage.setScene(profile.createScene(stage));
+           
+        });
 
         Button logoutBtn = new Button("Logout");
         logoutBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        logoutBtn.setOnAction(e -> {
+           Logout logout = new Logout();
+          stage.setScene(logout.createScene(stage));
+           
+        });
 
 
         sidebar.getChildren().addAll(logo,
