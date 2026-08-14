@@ -1,5 +1,8 @@
 package com.society.view.Secretary_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,10 +12,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 
 public class SecretaryDashboard {
-
+ private Scene SecretaryDash;
     
     public Scene creatScene() {
         
@@ -38,8 +42,12 @@ public class SecretaryDashboard {
         Button dashboardBtn = new Button("Dashboard");
         dashboardBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
 
+
         Button residentsBtn = new Button("Manage Residents");
         residentsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        residentsBtn.setOnAction(e -> {
+           
+        });
            
         Button ownersBtn = new Button("Manage Owners");
         ownersBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
@@ -99,9 +107,9 @@ public class SecretaryDashboard {
         header.setPrefHeight(80);
         header.setPadding(new Insets(20));
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color:white");
+        header.setStyle("-fx-background-color:#789098");
 
-        Label greeting = new Label("Good Morning, Secretary");
+        Label greeting = new Label("Good Morning, Secretary 👋");
         greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#123C36;");
 
         Region spacer = new Region();
@@ -110,14 +118,26 @@ public class SecretaryDashboard {
         Label notification = new Label("🔔");
         notification.setStyle("-fx-font-size:20px;");
 
-        Label dateTime = new Label("1 september 2026 \n 11:40 PM");
-        dateTime.setStyle("-fx-font-size:14px;-fx-text-fill:#555555");
+        Label day = new Label();
+        Label date = new Label();
 
+        LocalDate today = LocalDate.now();
+
+        day.setText(today.format(
+            DateTimeFormatter.ofPattern("EEEE")
+        ));
+
+        date.setText(today.format(
+            DateTimeFormatter.ofPattern("dd MMMM yyyy")
+        ));
+         
+        VBox vb1 = new VBox();
+        vb1.getChildren().addAll(day,date);
 
         header.getChildren().addAll(greeting,
                                  spacer,
                                  notification,
-                                 dateTime
+                                 vb1
         );
         
         // cards
@@ -242,6 +262,7 @@ public class SecretaryDashboard {
         );
 
         HBox cardsRow = new HBox(50,residentsCard,ownersCard,guardsCard,complaintsCard,maintenanceCard);
+        cardsRow.setStyle("-fx-background-color: #789098");
         cardsRow.setSpacing(30);
         cardsRow.setPadding(new Insets(20));
 
@@ -282,7 +303,7 @@ public class SecretaryDashboard {
 
         VBox todayOverview = new VBox();
         todayOverview.setPrefWidth(350);
-        todayOverview.setPrefHeight(400);
+        todayOverview.setPrefHeight(480);
         todayOverview.setSpacing(10);
         todayOverview.setPadding(new Insets(18));
         todayOverview.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
@@ -321,7 +342,7 @@ public class SecretaryDashboard {
         //upcoming Events
         VBox upcomingEvents = new VBox();
         upcomingEvents.setPrefWidth(350);
-        upcomingEvents.setPrefHeight(400);
+        upcomingEvents.setPrefHeight(480);
         upcomingEvents.setSpacing(12);
         upcomingEvents.setPadding(new Insets(18));
         upcomingEvents.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
@@ -346,15 +367,14 @@ public class SecretaryDashboard {
                        viewAllEvents           
         );
 
-        HBox hb1 = new HBox(50,quickActions,todayOverview,upcomingEvents);
 
 
         //sos Alerts
 
         VBox recentSOS = new VBox();
-        recentSOS.setPrefWidth(350);
-        recentSOS.setMinWidth(350);
-        recentSOS.setPrefHeight(150);
+        recentSOS.setPrefWidth(280);
+        recentSOS.setMinWidth(280);
+        recentSOS.setPrefHeight(180);
         recentSOS.setSpacing(8);
         recentSOS.setPadding(new Insets(18));
         recentSOS.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
@@ -385,35 +405,44 @@ public class SecretaryDashboard {
         );
 
 
+        VBox leftColumn = new VBox(20);
+        leftColumn.getChildren().addAll(quickActions,recentSOS);
+        HBox hb1 = new HBox(50,leftColumn,todayOverview,upcomingEvents);
+        hb1.setStyle("-fx-background-color: #789098");
+
         //main content Area
         VBox mainContent = new VBox();
         mainContent.setPrefWidth(920);
         mainContent.setPrefHeight(700);
         mainContent.setMaxWidth(Double.MAX_VALUE);
-        mainContent.setStyle("-fx-background-color:#F5F7FA");
+        mainContent.setStyle("-fx-background-color:#789098");
         mainContent.getChildren().addAll(header,
                                          cardsRow,
-                                         hb1,
-                                         recentSOS
+                                         hb1
         );
 
 
         //add sidebar and main content to body
         //body Dashboard
 
-        HBox body = new HBox(10);
-        body.getChildren().addAll(sidebar,mainContent);
+       VBox.setVgrow(mainContent, Priority.ALWAYS);
         HBox.setHgrow(mainContent, Priority.ALWAYS);
+
+        HBox body = new HBox(20);
+        body.getChildren().addAll(sidebar,mainContent);
+
 
          // main layout
         VBox mainvb = new VBox();
-        mainvb.getChildren().addAll();
-        mainvb.setStyle("-fx-background-color:white");
-
+        mainvb.setStyle("-fx-background-color:#789098");
         mainvb.getChildren().add(body);
+        VBox.setVgrow(body, Priority.ALWAYS);
 
         Scene scene = new Scene(mainvb,1500,750);
-        return scene;
+        scene.setFill(Color.web("#789098"));
+         SecretaryDash = scene;
+        
+        return SecretaryDash;
     }
     
 }
