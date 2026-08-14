@@ -4,9 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
-        
-        
+        {
+            "type": "java",
+            "name": "WelcomePage",
+            "request": "launch",
+            "mainClass": "com.society.view.Welcome.WelcomePage",
+            "projectName": "project"
+        },
         {
             "type": "java",
             "name": "Main",
