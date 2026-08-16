@@ -15,302 +15,749 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
 public class GuardDashboard {
 
-        public static Scene createScene(Stage stage){
+    public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
-        GuardSidebar sidebar = new GuardSidebar(stage, "Dashboard");
+
+        GuardSidebar sidebar =
+                new GuardSidebar(stage, "Dashboard");
 
         root.setLeft(sidebar.getSidebar());
 
         VBox mainContent = new VBox();
-        mainContent.setPadding(new Insets(25));
+
+        mainContent.setPadding(
+                new Insets(28, 32, 25, 28)
+        );
+
         mainContent.setSpacing(20);
+
         mainContent.setFillWidth(true);
-        mainContent.setStyle("-fx-background-color: #789098;");
 
-        Label greeting = new Label("Good Morning, Guard Rajesh");
-        greeting.setStyle(
-                "-fx-font-size: 24px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #030a12;");
+        mainContent.setStyle(
+                "-fx-background-color: #b3adad;"
+        );
 
-        // Shift information
-        Label shiftInfo = new Label("Main Gate  Shift A (08:00 AM - 04:00 PM)");
-        shiftInfo.setStyle(
-                "-fx-font-size: 12px;" +
-                "-fx-text-fill: #020407;");
-
-        // Greeting section
-        VBox greetingBox = new VBox();
-        greetingBox.setSpacing(5);
-        greetingBox.getChildren().addAll(
-                greeting,
-                shiftInfo);
-        
-        // Put main content in the center
         root.setCenter(mainContent);
 
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy\nEEEE");
-        Label date = new Label(today.format(formatter));
-        date.setStyle("-fx-font-size: 13px;" + "-fx-font-weight: bold;" + "-fx-text-fill: #e2e5e8;");
-        date.setAlignment(Pos.CENTER);
 
-        HBox header = new HBox();
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setSpacing(20);
-        header.setMaxWidth(Double.MAX_VALUE);
+        // =====================================================
+        // HEADER
+        // =====================================================
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Label greeting =
+                new Label("Good Morning, Guard Rajesh");
+
+        greeting.setStyle(
+                "-fx-font-size: 25px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #030A12;"
+        );
+
+
+        Label shiftInfo =
+                new Label(
+                        "Main Gate    Shift A    (08:00 AM - 04:00 PM)"
+                );
+
+        shiftInfo.setStyle(
+                "-fx-font-size: 12px;" +
+                "-fx-text-fill: #17231F;"
+        );
+
+
+        VBox greetingBox =
+                new VBox(6);
+
+        greetingBox.getChildren().addAll(
+                greeting,
+                shiftInfo
+        );
+
+
+        LocalDate today =
+                LocalDate.now();
+
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern(
+                        "dd MM yyyy\nEEEE"
+                );
+
+        Label date =
+                new Label(
+                        today.format(formatter)
+                );
+
+        date.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        date.setStyle(
+                "-fx-font-size: 13px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #E2E5E8;"
+        );
+
+
+        Region headerSpacer =
+                new Region();
+
+        HBox.setHgrow(
+                headerSpacer,
+                Priority.ALWAYS
+        );
+
+
+        HBox header =
+                new HBox();
+
+        header.setAlignment(
+                Pos.CENTER_LEFT
+        );
 
         header.getChildren().addAll(
                 greetingBox,
-                spacer,
-                date);
+                headerSpacer,
+                date
+        );
 
-
-        // Add header to main content
         mainContent.getChildren().add(header);
 
 
-        VBox activeVisitors = createStatCard(
-        "Active Visitors",
-        "24",
-        "+12% from yesterday");
+        // =====================================================
+        // STAT CARDS
+        // =====================================================
 
-        VBox parking = createStatCard(
-        "Parking Occupancy",
-        "142/160",
-        "88% Full");
+        VBox activeVisitors =
+                createStatCard(
+                        "Active Visitors",
+                        "24",
+                        "+12% from yesterday"
+                );
 
-        VBox approvals = createStatCard(
-        "Pending Approvals",
-        "03",
-        "Needs attention");
 
-        VBox sos = createStatCard(
-        "SOS Alerts",
-        "01",
-        "High Priority");
+        VBox parking =
+                createStatCard(
+                        "Parking Occupancy",
+                        "142/160",
+                        "88% Full"
+                );
 
-        HBox statCards = new HBox();
-        statCards.setSpacing(20);
-        statCards.getChildren().addAll(activeVisitors, parking, approvals, sos);
 
-    
+        VBox approvals =
+                createStatCard(
+                        "Pending Approvals",
+                        "03",
+                        "Needs attention"
+                );
+
+
+        VBox sos =
+                createStatCard(
+                        "SOS Alerts",
+                        "01",
+                        "High Priority"
+                );
+
+
+        HBox statCards =
+                new HBox(20);
+
+        statCards.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        statCards.getChildren().addAll(
+                activeVisitors,
+                parking,
+                approvals,
+                sos
+        );
+
         mainContent.getChildren().add(statCards);
 
-        Label quickActionsTitle = new Label("Quick Actions");
+
+        // =====================================================
+        // QUICK ACTIONS
+        // =====================================================
+
+        Label quickActionsTitle =
+                new Label("Quick Actions");
+
         quickActionsTitle.setStyle(
-        "-fx-font-size: 18px;" +
-        "-fx-text-fill: #030A12;");
+                "-fx-font-size: 19px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #030A12;"
+        );
 
 
-// First row of actions
-        Button scanQRButton = new Button(
-        "Scan QR Pass\nVisitor Check-in");
+        Label quickActionsSubtitle =
+                new Label(
+                        "Frequently used gate operations"
+                );
 
-        Button manualEntryButton = new Button(
-        "Manual Entry\nAdd Visitor");
+        quickActionsSubtitle.setStyle(
+                "-fx-font-size: 11px;" +
+                "-fx-text-fill: #263B35;"
+        );
 
 
-// Second row of actions
-        Button parkingEntryButton = new Button(
-        "Parking Entry\nVehicle In");
+        VBox quickHeading =
+                new VBox(3);
 
-        Button emergencySOSButton = new Button(
-        "Emergency SOS\nRaise Alert");
+        quickHeading.getChildren().addAll(
+                quickActionsTitle,
+                quickActionsSubtitle
+        );
 
-        // Common size for Quick Action buttons
+
+        // -----------------------------------------------------
+        // BUTTONS
+        // -----------------------------------------------------
+
+        Button scanQRButton =
+                new Button(
+                        "Scan QR Pass\nVisitor Check-in"
+                );
+
+        Button manualEntryButton =
+                new Button(
+                        "Manual Entry\nAdd Visitor"
+                );
+
+        Button parkingEntryButton =
+                new Button(
+                        "Parking Entry\nVehicle In"
+                );
+
+        Button emergencySOSButton =
+                new Button(
+                        "Emergency SOS\nRaise Alert"
+                );
+
+
         Button[] quickActionButtons = {
-        scanQRButton,
-        manualEntryButton,
-        parkingEntryButton,
-        emergencySOSButton
-};
+
+                scanQRButton,
+                manualEntryButton,
+                parkingEntryButton,
+                emergencySOSButton
+
+        };
+
 
         for (Button button : quickActionButtons) {
 
-            button.setPrefWidth(320);
-            button.setPrefHeight(75);
-            button.setAlignment(Pos.CENTER_LEFT);
+            button.setPrefWidth(315);
+
+            button.setPrefHeight(78);
+
+            button.setAlignment(
+                    Pos.CENTER_LEFT
+            );
+
+            button.setPadding(
+                    new Insets(12, 18, 12, 18)
+            );
 
             button.setStyle(
-            "-fx-background-color: #E8F0E8;" +
-            
-            "-fx-font-size: 13px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-text-fill: #183A2D;");
-}   
-
-        // First row
-        HBox firstActionRow = new HBox();
-        firstActionRow.setSpacing(20);
-        firstActionRow.getChildren().addAll(scanQRButton,manualEntryButton);
+                    "-fx-background-color: #E8F0E8;" +
+                    "-fx-text-fill: #183A2D;" +
+                    "-fx-font-size: 14px;" +
+                    "-fx-font-weight: bold;" +
+                    "-fx-background-radius: 10;"
+            );
 
 
-// Second row
-        HBox secondActionRow = new HBox();
-        secondActionRow.setSpacing(20);
-        secondActionRow.getChildren().addAll(parkingEntryButton,emergencySOSButton);
+            button.setOnMouseEntered(e -> {
 
-        VBox quickActionsSection = new VBox();
-        quickActionsSection.setSpacing(12);
-        quickActionsSection.setPrefWidth(700);
-        quickActionsSection.getChildren().addAll(quickActionsTitle,firstActionRow,secondActionRow);
+                button.setStyle(
+                        "-fx-background-color: #DCE9DF;" +
+                        "-fx-text-fill: #183A2D;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 10;"
+                );
+
+            });
 
 
-        Label summaryTitle = new Label("Today's Summary");
-        summaryTitle.setStyle(
-        "-fx-font-size: 18px;" +
-        "-fx-font-weight: bold;" +
-        "-fx-text-fill: #030A12;");
+            button.setOnMouseExited(e -> {
 
-        HBox totalVisitorsRow = createSummaryRow(
-        "Total Visitors",
-        "36");
+                button.setStyle(
+                        "-fx-background-color: #E8F0E8;" +
+                        "-fx-text-fill: #183A2D;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 10;"
+                );
 
-        HBox deliveryRow = createSummaryRow(
-        "Delivery / Service",
-        "18");
+            });
+        }
 
-        HBox personalRow = createSummaryRow(
-        "Personal / Guest",
-        "12");
 
-        HBox vehiclesRow = createSummaryRow(
-        "Vehicles Entered",
-        "28");
+        // -----------------------------------------------------
+        // FUNCTIONAL ACTIONS
+        // -----------------------------------------------------
 
-        HBox exitsRow = createSummaryRow(
-        "Exits",
-        "25");
+        scanQRButton.setOnAction(e -> {
 
-        VBox summaryBox = new VBox();
-        summaryBox.setSpacing(14);
-        summaryBox.setPadding(new Insets(15));
-        summaryBox.setPrefWidth(450);
-        summaryBox.setPrefHeight(230);
-        summaryBox.setStyle(
-        "-fx-background-color: #E8F0E8;"      
+            stage.setScene(
+                    QRScanner.createScene(stage)
+            );
+
+        });
+
+
+        manualEntryButton.setOnAction(e -> {
+
+            stage.setScene(
+                    ManualVisitorEntry.createScene(stage)
+            );
+
+        });
+
+
+        parkingEntryButton.setOnAction(e -> {
+
+            stage.setScene(
+                    Parking.createScene(stage)
+            );
+
+        });
+
+
+        emergencySOSButton.setOnAction(e -> {
+
+            stage.setScene(
+                    EmergencySOS.createScene(stage)
+            );
+
+        });
+
+
+        HBox firstActionRow =
+                new HBox(18);
+
+        firstActionRow.getChildren().addAll(
+                scanQRButton,
+                manualEntryButton
         );
 
+
+        HBox secondActionRow =
+                new HBox(18);
+
+        secondActionRow.getChildren().addAll(
+                parkingEntryButton,
+                emergencySOSButton
+        );
+
+
+        VBox quickActionsSection =
+                new VBox(12);
+
+        quickActionsSection.setPrefWidth(
+                650
+        );
+
+        quickActionsSection.getChildren().addAll(
+                quickHeading,
+                firstActionRow,
+                secondActionRow
+        );
+
+
+        // =====================================================
+        // TODAY'S SUMMARY - IMPROVED
+        // =====================================================
+
+        Label summaryTitle =
+                new Label("Today's Summary");
+
+        summaryTitle.setStyle(
+                "-fx-font-size: 20px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #030A12;"
+        );
+
+
+        Label summarySubtitle =
+                new Label(
+                        "Gate activity for today"
+                );
+
+        summarySubtitle.setStyle(
+                "-fx-font-size: 11px;" +
+                "-fx-text-fill: #52605A;"
+        );
+
+
+        VBox summaryHeading =
+                new VBox(3);
+
+        summaryHeading.getChildren().addAll(
+                summaryTitle,
+                summarySubtitle
+        );
+
+
+        HBox totalVisitorsRow =
+                createSummaryRow(
+                        "Total Visitors",
+                        "36"
+                );
+
+
+        HBox deliveryRow =
+                createSummaryRow(
+                        "Delivery / Service",
+                        "18"
+                );
+
+
+        HBox personalRow =
+                createSummaryRow(
+                        "Personal / Guest",
+                        "12"
+                );
+
+
+        HBox vehiclesRow =
+                createSummaryRow(
+                        "Vehicles Entered",
+                        "28"
+                );
+
+
+        HBox exitsRow =
+                createSummaryRow(
+                        "Exits",
+                        "25"
+                );
+
+
+        VBox summaryBox =
+                new VBox(16);
+
+        summaryBox.setPadding(
+                new Insets(20)
+        );
+
+        summaryBox.setPrefWidth(
+                475
+        );
+
+        summaryBox.setPrefHeight(
+                265
+        );
+
+        summaryBox.setStyle(
+                "-fx-background-color: #E8F0E8;" +
+                "-fx-background-radius: 10;"
+        );
+
+
         summaryBox.getChildren().addAll(
-        summaryTitle,
-        totalVisitorsRow,
-        deliveryRow,
-        personalRow,
-        vehiclesRow,
-        exitsRow);
+                summaryHeading,
+                totalVisitorsRow,
+                deliveryRow,
+                personalRow,
+                vehiclesRow,
+                exitsRow
+        );
 
-        HBox lowerSection = new HBox();
-        lowerSection.setSpacing(30);
-        lowerSection.setAlignment(Pos.TOP_LEFT);
-        lowerSection.getChildren().addAll(quickActionsSection,summaryBox);
 
-        mainContent.getChildren().add(lowerSection);
+        // =====================================================
+        // LOWER SECTION
+        // =====================================================
 
-// NOTICE BAR
-        Label noticeText = new Label(
-        "Notice: Fire Drill scheduled today at 3:00 PM.");
+        HBox lowerSection =
+                new HBox(28);
+
+        lowerSection.setAlignment(
+                Pos.TOP_LEFT
+        );
+
+        lowerSection.getChildren().addAll(
+                quickActionsSection,
+                summaryBox
+        );
+
+
+        mainContent.getChildren().add(
+                lowerSection
+        );
+
+
+        // =====================================================
+        // NOTICE SECTION - IMPROVED
+        // =====================================================
+
+        VBox noticeContent =
+                new VBox(4);
+
+
+        Label noticeLabel =
+                new Label("IMPORTANT NOTICE");
+
+        noticeLabel.setStyle(
+                "-fx-font-size: 10px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #183A2D;"
+        );
+
+
+        Label noticeText =
+                new Label(
+                        "Fire Drill scheduled today at 3:00 PM."
+                );
+
         noticeText.setStyle(
-        "-fx-font-size: 13px;" +
-        "-fx-font-weight: bold;" +
-        "-fx-text-fill: #080f0c;");
+                "-fx-font-size: 14px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #080F0C;"
+        );
 
-        Button viewNoticeButton = new Button("View Notice");
+
+        Label noticeInfo =
+                new Label(
+                        "All guards are requested to follow the emergency procedure."
+                );
+
+        noticeInfo.setStyle(
+                "-fx-font-size: 11px;" +
+                "-fx-text-fill: #52605A;"
+        );
+
+
+        noticeContent.getChildren().addAll(
+                noticeLabel,
+                noticeText,
+                noticeInfo
+        );
+
+
+        Button viewNoticeButton =
+                new Button("View Notice");
+
+        viewNoticeButton.setPrefWidth(
+                120
+        );
+
+        viewNoticeButton.setPrefHeight(
+                38
+        );
+
         viewNoticeButton.setStyle(
-        "-fx-background-color: transparent;" +
-        "-fx-text-fill: #183A2D;" +
-        "-fx-font-size: 12px;" +
-        "-fx-font-weight: bold;");
+                "-fx-background-color: #183A2D;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-size: 12px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 7;"
+        );
 
-        HBox noticeBar = new HBox();
-        noticeBar.setPrefHeight(50);
-        noticeBar.setPrefWidth(1200);
-        noticeBar.setMaxWidth(Double.MAX_VALUE);
-        noticeBar.setPadding(new Insets(10, 20, 10, 20));
-        noticeBar.setAlignment(Pos.CENTER_LEFT);
-        noticeBar.setSpacing(20);
+
+        Region noticeSpacer =
+                new Region();
+
+        HBox.setHgrow(
+                noticeSpacer,
+                Priority.ALWAYS
+        );
+
+
+        HBox noticeBar =
+                new HBox(15);
+
+        noticeBar.setPrefHeight(
+                75
+        );
+
+        noticeBar.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        noticeBar.setPadding(
+                new Insets(10, 18, 10, 20)
+        );
+
+        noticeBar.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
         noticeBar.setStyle(
-        "-fx-background-color: #E8F0E8;");
-        noticeBar.getChildren().addAll(noticeText, viewNoticeButton);
+                "-fx-background-color: #E8F0E8;" +
+                "-fx-background-radius: 10;"
+        );
 
-        mainContent.getChildren().add(noticeBar);
+
+        noticeBar.getChildren().addAll(
+                noticeContent,
+                noticeSpacer,
+                viewNoticeButton
+        );
 
 
-        Scene scene = new Scene(root,1500,750);
-        stage.setTitle("Society360 - Guard Dashboard");
-        stage.setScene(scene);
+        mainContent.getChildren().add(
+                noticeBar
+        );
+
+
+        // =====================================================
+        // SCENE
+        // =====================================================
+
+        Scene scene =
+                new Scene(
+                        root,
+                        1500,
+                        750
+                );
+
+
+        stage.setTitle(
+                "Society360 - Guard Dashboard"
+        );
+
+        stage.setScene(
+                scene
+        );
+
         stage.show();
+
+
         return scene;
     }
 
 
- private static VBox createStatCard(
-        String title,
-        String value,
-        String subtitle) {
+    // =========================================================
+    // STAT CARD
+    // =========================================================
 
-    VBox card = new VBox();
-    card.setPrefWidth(285);
-    card.setPrefHeight(105);
-    card.setPadding(new Insets(15));
-    card.setSpacing(5);
-    card.setStyle("-fx-background-color: #E8F0E8;");
+    private static VBox createStatCard(
+            String title,
+            String value,
+            String subtitle) {
 
-    Label titleLabel = new Label(title);
-    titleLabel.setStyle("-fx-font-size: 14px;" + "-fx-font-weight: bold;"+ "-fx-text-fill: #08140f;");
+        VBox card =
+                new VBox(5);
 
-    Label valueLabel = new Label(value);
-    valueLabel.setStyle("-fx-font-size: 25px;" + "-fx-font-weight: bold;" + "-fx-text-fill: #030A12;");
-    Label subtitleLabel = new Label(subtitle);
-    subtitleLabel.setStyle("-fx-font-size: 10px;" + "-fx-text-fill: #03070a;");
+        card.setPrefWidth(
+                285
+        );
 
-    card.getChildren().addAll(
-            titleLabel,
-            valueLabel,
-            subtitleLabel);
+        card.setPrefHeight(
+                110
+        );
 
-    return card;
+        card.setPadding(
+                new Insets(15)
+        );
 
+        card.setStyle(
+                "-fx-background-color: #E8F0E8;" +
+                "-fx-background-radius: 10;"
+        );
+
+
+        Label titleLabel =
+                new Label(title);
+
+        titleLabel.setStyle(
+                "-fx-font-size: 13px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #183A2D;"
+        );
+
+
+        Label valueLabel =
+                new Label(value);
+
+        valueLabel.setStyle(
+                "-fx-font-size: 26px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #030A12;"
+        );
+
+
+        Label subtitleLabel =
+                new Label(subtitle);
+
+        subtitleLabel.setStyle(
+                "-fx-font-size: 10px;" +
+                "-fx-text-fill: #52605A;"
+        );
+
+
+        card.getChildren().addAll(
+                titleLabel,
+                valueLabel,
+                subtitleLabel
+        );
+
+
+        return card;
     }
 
+
+    // =========================================================
+    // SUMMARY ROW
+    // =========================================================
+
     private static HBox createSummaryRow(
-        String title,
-        String value) {
+            String title,
+            String value) {
 
-    Label titleLabel = new Label(title);
+        Label titleLabel =
+                new Label(title);
 
-    titleLabel.setStyle(
-            "-fx-font-size: 12px;" +
-            "-fx-text-fill: #183A2D;"
-    );
-
-
-    Label valueLabel = new Label(value);
-
-    valueLabel.setStyle(
-            "-fx-font-size: 13px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-text-fill: #030A12;"
-    );
+        titleLabel.setStyle(
+                "-fx-font-size: 12px;" +
+                "-fx-text-fill: #183A2D;"
+        );
 
 
-    HBox row = new HBox();
+        Label valueLabel =
+                new Label(value);
 
-    row.setAlignment(Pos.CENTER_LEFT);
-    row.setSpacing(20);
+        valueLabel.setStyle(
+                "-fx-font-size: 14px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #030A12;"
+        );
 
-    row.getChildren().addAll(
-            titleLabel,
-            valueLabel
-    );
 
-    return row;
-}
+        Region spacer =
+                new Region();
+
+        HBox.setHgrow(
+                spacer,
+                Priority.ALWAYS
+        );
+
+
+        HBox row =
+                new HBox();
+
+        row.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        row.setPadding(
+                new Insets(2, 0, 2, 0)
+        );
+
+
+        row.getChildren().addAll(
+                titleLabel,
+                spacer,
+                valueLabel
+        );
+
+
+        return row;
+    }
 }

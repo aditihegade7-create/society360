@@ -27,7 +27,7 @@ public class GuardSidebar {
         sidebar.setPadding(new Insets(20));
         sidebar.setSpacing(12);
         sidebar.setAlignment(Pos.TOP_LEFT);
-        sidebar.setStyle("-fx-background-color: #352159;");
+        sidebar.setStyle("-fx-background-color: #4a4b4b;");
 
         Label logo = new Label("Society360");
         logo.setStyle(
@@ -146,7 +146,7 @@ public class GuardSidebar {
         button.setPrefHeight(40);
 
         button.setStyle(
-                "-fx-background-color: #291946;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 14px;" +
                 "-fx-alignment: CENTER_LEFT;"
