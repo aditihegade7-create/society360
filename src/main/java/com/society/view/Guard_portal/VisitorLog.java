@@ -19,22 +19,72 @@ import javafx.stage.Stage;
 
 public class VisitorLog {
 
+    // =====================================================
+    // SHARED VISITOR LIST
+    // =====================================================
+
+    public static ObservableList<Visitor> visitors =
+        FXCollections.observableArrayList(
+
+                    new Visitor(
+                            "Amit Sharma",
+                            "9876543210",
+                            "A-101",
+                            "Personal Visit",
+                            "",
+                            "09:15 AM",
+                            "Inside"
+                    ),
+
+                    new Visitor(
+                            "Rohan Patil",
+                            "9823456789",
+                            "B-204",
+                            "Delivery",
+                            "",
+                            "10:05 AM",
+                            "Inside"
+                    ),
+
+                    new Visitor(
+                            "Sneha Joshi",
+                            "9765432109",
+                            "C-302",
+                            "Service",
+                            "",
+                            "11:20 AM",
+                            "Checked Out"
+                    ),
+
+                    new Visitor(
+                            "Karan Mehta",
+                            "9898989898",
+                            "A-405",
+                            "Personal Visit",
+                            "",
+                            "12:10 PM",
+                            "Inside"
+                    )
+            );
+
+
     public static Scene createScene(Stage stage) {
 
-        // =========================
-        // ROOT
-        // =========================
-
         BorderPane root = new BorderPane();
+
+        // =====================================================
+        // SIDEBAR
+        // =====================================================
 
         GuardSidebar sidebar =
                 new GuardSidebar(stage, "Visitor Log");
 
         root.setLeft(sidebar.getSidebar());
 
-        // =========================
+
+        // =====================================================
         // MAIN CONTENT
-        // =========================
+        // =====================================================
 
         VBox mainContent = new VBox();
 
@@ -48,11 +98,13 @@ public class VisitorLog {
                 "-fx-background-color: #789098;"
         );
 
-        // =========================
-        // HEADER
-        // =========================
 
-        Label title = new Label("Visitor Log");
+        // =====================================================
+        // HEADER
+        // =====================================================
+
+        Label title =
+                new Label("Visitor Log");
 
         title.setStyle(
                 "-fx-font-size: 27px;" +
@@ -60,62 +112,75 @@ public class VisitorLog {
                 "-fx-text-fill: #102A43;"
         );
 
-        Label subtitle = new Label(
-                "Monitor visitor entries and exits at the society gate"
-        );
+
+        Label subtitle =
+                new Label(
+                        "Monitor visitor entries and exits at the society gate"
+                );
 
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
                 "-fx-text-fill: #263238;"
         );
 
-        VBox heading = new VBox(
-                4,
-                title,
-                subtitle
-        );
 
-        // =========================
+        VBox heading =
+                new VBox(
+                        4,
+                        title,
+                        subtitle
+                );
+
+
+        // =====================================================
         // SUMMARY CARDS
-        // =========================
+        // =====================================================
 
         GridPane summaryGrid = new GridPane();
 
         summaryGrid.setHgap(15);
+
 
         Label totalValue = new Label();
         Label insideValue = new Label();
         Label checkedOutValue = new Label();
         Label deliveryValue = new Label();
 
-        VBox totalCard = createSummaryCard(
-                "Total Visitors",
-                totalValue
-        );
 
-        VBox insideCard = createSummaryCard(
-                "Currently Inside",
-                insideValue
-        );
+        VBox totalCard =
+                createSummaryCard(
+                        "Total Visitors",
+                        totalValue
+                );
 
-        VBox checkedOutCard = createSummaryCard(
-                "Checked Out",
-                checkedOutValue
-        );
+        VBox insideCard =
+                createSummaryCard(
+                        "Currently Inside",
+                        insideValue
+                );
 
-        VBox deliveryCard = createSummaryCard(
-                "Deliveries",
-                deliveryValue
-        );
+        VBox checkedOutCard =
+                createSummaryCard(
+                        "Checked Out",
+                        checkedOutValue
+                );
+
+        VBox deliveryCard =
+                createSummaryCard(
+                        "Deliveries",
+                        deliveryValue
+                );
+
 
         summaryGrid.add(totalCard, 0, 0);
         summaryGrid.add(insideCard, 1, 0);
         summaryGrid.add(checkedOutCard, 2, 0);
         summaryGrid.add(deliveryCard, 3, 0);
 
-        // =========================
-        // SEARCH SECTION
-        // =========================
+
+        // =====================================================
+        // SEARCH
+        // =====================================================
 
         Label searchTitle =
                 new Label("Search Visitors");
@@ -125,6 +190,7 @@ public class VisitorLog {
                 "-fx-font-weight: bold;" +
                 "-fx-text-fill: #102A43;"
         );
+
 
         TextField searchField =
                 new TextField();
@@ -138,8 +204,9 @@ public class VisitorLog {
 
         searchField.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-background-radius: 6;" 
+                "-fx-background-radius: 6;"
         );
+
 
         Button searchButton =
                 new Button("Search");
@@ -154,6 +221,7 @@ public class VisitorLog {
                 "-fx-background-radius: 6;"
         );
 
+
         Button refreshButton =
                 new Button("Refresh");
 
@@ -167,26 +235,31 @@ public class VisitorLog {
                 "-fx-background-radius: 6;"
         );
 
-        HBox searchBox = new HBox(
-                10,
-                searchField,
-                searchButton,
-                refreshButton
-        );
+
+        HBox searchBox =
+                new HBox(
+                        10,
+                        searchField,
+                        searchButton,
+                        refreshButton
+                );
 
         searchBox.setAlignment(
                 Pos.CENTER_LEFT
         );
 
-        VBox searchSection = new VBox(
-                8,
-                searchTitle,
-                searchBox
-        );
 
-        // =========================
-        // VISITOR TABLE
-        // =========================
+        VBox searchSection =
+                new VBox(
+                        8,
+                        searchTitle,
+                        searchBox
+                );
+
+
+        // =====================================================
+        // TABLE
+        // =====================================================
 
         TableView<Visitor> visitorTable =
                 new TableView<>();
@@ -198,7 +271,6 @@ public class VisitorLog {
                 "-fx-background-radius: 8;"
         );
 
-        // Visitor Name
 
         TableColumn<Visitor, String> nameColumn =
                 new TableColumn<>("Visitor Name");
@@ -209,7 +281,6 @@ public class VisitorLog {
 
         nameColumn.setPrefWidth(190);
 
-        // Phone
 
         TableColumn<Visitor, String> phoneColumn =
                 new TableColumn<>("Phone");
@@ -220,7 +291,6 @@ public class VisitorLog {
 
         phoneColumn.setPrefWidth(140);
 
-        // Flat
 
         TableColumn<Visitor, String> flatColumn =
                 new TableColumn<>("Flat");
@@ -231,7 +301,6 @@ public class VisitorLog {
 
         flatColumn.setPrefWidth(100);
 
-        // Purpose
 
         TableColumn<Visitor, String> purposeColumn =
                 new TableColumn<>("Purpose");
@@ -242,7 +311,6 @@ public class VisitorLog {
 
         purposeColumn.setPrefWidth(170);
 
-        // Entry Time
 
         TableColumn<Visitor, String> entryColumn =
                 new TableColumn<>("Entry Time");
@@ -253,7 +321,6 @@ public class VisitorLog {
 
         entryColumn.setPrefWidth(120);
 
-        // Status
 
         TableColumn<Visitor, String> statusColumn =
                 new TableColumn<>("Status");
@@ -264,6 +331,7 @@ public class VisitorLog {
 
         statusColumn.setPrefWidth(130);
 
+
         visitorTable.getColumns().addAll(
                 nameColumn,
                 phoneColumn,
@@ -273,55 +341,14 @@ public class VisitorLog {
                 statusColumn
         );
 
-        // =========================
-        // SAMPLE DATA
-        // =========================
 
-        ObservableList<Visitor> visitors =
-                FXCollections.observableArrayList(
-
-                        new Visitor(
-                                "Amit Sharma",
-                                "9876543210",
-                                "A-101",
-                                "Personal Visit",
-                                "09:15 AM",
-                                "Inside"
-                        ),
-
-                        new Visitor(
-                                "Rohan Patil",
-                                "9823456789",
-                                "B-204",
-                                "Delivery",
-                                "10:05 AM",
-                                "Inside"
-                        ),
-
-                        new Visitor(
-                                "Sneha Joshi",
-                                "9765432109",
-                                "C-302",
-                                "Service",
-                                "11:20 AM",
-                                "Checked Out"
-                        ),
-
-                        new Visitor(
-                                "Karan Mehta",
-                                "9898989898",
-                                "A-405",
-                                "Personal Visit",
-                                "12:10 PM",
-                                "Inside"
-                        )
-                );
-
+        // Use the shared list
         visitorTable.setItems(visitors);
 
-        // =========================
-        // UPDATE SUMMARY
-        // =========================
+
+        // =====================================================
+        // SUMMARY
+        // =====================================================
 
         updateSummary(
                 visitors,
@@ -331,9 +358,10 @@ public class VisitorLog {
                 deliveryValue
         );
 
-        // =========================
-        // ADD VISITOR
-        // =========================
+
+        // =====================================================
+        // ADD VISITOR BUTTON
+        // =====================================================
 
         Button addVisitorButton =
                 new Button("Add Visitor");
@@ -348,16 +376,19 @@ public class VisitorLog {
                 "-fx-background-radius: 6;"
         );
 
+
         addVisitorButton.setOnAction(e -> {
 
             stage.setScene(
                     ManualVisitorEntry.createScene(stage)
             );
+
         });
 
-        // =========================
+
+        // =====================================================
         // CHECK OUT
-        // =========================
+        // =====================================================
 
         Button checkOutButton =
                 new Button("Check Out");
@@ -372,12 +403,14 @@ public class VisitorLog {
                 "-fx-background-radius: 6;"
         );
 
+
         checkOutButton.setOnAction(e -> {
 
             Visitor selectedVisitor =
                     visitorTable
                             .getSelectionModel()
                             .getSelectedItem();
+
 
             if (selectedVisitor == null) {
 
@@ -388,6 +421,7 @@ public class VisitorLog {
 
                 return;
             }
+
 
             if (selectedVisitor
                     .getStatus()
@@ -401,11 +435,14 @@ public class VisitorLog {
                 return;
             }
 
+
             selectedVisitor.setStatus(
                     "Checked Out"
             );
 
+
             visitorTable.refresh();
+
 
             updateSummary(
                     visitors,
@@ -415,33 +452,40 @@ public class VisitorLog {
                     deliveryValue
             );
 
+
             showMessage(
                     "Visitor Checked Out",
                     selectedVisitor.getName()
                             + " has been checked out."
             );
+
         });
 
-        HBox actionButtons = new HBox(
-                12,
-                addVisitorButton,
-                checkOutButton
-        );
+
+        HBox actionButtons =
+                new HBox(
+                        12,
+                        addVisitorButton,
+                        checkOutButton
+                );
 
         actionButtons.setAlignment(
                 Pos.CENTER_RIGHT
         );
 
-        // =========================
+
+        // =====================================================
         // SEARCH FUNCTION
-        // =========================
+        // =====================================================
 
         searchButton.setOnAction(e -> {
 
             String search =
-                    searchField.getText()
+                    searchField
+                            .getText()
                             .trim()
                             .toLowerCase();
+
 
             if (search.isEmpty()) {
 
@@ -450,8 +494,10 @@ public class VisitorLog {
                 return;
             }
 
+
             ObservableList<Visitor> filtered =
                     FXCollections.observableArrayList();
+
 
             for (Visitor visitor : visitors) {
 
@@ -459,10 +505,14 @@ public class VisitorLog {
                         visitor.getName()
                                 .toLowerCase()
                                 .contains(search)
+
                         ||
+
                         visitor.getPhone()
                                 .contains(search)
+
                         ||
+
                         visitor.getFlat()
                                 .toLowerCase()
                                 .contains(search)
@@ -472,12 +522,15 @@ public class VisitorLog {
                 }
             }
 
+
             visitorTable.setItems(filtered);
+
         });
 
-        // =========================
+
+        // =====================================================
         // REFRESH
-        // =========================
+        // =====================================================
 
         refreshButton.setOnAction(e -> {
 
@@ -487,6 +540,7 @@ public class VisitorLog {
                     visitors
             );
 
+
             updateSummary(
                     visitors,
                     totalValue,
@@ -494,11 +548,13 @@ public class VisitorLog {
                     checkedOutValue,
                     deliveryValue
             );
+
         });
 
-        // =========================
+
+        // =====================================================
         // ADD CONTENT
-        // =========================
+        // =====================================================
 
         mainContent.getChildren().addAll(
                 heading,
@@ -508,11 +564,13 @@ public class VisitorLog {
                 actionButtons
         );
 
+
         root.setCenter(mainContent);
 
-        // =========================
+
+        // =====================================================
         // SCENE
-        // =========================
+        // =====================================================
 
         return new Scene(
                 root,
@@ -520,6 +578,7 @@ public class VisitorLog {
                 750
         );
     }
+
 
     // =====================================================
     // SUMMARY CARD
@@ -537,17 +596,21 @@ public class VisitorLog {
                 "-fx-text-fill: #52606D;"
         );
 
+
         value.setStyle(
                 "-fx-font-size: 24px;" +
                 "-fx-font-weight: bold;" +
                 "-fx-text-fill: #102A43;"
         );
 
-        VBox card = new VBox(
-                8,
-                titleLabel,
-                value
-        );
+
+        VBox card =
+                new VBox(
+                        8,
+                        titleLabel,
+                        value
+                );
+
 
         card.setPrefWidth(250);
         card.setPrefHeight(80);
@@ -561,8 +624,10 @@ public class VisitorLog {
                 "-fx-background-radius: 10;"
         );
 
+
         return card;
     }
+
 
     // =====================================================
     // UPDATE SUMMARY
@@ -575,11 +640,14 @@ public class VisitorLog {
             Label checkedOut,
             Label deliveries) {
 
-        int totalCount = visitors.size();
+
+        int totalCount =
+                visitors.size();
 
         int insideCount = 0;
         int checkedOutCount = 0;
         int deliveryCount = 0;
+
 
         for (Visitor visitor : visitors) {
 
@@ -589,11 +657,13 @@ public class VisitorLog {
                 insideCount++;
             }
 
+
             if (visitor.getStatus()
                     .equals("Checked Out")) {
 
                 checkedOutCount++;
             }
+
 
             if (visitor.getPurpose()
                     .equals("Delivery")) {
@@ -601,6 +671,7 @@ public class VisitorLog {
                 deliveryCount++;
             }
         }
+
 
         total.setText(
                 String.valueOf(totalCount)
@@ -619,24 +690,28 @@ public class VisitorLog {
         );
     }
 
+
     // =====================================================
     // VISITOR CLASS
     // =====================================================
 
     public static class Visitor {
 
-        private String name;
-        private String phone;
-        private String flat;
-        private String purpose;
-        private String entryTime;
-        private String status;
+        String name;
+        String phone;
+        String flat;
+        String purpose;
+        private String remarks;
+        String entryTime;
+        String status;
+
 
         public Visitor(
                 String name,
                 String phone,
                 String flat,
                 String purpose,
+                String remarks,
                 String entryTime,
                 String status) {
 
@@ -644,38 +719,52 @@ public class VisitorLog {
             this.phone = phone;
             this.flat = flat;
             this.purpose = purpose;
+            this.remarks = remarks;
             this.entryTime = entryTime;
             this.status = status;
         }
+
 
         public String getName() {
             return name;
         }
 
+
         public String getPhone() {
             return phone;
         }
+
 
         public String getFlat() {
             return flat;
         }
 
+
         public String getPurpose() {
             return purpose;
         }
+
+
+        public String getRemarks() {
+            return remarks;
+        }
+
 
         public String getEntryTime() {
             return entryTime;
         }
 
+
         public String getStatus() {
             return status;
         }
+
 
         public void setStatus(String status) {
             this.status = status;
         }
     }
+
 
     // =====================================================
     // MESSAGE
