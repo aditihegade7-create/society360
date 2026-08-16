@@ -19,10 +19,6 @@ import java.util.ArrayList;
 
 public class Parking {
 
-    // =====================================================
-    // PARKING SPOT CLASS
-    // =====================================================
-
     static class ParkingSpot {
 
         String spotNumber;
@@ -42,17 +38,8 @@ public class Parking {
     }
 
 
-    // =====================================================
-    // PARKING SPOTS
-    // =====================================================
-
     static ArrayList<ParkingSpot> parkingSpots =
             new ArrayList<>();
-
-
-    // =====================================================
-    // INITIALIZE PARKING SPOTS
-    // =====================================================
 
     private static void initializeParkingSpots() {
 
@@ -61,57 +48,33 @@ public class Parking {
         }
 
         // Zone A
-
         parkingSpots.add(new ParkingSpot("A-01"));
         parkingSpots.add(new ParkingSpot("A-02"));
         parkingSpots.add(new ParkingSpot("A-03"));
         parkingSpots.add(new ParkingSpot("A-04"));
 
         // Zone B
-
         parkingSpots.add(new ParkingSpot("B-01"));
         parkingSpots.add(new ParkingSpot("B-02"));
         parkingSpots.add(new ParkingSpot("B-03"));
         parkingSpots.add(new ParkingSpot("B-04"));
 
         // Zone C
-
         parkingSpots.add(new ParkingSpot("C-01"));
         parkingSpots.add(new ParkingSpot("C-02"));
         parkingSpots.add(new ParkingSpot("C-03"));
         parkingSpots.add(new ParkingSpot("C-04"));
     }
 
-
-    // =====================================================
-    // CREATE SCENE
-    // =====================================================
-
     public static Scene createScene(Stage stage) {
-
         initializeParkingSpots();
-
-
-        // =================================================
-        // ROOT
-        // =================================================
 
         BorderPane root = new BorderPane();
 
-
-        // =================================================
-        // SIDEBAR
-        // =================================================
-
-        GuardSidebar sidebar =
-                new GuardSidebar(stage, "Parking");
+        GuardSidebar sidebar = new GuardSidebar(stage, "Parking");
 
         root.setLeft(sidebar.getSidebar());
 
-
-        // =================================================
-        // MAIN CONTENT
-        // =================================================
 
         VBox content = new VBox();
 
@@ -124,11 +87,6 @@ public class Parking {
         content.setStyle(
                 "-fx-background-color: #789098;"
         );
-
-
-        // =================================================
-        // TITLE
-        // =================================================
 
         Label title =
                 new Label("Parking / Vehicle Entry");
@@ -158,18 +116,8 @@ public class Parking {
                         subtitle
                 );
 
-
-        // =================================================
-        // AVAILABILITY SUMMARY
-        // =================================================
-
         HBox summary =
                 createSummary();
-
-
-        // =================================================
-        // PARKING AREA
-        // =================================================
 
         VBox parkingCard =
                 new VBox();
@@ -206,11 +154,6 @@ public class Parking {
                 "-fx-text-fill: #52606D;"
         );
 
-
-        // =================================================
-        // PARKING GRID
-        // =================================================
-
         GridPane parkingGrid =
                 new GridPane();
 
@@ -240,17 +183,11 @@ public class Parking {
             );
         }
 
-
         parkingCard.getChildren().addAll(
                 parkingTitle,
                 instruction,
                 parkingGrid
         );
-
-
-        // =================================================
-        // VEHICLE ENTRY CARD
-        // =================================================
 
         VBox entryCard =
                 new VBox();
@@ -266,7 +203,6 @@ public class Parking {
                 "-fx-background-radius: 12;"
         );
 
-
         Label entryTitle =
                 new Label("Vehicle Entry");
 
@@ -275,11 +211,6 @@ public class Parking {
                 "-fx-font-weight: bold;" +
                 "-fx-text-fill: #183A2D;"
         );
-
-
-        // =================================================
-        // VEHICLE NUMBER
-        // =================================================
 
         Label vehicleLabel =
                 createLabel("Vehicle Number *");
@@ -293,11 +224,6 @@ public class Parking {
 
         styleField(vehicleField);
 
-
-        // =================================================
-        // OWNER NAME
-        // =================================================
-
         Label ownerLabel =
                 createLabel("Owner / Resident Name *");
 
@@ -309,11 +235,6 @@ public class Parking {
         );
 
         styleField(ownerField);
-
-
-        // =================================================
-        // VEHICLE TYPE
-        // =================================================
 
         Label typeLabel =
                 createLabel("Vehicle Type *");
@@ -334,11 +255,6 @@ public class Parking {
 
         styleComboBox(vehicleTypeBox);
 
-
-        // =================================================
-        // SELECTED SPOT
-        // =================================================
-
         Label selectedLabel =
                 createLabel("Assigned Parking Spot");
 
@@ -350,11 +266,6 @@ public class Parking {
                 "-fx-font-weight: bold;" +
                 "-fx-text-fill: #183A2D;"
         );
-
-
-        // =================================================
-        // FORM GRID
-        // =================================================
 
         GridPane entryGrid =
                 new GridPane();
@@ -407,11 +318,6 @@ public class Parking {
                 1, 3
         );
 
-
-        // =================================================
-        // FIND SPOT BUTTON
-        // =================================================
-
         Button findSpotButton =
                 new Button("Find Available Spot");
 
@@ -424,11 +330,6 @@ public class Parking {
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
         );
-
-
-        // =================================================
-        // PARK VEHICLE BUTTON
-        // =================================================
 
         Button parkButton =
                 new Button("Park Vehicle");
@@ -443,11 +344,6 @@ public class Parking {
                 "-fx-background-radius: 6;"
         );
 
-
-        // =================================================
-        // CLEAR BUTTON
-        // =================================================
-
         Button clearButton =
                 new Button("Clear");
 
@@ -461,30 +357,12 @@ public class Parking {
                 "-fx-background-radius: 6;"
         );
 
-
-        HBox entryButtons =
-                new HBox(
-                        12,
-                        findSpotButton,
-                        parkButton,
-                        clearButton
-                );
-
-        entryButtons.setAlignment(
-                Pos.CENTER_RIGHT
-        );
-
-
+        HBox entryButtons = new HBox(12,findSpotButton,parkButton,clearButton);
+        entryButtons.setAlignment(Pos.CENTER_RIGHT);
         entryCard.getChildren().addAll(
                 entryTitle,
                 entryGrid,
-                entryButtons
-        );
-
-
-        // =================================================
-        // ADD EVERYTHING
-        // =================================================
+                entryButtons);
 
         content.getChildren().addAll(
                 heading,
@@ -493,13 +371,7 @@ public class Parking {
                 entryCard
         );
 
-
         root.setCenter(content);
-
-
-        // =================================================
-        // FIND AVAILABLE SPOT ACTION
-        // =================================================
 
         findSpotButton.setOnAction(e -> {
 
@@ -512,23 +384,11 @@ public class Parking {
                         "Parking Full",
                         "There are no available parking spots."
                 );
-
-                selectedSpot.setText(
-                        "No spot available"
-                );
-
+                selectedSpot.setText("No spot available");
                 return;
             }
-
-            selectedSpot.setText(
-                    availableSpot.spotNumber
-            );
+            selectedSpot.setText(availableSpot.spotNumber);
         });
-
-
-        // =================================================
-        // PARK VEHICLE ACTION
-        // =================================================
 
         parkButton.setOnAction(e -> {
 
@@ -548,10 +408,8 @@ public class Parking {
                         "Missing Information",
                         "Please enter vehicle number, owner name and vehicle type."
                 );
-
                 return;
             }
-
 
             ParkingSpot spot =
                     findSpotByNumber(
@@ -565,10 +423,8 @@ public class Parking {
                         "Parking Spot Required",
                         "Please find an available parking spot first."
                 );
-
                 return;
             }
-
 
             if (spot.occupied) {
 
@@ -576,14 +432,8 @@ public class Parking {
                         "Spot Occupied",
                         "This parking spot is already occupied."
                 );
-
                 return;
             }
-
-
-            // =============================================
-            // STORE VEHICLE INFORMATION
-            // =============================================
 
             spot.occupied = true;
 
@@ -605,50 +455,19 @@ public class Parking {
                             + spot.spotNumber
             );
 
-
-            // =============================================
-            // REFRESH PAGE
-            // =============================================
-
-            stage.setScene(
-                    createScene(stage)
-            );
+            stage.setScene(createScene(stage));
         });
 
-
-        // =================================================
-        // CLEAR ACTION
-        // =================================================
-
         clearButton.setOnAction(e -> {
-
             vehicleField.clear();
-
             ownerField.clear();
-
             vehicleTypeBox.setValue(null);
-
             selectedSpot.setText(
                     "Not assigned"
             );
         });
-
-
-        // =================================================
-        // SCENE
-        // =================================================
-
-        return new Scene(
-                root,
-                1500,
-                750
-        );
-    }
-
-
-    // =====================================================
-    // CREATE PARKING SPOT BUTTON
-    // =====================================================
+        return new Scene(root,1500,750);
+}
 
     private static Button createSpotButton(
             ParkingSpot spot) {
@@ -687,15 +506,8 @@ public class Parking {
                 );
             }
         });
-
-
         return button;
     }
-
-
-    // =====================================================
-    // UPDATE SPOT BUTTON
-    // =====================================================
 
     private static void updateSpotButton(
             Button button,
@@ -731,11 +543,6 @@ public class Parking {
         }
     }
 
-
-    // =====================================================
-    // FIND FIRST AVAILABLE SPOT
-    // =====================================================
-
     private static ParkingSpot findAvailableSpot() {
 
         for (ParkingSpot spot :
@@ -746,14 +553,8 @@ public class Parking {
                 return spot;
             }
         }
-
         return null;
     }
-
-
-    // =====================================================
-    // FIND SPOT BY NUMBER
-    // =====================================================
 
     private static ParkingSpot findSpotByNumber(
             String spotNumber) {
@@ -774,46 +575,24 @@ public class Parking {
         return null;
     }
 
-
-    // =====================================================
-    // SUMMARY
-    // =====================================================
-
     private static HBox createSummary() {
 
-        int total =
-                parkingSpots.size();
-
+        int total = parkingSpots.size();
         int occupied = 0;
 
         for (ParkingSpot spot :
                 parkingSpots) {
 
             if (spot.occupied) {
-
                 occupied++;
             }
         }
 
-        int available =
-                total - occupied;
+        int available = total - occupied;
 
-
-        Label totalLabel =
-                new Label(
-                        "Total Spots\n" + total
-                );
-
-        Label availableLabel =
-                new Label(
-                        "Available\n" + available
-                );
-
-        Label occupiedLabel =
-                new Label(
-                        "Occupied\n" + occupied
-                );
-
+        Label totalLabel = new Label("Total Spots\n" + total);
+        Label availableLabel = new Label("Available\n" + available);
+        Label occupiedLabel = new Label("Occupied\n" + occupied);
 
         styleSummaryLabel(
                 totalLabel
@@ -827,42 +606,18 @@ public class Parking {
                 occupiedLabel
         );
 
-
-        HBox summary =
-                new HBox(
-                        15,
-                        totalLabel,
-                        availableLabel,
-                        occupiedLabel
-                );
-
-        summary.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-
+        HBox summary = new HBox(15,totalLabel,availableLabel,occupiedLabel);
+        summary.setAlignment(Pos.CENTER_LEFT);
         return summary;
     }
-
-
-    // =====================================================
-    // SUMMARY LABEL STYLE
-    // =====================================================
 
     private static void styleSummaryLabel(
             Label label) {
 
         label.setPrefWidth(180);
         label.setPrefHeight(55);
-
-        label.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        label.setPadding(
-                new Insets(10)
-        );
-
+        label.setAlignment(Pos.CENTER_LEFT);
+        label.setPadding(new Insets(10));
         label.setStyle(
                 "-fx-background-color: #E8F0E8;" +
                 "-fx-text-fill: #183A2D;" +
@@ -871,40 +626,20 @@ public class Parking {
         );
     }
 
+    private static Label createLabel(String text) {
 
-    // =====================================================
-    // LABEL STYLE
-    // =====================================================
-
-    private static Label createLabel(
-            String text) {
-
-        Label label =
-                new Label(text);
-
+        Label label = new Label(text);
         label.setStyle(
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
                 "-fx-text-fill: #183A2D;"
         );
-
         return label;
     }
 
-
-    // =====================================================
-    // TEXT FIELD STYLE
-    // =====================================================
-
-    private static void styleField(
-            TextField field) {
-
-        field.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+    private static void styleField(TextField field) {
+        field.setMaxWidth(Double.MAX_VALUE);
         field.setPrefHeight(40);
-
         field.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
@@ -913,31 +648,15 @@ public class Parking {
         );
     }
 
-
-    // =====================================================
-    // COMBO BOX STYLE
-    // =====================================================
-
-    private static void styleComboBox(
-            ComboBox<String> box) {
-
-        box.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+    private static void styleComboBox(ComboBox<String> box) {
+        box.setMaxWidth(Double.MAX_VALUE);
         box.setPrefHeight(40);
-
         box.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
                 "-fx-text-fill: #102A43;"
         );
     }
-
-
-    // =====================================================
-    // MESSAGE
-    // =====================================================
 
     private static void showMessage(
             String title,
@@ -949,48 +668,27 @@ public class Parking {
                 );
 
         alert.setTitle(title);
-
         alert.setHeaderText(null);
-
         alert.setContentText(message);
-
         alert.showAndWait();
     }
 
-
-    // =====================================================
-    // COLUMN HELPER
-    // =====================================================
-
     static class ColumnConstraintsHelper {
 
-        static void addTwoColumns(
-                GridPane grid) {
+        static void addTwoColumns(GridPane grid) {
 
             javafx.scene.layout.ColumnConstraints
-                    column1 =
-                    new javafx.scene.layout.ColumnConstraints();
+                    column1 =new javafx.scene.layout.ColumnConstraints();
 
             javafx.scene.layout.ColumnConstraints
-                    column2 =
-                    new javafx.scene.layout.ColumnConstraints();
+                    column2 = new javafx.scene.layout.ColumnConstraints();
 
             column1.setPercentWidth(50);
             column2.setPercentWidth(50);
+            column1.setHgrow(Priority.ALWAYS);
+            column2.setHgrow(Priority.ALWAYS);
 
-            column1.setHgrow(
-                    Priority.ALWAYS
-            );
-
-            column2.setHgrow(
-                    Priority.ALWAYS
-            );
-
-            grid.getColumnConstraints()
-                    .addAll(
-                            column1,
-                            column2
-                    );
+            grid.getColumnConstraints().addAll(column1,column2);
         }
     }
 }

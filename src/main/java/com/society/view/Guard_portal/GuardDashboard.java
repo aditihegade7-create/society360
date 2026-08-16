@@ -42,11 +42,6 @@ public class GuardDashboard {
 
         root.setCenter(mainContent);
 
-
-        // =====================================================
-        // HEADER
-        // =====================================================
-
         Label greeting =
                 new Label("Good Morning, Guard Rajesh");
 
@@ -126,10 +121,6 @@ public class GuardDashboard {
         mainContent.getChildren().add(header);
 
 
-        // =====================================================
-        // STAT CARDS
-        // =====================================================
-
         VBox activeVisitors =
                 createStatCard(
                         "Active Visitors",
@@ -179,10 +170,6 @@ public class GuardDashboard {
         mainContent.getChildren().add(statCards);
 
 
-        // =====================================================
-        // QUICK ACTIONS
-        // =====================================================
-
         Label quickActionsTitle =
                 new Label("Quick Actions");
 
@@ -211,11 +198,6 @@ public class GuardDashboard {
                 quickActionsTitle,
                 quickActionsSubtitle
         );
-
-
-        // -----------------------------------------------------
-        // BUTTONS
-        // -----------------------------------------------------
 
         Button scanQRButton =
                 new Button(
@@ -298,10 +280,6 @@ public class GuardDashboard {
         }
 
 
-        // -----------------------------------------------------
-        // FUNCTIONAL ACTIONS
-        // -----------------------------------------------------
-
         scanQRButton.setOnAction(e -> {
 
             stage.setScene(
@@ -369,10 +347,6 @@ public class GuardDashboard {
                 secondActionRow
         );
 
-
-        // =====================================================
-        // TODAY'S SUMMARY - IMPROVED
-        // =====================================================
 
         Label summaryTitle =
                 new Label("Today's Summary");
@@ -470,10 +444,6 @@ public class GuardDashboard {
         );
 
 
-        // =====================================================
-        // LOWER SECTION
-        // =====================================================
-
         HBox lowerSection =
                 new HBox(28);
 
@@ -490,11 +460,6 @@ public class GuardDashboard {
         mainContent.getChildren().add(
                 lowerSection
         );
-
-
-        // =====================================================
-        // NOTICE SECTION - IMPROVED
-        // =====================================================
 
         VBox noticeContent =
                 new VBox(4);
@@ -600,42 +565,15 @@ public class GuardDashboard {
                 viewNoticeButton
         );
 
+        mainContent.getChildren().add(noticeBar);
 
-        mainContent.getChildren().add(
-                noticeBar
-        );
-
-
-        // =====================================================
-        // SCENE
-        // =====================================================
-
-        Scene scene =
-                new Scene(
-                        root,
-                        1500,
-                        750
-                );
-
-
-        stage.setTitle(
-                "Society360 - Guard Dashboard"
-        );
-
-        stage.setScene(
-                scene
-        );
-
+        Scene scene = new Scene(root,1500,750);
+        stage.setTitle("Society360 - Guard Dashboard");
+        stage.setScene(scene);
         stage.show();
-
-
         return scene;
     }
 
-
-    // =========================================================
-    // STAT CARD
-    // =========================================================
 
     private static VBox createStatCard(
             String title,
@@ -701,11 +639,6 @@ public class GuardDashboard {
 
         return card;
     }
-
-
-    // =========================================================
-    // SUMMARY ROW
-    // =========================================================
 
     private static HBox createSummaryRow(
             String title,

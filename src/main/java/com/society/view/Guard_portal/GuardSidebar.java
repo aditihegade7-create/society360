@@ -13,9 +13,7 @@ public class GuardSidebar {
     private VBox sidebar;
 
     public GuardSidebar(Stage stage, String activePage) {
-
         this.stage = stage;
-
         createSidebar(activePage);
     }
 
@@ -25,21 +23,28 @@ public class GuardSidebar {
         sidebar.setPrefWidth(280);
         sidebar.setPrefHeight(750);
         sidebar.setPadding(new Insets(20));
-        sidebar.setSpacing(12);
+        sidebar.setSpacing(14);
         sidebar.setAlignment(Pos.TOP_LEFT);
-        sidebar.setStyle("-fx-background-color: #4a4b4b;");
+        sidebar.setStyle(
+                "-fx-background-color: #0B4F4A;"
+        );
+
 
         Label logo = new Label("Society360");
+        logo.setLineSpacing(10);
+        logo.setAlignment(Pos.CENTER_LEFT);
         logo.setStyle(
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 24px;" +
-                "-fx-font-weight: bold;");
+                "-fx-font-weight: bold;"
+        );
 
         Label guardPanel = new Label("Guard Panel");
         guardPanel.setStyle(
-                "-fx-text-fill: white;" +
+                "-fx-text-fill: lightgray;" +
                 "-fx-font-size: 14px;" +
-                "-fx-padding: 5px;");
+                "-fx-padding: 5px;"
+        );
 
         Button dashboardButton = createButton("Dashboard");
         Button visitorButton = createButton("Visitor Log");
@@ -114,12 +119,9 @@ public class GuardSidebar {
 
         logoutButton.setOnAction(e -> {
 
-            System.out.println(
-                    "Logout clicked"
-            );
+            System.out.println("Logout clicked");
 
-            // Authentication screen will be
-            // connected here later.
+            // Authentication screen will be connected here later.
         });
 
         sidebar.getChildren().addAll(
@@ -137,8 +139,7 @@ public class GuardSidebar {
         );
     }
 
-    private Button createButton(
-            String text) {
+    private Button createButton(String text) {
 
         Button button = new Button(text);
 
@@ -146,15 +147,13 @@ public class GuardSidebar {
         button.setPrefHeight(40);
 
         button.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #0B4F4A;" +
+                "-fx-font-weight: bold;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 14px;" +
-                "-fx-alignment: CENTER_LEFT;"
-        );
-
+                "-fx-alignment: CENTER_LEFT;");
         return button;
     }
-
 
     private void setActiveButton(
             String activePage,
@@ -209,11 +208,14 @@ public class GuardSidebar {
                 break;
         }
 
+
         if (activeButton != null) {
+
             activeButton.setStyle(
-                    "-fx-background-color: #06110d;" +
+                    "-fx-background-color: #073936;" +
+                    "-fx-font-weight: bold;" +
                     "-fx-text-fill: white;" +
-                    "-fx-font-size: 13px;" +
+                    "-fx-font-size: 14px;" +
                     "-fx-alignment: CENTER_LEFT;" +
                     "-fx-background-radius: 6;"
             );
@@ -221,7 +223,6 @@ public class GuardSidebar {
     }
 
     public VBox getSidebar() {
-
         return sidebar;
     }
 }
