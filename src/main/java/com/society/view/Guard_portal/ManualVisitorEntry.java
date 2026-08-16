@@ -22,27 +22,12 @@ import java.time.format.DateTimeFormatter;
 public class ManualVisitorEntry {
 
     public static Scene createScene(Stage stage) {
-
-        // =====================================================
-        // ROOT
-        // =====================================================
-
         BorderPane root = new BorderPane();
-
-
-        // =====================================================
-        // SIDEBAR
-        // =====================================================
 
         GuardSidebar sidebar =
                 new GuardSidebar(stage, "Manual Entry");
 
         root.setLeft(sidebar.getSidebar());
-
-
-        // =====================================================
-        // MAIN CONTENT
-        // =====================================================
 
         VBox content = new VBox();
 
@@ -58,11 +43,6 @@ public class ManualVisitorEntry {
         content.setStyle(
                 "-fx-background-color: #789098;"
         );
-
-
-        // =====================================================
-        // PAGE HEADING
-        // =====================================================
 
         Label title =
                 new Label("Manual Visitor Entry");
@@ -92,11 +72,6 @@ public class ManualVisitorEntry {
                         subtitle
                 );
 
-
-        // =====================================================
-        // FORM CARD
-        // =====================================================
-
         VBox formCard =
                 new VBox();
 
@@ -114,11 +89,6 @@ public class ManualVisitorEntry {
                 "-fx-background-color: #E8F0E8;" +
                 "-fx-background-radius: 12;"
         );
-
-
-        // =====================================================
-        // FORM HEADING
-        // =====================================================
 
         Label formTitle =
                 new Label("Visitor Information");
@@ -151,11 +121,6 @@ public class ManualVisitorEntry {
 
         formHeading.setSpacing(20);
 
-
-        // =====================================================
-        // FORM GRID
-        // =====================================================
-
         GridPane form =
                 new GridPane();
 
@@ -165,11 +130,6 @@ public class ManualVisitorEntry {
         form.setMaxWidth(
                 Double.MAX_VALUE
         );
-
-
-        // =====================================================
-        // TWO EQUAL COLUMNS
-        // =====================================================
 
         ColumnConstraints column1 =
                 new ColumnConstraints();
@@ -193,11 +153,6 @@ public class ManualVisitorEntry {
                 column2
         );
 
-
-        // =====================================================
-        // FULL NAME
-        // =====================================================
-
         Label nameLabel =
                 createLabel("Full Name *");
 
@@ -210,11 +165,6 @@ public class ManualVisitorEntry {
 
         styleField(nameField);
 
-
-        // =====================================================
-        // PHONE NUMBER
-        // =====================================================
-
         Label phoneLabel =
                 createLabel("Phone Number *");
 
@@ -226,11 +176,6 @@ public class ManualVisitorEntry {
         );
 
         styleField(phoneField);
-
-
-        // =====================================================
-        // PURPOSE
-        // =====================================================
 
         Label purposeLabel =
                 createLabel("Purpose of Visit *");
@@ -252,11 +197,6 @@ public class ManualVisitorEntry {
 
         styleComboBox(purposeBox);
 
-
-        // =====================================================
-        // FLAT
-        // =====================================================
-
         Label flatLabel =
                 createLabel("Visiting Unit / Flat *");
 
@@ -268,11 +208,6 @@ public class ManualVisitorEntry {
         );
 
         styleField(flatField);
-
-
-        // =====================================================
-        // REMARKS
-        // =====================================================
 
         Label remarksLabel =
                 createLabel("Remarks");
@@ -298,11 +233,6 @@ public class ManualVisitorEntry {
                 "-fx-text-fill: #102A43;" +
                 "-fx-prompt-text-fill: #52606D;"
         );
-
-
-        // =====================================================
-        // ADD FORM ELEMENTS
-        // =====================================================
 
         form.add(
                 nameLabel,
@@ -357,11 +287,6 @@ public class ManualVisitorEntry {
                 2, 1
         );
 
-
-        // =====================================================
-        // BUTTONS
-        // =====================================================
-
         Button clearButton =
                 new Button("Clear");
 
@@ -401,32 +326,15 @@ public class ManualVisitorEntry {
                 Pos.CENTER_RIGHT
         );
 
-
-        // =====================================================
-        // CLEAR ACTION
-        // =====================================================
-
         clearButton.setOnAction(e -> {
-
             nameField.clear();
-
             phoneField.clear();
-
             flatField.clear();
-
             remarksField.clear();
-
             purposeBox.setValue(null);
         });
 
-
-        // =====================================================
-        // SUBMIT & APPROVE ACTION
-        // =====================================================
-
         submitButton.setOnAction(e -> {
-
-            // Check required fields
 
             if (
                     nameField.getText()
@@ -458,11 +366,6 @@ public class ManualVisitorEntry {
                 return;
             }
 
-
-            // =================================================
-            // CREATE VISITOR
-            // =================================================
-
             VisitorLog.Visitor visitor =
                     new VisitorLog.Visitor(
 
@@ -491,19 +394,9 @@ public class ManualVisitorEntry {
                             "Inside"
                     );
 
-
-            // =================================================
-            // ADD VISITOR TO VISITOR LOG
-            // =================================================
-
             VisitorLog.visitors.add(
                     visitor
             );
-
-
-            // =================================================
-            // SUCCESS MESSAGE
-            // =================================================
 
             showMessage(
                     "Visitor Approved",
@@ -512,23 +405,10 @@ public class ManualVisitorEntry {
                             + " has been added successfully."
             );
 
-
-            // Clear the form
-
             clearButton.fire();
 
-
-            // Open Visitor Log
-
-            stage.setScene(
-                    VisitorLog.createScene(stage)
-            );
+            stage.setScene(VisitorLog.createScene(stage));
         });
-
-
-        // =====================================================
-        // ADD FORM TO CARD
-        // =====================================================
 
         formCard.getChildren().addAll(
                 formHeading,
@@ -536,35 +416,10 @@ public class ManualVisitorEntry {
                 buttons
         );
 
-
-        // =====================================================
-        // ADD CONTENT
-        // =====================================================
-
-        content.getChildren().addAll(
-                heading,
-                formCard
-        );
-
-
+        content.getChildren().addAll(heading,formCard);
         root.setCenter(content);
-
-
-        // =====================================================
-        // SCENE SIZE
-        // =====================================================
-
-        return new Scene(
-                root,
-                1500,
-                750
-        );
+        return new Scene(root,1500,750);
     }
-
-
-    // =====================================================
-    // CREATE LABEL
-    // =====================================================
 
     private static Label createLabel(
             String text) {
@@ -581,20 +436,9 @@ public class ManualVisitorEntry {
         return label;
     }
 
-
-    // =====================================================
-    // STYLE TEXT FIELD
-    // =====================================================
-
-    private static void styleField(
-            TextField field) {
-
-        field.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+    private static void styleField(TextField field) {
+        field.setMaxWidth(Double.MAX_VALUE);
         field.setPrefHeight(40);
-
         field.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
@@ -603,31 +447,15 @@ public class ManualVisitorEntry {
         );
     }
 
-
-    // =====================================================
-    // STYLE COMBO BOX
-    // =====================================================
-
-    private static void styleComboBox(
-            ComboBox<String> box) {
-
-        box.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+    private static void styleComboBox(ComboBox<String> box) {
+        box.setMaxWidth(Double.MAX_VALUE);
         box.setPrefHeight(60);
-
         box.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
                 "-fx-text-fill: #102A43;"
         );
     }
-
-
-    // =====================================================
-    // MESSAGE
-    // =====================================================
 
     private static void showMessage(
             String title,
@@ -639,11 +467,8 @@ public class ManualVisitorEntry {
                 );
 
         alert.setTitle(title);
-
         alert.setHeaderText(null);
-
         alert.setContentText(message);
-
         alert.showAndWait();
     }
 }

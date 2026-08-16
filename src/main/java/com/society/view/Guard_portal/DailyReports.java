@@ -19,900 +19,312 @@ import java.time.format.DateTimeFormatter;
 
 public class DailyReports {
 
-    // =====================================================
-    // CREATE SCENE
-    // =====================================================
-
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
 
+        GuardSidebar sidebar = new GuardSidebar(stage, "Daily Reports");
 
-        // =====================================================
-        // SIDEBAR
-        // =====================================================
-
-        GuardSidebar sidebar =
-                new GuardSidebar(stage, "Daily Reports");
-
-        root.setLeft(
-                sidebar.getSidebar()
-        );
-
-
-        // =====================================================
-        // MAIN CONTENT
-        // =====================================================
+        root.setLeft(sidebar.getSidebar());
 
         VBox content = new VBox();
-
-        content.setPadding(
-                new Insets(25, 40, 25, 40)
-        );
-
+        content.setPadding(new Insets(25, 40, 25, 40));
         content.setSpacing(18);
+        content.setStyle("-fx-background-color: #789098;");
 
-        content.setStyle(
-                "-fx-background-color: #789098;"
-        );
-
-
-        // =====================================================
-        // HEADING
-        // =====================================================
-
-        Label title =
-                new Label("Daily Reports");
-
+        Label title = new Label("Daily Reports");
         title.setStyle(
                 "-fx-font-size: 27px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
-        );
+                "-fx-text-fill: #102A43;");
 
-
-        Label subtitle =
-                new Label(
-                        "View today's visitor, parking and emergency activity."
-                );
-
+        Label subtitle = new Label("View today's visitor, parking and emergency activity.");
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;"
-        );
+                "-fx-text-fill: #263238;");
 
-
-        Label dateLabel =
-                new Label(
-                        "Report Date: "
-                                + LocalDate.now()
-                                .format(
-                                        DateTimeFormatter.ofPattern(
-                                                "dd MMMM yyyy"
-                                        )
-                                )
-                );
-
+        Label dateLabel = new Label("Report Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
         dateLabel.setStyle(
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
-        );
+                "-fx-text-fill: #183A2D;");
 
+        VBox heading = new VBox(4,title,subtitle,dateLabel);
 
-        VBox heading =
-                new VBox(
-                        4,
-                        title,
-                        subtitle,
-                        dateLabel
-                );
-
-
-        // =====================================================
-        // SUMMARY CARD
-        // =====================================================
-
-        VBox summaryCard =
-                new VBox();
-
-        summaryCard.setPadding(
-                new Insets(20)
-        );
-
+        VBox summaryCard = new VBox();
+        summaryCard.setPadding(new Insets(20));
         summaryCard.setSpacing(15);
-
         summaryCard.setStyle(
                 "-fx-background-color: #E8F0E8;" +
-                "-fx-background-radius: 12;"
-        );
+                "-fx-background-radius: 12;");
 
-
-        Label summaryTitle =
-                new Label("Today's Summary");
-
+        Label summaryTitle = new Label("Today's Summary");
         summaryTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
-        );
+                "-fx-text-fill: #183A2D;");
 
-
-        GridPane summaryGrid =
-                new GridPane();
-
+        GridPane summaryGrid = new GridPane();
         summaryGrid.setHgap(15);
-
         summaryGrid.setVgap(10);
 
-
-        // =====================================================
-        // VISITOR COUNTS
-        // =====================================================
-
-        int totalVisitors =
-                VisitorLog.visitors.size();
-
+        int totalVisitors = VisitorLog.visitors.size();
         int insideVisitors = 0;
-
         int checkedOutVisitors = 0;
-
         int deliveries = 0;
 
-
-        for (
-                VisitorLog.Visitor visitor :
-                VisitorLog.visitors
-        ) {
-
-            if (
-                    visitor.getStatus()
-                            .equals("Inside")
-            ) {
-
+        for (VisitorLog.Visitor visitor : VisitorLog.visitors) {
+            if (visitor.getStatus().equals("Inside")) {
                 insideVisitors++;
             }
 
-
-            if (
-                    visitor.getStatus()
-                            .equals("Checked Out")
-            ) {
-
+            if (visitor.getStatus().equals("Checked Out")) {
                 checkedOutVisitors++;
             }
 
-
-            if (
-                    visitor.getPurpose()
-                            .equals("Delivery")
-            ) {
-
+            if (visitor.getPurpose().equals("Delivery")) {
                 deliveries++;
             }
         }
 
 
-        // =====================================================
-        // PARKING COUNTS
-        // =====================================================
-
-        int totalParking =
-                Parking.parkingSpots.size();
-
+        int totalParking = Parking.parkingSpots.size();
         int occupiedParking = 0;
 
-
-        for (
-                Parking.ParkingSpot spot :
-                Parking.parkingSpots
-        ) {
-
+        for (Parking.ParkingSpot spot : Parking.parkingSpots) {
             if (spot.occupied) {
-
                 occupiedParking++;
             }
         }
 
+        int availableParking = totalParking - occupiedParking;
 
-        int availableParking =
-                totalParking -
-                        occupiedParking;
+        VBox totalCard = createSummaryCard("Total Visitors",String.valueOf(totalVisitors));
 
+        VBox insideCard = createSummaryCard("Currently Inside", String.valueOf(insideVisitors));
 
-        // =====================================================
-        // SUMMARY CARDS
-        // =====================================================
+        VBox checkedOutCard = createSummaryCard("Checked Out", String.valueOf(checkedOutVisitors));
 
-        VBox totalCard =
-                createSummaryCard(
-                        "Total Visitors",
-                        String.valueOf(
-                                totalVisitors
-                        )
-                );
-
-
-        VBox insideCard =
-                createSummaryCard(
-                        "Currently Inside",
-                        String.valueOf(
-                                insideVisitors
-                        )
-                );
-
-
-        VBox checkedOutCard =
-                createSummaryCard(
-                        "Checked Out",
-                        String.valueOf(
-                                checkedOutVisitors
-                        )
-                );
-
-
-        VBox deliveryCard =
-                createSummaryCard(
-                        "Deliveries",
-                        String.valueOf(
-                                deliveries
-                        )
-                );
+        VBox deliveryCard = createSummaryCard("Deliveries", String.valueOf(deliveries));
 
 
         VBox parkingCard =
-                createSummaryCard(
-                        "Occupied Parking",
-                        occupiedParking
-                                + " / "
-                                + totalParking
-                );
+                createSummaryCard("Occupied Parking", occupiedParking + " / " + totalParking);
 
 
-        VBox availableParkingCard =
-                createSummaryCard(
-                        "Available Parking",
-                        String.valueOf(
-                                availableParking
-                        )
-                );
+        VBox availableParkingCard = createSummaryCard("Available Parking", String.valueOf(availableParking));
 
+        summaryGrid.add(totalCard,0, 0);
+        summaryGrid.add(insideCard,1, 0);
+        summaryGrid.add(checkedOutCard,2, 0);
+        summaryGrid.add(deliveryCard,3, 0);
+        summaryGrid.add(parkingCard,4, 0);
+        summaryGrid.add(availableParkingCard,5, 0);
+        summaryCard.getChildren().addAll(summaryTitle,summaryGrid);
 
-        summaryGrid.add(
-                totalCard,
-                0, 0
-        );
-
-        summaryGrid.add(
-                insideCard,
-                1, 0
-        );
-
-        summaryGrid.add(
-                checkedOutCard,
-                2, 0
-        );
-
-        summaryGrid.add(
-                deliveryCard,
-                3, 0
-        );
-
-        summaryGrid.add(
-                parkingCard,
-                4, 0
-        );
-
-        summaryGrid.add(
-                availableParkingCard,
-                5, 0
-        );
-
-
-        summaryCard.getChildren().addAll(
-                summaryTitle,
-                summaryGrid
-        );
-
-
-        // =====================================================
-        // ACTIVITY REPORT CARD
-        // =====================================================
-
-        VBox reportCard =
-                new VBox();
-
-        reportCard.setPadding(
-                new Insets(20)
-        );
-
+        VBox reportCard = new VBox();
+        reportCard.setPadding(new Insets(20));
         reportCard.setSpacing(12);
-
         reportCard.setStyle(
                 "-fx-background-color: #E8F0E8;" +
-                "-fx-background-radius: 12;"
-        );
+                "-fx-background-radius: 12;");
 
-
-        Label reportTitle =
-                new Label("Daily Activity Report");
-
+        Label reportTitle = new Label("Daily Activity Report");
         reportTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
-        );
+                "-fx-text-fill: #183A2D;");
 
-
-        TextArea reportArea =
-                new TextArea();
-
+        TextArea reportArea = new TextArea();
         reportArea.setEditable(false);
-
         reportArea.setWrapText(true);
-
         reportArea.setPrefHeight(220);
-
-        reportArea.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
+        reportArea.setMaxWidth(Double.MAX_VALUE);
         reportArea.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;"
-        );
+                "-fx-text-fill: #102A43;");
 
+        generateReport(reportArea);
+        reportCard.getChildren().addAll(reportTitle,reportArea);
 
-        generateReport(
-                reportArea
-        );
-
-
-        reportCard.getChildren().addAll(
-                reportTitle,
-                reportArea
-        );
-
-
-        // =====================================================
-        // BUTTONS
-        // =====================================================
-
-        Button refreshButton =
-                new Button("Refresh Report");
-
+        Button refreshButton = new Button("Refresh Report");
         refreshButton.setPrefWidth(145);
-
         refreshButton.setPrefHeight(40);
-
         refreshButton.setStyle(
                 "-fx-background-color: #183A2D;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 6;"
-        );
+                "-fx-background-radius: 6;");
 
-
-        Button clearButton =
-                new Button("Clear");
-
+        Button clearButton = new Button("Clear");
         clearButton.setPrefWidth(100);
-
         clearButton.setPrefHeight(40);
-
         clearButton.setStyle(
                 "-fx-background-color: white;" +
                 "-fx-text-fill: #183A2D;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 6;"
-        );
+                "-fx-background-radius: 6;");
 
-
-        HBox buttons =
-                new HBox(
-                        12,
-                        clearButton,
-                        refreshButton
-                );
-
-        buttons.setAlignment(
-                Pos.CENTER_RIGHT
-        );
-
-
-        // =====================================================
-        // REFRESH
-        // =====================================================
+        HBox buttons = new HBox(12,clearButton,refreshButton);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
 
         refreshButton.setOnAction(e -> {
-
-            generateReport(
-                    reportArea
-            );
+            generateReport(reportArea);
 
             showMessage(
                     "Report Updated",
-                    "Daily report has been refreshed."
-            );
+                    "Daily report has been refreshed.");
         });
-
-
-        // =====================================================
-        // CLEAR
-        // =====================================================
 
         clearButton.setOnAction(e -> {
-
             reportArea.clear();
         });
-
-
-        // =====================================================
-        // ADD CONTENT
-        // =====================================================
 
         content.getChildren().addAll(
                 heading,
                 summaryCard,
                 reportCard,
-                buttons
-        );
+                buttons);
 
+        root.setCenter(content);
 
-        root.setCenter(
-                content
-        );
-
-
-        // =====================================================
-        // SCENE
-        // =====================================================
-
-        return new Scene(
-                root,
-                1500,
-                750
-        );
+        return new Scene(root,1500,750);
     }
 
 
-    // =====================================================
-    // GENERATE REPORT
-    // =====================================================
+    private static void generateReport(TextArea reportArea) {
 
-    private static void generateReport(
-            TextArea reportArea) {
-
-        StringBuilder report =
-                new StringBuilder();
-
-
-        report.append(
-                "DAILY SECURITY REPORT\n"
-        );
-
-        report.append(
-                "Date: "
-        );
-
-        report.append(
-                LocalDate.now()
-                        .format(
-                                DateTimeFormatter.ofPattern(
-                                        "dd MMMM yyyy"
-                                )
-                        )
-        );
-
-        report.append(
-                "\n\n"
-        );
-
-
-        // =====================================================
-        // VISITOR ACTIVITY
-        // =====================================================
-
-        report.append(
-                "VISITOR ACTIVITY\n"
-        );
-
-        report.append(
-                "-----------------------------\n"
-        );
-
-
-        report.append(
-                "Total Visitors: "
-        );
-
-        report.append(
-                VisitorLog.visitors.size()
-        );
-
-        report.append(
-                "\n"
-        );
-
+        StringBuilder report = new StringBuilder();
+        report.append("DAILY SECURITY REPORT\n");
+        report.append("Date: ");
+        report.append(LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
+        report.append("\n\n");
+        report.append("VISITOR ACTIVITY\n");
+        report.append("Total Visitors: ");
+        report.append(VisitorLog.visitors.size());
+        report.append("\n");
 
         int insideCount = 0;
-
         int checkedOutCount = 0;
-
         int deliveryCount = 0;
 
-
-        for (
-                VisitorLog.Visitor visitor :
-                VisitorLog.visitors
-        ) {
-
-            if (
-                    visitor.getStatus()
-                            .equals("Inside")
-            ) {
-
+        for (VisitorLog.Visitor visitor : VisitorLog.visitors) {
+            if (visitor.getStatus().equals("Inside")) {
                 insideCount++;
             }
 
-
-            if (
-                    visitor.getStatus()
-                            .equals("Checked Out")
-            ) {
-
+            if (visitor.getStatus().equals("Checked Out")) {
                 checkedOutCount++;
             }
 
-
-            if (
-                    visitor.getPurpose()
-                            .equals("Delivery")
-            ) {
-
+            if (visitor.getPurpose().equals("Delivery")) {
                 deliveryCount++;
             }
         }
 
 
-        report.append(
-                "Currently Inside: "
-        );
-
-        report.append(
-                insideCount
-        );
-
-        report.append(
-                "\n"
-        );
-
-
-        report.append(
-                "Checked Out: "
-        );
-
-        report.append(
-                checkedOutCount
-        );
-
-        report.append(
-                "\n"
-        );
+        report.append("Currently Inside: ");
+        report.append(insideCount);
+        report.append("\n");
+        report.append("Checked Out: ");
+        report.append(checkedOutCount);
+        report.append("\n");
+        report.append("Deliveries: ");
+        report.append(deliveryCount);
+        report.append("\n\n");
+        report.append("VISITOR ENTRIES\n");
 
 
-        report.append(
-                "Deliveries: "
-        );
-
-        report.append(
-                deliveryCount
-        );
-
-        report.append(
-                "\n\n"
-        );
-
-
-        // =====================================================
-        // VISITOR DETAILS
-        // =====================================================
-
-        report.append(
-                "VISITOR ENTRIES\n"
-        );
-
-        report.append(
-                "-----------------------------\n"
-        );
-
-
-        if (
-                VisitorLog.visitors.isEmpty()
-        ) {
-
-            report.append(
-                    "No visitor entries available.\n"
-            );
-
+        if (VisitorLog.visitors.isEmpty()) {
+            report.append("No visitor entries available.\n");
         } else {
-
-            for (
-                    VisitorLog.Visitor visitor :
-                    VisitorLog.visitors
-            ) {
-
-                report.append(
-                        "Name: "
-                );
-
-                report.append(
-                        visitor.getName()
-                );
-
-                report.append(
-                        "\n"
-                );
-
-
-                report.append(
-                        "Phone: "
-                );
-
-                report.append(
-                        visitor.getPhone()
-                );
-
-                report.append(
-                        "\n"
-                );
-
-
-                report.append(
-                        "Flat: "
-                );
-
-                report.append(
-                        visitor.getFlat()
-                );
-
-                report.append(
-                        "\n"
-                );
-
-
-                report.append(
-                        "Purpose: "
-                );
-
-                report.append(
-                        visitor.getPurpose()
-                );
-
-                report.append(
-                        "\n"
-                );
-
-
-                report.append(
-                        "Entry Time: "
-                );
-
-                report.append(
-                        visitor.getEntryTime()
-                );
-
-                report.append(
-                        "\n"
-                );
-
-
-                report.append(
-                        "Status: "
-                );
-
-                report.append(
-                        visitor.getStatus()
-                );
-
-                report.append(
-                        "\n"
-                );
-
-
-                report.append(
-                        "-----------------------------\n"
-                );
+            for (VisitorLog.Visitor visitor : VisitorLog.visitors) {
+                report.append("Name: ");
+                report.append(visitor.getName());
+                report.append("\n");
+                report.append("Phone: ");
+                report.append(visitor.getPhone());
+                report.append("\n");
+                report.append("Flat: ");
+                report.append(visitor.getFlat());
+                report.append("\n");
+                report.append("Purpose: ");
+                report.append(visitor.getPurpose());
+                report.append("\n");
+                report.append("Entry Time: ");
+                report.append(visitor.getEntryTime());
+                report.append("\n");
+                report.append("Status: ");
+                report.append(visitor.getStatus());
+                report.append("\n");
             }
         }
 
+        report.append("\nPARKING ACTIVITY\n");
 
-        // =====================================================
-        // PARKING ACTIVITY
-        // =====================================================
-
-        report.append(
-                "\nPARKING ACTIVITY\n"
-        );
-
-        report.append(
-                "-----------------------------\n"
-        );
-
-
-        int totalParking =
-                Parking.parkingSpots.size();
-
+        int totalParking = Parking.parkingSpots.size();
         int occupiedParking = 0;
 
-
-        for (
-                Parking.ParkingSpot spot :
-                Parking.parkingSpots
-        ) {
-
+        for (Parking.ParkingSpot spot : Parking.parkingSpots) {
             if (spot.occupied) {
-
                 occupiedParking++;
             }
         }
 
-
-        report.append(
-                "Total Parking Spots: "
-        );
-
-        report.append(
-                totalParking
-        );
-
-        report.append(
-                "\n"
-        );
+        report.append("Total Parking Spots: ");
+        report.append(totalParking);
+        report.append("\n");
+        report.append("Occupied Spots: ");
+        report.append(occupiedParking);
+        report.append("\n");
+        report.append("Available Spots: ");
+        report.append(totalParking - occupiedParking);
+        report.append("\n");
+        report.append("\nEMERGENCY STATUS\n");
 
 
-        report.append(
-                "Occupied Spots: "
-        );
-
-        report.append(
-                occupiedParking
-        );
-
-        report.append(
-                "\n"
-        );
-
-
-        report.append(
-                "Available Spots: "
-        );
-
-        report.append(
-                totalParking -
-                        occupiedParking
-        );
-
-        report.append(
-                "\n"
-        );
-
-
-        // =====================================================
-        // EMERGENCY STATUS
-        // =====================================================
-
-        report.append(
-                "\nEMERGENCY STATUS\n"
-        );
-
-        report.append(
-                "-----------------------------\n"
-        );
-
-
-        if (
-                EmergencySOS.isSOSActive()
-        ) {
-
-            report.append(
-                    "ACTIVE EMERGENCY ALERT\n"
-            );
-
-            report.append(
-                    "Immediate attention required.\n"
-            );
+        if (EmergencySOS.isSOSActive()) {
+            report.append("ACTIVE EMERGENCY ALERT\n");
+            report.append("Immediate attention required.\n");
 
         } else {
-
-            report.append(
-                    "No active emergency alerts.\n"
-            );
+            report.append("No active emergency alerts.\n");
         }
 
-
-        // =====================================================
-        // DISPLAY REPORT
-        // =====================================================
-
-        reportArea.setText(
-                report.toString()
-        );
+        reportArea.setText(report.toString());
     }
 
+    private static VBox createSummaryCard(String title, String value) {
 
-    // =====================================================
-    // SUMMARY CARD
-    // =====================================================
-
-    private static VBox createSummaryCard(
-            String title,
-            String value) {
-
-        Label titleLabel =
-                new Label(title);
-
+        Label titleLabel = new Label(title);
         titleLabel.setStyle(
                 "-fx-font-size: 11px;" +
-                "-fx-text-fill: #52606D;"
-        );
+                "-fx-text-fill: #52606D;");
 
-
-        Label valueLabel =
-                new Label(value);
-
+        Label valueLabel = new Label(value);
         valueLabel.setStyle(
                 "-fx-font-size: 22px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
-        );
+                "-fx-text-fill: #102A43;");
 
-
-        VBox card =
-                new VBox(
-                        6,
-                        titleLabel,
-                        valueLabel
-                );
-
+        VBox card = new VBox(6,titleLabel,valueLabel);
         card.setPrefWidth(175);
-
         card.setPrefHeight(65);
-
-        card.setPadding(
-                new Insets(10)
-        );
-
+        card.setPadding(new Insets(10));
         card.setStyle(
                 "-fx-background-color: #F4F7F4;" +
-                "-fx-background-radius: 8;"
-        );
-
+                "-fx-background-radius: 8;");
 
         return card;
     }
 
+    private static void showMessage(String title, String message) {
 
-    // =====================================================
-    // MESSAGE
-    // =====================================================
-
-    private static void showMessage(
-            String title,
-            String message) {
-
-        Alert alert =
-                new Alert(
-                        Alert.AlertType.INFORMATION
-                );
-
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
-
         alert.setHeaderText(null);
-
         alert.setContentText(message);
-
         alert.showAndWait();
     }
 }

@@ -18,16 +18,12 @@ public class QRScanner {
         root.setLeft(sidebar.getSidebar());
 
         VBox root1 = new VBox();
-
         root1.setSpacing(20);
         root1.setAlignment(Pos.CENTER);
-
         root1.setStyle(
-                "-fx-background-color: #789098;"
-        );
+                "-fx-background-color: #789098;");
 
         Label title = new Label("QR Scanner");
-
         title.setStyle(
                 "-fx-font-size: 28px;" +
                 "-fx-font-weight: bold;" +
@@ -39,7 +35,6 @@ public class QRScanner {
         );
 
         Button backButton = new Button("Back to Dashboard");
-
         backButton.setOnAction(e -> {
             stage.setScene(
                     GuardDashboard.createScene(stage)

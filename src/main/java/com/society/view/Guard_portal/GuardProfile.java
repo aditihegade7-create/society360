@@ -55,10 +55,6 @@ public class GuardProfile {
                 subtitle
         );
 
-        // =========================
-        // PROFILE HEADER CARD
-        // =========================
-
         HBox profileHeader = new HBox();
 
         profileHeader.setPadding(
@@ -78,9 +74,7 @@ public class GuardProfile {
 
         // Avatar
         Label avatar = new Label("R");
-
         avatar.setAlignment(Pos.CENTER);
-
         avatar.setPrefWidth(75);
         avatar.setPrefHeight(75);
 
@@ -129,10 +123,6 @@ public class GuardProfile {
                 profileInfo
         );
 
-        // =========================
-        // PERSONAL INFORMATION
-        // =========================
-
         Label personalTitle = new Label(
                 "Personal Information"
         );
@@ -175,10 +165,6 @@ public class GuardProfile {
                         idField
                 )
         );
-
-        // =========================
-        // DUTY INFORMATION
-        // =========================
 
         Label dutyTitle = new Label(
                 "Duty Information"
@@ -225,10 +211,6 @@ public class GuardProfile {
                 )
         );
 
-        // =========================
-        // TWO INFORMATION CARDS
-        // =========================
-
         VBox personalSection = new VBox(
                 10,
                 personalTitle,
@@ -249,10 +231,6 @@ public class GuardProfile {
                 personalSection,
                 dutySection
         );
-
-        // =========================
-        // BUTTONS
-        // =========================
 
         Button editButton =
                 new Button("Edit Profile");
@@ -327,10 +305,6 @@ public class GuardProfile {
                 saveButton
         );
 
-        // =========================
-        // ADD EVERYTHING
-        // =========================
-
         mainContent.getChildren().addAll(
                 heading,
                 profileHeader,
@@ -340,15 +314,7 @@ public class GuardProfile {
 
         root.setCenter(mainContent);
 
-        // =========================
-        // SCENE
-        // =========================
-
-        return new Scene(
-                root,
-                1500,
-                750
-        );
+        return new Scene(root,1500,750);
     }
 
     private static VBox createInfoCard() {
@@ -397,10 +363,6 @@ public class GuardProfile {
         return row;
     }
 
-    // ==========================================
-    // TEXT FIELD
-    // ==========================================
-
     private static TextField createField(
             String text) {
 
@@ -420,10 +382,6 @@ public class GuardProfile {
         return field;
     }
 
-    // ==========================================
-    // EDITABLE
-    // ==========================================
-
     private static void setFieldsEditable(
             boolean editable,
             TextField[] fields) {
@@ -432,10 +390,6 @@ public class GuardProfile {
             field.setEditable(editable);
         }
     }
-
-    // ==========================================
-    // MESSAGE
-    // ==========================================
 
     private static void showMessage(
             String title,
@@ -449,7 +403,6 @@ public class GuardProfile {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-
         alert.showAndWait();
     }
 }
