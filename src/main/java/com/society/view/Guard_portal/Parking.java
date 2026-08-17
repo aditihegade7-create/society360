@@ -85,7 +85,7 @@ public class Parking {
         content.setSpacing(18);
 
         content.setStyle(
-                "-fx-background-color: #789098;"
+                "-fx-background-color: #b3adad;"
         );
 
         Label title =
@@ -94,7 +94,7 @@ public class Parking {
         title.setStyle(
                 "-fx-font-size: 27px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #09090a;"
         );
 
 
@@ -105,7 +105,7 @@ public class Parking {
 
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;"
+                "-fx-text-fill: #070808;"
         );
 
 
@@ -140,7 +140,7 @@ public class Parking {
         parkingTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #0c0c0c;"
         );
 
 
@@ -151,19 +151,13 @@ public class Parking {
 
         instruction.setStyle(
                 "-fx-font-size: 12px;" +
-                "-fx-text-fill: #52606D;"
+                "-fx-text-fill: #080808;"
         );
 
-        GridPane parkingGrid =
-                new GridPane();
-
+        GridPane parkingGrid =new GridPane();
         parkingGrid.setHgap(12);
         parkingGrid.setVgap(12);
-
-        parkingGrid.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
+        parkingGrid.setAlignment(Pos.CENTER_LEFT);
 
         for (int i = 0; i < parkingSpots.size(); i++) {
 
@@ -195,9 +189,7 @@ public class Parking {
         entryCard.setPadding(
                 new Insets(20)
         );
-
         entryCard.setSpacing(15);
-
         entryCard.setStyle(
                 "-fx-background-color: #E8F0E8;" +
                 "-fx-background-radius: 12;"
@@ -209,7 +201,7 @@ public class Parking {
         entryTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #0a0a0a;"
         );
 
         Label vehicleLabel =
@@ -264,7 +256,7 @@ public class Parking {
         selectedSpot.setStyle(
                 "-fx-font-size: 14px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #080808;"
         );
 
         GridPane entryGrid =
@@ -325,7 +317,7 @@ public class Parking {
         findSpotButton.setPrefHeight(40);
 
         findSpotButton.setStyle(
-                "-fx-background-color: #315B45;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -338,7 +330,7 @@ public class Parking {
         parkButton.setPrefHeight(40);
 
         parkButton.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -352,7 +344,7 @@ public class Parking {
 
         clearButton.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-text-fill: #183A2D;" +
+                "-fx-text-fill: #0e0f0f;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
         );
@@ -620,7 +612,7 @@ public class Parking {
         label.setPadding(new Insets(10));
         label.setStyle(
                 "-fx-background-color: #E8F0E8;" +
-                "-fx-text-fill: #183A2D;" +
+                "-fx-text-fill: #080808;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 7;"
         );
@@ -632,7 +624,7 @@ public class Parking {
         label.setStyle(
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #090a0a;"
         );
         return label;
     }
@@ -643,7 +635,7 @@ public class Parking {
         field.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;" +
+                "-fx-text-fill: #050505;" +
                 "-fx-prompt-text-fill: #52606D;"
         );
     }
@@ -654,7 +646,7 @@ public class Parking {
         box.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #090909;"
         );
     }
 

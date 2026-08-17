@@ -30,6 +30,8 @@ public class EmergencySOS {
     private static String emergencyDetails = "";
     private static String emergencyTime = "";
 
+    private static Scene emergencyScene;
+
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -42,18 +44,18 @@ public class EmergencySOS {
         content.setPadding(new Insets(25, 40, 25, 40));
         content.setSpacing(18);
         content.setStyle(
-                "-fx-background-color: #789098;");
+                "-fx-background-color: #b3adad;");
 
         Label title = new Label("Emergency SOS");
         title.setStyle(
                 "-fx-font-size: 27px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;");
+                "-fx-text-fill: #040404;");
 
         Label subtitle = new Label("Send an emergency alert to residents and the secretary.");
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;");
+                "-fx-text-fill: #050606;");
 
         VBox heading =new VBox(4,title,subtitle);
 
@@ -117,7 +119,7 @@ public class EmergencySOS {
         detailsTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;");
+                "-fx-text-fill: #060606;");
 
         Label detailsSubtitle = new Label("These details will be included in the emergency alert.");
         detailsSubtitle.setStyle(
@@ -176,7 +178,7 @@ public class EmergencySOS {
         informationField.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;" +
+                "-fx-text-fill: #080808;" +
                 "-fx-prompt-text-fill: #52606D;");
 
         form.add(informationLabel,0, 2);
@@ -190,7 +192,7 @@ public class EmergencySOS {
 
         clearButton.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-text-fill: #183A2D;" +
+                "-fx-text-fill: #080808;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
         );
@@ -202,7 +204,7 @@ public class EmergencySOS {
         resolveButton.setPrefHeight(40);
 
         resolveButton.setStyle(
-                "-fx-background-color: #315B45;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -368,10 +370,10 @@ public class EmergencySOS {
         });
 
         content.getChildren().addAll(heading,alertCard,detailsCard);
-
         root.setCenter(content);
 
-        return new Scene(root,1500,750);
+        emergencyScene = new Scene(root,1500,750);
+        return emergencyScene;
     }
 
 
@@ -417,7 +419,7 @@ public class EmergencySOS {
         if (sosActive) {
 
             statusLabel.setText(
-                    "● ALERT ACTIVE"
+                    " ALERT ACTIVE "
             );
 
             statusLabel.setStyle(
@@ -429,7 +431,7 @@ public class EmergencySOS {
         } else {
 
             statusLabel.setText(
-                    "● No active emergency"
+                    " No active emergency "
             );
 
             statusLabel.setStyle(
@@ -449,7 +451,7 @@ public class EmergencySOS {
         label.setStyle(
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #050505;"
         );
 
         return label;
@@ -468,7 +470,7 @@ public class EmergencySOS {
         field.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;" +
+                "-fx-text-fill: #040505;" +
                 "-fx-prompt-text-fill: #52606D;"
         );
     }
@@ -486,7 +488,7 @@ public class EmergencySOS {
         box.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #070707;"
         );
     }
 

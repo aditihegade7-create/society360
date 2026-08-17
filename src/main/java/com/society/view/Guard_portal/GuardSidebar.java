@@ -25,10 +25,7 @@ public class GuardSidebar {
         sidebar.setPadding(new Insets(20));
         sidebar.setSpacing(14);
         sidebar.setAlignment(Pos.TOP_LEFT);
-        sidebar.setStyle(
-                "-fx-background-color: #0B4F4A;"
-        );
-
+        sidebar.setStyle("-fx-background-color: #4a4b4b;");
 
         Label logo = new Label("Society360");
         logo.setLineSpacing(10);
@@ -70,9 +67,7 @@ public class GuardSidebar {
         );
 
         dashboardButton.setOnAction(e ->
-                stage.setScene(
-                        GuardDashboard.createScene(stage)
-                )
+                stage.setScene(GuardDashboard.createScene(stage))
         );
 
         visitorButton.setOnAction(e ->
@@ -147,7 +142,7 @@ public class GuardSidebar {
         button.setPrefHeight(40);
 
         button.setStyle(
-                "-fx-background-color: #0B4F4A;" +
+                "-fx-background-color: #434141;" +
                 "-fx-font-weight: bold;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 14px;" +
@@ -212,7 +207,7 @@ public class GuardSidebar {
         if (activeButton != null) {
 
             activeButton.setStyle(
-                    "-fx-background-color: #073936;" +
+                    "-fx-background-color: #434141;" +
                     "-fx-font-weight: bold;" +
                     "-fx-text-fill: white;" +
                     "-fx-font-size: 14px;" +

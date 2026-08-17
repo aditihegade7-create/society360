@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 
 public class GuardProfile {
 
+        private static Scene profileScene;
+
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -29,7 +31,7 @@ public class GuardProfile {
         mainContent.setSpacing(20);
 
         mainContent.setStyle(
-                "-fx-background-color: #789098;"
+                "-fx-background-color: #b3adad;"
         );
 
         Label title = new Label("My Profile");
@@ -37,7 +39,7 @@ public class GuardProfile {
         title.setStyle(
                 "-fx-font-size: 27px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #090909;"
         );
 
         Label subtitle = new Label(
@@ -46,7 +48,7 @@ public class GuardProfile {
 
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;"
+                "-fx-text-fill: #070707;"
         );
 
         VBox heading = new VBox(
@@ -79,7 +81,7 @@ public class GuardProfile {
         avatar.setPrefHeight(75);
 
         avatar.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #3a3218;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 30px;" +
                 "-fx-font-weight: bold;" +
@@ -92,7 +94,7 @@ public class GuardProfile {
         name.setStyle(
                 "-fx-font-size: 22px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #030303;"
         );
 
         Label guardId = new Label(
@@ -130,7 +132,7 @@ public class GuardProfile {
         personalTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #060606;"
         );
 
         TextField nameField =
@@ -173,16 +175,14 @@ public class GuardProfile {
         dutyTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #050505;"
         );
 
         TextField gateField =
                 createField("Main Gate");
 
         TextField shiftField =
-                createField(
-                        "Shift A • 08:00 AM - 04:00 PM"
-                );
+                createField("Shift A  (08:00 AM - 04:00 PM)");
 
         TextField joiningField =
                 createField("15 January 2025");
@@ -239,7 +239,7 @@ public class GuardProfile {
         editButton.setPrefHeight(40);
 
         editButton.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"+
@@ -253,7 +253,7 @@ public class GuardProfile {
         saveButton.setPrefHeight(40);
 
         saveButton.setStyle(
-                "-fx-background-color: #315F4C;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -313,8 +313,8 @@ public class GuardProfile {
         );
 
         root.setCenter(mainContent);
-
-        return new Scene(root,1500,750);
+        profileScene = new Scene(root,1500,750);
+        return profileScene;
     }
 
     private static VBox createInfoCard() {
@@ -347,7 +347,7 @@ public class GuardProfile {
         label.setStyle(
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #070707;"
         );
 
         HBox row = new HBox();
@@ -376,7 +376,7 @@ public class GuardProfile {
                 "-fx-background-radius: 6;" +
                 "-fx-border-color: #B7C7BE;" +
                 "-fx-border-radius: 6;" +
-                "-fx-text-fill: #263238;"
+                "-fx-text-fill: #060606;"
         );
 
         return field;

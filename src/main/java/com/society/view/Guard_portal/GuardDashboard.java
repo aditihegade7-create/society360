@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 
 public class GuardDashboard {
 
+        private static Scene guardScene;
+
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -245,8 +247,8 @@ public class GuardDashboard {
             );
 
             button.setStyle(
-                    "-fx-background-color: #E8F0E8;" +
-                    "-fx-text-fill: #183A2D;" +
+                    "-fx-background-color: #434141;" +
+                    "-fx-text-fill: #E8F0E8;" +
                     "-fx-font-size: 14px;" +
                     "-fx-font-weight: bold;" +
                     "-fx-background-radius: 10;"
@@ -256,8 +258,8 @@ public class GuardDashboard {
             button.setOnMouseEntered(e -> {
 
                 button.setStyle(
-                        "-fx-background-color: #DCE9DF;" +
-                        "-fx-text-fill: #183A2D;" +
+                        "-fx-background-color: #434141;" +
+                        "-fx-text-fill: #E8F0E8;" +
                         "-fx-font-size: 14px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-background-radius: 10;"
@@ -269,8 +271,8 @@ public class GuardDashboard {
             button.setOnMouseExited(e -> {
 
                 button.setStyle(
-                        "-fx-background-color: #E8F0E8;" +
-                        "-fx-text-fill: #183A2D;" +
+                        "-fx-background-color: #434141;" +
+                        "-fx-text-fill: #E8F0E8;" +
                         "-fx-font-size: 14px;" +
                         "-fx-font-weight: bold;" +
                         "-fx-background-radius: 10;"
@@ -483,7 +485,7 @@ public class GuardDashboard {
         noticeText.setStyle(
                 "-fx-font-size: 14px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #080F0C;"
+                "-fx-text-fill: #050605;"
         );
 
 
@@ -517,7 +519,7 @@ public class GuardDashboard {
         );
 
         viewNoticeButton.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
@@ -568,10 +570,11 @@ public class GuardDashboard {
         mainContent.getChildren().add(noticeBar);
 
         Scene scene = new Scene(root,1500,750);
+        guardScene = scene;
         stage.setTitle("Society360 - Guard Dashboard");
         stage.setScene(scene);
         stage.show();
-        return scene;
+        return guardScene;
     }
 
 
@@ -607,7 +610,7 @@ public class GuardDashboard {
         titleLabel.setStyle(
                 "-fx-font-size: 13px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #0b0d0c;"
         );
 
 
@@ -689,7 +692,6 @@ public class GuardDashboard {
                 spacer,
                 valueLabel
         );
-
 
         return row;
     }

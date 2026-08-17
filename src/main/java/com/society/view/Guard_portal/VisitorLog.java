@@ -71,18 +71,18 @@ public class VisitorLog {
         VBox mainContent = new VBox();
         mainContent.setPadding(new Insets(25, 35, 25, 35));
         mainContent.setSpacing(18);
-        mainContent.setStyle("-fx-background-color: #789098;");
+        mainContent.setStyle("-fx-background-color: #b3adad;");
 
         Label title =new Label("Visitor Log");
         title.setStyle(
                 "-fx-font-size: 27px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;");
+                "-fx-text-fill: #080808;");
 
         Label subtitle = new Label("Monitor visitor entries and exits at the society gate");
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;");
+                "-fx-text-fill: #050505;");
 
         VBox heading = new VBox(4,title,subtitle);
 
@@ -123,7 +123,7 @@ public class VisitorLog {
         searchTitle.setStyle(
                 "-fx-font-size: 14px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;");
+                "-fx-text-fill: #070707;");
 
         TextField searchField = new TextField();
         searchField.setPromptText("Name, phone number or flat number...");
@@ -137,7 +137,7 @@ public class VisitorLog {
         searchButton.setPrefWidth(100);
         searchButton.setPrefHeight(38);
         searchButton.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
@@ -146,8 +146,8 @@ public class VisitorLog {
         refreshButton.setPrefWidth(100);
         refreshButton.setPrefHeight(38);
         refreshButton.setStyle(
-                "-fx-background-color: #E8F0E8;" +
-                "-fx-text-fill: #183A2D;" +
+                "-fx-background-color: #fefdfd;" +
+                "-fx-text-fill: #050505;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
 
@@ -217,7 +217,7 @@ public class VisitorLog {
         addVisitorButton.setPrefWidth(140);
         addVisitorButton.setPrefHeight(40);
         addVisitorButton.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
@@ -231,7 +231,7 @@ public class VisitorLog {
         checkOutButton.setPrefHeight(40);
         checkOutButton.setStyle(
                 "-fx-background-color: #E8F0E8;" +
-                "-fx-text-fill: #183A2D;" +
+                "-fx-text-fill: #060606;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
         checkOutButton.setOnAction(e -> {
@@ -377,13 +377,13 @@ public class VisitorLog {
         Label titleLabel = new Label(title);
         titleLabel.setStyle(
                 "-fx-font-size: 12px;" +
-                "-fx-text-fill: #52606D;"
+                "-fx-text-fill: #080808;"
         );
 
         value.setStyle(
                 "-fx-font-size: 24px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #080808;"
         );
 
         VBox card = new VBox(8,titleLabel,value);

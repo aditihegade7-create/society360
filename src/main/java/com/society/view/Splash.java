@@ -10,7 +10,6 @@ public class Splash extends Application{
     @Override
     public void start(Stage stage) throws Exception {
 
-
     stage.setScene(GuardDashboard.createScene(stage));    
     stage.show();
 
