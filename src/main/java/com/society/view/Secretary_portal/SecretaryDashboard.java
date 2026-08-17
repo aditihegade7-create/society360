@@ -3,6 +3,8 @@ package com.society.view.Secretary_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,21 +14,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-
-
 public class SecretaryDashboard {
- private Scene SecretaryDash;
-    
+    private Scene SecretaryDash;
+
     public Scene createScene(Stage stage) {
-        
-        
+
         VBox sidebar = new VBox();
         sidebar.setPrefWidth(280);
         sidebar.setPrefHeight(750);
-        sidebar.setStyle("-fx-background-color:#0B4F4A");
+        sidebar.setStyle("-fx-background-color:#4e4b4b");
         sidebar.setSpacing(14);
         sidebar.setPadding(new Insets(20));
 
@@ -38,138 +36,145 @@ public class SecretaryDashboard {
         Label panel = new Label("Secretary Panel");
         panel.setStyle("-fx-text-fill:lightgray;-fx-font-size:14px;-fx-padding:5px");
 
-
-        //sidebar menu buttons
+        // sidebar menu buttons
 
         Button dashboardBtn = new Button("Dashboard");
-        dashboardBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
-
+        dashboardBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
 
         Button residentsBtn = new Button("Manage Residents");
-        residentsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        residentsBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         residentsBtn.setOnAction(e -> {
-           ManageResidents residents = new ManageResidents();
-          stage.setScene(residents.createScene(stage));
-           
+            ManageResidents residents = new ManageResidents();
+            stage.setScene(residents.createScene(stage));
+
         });
-           
+
         Button ownersBtn = new Button("Manage Owners");
-        ownersBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        ownersBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         ownersBtn.setOnAction(e -> {
-           ManageOwner owners = new ManageOwner();
-          stage.setScene(owners.createScene(stage));
-           
+            ManageOwner owners = new ManageOwner();
+            stage.setScene(owners.createScene(stage));
+
         });
 
         Button guardsBtn = new Button("Manage Guards");
-        guardsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        guardsBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         guardsBtn.setOnAction(e -> {
-           ManageGuard guards = new ManageGuard();
-          stage.setScene(guards.createScene(stage));
-           
+            ManageGuard guards = new ManageGuard();
+            stage.setScene(guards.createScene(stage));
+
         });
-        
+
         Button noticesBtn = new Button("Manage Notices");
-        noticesBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        noticesBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         noticesBtn.setOnAction(e -> {
-           ManageNotices notices = new ManageNotices();
-          stage.setScene(notices.createScene(stage));
-           
+            ManageNotices notices = new ManageNotices();
+            stage.setScene(notices.createScene(stage));
+
         });
-        
+
         Button complaintsBtn = new Button("Manage Complaints");
-        complaintsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        complaintsBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         complaintsBtn.setOnAction(e -> {
-           ManageComplaints complaints = new ManageComplaints();
-          stage.setScene(complaints.createScene(stage));
-           
+            ManageComplaints complaints = new ManageComplaints();
+            stage.setScene(complaints.createScene(stage));
+
         });
-        
+
         Button maintenanceBtn = new Button("Manage Maintenance");
-        maintenanceBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        maintenanceBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         maintenanceBtn.setOnAction(e -> {
-           ManageMaintenance maintenance = new ManageMaintenance();
-          stage.setScene(maintenance.createScene(stage));
-           
+            ManageMaintenance maintenance = new ManageMaintenance();
+            stage.setScene(maintenance.createScene(stage));
+
         });
-        
+
         Button paymentsBtn = new Button("Manage Payments");
-        paymentsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        paymentsBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         paymentsBtn.setOnAction(e -> {
-           ManagePayment payment = new ManagePayment();
-          stage.setScene(payment.createScene(stage));
-           
+            ManagePayment payment = new ManagePayment();
+            stage.setScene(payment.createScene(stage));
+
         });
 
         Button sosBtn = new Button("View SOS Alerts");
-        sosBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        sosBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         sosBtn.setOnAction(e -> {
-           ViewSos sos = new ViewSos();
-          stage.setScene(sos.createScene(stage));
-           
+            ViewSos sos = new ViewSos();
+            stage.setScene(sos.createScene(stage));
+
         });
 
         Button eventsBtn = new Button("Manage Events");
-        eventsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        eventsBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         eventsBtn.setOnAction(e -> {
-           ManageEvents events = new ManageEvents();
-          stage.setScene(events.createScene(stage));
-           
+            ManageEvents events = new ManageEvents();
+            stage.setScene(events.createScene(stage));
+
         });
 
         Button reportsBtn = new Button("Generate Reports");
-        reportsBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        reportsBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         reportsBtn.setOnAction(e -> {
-           GenerateReports report = new GenerateReports();
-          stage.setScene(report.createScene(stage));
-           
+            GenerateReports report = new GenerateReports();
+            stage.setScene(report.createScene(stage));
+
         });
 
         Button profileBtn = new Button("Profile");
-        profileBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        profileBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         profileBtn.setOnAction(e -> {
-           Profile profile = new Profile();
-          stage.setScene(profile.createScene(stage));
-           
+            Profile profile = new Profile();
+            stage.setScene(profile.createScene(stage));
+
         });
 
         Button logoutBtn = new Button("Logout");
-        logoutBtn.setStyle("-fx-background-color:#0B4F4A;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+        logoutBtn.setStyle(
+                "-fx-background-color:#434141;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         logoutBtn.setOnAction(e -> {
-           Logout logout = new Logout();
-          stage.setScene(logout.createScene(stage));
-           
+            Logout logout = new Logout();
+            stage.setScene(logout.createScene(stage));
+
         });
 
-
         sidebar.getChildren().addAll(logo,
-                                    panel,
-                                    dashboardBtn,
-                                    residentsBtn,
-                                    ownersBtn,
-                                    guardsBtn,
-                                    noticesBtn,
-                                    complaintsBtn,
-                                    maintenanceBtn,
-                                    paymentsBtn,
-                                    sosBtn,
-                                    eventsBtn,
-                                    reportsBtn,
-                                    profileBtn,
-                                    logoutBtn
-        );
-     
-
+                panel,
+                dashboardBtn,
+                residentsBtn,
+                ownersBtn,
+                guardsBtn,
+                noticesBtn,
+                complaintsBtn,
+                maintenanceBtn,
+                paymentsBtn,
+                sosBtn,
+                eventsBtn,
+                reportsBtn,
+                profileBtn,
+                logoutBtn);
 
         HBox header = new HBox();
         header.setPrefWidth(900);
         header.setPrefHeight(80);
         header.setPadding(new Insets(20));
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color:#789098");
+        header.setStyle("-fx-background-color:#b3adad;");
 
         Label greeting = new Label("Good Morning, Secretary 👋");
-        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#123C36;");
+        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#434141;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -183,22 +188,19 @@ public class SecretaryDashboard {
         LocalDate today = LocalDate.now();
 
         day.setText(today.format(
-            DateTimeFormatter.ofPattern("EEEE")
-        ));
+                DateTimeFormatter.ofPattern("EEEE")));
 
         date.setText(today.format(
-            DateTimeFormatter.ofPattern("dd MMMM yyyy")
-        ));
-         
+                DateTimeFormatter.ofPattern("dd MMMM yyyy")));
+
         VBox vb1 = new VBox();
-        vb1.getChildren().addAll(day,date);
+        vb1.getChildren().addAll(day, date);
 
         header.getChildren().addAll(greeting,
-                                 spacer,
-                                 notification,
-                                 vb1
-        );
-        
+                spacer,
+                notification,
+                vb1);
+
         // cards
 
         VBox residentsCard = new VBox();
@@ -207,7 +209,7 @@ public class SecretaryDashboard {
         residentsCard.setPrefHeight(130);
         residentsCard.setPadding(new Insets(20));
 
-        //residents cards
+        // residents cards
         residentsCard.setStyle("-fx-background-color: white;-fx-background-radius: 10;");
 
         Label residentsTitle = new Label("Residents");
@@ -220,12 +222,11 @@ public class SecretaryDashboard {
         residentText.setStyle("-fx-font-size: 13px;-fx-text-fill: #777777;");
 
         residentsCard.getChildren().addAll(
-            residentsTitle,
-            residentsCount,
-            residentText
-        );
+                residentsTitle,
+                residentsCount,
+                residentText);
 
-        //owner cards
+        // owner cards
 
         VBox ownersCard = new VBox();
         ownersCard.setPrefWidth(200);
@@ -243,12 +244,11 @@ public class SecretaryDashboard {
         ownerText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
 
         ownersCard.getChildren().addAll(
-            ownersTitle,
-            ownersCount,
-            ownerText
-        );
+                ownersTitle,
+                ownersCount,
+                ownerText);
 
-        //guard card
+        // guard card
 
         VBox guardsCard = new VBox();
         guardsCard.setPrefWidth(200);
@@ -266,13 +266,11 @@ public class SecretaryDashboard {
         guardText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
 
         guardsCard.getChildren().addAll(
-            guardsTitle,
-            guardsCount,
-            guardText
-        );
+                guardsTitle,
+                guardsCount,
+                guardText);
 
-
-        //complaint card
+        // complaint card
 
         VBox complaintsCard = new VBox();
         complaintsCard.setPrefWidth(200);
@@ -290,12 +288,11 @@ public class SecretaryDashboard {
         complaintText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
 
         complaintsCard.getChildren().addAll(
-            complaintsTitle,
-            complaintsCount,
-            complaintText
-        );
+                complaintsTitle,
+                complaintsCount,
+                complaintText);
 
-        //card - maintenance
+        // card - maintenance
 
         VBox maintenanceCard = new VBox();
 
@@ -315,26 +312,25 @@ public class SecretaryDashboard {
         maintenanceText.setStyle("-fx-font-size: 13px; -fx-text-fill: #777777;");
 
         maintenanceCard.getChildren().addAll(
-            maintenanceTitle,
-            maintenanceAmount,
-            maintenanceText
-        );
+                maintenanceTitle,
+                maintenanceAmount,
+                maintenanceText);
 
-        HBox cardsRow = new HBox(50,residentsCard,ownersCard,guardsCard,complaintsCard,maintenanceCard);
-        cardsRow.setStyle("-fx-background-color: #789098");
+        HBox cardsRow = new HBox(50, residentsCard, ownersCard, guardsCard, complaintsCard, maintenanceCard);
+        cardsRow.setStyle("-fx-background-color: #b3adad;");
         cardsRow.setSpacing(30);
         cardsRow.setPadding(new Insets(20));
 
+        // quick Actions
 
-        //quick Actions
-
-         VBox quickActions = new VBox();
+        VBox quickActions = new VBox();
         quickActions.setPrefWidth(350);
         quickActions.setMinWidth(350);
         quickActions.setPrefHeight(280);
         quickActions.setSpacing(10);
         quickActions.setPadding(new Insets(20));
-        quickActions.setStyle("-fx-background-color:white;-fx-border-color:#E5E7EB;-fx-border-radius:10;-fx-background-radius:10");
+        quickActions.setStyle(
+                "-fx-background-color:white;-fx-border-color:#E5E7EB;-fx-border-radius:10;-fx-background-radius:10");
 
         Label quickTitle = new Label("Quick Actions");
         quickTitle.setStyle("-fx-font-size: 17px;-fx-font-weight: bold;-fx-text-fill: #183B56;");
@@ -352,20 +348,20 @@ public class SecretaryDashboard {
         viewPayments.setStyle("-fx-font-size: 14px;-fx-text-fill: #183B56;-fx-padding: 12px;");
 
         quickActions.getChildren().addAll(
-            quickTitle,
-            addResident,
-            addNotice,
-            viewPayments
-        );
+                quickTitle,
+                addResident,
+                addNotice,
+                viewPayments);
 
-        //Todays overview
+        // Todays overview
 
         VBox todayOverview = new VBox();
         todayOverview.setPrefWidth(350);
         todayOverview.setPrefHeight(480);
         todayOverview.setSpacing(10);
         todayOverview.setPadding(new Insets(18));
-        todayOverview.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
+        todayOverview.setStyle(
+                "-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
 
         Label todayTitle = new Label("Today's Overview");
         todayTitle.setStyle("-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #183B56;");
@@ -389,22 +385,23 @@ public class SecretaryDashboard {
         viewAllreports.setStyle("-fx-font-size: 13px;-fx-font-weight: bold;-fx-text-fill: #4169A1;-fx-padding: 10px;");
 
         todayOverview.getChildren().addAll(todayTitle,
-                                        newResidents,
-                                        dailyVisitors,
-                                        complaintsReceived,
-                                        maintenanceRequests,
-                                        paymentsReceived,
-                                        viewAllreports
-                                            
+                newResidents,
+                dailyVisitors,
+                complaintsReceived,
+                maintenanceRequests,
+                paymentsReceived,
+                viewAllreports
+
         );
 
-        //upcoming Events
+        // upcoming Events
         VBox upcomingEvents = new VBox();
         upcomingEvents.setPrefWidth(350);
         upcomingEvents.setPrefHeight(480);
         upcomingEvents.setSpacing(12);
         upcomingEvents.setPadding(new Insets(18));
-        upcomingEvents.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
+        upcomingEvents.setStyle(
+                "-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
 
         Label eventsTitle = new Label("Upcoming Events");
         eventsTitle.setStyle("-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #183B56;");
@@ -418,17 +415,13 @@ public class SecretaryDashboard {
         Label viewAllEvents = new Label("View All Events");
         viewAllEvents.setStyle("-fx-font-size: 13px;-fx-font-weight: bold;-fx-text-fill: #4169A1;-fx-padding: 10px;");
 
-
         upcomingEvents.getChildren().addAll(
-                       eventsTitle,
-                       event1,
-                       event2,
-                       viewAllEvents           
-        );
+                eventsTitle,
+                event1,
+                event2,
+                viewAllEvents);
 
-
-
-        //sos Alerts
+        // sos Alerts
 
         VBox recentSOS = new VBox();
         recentSOS.setPrefWidth(280);
@@ -436,7 +429,8 @@ public class SecretaryDashboard {
         recentSOS.setPrefHeight(180);
         recentSOS.setSpacing(8);
         recentSOS.setPadding(new Insets(18));
-        recentSOS.setStyle("-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
+        recentSOS.setStyle(
+                "-fx-background-color: white;-fx-border-color: #E5E7EB;-fx-border-radius: 10;-fx-background-radius: 10;");
 
         Label sosTitle = new Label("Recent SOS Alerts");
         sosTitle.setStyle("-fx-font-size: 17px;-fx-font-weight: bold;-fx-text-fill: #D9534F;");
@@ -444,64 +438,58 @@ public class SecretaryDashboard {
         Label viewAll = new Label("View All");
         viewAll.setStyle("-fx-font-size: 13px;-fx-text-fill: #4169A1;");
 
-
-         HBox sosHeader = new HBox(10);
+        HBox sosHeader = new HBox(10);
         sosHeader.setSpacing(120);
         sosHeader.getChildren().addAll(
-            sosTitle,
-            viewAll
-        );
-
+                sosTitle,
+                viewAll);
 
         Label sosAlert = new Label(
-            "🔴   Block B, 402 (Medical)            2 min ago"
-        );
+                "🔴   Block B, 402 (Medical)            2 min ago");
         sosAlert.setStyle("-fx-font-size: 13px;-fx-text-fill: #555555;-fx-padding: 8px;");
 
         recentSOS.getChildren().addAll(
-            sosHeader,
-            sosAlert
-        );
-
+                sosHeader,
+                sosAlert);
 
         VBox leftColumn = new VBox(20);
-        leftColumn.getChildren().addAll(quickActions,recentSOS);
-        HBox hb1 = new HBox(50,leftColumn,todayOverview,upcomingEvents);
-        hb1.setStyle("-fx-background-color: #789098");
+        leftColumn.getChildren().addAll(quickActions, recentSOS);
+        HBox hb1 = new HBox(50, leftColumn, todayOverview, upcomingEvents);
+        hb1.setStyle("-fx-background-color: #b3adad;");
 
-        //main content Area
+        // main content Area
         VBox mainContent = new VBox();
         mainContent.setPrefWidth(920);
         mainContent.setPrefHeight(700);
         mainContent.setMaxWidth(Double.MAX_VALUE);
-        mainContent.setStyle("-fx-background-color:#789098");
+        mainContent.setStyle("-fx-background-color:#b3adad;");
         mainContent.getChildren().addAll(header,
-                                         cardsRow,
-                                         hb1
-        );
+                cardsRow,
+                hb1);
 
+        // add sidebar and main content to body
+        // body Dashboard
 
-        //add sidebar and main content to body
-        //body Dashboard
-
-       VBox.setVgrow(mainContent, Priority.ALWAYS);
+        VBox.setVgrow(mainContent, Priority.ALWAYS);
         HBox.setHgrow(mainContent, Priority.ALWAYS);
 
         HBox body = new HBox(20);
-        body.getChildren().addAll(sidebar,mainContent);
+        body.getChildren().addAll(sidebar, mainContent);
 
-
-         // main layout
+        // main layout
         VBox mainvb = new VBox();
-        mainvb.setStyle("-fx-background-color:#789098");
+        mainvb.setStyle("-fx-background-color:#b3adad;");
         mainvb.getChildren().add(body);
         VBox.setVgrow(body, Priority.ALWAYS);
 
-        Scene scene = new Scene(mainvb,1500,750);
-        scene.setFill(Color.web("#789098"));
-         SecretaryDash = scene;
-        
+        // Scene scene = new Scene(mainvb, 1500, 750);
+        Scene scene = new Scene(
+                mainvb,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
+        SecretaryDash = scene;
+
         return SecretaryDash;
     }
-    
+
 }
