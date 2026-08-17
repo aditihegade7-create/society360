@@ -21,13 +21,13 @@ public class QRScanner {
         root1.setSpacing(20);
         root1.setAlignment(Pos.CENTER);
         root1.setStyle(
-                "-fx-background-color: #789098;");
+                "-fx-background-color: #b3adad;");
 
         Label title = new Label("QR Scanner");
         title.setStyle(
                 "-fx-font-size: 28px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #090a0a;"
         );
 
         Label message = new Label(

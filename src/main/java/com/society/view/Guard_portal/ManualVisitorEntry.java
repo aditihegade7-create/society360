@@ -21,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 
 public class ManualVisitorEntry {
 
+        private static Scene visitorScene;
+
     public static Scene createScene(Stage stage) {
         BorderPane root = new BorderPane();
 
@@ -41,7 +43,7 @@ public class ManualVisitorEntry {
        
 
         content.setStyle(
-                "-fx-background-color: #789098;"
+                "-fx-background-color: #b3adad;"
         );
 
         Label title =
@@ -50,7 +52,7 @@ public class ManualVisitorEntry {
         title.setStyle(
                 "-fx-font-size: 27px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #070707;"
         );
 
 
@@ -61,7 +63,7 @@ public class ManualVisitorEntry {
 
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;"
+                "-fx-text-fill: #080808;"
         );
 
 
@@ -96,7 +98,7 @@ public class ManualVisitorEntry {
         formTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #090909;"
         );
 
 
@@ -105,7 +107,7 @@ public class ManualVisitorEntry {
 
         requiredNote.setStyle(
                 "-fx-font-size: 11px;" +
-                "-fx-text-fill: #52606D;"
+                "-fx-text-fill: #c90909;"
         );
 
 
@@ -230,7 +232,7 @@ public class ManualVisitorEntry {
         remarksField.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;" +
+                "-fx-text-fill: #090909;" +
                 "-fx-prompt-text-fill: #52606D;"
         );
 
@@ -295,7 +297,7 @@ public class ManualVisitorEntry {
 
         clearButton.setStyle(
                 "-fx-background-color: #F4F7F4;" +
-                "-fx-text-fill: #183A2D;" +
+                "-fx-text-fill: #070707;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
         );
@@ -308,7 +310,7 @@ public class ManualVisitorEntry {
         submitButton.setPrefHeight(40);
 
         submitButton.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -418,7 +420,8 @@ public class ManualVisitorEntry {
 
         content.getChildren().addAll(heading,formCard);
         root.setCenter(content);
-        return new Scene(root,1500,750);
+        visitorScene = new Scene(root,1500,750);
+        return visitorScene;
     }
 
     private static Label createLabel(
@@ -430,7 +433,7 @@ public class ManualVisitorEntry {
         label.setStyle(
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;"
+                "-fx-text-fill: #080808;"
         );
 
         return label;
@@ -442,7 +445,7 @@ public class ManualVisitorEntry {
         field.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;" +
+                "-fx-text-fill: #060606;" +
                 "-fx-prompt-text-fill: #52606D;"
         );
     }
@@ -453,7 +456,7 @@ public class ManualVisitorEntry {
         box.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-text-fill: #080808;"
         );
     }
 

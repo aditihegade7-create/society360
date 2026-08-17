@@ -19,6 +19,8 @@ import java.time.format.DateTimeFormatter;
 
 public class DailyReports {
 
+    private static Scene dailyReportScene;
+
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -30,24 +32,24 @@ public class DailyReports {
         VBox content = new VBox();
         content.setPadding(new Insets(25, 40, 25, 40));
         content.setSpacing(18);
-        content.setStyle("-fx-background-color: #789098;");
+        content.setStyle("-fx-background-color: #b3adad;");
 
         Label title = new Label("Daily Reports");
         title.setStyle(
                 "-fx-font-size: 27px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;");
+                "-fx-text-fill: #030a11;");
 
         Label subtitle = new Label("View today's visitor, parking and emergency activity.");
         subtitle.setStyle(
                 "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;");
+                "-fx-text-fill: #090b0c;");
 
         Label dateLabel = new Label("Report Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
         dateLabel.setStyle(
                 "-fx-font-size: 12px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;");
+                "-fx-text-fill: #050a08;");
 
         VBox heading = new VBox(4,title,subtitle,dateLabel);
 
@@ -62,7 +64,7 @@ public class DailyReports {
         summaryTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;");
+                "-fx-text-fill: #0b0c0c;");
 
         GridPane summaryGrid = new GridPane();
         summaryGrid.setHgap(15);
@@ -107,10 +109,7 @@ public class DailyReports {
 
         VBox deliveryCard = createSummaryCard("Deliveries", String.valueOf(deliveries));
 
-
-        VBox parkingCard =
-                createSummaryCard("Occupied Parking", occupiedParking + " / " + totalParking);
-
+        VBox parkingCard = createSummaryCard("Occupied Parking", occupiedParking + " / " + totalParking);
 
         VBox availableParkingCard = createSummaryCard("Available Parking", String.valueOf(availableParking));
 
@@ -133,7 +132,7 @@ public class DailyReports {
         reportTitle.setStyle(
                 "-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #183A2D;");
+                "-fx-text-fill: #040505;");
 
         TextArea reportArea = new TextArea();
         reportArea.setEditable(false);
@@ -143,7 +142,7 @@ public class DailyReports {
         reportArea.setStyle(
                 "-fx-background-color: #F4F7F4;" +
                 "-fx-background-radius: 6;" +
-                "-fx-text-fill: #102A43;");
+                "-fx-text-fill: #090909;");
 
         generateReport(reportArea);
         reportCard.getChildren().addAll(reportTitle,reportArea);
@@ -152,7 +151,7 @@ public class DailyReports {
         refreshButton.setPrefWidth(145);
         refreshButton.setPrefHeight(40);
         refreshButton.setStyle(
-                "-fx-background-color: #183A2D;" +
+                "-fx-background-color: #434141;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
@@ -162,7 +161,7 @@ public class DailyReports {
         clearButton.setPrefHeight(40);
         clearButton.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-text-fill: #183A2D;" +
+                "-fx-text-fill: #0b0b0b;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
 
@@ -189,7 +188,8 @@ public class DailyReports {
 
         root.setCenter(content);
 
-        return new Scene(root,1500,750);
+        dailyReportScene = new Scene(root,1500,750);
+        return dailyReportScene;
     }
 
 
@@ -238,6 +238,7 @@ public class DailyReports {
 
         if (VisitorLog.visitors.isEmpty()) {
             report.append("No visitor entries available.\n");
+            report.append("\n");
         } else {
             for (VisitorLog.Visitor visitor : VisitorLog.visitors) {
                 report.append("Name: ");
@@ -257,6 +258,8 @@ public class DailyReports {
                 report.append("\n");
                 report.append("Status: ");
                 report.append(visitor.getStatus());
+                report.append("\n");
+                report.append("\n");
                 report.append("\n");
             }
         }
@@ -281,6 +284,7 @@ public class DailyReports {
         report.append("Available Spots: ");
         report.append(totalParking - occupiedParking);
         report.append("\n");
+        report.append("\n");
         report.append("\nEMERGENCY STATUS\n");
 
 
@@ -290,6 +294,7 @@ public class DailyReports {
 
         } else {
             report.append("No active emergency alerts.\n");
+            report.append("\n");
         }
 
         reportArea.setText(report.toString());
@@ -300,13 +305,13 @@ public class DailyReports {
         Label titleLabel = new Label(title);
         titleLabel.setStyle(
                 "-fx-font-size: 11px;" +
-                "-fx-text-fill: #52606D;");
+                "-fx-text-fill: #050506;");
 
         Label valueLabel = new Label(value);
         valueLabel.setStyle(
                 "-fx-font-size: 22px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;");
+                "-fx-text-fill: #060707;");
 
         VBox card = new VBox(6,titleLabel,valueLabel);
         card.setPrefWidth(175);
