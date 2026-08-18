@@ -1,5 +1,8 @@
 package com.society.view.Owner_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,6 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -25,14 +30,48 @@ public class AddTenant {
     mainContent.setPadding( new Insets(25, 35, 25, 35));
     mainContent.setSpacing(18);
     mainContent.setAlignment(Pos.TOP_LEFT);
-    mainContent.setStyle("-fx-background-color: #b3adad;" );
+    mainContent.setStyle("-fx-background-color: #e8ddd5;" );
 
-    Label title = new Label("Add Tenant" );
-    title.setStyle("-fx-font-size: 27px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
-    Label subtitle = new Label("Enter the details of the new tenant");
-    subtitle.setStyle( "-fx-font-size: 13px;-fx-text-fill: #263238;");
-       
-        VBox heading = new VBox( 5, title, subtitle );
+    HBox header = new HBox();
+        header.setPrefWidth(900);
+        header.setPrefHeight(80);
+        header.setPadding(new Insets(20));
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setStyle("-fx-background-color: #4e342e;");
+
+        VBox vb = new VBox();
+        Label greeting = new Label("Add Tenant");
+        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill: #ffffff;");
+
+        Label description = new Label("Add and manage tenant details for your property");
+        description.setStyle("-fx-font-size:12px;-fx-text-fill: #ffffff;");
+
+        vb.getChildren().addAll(greeting,description);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        
+
+        Label day = new Label();
+        Label date = new Label();
+
+        LocalDate today = LocalDate.now();
+
+        day.setText(today.format(
+                DateTimeFormatter.ofPattern("EEEE")));
+        day.setStyle("-fx-text-fill: #ffffff");        
+
+        date.setText(today.format(
+                DateTimeFormatter.ofPattern("dd MMMM yyyy")));
+         date.setStyle("-fx-text-fill: #ffffff"); 
+        VBox vb1 = new VBox();
+        vb1.getChildren().addAll(day, date);
+
+        header.getChildren().addAll(vb,
+                spacer,
+                vb1);
+
         VBox formCard = new VBox();
 
         formCard.setPadding( new Insets(20, 25, 20, 25));
@@ -124,8 +163,8 @@ public class AddTenant {
         clearButton.setPrefHeight(38);
         saveButton.setPrefWidth(125);
         saveButton.setPrefHeight(38);
-        clearButton.setStyle("-fx-background-color: #b3adad;-fx-text-fill: #434141;-fx-font-weight: bold;-fx-background-radius: 7;" );
-        saveButton.setStyle("-fx-background-color: #434141;-fx-text-fill: b3adad;-fx-font-weight: bold;-fx-background-radius: 7;" );
+        clearButton.setStyle("-fx-background-color: #ffffff;-fx-text-fill: #4e342e;-fx-font-weight: bold;-fx-background-radius: 7;" );
+        saveButton.setStyle("-fx-background-color: #4e342e;-fx-text-fill: #ffffff;-fx-font-weight: bold;-fx-background-radius: 7;" );
 
         HBox buttons = new HBox();
         buttons.setSpacing(12);
@@ -145,13 +184,15 @@ public class AddTenant {
 
        
         mainContent.getChildren().addAll(
-                heading,
+                header,
                 formCard
         );
 
        
-        root.setCenter(mainContent );
-
+       BorderPane mainarea = new BorderPane();
+       mainarea.setTop(header);
+       mainarea.setCenter(mainContent);
+       root.setCenter(mainarea);
        
         return new Scene(
                 root,

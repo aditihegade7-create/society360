@@ -1,5 +1,8 @@
 package com.society.view.Owner_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -27,23 +32,48 @@ public class RemoveTenant {
                 Pos.TOP_LEFT
         );
 
-        mainContent.setStyle( "-fx-background-color: #b3adad;" );
+        mainContent.setStyle( "-fx-background-color: #e8ddd5;" );
 
         
-        Label title = new Label("Remove Tenant" );
-        title.setStyle( "-fx-font-size: 27px;-fx-font-weight: bold;-fx-text-fill: #102A43;"
-        );
+        HBox header = new HBox();
+        header.setPrefWidth(900);
+        header.setPrefHeight(80);
+        header.setPadding(new Insets(20));
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setStyle("-fx-background-color: #4e342e;");
 
-        Label subtitle = new Label("Remove an existing tenant from your property"
-        );
-        subtitle.setStyle(
-                "-fx-font-size: 13px;-fx-text-fill: #263238;");
+        VBox vb = new VBox();
+        Label greeting = new Label("Remove Tenant");
+        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill: #ffffff;");
 
-        VBox heading = new VBox(
-                5,
-                title,
-                subtitle
-        );
+        Label description = new Label("Remove an existing tenant from your property");
+        description.setStyle("-fx-font-size:12px;-fx-text-fill: #ffffff;");
+
+        vb.getChildren().addAll(greeting,description);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        
+
+        Label day = new Label();
+        Label date = new Label();
+
+        LocalDate today = LocalDate.now();
+
+        day.setText(today.format(
+                DateTimeFormatter.ofPattern("EEEE")));
+        day.setStyle("-fx-text-fill: #ffffff"); 
+        date.setText(today.format(
+                DateTimeFormatter.ofPattern("dd MMMM yyyy")));
+        date.setStyle("-fx-text-fill: #ffffff"); 
+        VBox vb1 = new VBox();
+        vb1.getChildren().addAll(day, date);
+
+        header.getChildren().addAll(vb,
+                spacer,
+                vb1);
+
 
         VBox tenantCard = new VBox();
         tenantCard.setPadding( new Insets(25)
@@ -131,8 +161,8 @@ public class RemoveTenant {
         removeButton.setPrefWidth(140);
         removeButton.setPrefHeight(40);
 
-        clearButton.setStyle("-fx-background-color: #b3adad;-fx-text-fill: #434141;-fx-font-weight: bold;-fx-background-radius: 7;");
-        removeButton.setStyle("-fx-background-color: #434141;-fx-text-fill: #b3adad;-fx-font-weight: bold;-fx-background-radius: 7;");
+        clearButton.setStyle("-fx-background-color: #ffffff;-fx-text-fill: #4e342e;-fx-font-weight: bold;-fx-background-radius: 7;");
+        removeButton.setStyle("-fx-background-color: #4e342e;-fx-text-fill: #ffffff;-fx-font-weight: bold;-fx-background-radius: 7;");
 
         HBox buttons = new HBox();
         buttons.setSpacing(12);
@@ -156,11 +186,15 @@ public class RemoveTenant {
         information.setStyle( "-fx-background-color: #E8F1F2;-fx-background-radius: 8;-fx-text-fill: #263238;");
 
         mainContent.getChildren().addAll(
-                heading,
+                header,
                 tenantCard,
                 information
         );
-        root.setCenter( mainContent );
+       BorderPane mainarea = new BorderPane();
+       mainarea.setTop(header);
+       mainarea.setCenter(mainContent);
+       root.setCenter(mainarea);
+       
         return new Scene(
                 root,
                 1500,
