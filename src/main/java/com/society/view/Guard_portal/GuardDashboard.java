@@ -17,8 +17,6 @@ import javafx.stage.Stage;
 
 public class GuardDashboard {
 
-        private static Scene guardScene;
-
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -44,16 +42,6 @@ public class GuardDashboard {
 
         root.setCenter(mainContent);
 
-        Label greeting =
-                new Label("Good Morning, Guard Rajesh");
-
-        greeting.setStyle(
-                "-fx-font-size: 25px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #030A12;"
-        );
-
-
         Label shiftInfo =
                 new Label(
                         "Main Gate    Shift A    (08:00 AM - 04:00 PM)"
@@ -64,61 +52,37 @@ public class GuardDashboard {
                 "-fx-text-fill: #17231F;"
         );
 
+        HBox header = new HBox();
+        header.setPrefWidth(900);
+        header.setPrefHeight(80);
+        header.setPadding(new Insets(20));
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setStyle("-fx-background-color:#b3adad;");
 
-        VBox greetingBox =
-                new VBox(6);
+        Label greeting = new Label("Good Morning, Owner");
+        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#434141;");
 
-        greetingBox.getChildren().addAll(
-                greeting,
-                shiftInfo
-        );
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        Label day = new Label();
+        Label date = new Label();
 
-        LocalDate today =
-                LocalDate.now();
+        LocalDate today = LocalDate.now();
 
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern(
-                        "dd MM yyyy\nEEEE"
-                );
+        day.setText(today.format(
+                DateTimeFormatter.ofPattern("EEEE")));
 
-        Label date =
-                new Label(
-                        today.format(formatter)
-                );
+        date.setText(today.format(
+                DateTimeFormatter.ofPattern("dd MMMM yyyy")));
 
-        date.setAlignment(
-                Pos.CENTER_RIGHT
-        );
+        VBox vb1 = new VBox();
+        vb1.getChildren().addAll(day, date);
 
-        date.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #E2E5E8;"
-        );
+        header.getChildren().addAll(greeting,
+                spacer,
+                vb1);
 
-
-        Region headerSpacer =
-                new Region();
-
-        HBox.setHgrow(
-                headerSpacer,
-                Priority.ALWAYS
-        );
-
-
-        HBox header =
-                new HBox();
-
-        header.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        header.getChildren().addAll(
-                greetingBox,
-                headerSpacer,
-                date
-        );
 
         mainContent.getChildren().add(header);
 
@@ -570,11 +534,10 @@ public class GuardDashboard {
         mainContent.getChildren().add(noticeBar);
 
         Scene scene = new Scene(root,1500,750);
-        guardScene = scene;
         stage.setTitle("Society360 - Guard Dashboard");
         stage.setScene(scene);
         stage.show();
-        return guardScene;
+        return scene;
     }
 
 

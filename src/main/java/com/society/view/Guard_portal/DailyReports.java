@@ -19,8 +19,6 @@ import java.time.format.DateTimeFormatter;
 
 public class DailyReports {
 
-    private static Scene dailyReportScene;
-
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -187,11 +185,8 @@ public class DailyReports {
                 buttons);
 
         root.setCenter(content);
-
-        dailyReportScene = new Scene(root,1500,750);
-        return dailyReportScene;
+        return new Scene(root,1500,750);
     }
-
 
     private static void generateReport(TextArea reportArea) {
 

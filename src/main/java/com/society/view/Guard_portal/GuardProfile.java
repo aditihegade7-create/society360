@@ -13,8 +13,6 @@ import javafx.stage.Stage;
 
 public class GuardProfile {
 
-        private static Scene profileScene;
-
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -311,10 +309,8 @@ public class GuardProfile {
                 informationSection,
                 buttons
         );
-
         root.setCenter(mainContent);
-        profileScene = new Scene(root,1500,750);
-        return profileScene;
+        return new Scene(root,1500,750);
     }
 
     private static VBox createInfoCard() {
