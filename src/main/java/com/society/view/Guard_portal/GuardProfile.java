@@ -1,5 +1,10 @@
 package com.society.view.Guard_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,6 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -29,31 +36,65 @@ public class GuardProfile {
         mainContent.setSpacing(20);
 
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
-        Label title = new Label("My Profile");
+         HBox header = new HBox();
+header.setPadding(new Insets(25, 35, 25, 35));
+header.setStyle("-fx-background-color: #4e342e;");
 
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #090909;"
-        );
+// Title + description
+VBox titleBox = new VBox(3);
 
-        Label subtitle = new Label(
-                "Guard account and duty information"
-        );
+Label title = new Label("My Profile");
+title.setStyle(
+        "-fx-font-size:24px;" +
+        "-fx-font-weight:bold;" +
+        "-fx-text-fill: white;"
+);
 
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #070707;"
-        );
+Label description = new Label(
+        "Guard account and duty information."
+);
+description.setStyle(
+        "-fx-font-size:13px;" +
+        "-fx-text-fill: white;"
+);
 
-        VBox heading = new VBox(
-                5,
-                title,
-                subtitle
-        );
+titleBox.getChildren().addAll(title, description);
+
+
+// Spacer pushes date to the right
+Region spacer = new Region();
+HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+// Date
+Label day = new Label();
+Label date = new Label();
+
+LocalDate today = LocalDate.now();
+
+day.setText(today.format(
+        DateTimeFormatter.ofPattern("EEEE")
+));
+
+date.setText(today.format(
+        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+));
+
+VBox dateBox = new VBox(3);
+dateBox.setAlignment(Pos.CENTER_RIGHT);
+dateBox.getChildren().addAll(day, date);
+
+
+// Add everything to header
+header.getChildren().addAll(
+        titleBox,
+        spacer,
+        dateBox
+);
+
 
         HBox profileHeader = new HBox();
 
@@ -79,7 +120,7 @@ public class GuardProfile {
         avatar.setPrefHeight(75);
 
         avatar.setStyle(
-                "-fx-background-color: #3a3218;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-size: 30px;" +
                 "-fx-font-weight: bold;" +
@@ -237,7 +278,7 @@ public class GuardProfile {
         editButton.setPrefHeight(40);
 
         editButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"+
@@ -251,7 +292,7 @@ public class GuardProfile {
         saveButton.setPrefHeight(40);
 
         saveButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -304,13 +345,18 @@ public class GuardProfile {
         );
 
         mainContent.getChildren().addAll(
-                heading,
+                header,
                 profileHeader,
                 informationSection,
                 buttons
         );
-        root.setCenter(mainContent);
-        return new Scene(root,1500,750);
+        BorderPane mainarea = new BorderPane();
+        mainarea.setTop(header);
+        mainarea.setCenter(mainContent);
+        root.setCenter(mainarea);
+        return new Scene(root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
     }
 
     private static VBox createInfoCard() {

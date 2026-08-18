@@ -15,11 +15,15 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import com.society.view.ScreenSize;
 
 public class EmergencySOS {
 
@@ -43,20 +47,64 @@ public class EmergencySOS {
         content.setPadding(new Insets(25, 40, 25, 40));
         content.setSpacing(18);
         content.setStyle(
-                "-fx-background-color: #b3adad;");
+                "-fx-background-color: #e8ddd5;");
 
-        Label title = new Label("Emergency SOS");
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #040404;");
+         HBox header = new HBox();
+header.setPadding(new Insets(25, 35, 25, 35));
+header.setStyle("-fx-background-color: #4e342e;");
 
-        Label subtitle = new Label("Send an emergency alert to residents and the secretary.");
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #050606;");
+// Title + description
+VBox titleBox = new VBox(3);
 
-        VBox heading =new VBox(4,title,subtitle);
+Label title = new Label("Emergency SOS");
+title.setStyle(
+        "-fx-font-size:24px;" +
+        "-fx-font-weight:bold;" +
+        "-fx-text-fill: white;"
+);
+
+Label description = new Label(
+        "Send an emergency alert to residents and the secretary."
+);
+description.setStyle(
+        "-fx-font-size:13px;" +
+        "-fx-text-fill: white;"
+);
+
+titleBox.getChildren().addAll(title, description);
+
+
+// Spacer pushes date to the right
+Region spacer = new Region();
+HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+// Date
+Label day = new Label();
+Label date = new Label();
+
+LocalDate today = LocalDate.now();
+
+day.setText(today.format(
+        DateTimeFormatter.ofPattern("EEEE")
+));
+
+date.setText(today.format(
+        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+));
+
+VBox dateBox = new VBox(3);
+dateBox.setAlignment(Pos.CENTER_RIGHT);
+dateBox.getChildren().addAll(day, date);
+
+
+// Add everything to header
+header.getChildren().addAll(
+        titleBox,
+        spacer,
+        dateBox
+);
+
 
         VBox alertCard = new VBox();
         alertCard.setPadding(new Insets(18, 25, 18, 25));
@@ -203,7 +251,7 @@ public class EmergencySOS {
         resolveButton.setPrefHeight(40);
 
         resolveButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -368,10 +416,16 @@ public class EmergencySOS {
             informationField.clear();
         });
 
-        content.getChildren().addAll(heading,alertCard,detailsCard);
-        root.setCenter(content);
+        content.getChildren().addAll(header,alertCard,detailsCard);
 
-        return new Scene(root,1500,750);
+        BorderPane mainarea = new BorderPane();
+        mainarea.setTop(header);
+        mainarea.setCenter(content);
+        root.setCenter(mainarea);
+
+        return new Scene(root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
     }
 
 

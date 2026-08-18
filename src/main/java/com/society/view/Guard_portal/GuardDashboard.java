@@ -3,6 +3,8 @@ package com.society.view.Guard_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -28,60 +30,71 @@ public class GuardDashboard {
 
         VBox mainContent = new VBox();
 
-        mainContent.setPadding(
-                new Insets(28, 32, 25, 28)
-        );
-
-        mainContent.setSpacing(20);
-
-        mainContent.setFillWidth(true);
-
+        mainContent.setPadding(new Insets(25, 35, 25, 35));
+        mainContent.setSpacing(18);
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
-        root.setCenter(mainContent);
-
-        Label shiftInfo =
-                new Label(
-                        "Main Gate    Shift A    (08:00 AM - 04:00 PM)"
-                );
-
-        shiftInfo.setStyle(
-                "-fx-font-size: 12px;" +
-                "-fx-text-fill: #17231F;"
-        );
 
         HBox header = new HBox();
-        header.setPrefWidth(900);
-        header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color:#b3adad;");
+header.setPrefWidth(1500);
+header.setPrefHeight(80);
+header.setPadding(new Insets(20, 25, 20, 25));
+header.setAlignment(Pos.CENTER_LEFT);
+header.setStyle("-fx-background-color: #4e342e;");
 
-        Label greeting = new Label("Good Morning, Owner");
-        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#434141;");
+// Title + description
+VBox titleBox = new VBox(3);
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
+Label title = new Label("Good Morning, Guard");
+title.setStyle(
+        "-fx-font-size:24px;" +
+        "-fx-font-weight:bold;" +
+        "-fx-text-fill: white;"
+);
 
-        Label day = new Label();
-        Label date = new Label();
+Label description = new Label(
+        "Main Gate    Shift A    (08:00 AM - 04:00 PM)"
+);
+description.setStyle(
+        "-fx-font-size:13px;" +
+        "-fx-text-fill: white;"
+);
 
-        LocalDate today = LocalDate.now();
+titleBox.getChildren().addAll(title, description);
 
-        day.setText(today.format(
-                DateTimeFormatter.ofPattern("EEEE")));
 
-        date.setText(today.format(
-                DateTimeFormatter.ofPattern("dd MMMM yyyy")));
+// Spacer pushes date to the right
+Region spacer = new Region();
+HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        VBox vb1 = new VBox();
-        vb1.getChildren().addAll(day, date);
 
-        header.getChildren().addAll(greeting,
-                spacer,
-                vb1);
+// Date
+Label day = new Label();
+Label date = new Label();
+
+LocalDate today = LocalDate.now();
+
+day.setText(today.format(
+        DateTimeFormatter.ofPattern("EEEE")
+));
+
+date.setText(today.format(
+        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+));
+
+VBox dateBox = new VBox(3);
+dateBox.setAlignment(Pos.CENTER_RIGHT);
+dateBox.getChildren().addAll(day, date);
+
+
+// Add everything to header
+header.getChildren().addAll(
+        titleBox,
+        spacer,
+        dateBox
+);
 
 
         mainContent.getChildren().add(header);
@@ -211,8 +224,8 @@ public class GuardDashboard {
             );
 
             button.setStyle(
-                    "-fx-background-color: #434141;" +
-                    "-fx-text-fill: #E8F0E8;" +
+                    "-fx-background-color: #4e342e;" +
+                    "-fx-text-fill: white;" +
                     "-fx-font-size: 14px;" +
                     "-fx-font-weight: bold;" +
                     "-fx-background-radius: 10;"
@@ -222,7 +235,7 @@ public class GuardDashboard {
             button.setOnMouseEntered(e -> {
 
                 button.setStyle(
-                        "-fx-background-color: #434141;" +
+                        "-fx-background-color: #522c23;" +
                         "-fx-text-fill: #E8F0E8;" +
                         "-fx-font-size: 14px;" +
                         "-fx-font-weight: bold;" +
@@ -235,7 +248,7 @@ public class GuardDashboard {
             button.setOnMouseExited(e -> {
 
                 button.setStyle(
-                        "-fx-background-color: #434141;" +
+                        "-fx-background-color: #4e342e;" +
                         "-fx-text-fill: #E8F0E8;" +
                         "-fx-font-size: 14px;" +
                         "-fx-font-weight: bold;" +
@@ -533,7 +546,14 @@ public class GuardDashboard {
 
         mainContent.getChildren().add(noticeBar);
 
-        Scene scene = new Scene(root,1500,750);
+        BorderPane mainarea = new BorderPane();
+        mainarea.setTop(header);
+        mainarea.setCenter(mainContent);
+        root.setCenter(mainarea);
+
+        Scene scene = new Scene(root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
         stage.setTitle("Society360 - Guard Dashboard");
         stage.setScene(scene);
         stage.show();
