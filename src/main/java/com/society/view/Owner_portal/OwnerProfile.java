@@ -16,208 +16,76 @@ public class OwnerProfile {
 
     public static Scene createScene(Stage stage) {
 
-        // =========================
-        // ROOT
-        // =========================
-
         BorderPane root = new BorderPane();
 
-        // =========================
-        // SIDEBAR
-        // =========================
+        OwnerSidebar sidebar = new OwnerSidebar(stage);
 
-        OwnerSidebar sidebar =
-                new OwnerSidebar(stage);
-
-        root.setLeft(
-                sidebar.getSidebar()
+        root.setLeft( sidebar.getSidebar()
         );
-
-        // =========================
-        // MAIN CONTENT
-        // =========================
 
         VBox mainContent = new VBox();
 
-        mainContent.setPadding(
-                new Insets(30, 40, 30, 40)
-        );
+        mainContent.setPadding(new Insets(30, 40, 30, 40));
 
         mainContent.setSpacing(20);
 
-        mainContent.setAlignment(
-                Pos.TOP_LEFT
-        );
+        mainContent.setAlignment( Pos.TOP_LEFT);
 
-        mainContent.setStyle(
-                "-fx-background-color: #789098;"
-        );
+        mainContent.setStyle( "-fx-background-color: #b3adad;" );
 
-        // =========================
-        // HEADER
-        // =========================
+        Label title = new Label("Owner Profile" );
 
-        Label title = new Label(
-                "Owner Profile"
-        );
+        title.setStyle( "-fx-font-size: 27px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
 
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
-        );
+        Label subtitle = new Label("View and manage your personal details");
 
-        Label subtitle = new Label(
-                "View and manage your personal details"
-        );
+        subtitle.setStyle("-fx-font-size: 13px;-fx-text-fill: #263238;" );
 
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;"
-        );
-
-        VBox heading = new VBox(
-                5,
-                title,
-                subtitle
-        );
-
-        // =========================
-        // PROFILE CARD
-        // =========================
+        VBox heading = new VBox( 5, title,subtitle );
 
         VBox profileCard = new VBox();
-
-        profileCard.setPadding(
-                new Insets(25)
-        );
-
+        profileCard.setPadding(new Insets(25));
         profileCard.setSpacing(20);
+        profileCard.setMaxWidth( 900);
 
-        profileCard.setMaxWidth(
-                900
-        );
+        profileCard.setStyle("-fx-background-color: #F4F7F8;-fx-background-radius: 12;");
 
-        profileCard.setStyle(
-                "-fx-background-color: #F4F7F8;" +
-                "-fx-background-radius: 12;"
-        );
+        
+        Label profileTitle = new Label( "Personal Information");
+        profileTitle.setStyle( "-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #102A43;");
 
-        // =========================
-        // PROFILE TITLE
-        // =========================
+        Label profileSubtitle = new Label("Your registered owner information" );
+        profileSubtitle.setStyle("-fx-font-size: 12px;-fx-text-fill: #546E7A;");
 
-        Label profileTitle = new Label(
-                "Personal Information"
-        );
+        VBox profileHeading = new VBox(4, profileTitle,profileSubtitle);
 
-        profileTitle.setStyle(
-                "-fx-font-size: 18px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
-        );
-
-        Label profileSubtitle = new Label(
-                "Your registered owner information"
-        );
-
-        profileSubtitle.setStyle(
-                "-fx-font-size: 12px;" +
-                "-fx-text-fill: #546E7A;"
-        );
-
-        VBox profileHeading = new VBox(
-                4,
-                profileTitle,
-                profileSubtitle
-        );
-
-        // =========================
-        // FORM
-        // =========================
-
+       
         GridPane form = new GridPane();
-
         form.setHgap(30);
-
         form.setVgap(15);
 
-        // =========================
-        // FULL NAME
-        // =========================
+        
+        Label nameLabel = new Label( "Full Name");
+        TextField nameField = new TextField( "Owner Name");
 
-        Label nameLabel = new Label(
-                "Full Name"
-        );
+       Label phoneLabel = new Label("Phone Number" );
+       TextField phoneField = new TextField("9876543210");
 
-        TextField nameField = new TextField(
-                "Owner Name"
-        );
+        Label emailLabel = new Label("Email");
 
-        // =========================
-        // PHONE
-        // =========================
+        TextField emailField = new TextField("owner@email.com");
 
-        Label phoneLabel = new Label(
-                "Phone Number"
-        );
+        
+        Label societyLabel = new Label("Society Name" );
+        TextField societyField = new TextField("Green Acres Society" );
 
-        TextField phoneField = new TextField(
-                "9876543210"
-        );
+        Label flatLabel = new Label( "Flat / Unit Number");
+        TextField flatField = new TextField( "A-101");
 
-        // =========================
-        // EMAIL
-        // =========================
+         Label ownerIdLabel = new Label("Owner ID");
+        TextField ownerIdField = new TextField( "OWN001" );
 
-        Label emailLabel = new Label(
-                "Email"
-        );
-
-        TextField emailField = new TextField(
-                "owner@email.com"
-        );
-
-        // =========================
-        // SOCIETY
-        // =========================
-
-        Label societyLabel = new Label(
-                "Society Name"
-        );
-
-        TextField societyField = new TextField(
-                "Green Acres Society"
-        );
-
-        // =========================
-        // FLAT
-        // =========================
-
-        Label flatLabel = new Label(
-                "Flat / Unit Number"
-        );
-
-        TextField flatField = new TextField(
-                "A-101"
-        );
-
-        // =========================
-        // OWNER ID
-        // =========================
-
-        Label ownerIdLabel = new Label(
-                "Owner ID"
-        );
-
-        TextField ownerIdField = new TextField(
-                "OWN001"
-        );
-
-        // =========================
-        // FIELD SIZE
-        // =========================
-
+        
         nameField.setPrefWidth(350);
         phoneField.setPrefWidth(350);
 
@@ -236,9 +104,7 @@ public class OwnerProfile {
         flatField.setPrefHeight(40);
         ownerIdField.setPrefHeight(40);
 
-        // =========================
-        // LABEL STYLE
-        // =========================
+        
 
         styleLabel(nameLabel);
         styleLabel(phoneLabel);
@@ -249,15 +115,9 @@ public class OwnerProfile {
         styleLabel(flatLabel);
         styleLabel(ownerIdLabel);
 
-        // =========================
-        // FIELD STYLE
-        // =========================
+        
 
-        String fieldStyle =
-                "-fx-background-color: white;" +
-                "-fx-border-color: #CBD5D8;" +
-                "-fx-border-radius: 6;" +
-                "-fx-background-radius: 6;";
+        String fieldStyle ="-fx-background-color: white;-fx-border-color: #CBD5D8;-fx-border-radius: 6;-fx-background-radius: 6;";
 
         nameField.setStyle(fieldStyle);
         phoneField.setStyle(fieldStyle);
@@ -268,10 +128,7 @@ public class OwnerProfile {
         flatField.setStyle(fieldStyle);
         ownerIdField.setStyle(fieldStyle);
 
-        // =========================
-        // DISABLE EDITING INITIALLY
-        // =========================
-
+        
         nameField.setEditable(false);
         phoneField.setEditable(false);
 
@@ -281,91 +138,23 @@ public class OwnerProfile {
         flatField.setEditable(false);
         ownerIdField.setEditable(false);
 
-        // =========================
-        // FORM LAYOUT
-        // =========================
+        form.add(nameLabel,0,0);
+        form.add(phoneLabel,1,0 );
+        form.add( nameField, 0,1 );
+        form.add(phoneField,1,1);
+        form.add(emailLabel,0,2);
+        form.add( societyLabel, 1, 2 );
+        form.add(emailField,0,3);
+        form.add(societyField,1,3);
+        form.add(flatLabel,0,4 );
+        form.add( ownerIdLabel, 1, 4);
+        form.add(flatField,0,5 );
+        form.add(ownerIdField,1, 5);
 
-        form.add(
-                nameLabel,
-                0,
-                0
-        );
+        
 
-        form.add(
-                phoneLabel,
-                1,
-                0
-        );
-
-        form.add(
-                nameField,
-                0,
-                1
-        );
-
-        form.add(
-                phoneField,
-                1,
-                1
-        );
-
-        form.add(
-                emailLabel,
-                0,
-                2
-        );
-
-        form.add(
-                societyLabel,
-                1,
-                2
-        );
-
-        form.add(
-                emailField,
-                0,
-                3
-        );
-
-        form.add(
-                societyField,
-                1,
-                3
-        );
-
-        form.add(
-                flatLabel,
-                0,
-                4
-        );
-
-        form.add(
-                ownerIdLabel,
-                1,
-                4
-        );
-
-        form.add(
-                flatField,
-                0,
-                5
-        );
-
-        form.add(
-                ownerIdField,
-                1,
-                5
-        );
-
-        // =========================
-        // BUTTONS
-        // =========================
-
-        Button editButton =
-                new Button("Edit Profile");
-
-        Button saveButton =
-                new Button("Save Changes");
+        Button editButton =new Button("Edit Profile");
+        Button saveButton =new Button("Save Changes");
 
         editButton.setPrefWidth(130);
         editButton.setPrefHeight(40);
@@ -374,27 +163,15 @@ public class OwnerProfile {
         saveButton.setPrefHeight(40);
 
         editButton.setStyle(
-                "-fx-background-color: #DCE8EA;" +
-                "-fx-text-fill: #102A43;" +
-                "-fx-font-weight: bold;" +
-                "-fx-background-radius: 7;"
+                "-fx-background-color: #434141;-fx-text-fill: #b3adad;-fx-font-weight: bold;-fx-background-radius: 7;"
         );
 
         saveButton.setStyle(
-                "-fx-background-color: #102A43;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-weight: bold;" +
-                "-fx-background-radius: 7;"
+                "-fx-background-color: #434141;-fx-text-fill: #b3adad;-fx-font-weight: bold;-fx-background-radius: 7;"
         );
 
-        // Save disabled initially
-
+        
         saveButton.setDisable(true);
-
-        // =========================
-        // EDIT PROFILE
-        // =========================
-
         editButton.setOnAction(e -> {
 
             nameField.setEditable(true);
@@ -409,10 +186,7 @@ public class OwnerProfile {
             editButton.setDisable(true);
         });
 
-        // =========================
-        // SAVE CHANGES
-        // =========================
-
+        
         saveButton.setOnAction(e -> {
 
             nameField.setEditable(false);
@@ -428,21 +202,10 @@ public class OwnerProfile {
         });
 
         HBox buttons = new HBox();
-
         buttons.setSpacing(12);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
 
-        buttons.setAlignment(
-                Pos.CENTER_RIGHT
-        );
-
-        buttons.getChildren().addAll(
-                editButton,
-                saveButton
-        );
-
-        // =========================
-        // PROFILE CARD
-        // =========================
+        buttons.getChildren().addAll(editButton,saveButton);
 
         profileCard.getChildren().addAll(
                 profileHeading,
@@ -450,27 +213,14 @@ public class OwnerProfile {
                 buttons
         );
 
-        // =========================
-        // MAIN CONTENT
-        // =========================
-
+        
         mainContent.getChildren().addAll(
                 heading,
                 profileCard
         );
 
-        // =========================
-        // CENTER
-        // =========================
-
-        root.setCenter(
-                mainContent
-        );
-
-        // =========================
-        // SCENE
-        // =========================
-
+        
+        root.setCenter( mainContent);
         return new Scene(
                 root,
                 1500,
@@ -478,18 +228,13 @@ public class OwnerProfile {
         );
     }
 
-    // =========================
-    // LABEL STYLE
-    // =========================
+    
 
-    private static void styleLabel(
-            Label label
+    private static void styleLabel( Label label
     ) {
 
         label.setStyle(
-                "-fx-font-size: 12px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #37474F;"
+                "-fx-font-size: 12px;-fx-font-weight: bold;-fx-text-fill: #37474F;"
         );
     }
 }
