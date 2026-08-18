@@ -21,8 +21,6 @@ import java.time.format.DateTimeFormatter;
 
 public class ManualVisitorEntry {
 
-        private static Scene visitorScene;
-
     public static Scene createScene(Stage stage) {
         BorderPane root = new BorderPane();
 
@@ -420,8 +418,7 @@ public class ManualVisitorEntry {
 
         content.getChildren().addAll(heading,formCard);
         root.setCenter(content);
-        visitorScene = new Scene(root,1500,750);
-        return visitorScene;
+        return new Scene(root,1500,750);
     }
 
     private static Label createLabel(

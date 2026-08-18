@@ -30,7 +30,6 @@ public class EmergencySOS {
     private static String emergencyDetails = "";
     private static String emergencyTime = "";
 
-    private static Scene emergencyScene;
 
     public static Scene createScene(Stage stage) {
 
@@ -372,8 +371,7 @@ public class EmergencySOS {
         content.getChildren().addAll(heading,alertCard,detailsCard);
         root.setCenter(content);
 
-        emergencyScene = new Scene(root,1500,750);
-        return emergencyScene;
+        return new Scene(root,1500,750);
     }
 
 
