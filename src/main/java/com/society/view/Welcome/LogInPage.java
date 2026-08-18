@@ -35,28 +35,19 @@ public class LogInPage {
     private static final String TEXT = "#3E2723";
     private static final String WHITE = "#FFFFFF";
 
-
-    // =========================================================
     // SHOW LOGIN PAGE
     // =========================================================
 
     public Scene createScene(Stage stage) {
 
-        // =====================================================
+
         // MAIN ROOT
-        // =====================================================
 
         StackPane root = new StackPane();
 
-        root.setStyle(
-                "-fx-background-color: linear-gradient(to right, #E8DDD5, #E8DDD5);"
-        );
+        root.setStyle("-fx-background-color: linear-gradient(to right, #E8DDD5, #E8DDD5);");
 
-
-        // =====================================================
         // LEFT IMAGE PANEL
-        // =====================================================
-
         VBox leftPanel = createLeftPanel();
 
         StackPane.setAlignment(
@@ -74,14 +65,9 @@ public class LogInPage {
                 )
         );
 
-
-        // =====================================================
         // LOGIN CARD
-        // =====================================================
 
-        VBox loginCard =
-                createLoginCard(stage);
-
+        VBox loginCard =createLoginCard(stage);
 
         loginCard.setPrefWidth(400);
         loginCard.setMinWidth(400);
@@ -90,10 +76,7 @@ public class LogInPage {
         loginCard.setPrefHeight(500);
         loginCard.setMaxHeight(500);
 
-
-        // =====================================================
         // RIGHT SIDE
-        // =====================================================
 
         StackPane.setAlignment(
                 loginCard,
@@ -110,20 +93,14 @@ public class LogInPage {
                 )
         );
 
-
-        // =====================================================
         // ADD LEFT IMAGE + LOGIN CARD
-        // =====================================================
 
         root.getChildren().addAll(
                 leftPanel,
                 loginCard
         );
 
-
-        // =====================================================
         // SCENE
-        // =====================================================
 
         Scene loginScene =
                 new Scene(
@@ -132,9 +109,7 @@ public class LogInPage {
                         700
                 );
 
-        stage.setTitle(
-                "Society360 - Login"
-        );
+        stage.setTitle("Society360 - Login");
 
         stage.setMinWidth(900);
         stage.setMinHeight(600);
@@ -142,10 +117,7 @@ public class LogInPage {
         return loginScene;
     }
 
-
-    // =========================================================
     // LEFT IMAGE PANEL
-    // =========================================================
 
     private VBox createLeftPanel() {
 
@@ -160,38 +132,22 @@ public class LogInPage {
         panel.setMaxWidth(440);
         panel.setMaxHeight(400);
 
-        panel.setAlignment(
-                Pos.CENTER
-        );
+        panel.setAlignment(Pos.CENTER);
 
-        panel.setPadding(
-                new Insets(0)
-        );
+        panel.setPadding(new Insets(0));
 
         // YOUR ORIGINAL COLOR
-        panel.setStyle(
-                "-fx-background-color: " + DARK_BROWN + ";"
-        );
+        panel.setStyle("-fx-background-color: " + DARK_BROWN + ";");
 
-
-        // =====================================================
         // LOAD IMAGE
-        // =====================================================
-
-        Image image = new Image(
-                getClass()
-                        .getResourceAsStream("/image.png")
-        );
+ 
+        Image image = new Image(getClass().getResourceAsStream("/image.png"));
 
 
-        ImageView imageView =
-                new ImageView(image);
+        ImageView imageView =new ImageView(image);
 
-
-        // =====================================================
         // IMAGE SIZE
-        // =====================================================
-
+        
         imageView.setFitWidth(420);
 
         imageView.setFitHeight(380);
@@ -200,15 +156,9 @@ public class LogInPage {
 
         imageView.setSmooth(true);
 
-
-        // =====================================================
         // IMAGE CONTAINER
-        // =====================================================
 
-        StackPane imageContainer =
-                new StackPane(
-                        imageView
-                );
+        StackPane imageContainer =new StackPane(imageView);
 
         imageContainer.setPrefWidth(500);
         imageContainer.setPrefHeight(600);
@@ -219,28 +169,19 @@ public class LogInPage {
         imageContainer.setMaxWidth(500);
         imageContainer.setMaxHeight(600);
 
-
-        // =====================================================
         // ADD IMAGE
-        // =====================================================
 
-        panel.getChildren().add(
-                imageContainer
-        );
+        panel.getChildren().add(imageContainer);
 
 
         return panel;
     }
 
-
-    // =========================================================
     // LOGIN CARD
-    // =========================================================
 
     private VBox createLoginCard(Stage stage) {
 
-        VBox card =
-                new VBox(16);
+        VBox card =new VBox(16);
 
         card.setMaxWidth(450);
 
@@ -270,15 +211,9 @@ public class LogInPage {
                 + "8);"
         );
 
-
-        // =====================================================
         // TITLE
-        // =====================================================
 
-        Label title =
-                new Label(
-                        "Welcome Back! 👋"
-                );
+        Label title =new Label("Welcome Back! 👋");
 
         title.setFont(
                 Font.font(
@@ -288,15 +223,10 @@ public class LogInPage {
                 )
         );
 
-        title.setTextFill(
-                Color.web(TEXT)
-        );
+        title.setTextFill(Color.web(TEXT));
 
 
-        Label subtitle =
-                new Label(
-                        " Login to continue to Society360"
-                );
+        Label subtitle =new Label(" Login to continue to Society360");
 
         subtitle.setFont(
                 Font.font(
@@ -305,11 +235,7 @@ public class LogInPage {
                 )
         );
 
-        subtitle.setTextFill(
-                Color.web(BROWN)
-        );
-
-
+        subtitle.setTextFill(Color.web(BROWN));
         VBox titleBox =
                 new VBox(
                         6,
@@ -317,83 +243,47 @@ public class LogInPage {
                         subtitle
                 );
 
-
-        // =====================================================
         // EMAIL
-        // =====================================================
 
-        TextField username =
-                new TextField();
+        TextField username =new TextField();
 
-        username.setPromptText(
-                "Email"
-        );
+        username.setPromptText("Email");
 
         username.setPrefHeight(42);
 
-        username.setStyle(
-                inputStyle()
-        );
+        username.setStyle(inputStyle());
 
-
-        // =====================================================
         // PASSWORD
-        // =====================================================
 
-        PasswordField password =
-                new PasswordField();
+        PasswordField password =new PasswordField();
 
-        password.setPromptText(
-                "Password"
-        );
+        password.setPromptText("Password");
 
         password.setPrefHeight(42);
 
-        password.setStyle(
-                inputStyle()
-        );
+        password.setStyle(inputStyle());
 
-
-        // =====================================================
         // REMEMBER ME
-        // =====================================================
 
-        CheckBox remember =
-                new CheckBox(
-                        "Remember me"
-                );
+        CheckBox remember =new CheckBox("Remember me");
 
-        remember.setTextFill(
-                Color.web(TEXT)
-        );
+        remember.setTextFill(Color.web(TEXT));
 
-
-        // =====================================================
         // FORGOT PASSWORD
-        // =====================================================
 
         Hyperlink forgot =
-                new Hyperlink(
-                        "Forgot Password?"
-                );
+                new Hyperlink("Forgot Password?");
 
-        forgot.setTextFill(
-                Color.web(PRIMARY_BROWN)
-        );
+        forgot.setTextFill(Color.web(PRIMARY_BROWN));
 
+        HBox rememberRow = new HBox();
 
-        HBox rememberRow =
-                new HBox();
-
-
-        Region spacer =
-                new Region();
+        Region spacer =new Region();
 
         HBox.setHgrow(
                 spacer,
                 Priority.ALWAYS
         );
-
 
         rememberRow.getChildren().addAll(
                 remember,
@@ -401,30 +291,17 @@ public class LogInPage {
                 forgot
         );
 
-        rememberRow.setAlignment(
-                Pos.CENTER_LEFT
-        );
+        rememberRow.setAlignment(Pos.CENTER_LEFT);
 
-
-        // =====================================================
         // LOGIN BUTTON
-        // =====================================================
 
-        Button loginButton =
-                new Button(
-                        "Login   →"
-                );
+        Button loginButton =new Button("Login   →");
 
         loginButton.setPrefHeight(52);
 
-        loginButton.setMaxWidth(
-                Double.MAX_VALUE
-        );
+        loginButton.setMaxWidth(Double.MAX_VALUE);
 
-        loginButton.setStyle(
-                primaryButtonStyle()
-        );
-
+        loginButton.setStyle(primaryButtonStyle());
 
         loginButton.setOnAction(event -> {
 
@@ -442,10 +319,7 @@ public class LogInPage {
                 return;
             }
 
-
-            // =================================================
             // LOGIN SUCCESS
-            // =================================================
 
             showAlert(
                     Alert.AlertType.INFORMATION,
@@ -454,57 +328,37 @@ public class LogInPage {
             );
         });
 
-
-        // =====================================================
         // NEW ACCOUNT
-        // =====================================================
 
         Label account =
-                new Label(
-                        "Don't have an account?"
-                );
+                new Label("Don't have an account?");
 
-        account.setTextFill(
-                Color.web(TEXT)
-        );
+        account.setTextFill(Color.web(TEXT));
 
 
         Hyperlink signup =
-                new Hyperlink(
-                        "Sign up"
-                );
+                new Hyperlink("Sign up");
 
-        signup.setTextFill(
-                Color.web(PRIMARY_BROWN)
-        );
+        signup.setTextFill(Color.web(PRIMARY_BROWN));
 
 
         signup.setOnAction(event -> {
 
-            SigninPage signupPage =
-                    new SigninPage();
+            SigninPage signupPage =new SigninPage();
 
-            stage.setScene(
-                    signupPage.createScene(stage)
-            );
+            stage.setScene(signupPage.createScene(stage));
         });
 
 
-        HBox signupRow =
-                new HBox(
+        HBox signupRow =new HBox(
                         4,
                         account,
                         signup
                 );
 
-        signupRow.setAlignment(
-                Pos.CENTER
-        );
+        signupRow.setAlignment(Pos.CENTER);
 
-
-        // =====================================================
         // ADD TO CARD
-        // =====================================================
 
         card.getChildren().addAll(
                 titleBox,
@@ -516,15 +370,10 @@ public class LogInPage {
                 signupRow
         );
 
-
         return card;
     }
 
-
-    // =========================================================
     // INPUT STYLE
-    // =========================================================
-
     private String inputStyle() {
 
         return
@@ -539,10 +388,7 @@ public class LogInPage {
                 + "-fx-prompt-text-fill: #9E8E8E;";
     }
 
-
-    // =========================================================
     // BUTTON STYLE
-    // =========================================================
 
     private String primaryButtonStyle() {
 
@@ -555,10 +401,7 @@ public class LogInPage {
                 + "-fx-cursor: hand;";
     }
 
-
-    // =========================================================
     // ALERT
-    // =========================================================
 
     private void showAlert(
             Alert.AlertType type,
@@ -566,8 +409,7 @@ public class LogInPage {
             String message
     ) {
 
-        Alert alert =
-                new Alert(type);
+        Alert alert =new Alert(type);
 
         alert.setTitle(title);
 
