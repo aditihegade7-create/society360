@@ -32,7 +32,7 @@ public class ManageResidents {
         mainvb.setMaxHeight(Double.MAX_VALUE);
         mainvb.setPadding(new Insets(20));
         mainvb.setSpacing(10);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
+        mainvb.setStyle("-fx-background-color: #e8ddd5;");
 
         // ================= TITLE =================
 
@@ -40,13 +40,13 @@ public class ManageResidents {
         title.setStyle(
                 "-fx-font-size:28px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:black;"
+                "-fx-text-fill: white;"
         );
 
         Label subtitle = new Label("View and manage all residents");
         subtitle.setStyle(
                 "-fx-font-size:14px;" +
-                "-fx-text-fill:#777777;"
+                "-fx-text-fill: white;"
         );
 
         // ================= SEARCH =================
@@ -72,7 +72,7 @@ public class ManageResidents {
         addResidentBtn.setPrefHeight(45);
 
         addResidentBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:8;"
@@ -190,7 +190,7 @@ public class ManageResidents {
             saveBtn.setPrefHeight(40);
 
             saveBtn.setStyle(
-                    "-fx-background-color:#434141;" +
+                    "-fx-background-color:#4e342e;" +
                     "-fx-text-fill:white;" +
                     "-fx-font-weight:bold;" +
                     "-fx-background-radius:7;"
@@ -204,7 +204,7 @@ public class ManageResidents {
             cancelBtn.setPrefHeight(40);
 
             cancelBtn.setStyle(
-                    "-fx-background-color:#E5E7EB;" +
+                    "-fx-background-color:#4e342e;" +
                     "-fx-text-fill:#333333;" +
                     "-fx-font-weight:bold;" +
                     "-fx-background-radius:7;"

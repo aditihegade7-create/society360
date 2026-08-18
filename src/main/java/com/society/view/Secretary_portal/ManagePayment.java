@@ -32,7 +32,7 @@ public class ManagePayment {
         mainvb.setMaxWidth(Double.MAX_VALUE);
         mainvb.setMaxWidth(Double.MAX_VALUE);
         mainvb.setStyle(
-                "-fx-background-color:#b3adad;"
+                "-fx-background-color:#4e342e;"
         );
 
         // HEADING
