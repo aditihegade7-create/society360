@@ -3,6 +3,8 @@ package com.society.view.Owner_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,6 +25,7 @@ public class OwnerDashboard {
 
         BorderPane root = new BorderPane();
 
+
         OwnerSidebar sidebar = new OwnerSidebar(stage);
         root.setLeft(sidebar.getSidebar());
 
@@ -30,25 +33,22 @@ public class OwnerDashboard {
         mainContent.setPadding(new Insets(25, 35, 25, 35));
         mainContent.setSpacing(20);
         mainContent.setAlignment(Pos.TOP_LEFT);
-
-        mainContent.setStyle("-fx-background-color: #b3adad;" );
+        mainContent.setStyle("-fx-background-color: #e8ddd5;");
 
         HBox header = new HBox();
         header.setPrefWidth(900);
         header.setPrefHeight(80);
         header.setPadding(new Insets(20));
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color:#b3adad;");
+        header.setStyle("-fx-background-color: #4e342e;");
 
         Label greeting = new Label("Good Morning, Owner 👋");
-        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill:#434141;");
+        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill: #ffffff;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Label notification = new Label("🔔");
-        notification.setStyle("-fx-font-size:24px;");
-
+        
         Label day = new Label();
         Label date = new Label();
 
@@ -56,16 +56,16 @@ public class OwnerDashboard {
 
         day.setText(today.format(
                 DateTimeFormatter.ofPattern("EEEE")));
-
+        day.setStyle("-fx-text-fill: #ffffff"); 
         date.setText(today.format(
                 DateTimeFormatter.ofPattern("dd MMMM yyyy")));
-
+        date.setStyle("-fx-text-fill: #ffffff"); 
         VBox vb1 = new VBox();
         vb1.getChildren().addAll(day, date);
 
         header.getChildren().addAll(greeting,
                 spacer,
-                notification,
+                
                 vb1);
 
         mainContent.getChildren().add(header);
@@ -75,7 +75,7 @@ public class OwnerDashboard {
 
         VBox totalTenants =createCard("Total Tenants", "02");
         VBox rentReceived =createCard("Rent Received", "₹18,450");
-        VBox pendingAmount =createCard("Pending Amount", "₹1,250");
+        VBox pendingAmount=createCard("Pending Amount", "₹1,250");
         VBox upcomingDue = createCard("Upcoming Due", "02");
 
         cards.getChildren().addAll(
@@ -135,8 +135,15 @@ public class OwnerDashboard {
         );
 
         mainContent.getChildren().add(noticeBox);
-        root.setCenter(mainContent);
-        return new Scene(root, 1500, 750);
+        BorderPane mainarea = new BorderPane();
+       mainarea.setTop(header);
+       mainarea.setCenter(mainContent);
+       root.setCenter(mainarea);
+       
+        return new Scene(root, 
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+        );
     }
 
          private static VBox createCard(
@@ -185,7 +192,7 @@ public class OwnerDashboard {
         box.setPrefHeight(250);
 
         box.setStyle(
-                "-fx-background-color: white;-fx-background-radius: 15;-fx-border-radius: 15;-fx-border-color: #E0E0E0;-fx-effect: dropshadow;gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);"
+                "-fx-background-color: white;-fx-background-radius: 15;-fx-border-radius: 15;-fx-border-color: #E0E0E0;-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);"
         );
 
         Label heading = new Label(title);

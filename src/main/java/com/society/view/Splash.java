@@ -14,5 +14,6 @@ public class Splash extends Application{
        stage.setTitle( "Society360 - Owner Portal" );
        stage.setScene(OwnerDashboard.createScene(stage));
        stage.show();
+
     }
 }

@@ -15,7 +15,7 @@ public class OwnerSidebar {
         sidebar = new VBox(10);
         sidebar.setPadding( new Insets(20) );
         sidebar.setPrefWidth(300);
-        sidebar.setStyle("-fx-background-color: #4a4b4b;" );
+        sidebar.setStyle("-fx-background-color: #593a32;" );
 
         Label logo = new Label( "Society360");
         logo.setStyle(  "-fx-font-size: 22px;-fx-font-weight: bold;-fx-text-fill: white;" );
@@ -27,6 +27,7 @@ public class OwnerSidebar {
         Button removeTenant = new Button( "Remove Tenant");
         Button payments = new Button("View Payments" );
         Button rentalHistory = new Button( "Rental History" );
+        Button ownerDocuments= new Button("Owner Document");
         Button profile = new Button( "Profile");
         Button logout = new Button("Logout" );
 
@@ -35,6 +36,7 @@ public class OwnerSidebar {
         removeTenant.setPrefSize(300, 40);
         payments.setPrefSize(300, 40);
         rentalHistory.setPrefSize(300, 40);
+        ownerDocuments.setPrefSize(300,40);
         profile.setPrefSize(300, 40);
         logout.setPrefSize(300, 40);
 
@@ -42,13 +44,14 @@ public class OwnerSidebar {
 
        
 
-         dashboard.setStyle("-fx-background-color: #434141; -fx-text-fill: white;-fx-font-size: 16px;");
-         addTenant.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
-         removeTenant.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
-         payments.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
-         rentalHistory.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
-         profile.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
-         logout.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
+         dashboard.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white;-fx-font-size: 16px;");
+         addTenant.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         removeTenant.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         payments.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         rentalHistory.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+        ownerDocuments.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         profile.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         logout.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
 
         
         dashboard.setOnAction(e -> {stage.setScene(OwnerDashboard.createScene(stage) );
@@ -66,8 +69,12 @@ public class OwnerSidebar {
         rentalHistory.setOnAction(e -> {stage.setScene( RentalHistory.createScene(stage));
         });
 
+        ownerDocuments.setOnAction(e -> {stage.setScene(OwnerDocuments.createScene(stage));
+        });
+
         profile.setOnAction(e -> {stage.setScene( OwnerProfile.createScene(stage));
         });
+        
 
         logout.setOnAction(e -> {System.out.println("Logout");
         });
@@ -80,6 +87,7 @@ public class OwnerSidebar {
                 removeTenant,
                 payments,
                 rentalHistory,
+                ownerDocuments,
                 profile,
                 logout
         );
