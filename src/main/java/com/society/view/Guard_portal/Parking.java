@@ -12,10 +12,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import com.society.view.ScreenSize;
 
 public class Parking {
 
@@ -85,36 +90,64 @@ public class Parking {
         content.setSpacing(18);
 
         content.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5 ;"
         );
 
-        Label title =
-                new Label("Parking / Vehicle Entry");
+HBox header = new HBox();
+header.setPadding(new Insets(25, 35, 25, 35));
+header.setStyle("-fx-background-color: #4e342e;");
 
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #09090a;"
-        );
+// Title + description
+VBox titleBox = new VBox(3);
+
+Label title = new Label("Parking / Vehicle Entry");
+title.setStyle(
+        "-fx-font-size:24px;" +
+        "-fx-font-weight:bold;" +
+        "-fx-text-fill: white;"
+);
+
+Label description = new Label(
+        "Check parking availability and allot a space to vehicles."
+);
+description.setStyle(
+        "-fx-font-size:13px;" +
+        "-fx-text-fill: white;"
+);
+
+titleBox.getChildren().addAll(title, description);
 
 
-        Label subtitle =
-                new Label(
-                        "Check parking availability and allot a space to vehicles."
-                );
-
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #070808;"
-        );
+// Spacer pushes date to the right
+Region spacer = new Region();
+HBox.setHgrow(spacer, Priority.ALWAYS);
 
 
-        VBox heading =
-                new VBox(
-                        4,
-                        title,
-                        subtitle
-                );
+// Date
+Label day = new Label();
+Label date = new Label();
+
+LocalDate today = LocalDate.now();
+
+day.setText(today.format(
+        DateTimeFormatter.ofPattern("EEEE")
+));
+
+date.setText(today.format(
+        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+));
+
+VBox dateBox = new VBox(3);
+dateBox.setAlignment(Pos.CENTER_RIGHT);
+dateBox.getChildren().addAll(day, date);
+
+
+// Add everything to header
+header.getChildren().addAll(
+        titleBox,
+        spacer,
+        dateBox
+);
 
         HBox summary =
                 createSummary();
@@ -317,7 +350,7 @@ public class Parking {
         findSpotButton.setPrefHeight(40);
 
         findSpotButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -330,7 +363,7 @@ public class Parking {
         parkButton.setPrefHeight(40);
 
         parkButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -357,7 +390,7 @@ public class Parking {
                 entryButtons);
 
         content.getChildren().addAll(
-                heading,
+                header,
                 summary,
                 parkingCard,
                 entryCard
@@ -458,7 +491,13 @@ public class Parking {
                     "Not assigned"
             );
         });
-        return new Scene(root,1500,750);
+        BorderPane mainarea = new BorderPane();
+        mainarea.setTop(header);
+        mainarea.setCenter(content);
+        root.setCenter(mainarea);
+        return new Scene(root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
 }
 
     private static Button createSpotButton(

@@ -13,11 +13,15 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+
+import com.society.view.ScreenSize;
 
 public class ManualVisitorEntry {
 
@@ -38,39 +42,66 @@ public class ManualVisitorEntry {
         content.setSpacing(18);
 
         content.setFillWidth(true);
-       
 
         content.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
-        Label title =
-                new Label("Manual Visitor Entry");
+        HBox header = new HBox();
+header.setPadding(new Insets(25, 35, 25, 35));
+header.setStyle("-fx-background-color: #4e342e;");
 
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #070707;"
-        );
+// Title + description
+VBox titleBox = new VBox(3);
+
+Label title = new Label("Manual Visitor Entry");
+title.setStyle(
+        "-fx-font-size:24px;" +
+        "-fx-font-weight:bold;" +
+        "-fx-text-fill: white;"
+);
+
+Label description = new Label(
+        "Enter visitor details to approve their entry."
+);
+description.setStyle(
+        "-fx-font-size:13px;" +
+        "-fx-text-fill: white;"
+);
+
+titleBox.getChildren().addAll(title, description);
 
 
-        Label subtitle =
-                new Label(
-                        "Enter visitor details to approve their entry."
-                );
-
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #080808;"
-        );
+// Spacer pushes date to the right
+Region spacer = new Region();
+HBox.setHgrow(spacer, Priority.ALWAYS);
 
 
-        VBox heading =
-                new VBox(
-                        4,
-                        title,
-                        subtitle
-                );
+// Date
+Label day = new Label();
+Label date = new Label();
+
+LocalDate today = LocalDate.now();
+
+day.setText(today.format(
+        DateTimeFormatter.ofPattern("EEEE")
+));
+
+date.setText(today.format(
+        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+));
+
+VBox dateBox = new VBox(3);
+dateBox.setAlignment(Pos.CENTER_RIGHT);
+dateBox.getChildren().addAll(day, date);
+
+
+// Add everything to header
+header.getChildren().addAll(
+        titleBox,
+        spacer,
+        dateBox
+);
 
         VBox formCard =
                 new VBox();
@@ -294,7 +325,7 @@ public class ManualVisitorEntry {
         clearButton.setPrefHeight(40);
 
         clearButton.setStyle(
-                "-fx-background-color: #F4F7F4;" +
+                "-fx-background-color: white;" +
                 "-fx-text-fill: #070707;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -308,7 +339,7 @@ public class ManualVisitorEntry {
         submitButton.setPrefHeight(40);
 
         submitButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -416,9 +447,14 @@ public class ManualVisitorEntry {
                 buttons
         );
 
-        content.getChildren().addAll(heading,formCard);
-        root.setCenter(content);
-        return new Scene(root,1500,750);
+        content.getChildren().addAll(header,formCard);
+        BorderPane mainarea = new BorderPane();
+        mainarea.setTop(header);
+        mainarea.setCenter(content);
+        root.setCenter(mainarea);
+        return new Scene(root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
     }
 
     private static Label createLabel(
@@ -440,7 +476,7 @@ public class ManualVisitorEntry {
         field.setMaxWidth(Double.MAX_VALUE);
         field.setPrefHeight(40);
         field.setStyle(
-                "-fx-background-color: #F4F7F4;" +
+                "-fx-background-color: white;" +
                 "-fx-background-radius: 6;" +
                 "-fx-text-fill: #060606;" +
                 "-fx-prompt-text-fill: #52606D;"
@@ -451,7 +487,7 @@ public class ManualVisitorEntry {
         box.setMaxWidth(Double.MAX_VALUE);
         box.setPrefHeight(60);
         box.setStyle(
-                "-fx-background-color: #F4F7F4;" +
+                "-fx-background-color: white;" +
                 "-fx-background-radius: 6;" +
                 "-fx-text-fill: #080808;"
         );

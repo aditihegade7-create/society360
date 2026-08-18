@@ -1,5 +1,10 @@
 package com.society.view.Guard_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import com.society.view.ScreenSize;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -14,6 +19,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -71,23 +78,69 @@ public class VisitorLog {
         VBox mainContent = new VBox();
         mainContent.setPadding(new Insets(25, 35, 25, 35));
         mainContent.setSpacing(18);
-        mainContent.setStyle("-fx-background-color: #b3adad;");
+        mainContent.setStyle("-fx-background-color: #e8ddd5;");
 
-        Label title =new Label("Visitor Log");
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #080808;");
+         HBox header = new HBox();
+header.setPrefWidth(900);
+header.setPrefHeight(80);
+header.setPadding(new Insets(25, 35, 25, 35));
+header.setAlignment(Pos.CENTER_LEFT);
+header.setStyle("-fx-background-color: #4e342e;");
 
-        Label subtitle = new Label("Monitor visitor entries and exits at the society gate");
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #050505;");
+// Title + description
+VBox titleBox = new VBox(3);
 
-        VBox heading = new VBox(4,title,subtitle);
+Label title = new Label("Visitor Log");
+title.setStyle(
+        "-fx-font-size:24px;" +
+        "-fx-font-weight:bold;" +
+        "-fx-text-fill: white;"
+);
+
+Label description = new Label(
+        "Monitor visitor entries and exits at the society gate."
+);
+description.setStyle(
+        "-fx-font-size:13px;" +
+        "-fx-text-fill: white;"
+);
+
+titleBox.getChildren().addAll(title, description);
+
+
+// Spacer pushes date to the right
+Region spacer = new Region();
+HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+// Date
+Label day = new Label();
+Label date = new Label();
+
+LocalDate today = LocalDate.now();
+
+day.setText(today.format(
+        DateTimeFormatter.ofPattern("EEEE")
+));
+
+date.setText(today.format(
+        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+));
+
+VBox dateBox = new VBox(3);
+dateBox.setAlignment(Pos.CENTER_RIGHT);
+dateBox.getChildren().addAll(day, date);
+
+
+// Add everything to header
+header.getChildren().addAll(
+        titleBox,
+        spacer,
+        dateBox
+);
 
         GridPane summaryGrid = new GridPane();
-        summaryGrid.setHgap(15);
+        summaryGrid.setHgap(20);
 
         Label totalValue = new Label();
         Label insideValue = new Label();
@@ -137,7 +190,7 @@ public class VisitorLog {
         searchButton.setPrefWidth(100);
         searchButton.setPrefHeight(38);
         searchButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
@@ -146,7 +199,7 @@ public class VisitorLog {
         refreshButton.setPrefWidth(100);
         refreshButton.setPrefHeight(38);
         refreshButton.setStyle(
-                "-fx-background-color: #fefdfd;" +
+                "-fx-background-color: white;" +
                 "-fx-text-fill: #050505;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
@@ -217,7 +270,7 @@ public class VisitorLog {
         addVisitorButton.setPrefWidth(140);
         addVisitorButton.setPrefHeight(40);
         addVisitorButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
@@ -362,14 +415,19 @@ public class VisitorLog {
         });
 
         mainContent.getChildren().addAll(
-                heading,
+                header,
                 summaryGrid,
                 searchSection,
                 visitorTable,
                 actionButtons
         );
-        root.setCenter(mainContent);
-        return new Scene(root,1500,750);
+        BorderPane mainarea = new BorderPane();
+        mainarea.setTop(header);
+        mainarea.setCenter(mainContent);
+        root.setCenter(mainarea);
+        return new Scene(root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
     }
 
     private static VBox createSummaryCard(String title,Label value) {

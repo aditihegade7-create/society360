@@ -1,5 +1,7 @@
 package com.society.view.Guard_portal;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,7 +23,7 @@ public class QRScanner {
         root1.setSpacing(20);
         root1.setAlignment(Pos.CENTER);
         root1.setStyle(
-                "-fx-background-color: #b3adad;");
+                "-fx-background-color: #e8ddd5;");
 
         Label title = new Label("QR Scanner");
         title.setStyle(
@@ -47,6 +49,10 @@ public class QRScanner {
                 backButton
         );
 
-        return new Scene(root1, 1500, 750);
+        
+        return new Scene(root1, 
+                ScreenSize.getHeight(),
+                ScreenSize.getWidth()      
+        );
     }
 }

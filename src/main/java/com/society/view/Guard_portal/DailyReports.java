@@ -11,11 +11,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import com.society.view.ScreenSize;
 
 public class DailyReports {
 
@@ -30,26 +33,64 @@ public class DailyReports {
         VBox content = new VBox();
         content.setPadding(new Insets(25, 40, 25, 40));
         content.setSpacing(18);
-        content.setStyle("-fx-background-color: #b3adad;");
+        content.setStyle("-fx-background-color: #e8ddd5;");
 
-        Label title = new Label("Daily Reports");
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #030a11;");
 
-        Label subtitle = new Label("View today's visitor, parking and emergency activity.");
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #090b0c;");
+       HBox header = new HBox();
+header.setPadding(new Insets(25, 35, 25, 35));
+header.setStyle("-fx-background-color: #4e342e;");
 
-        Label dateLabel = new Label("Report Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
-        dateLabel.setStyle(
-                "-fx-font-size: 12px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #050a08;");
+// Title + description
+VBox titleBox = new VBox(3);
 
-        VBox heading = new VBox(4,title,subtitle,dateLabel);
+Label title = new Label("Daily Reports");
+title.setStyle(
+        "-fx-font-size:24px;" +
+        "-fx-font-weight:bold;" +
+        "-fx-text-fill: white;"
+);
+
+Label description = new Label(
+        "Main Gate    Shift A    (08:00 AM - 04:00 PM)"
+);
+description.setStyle(
+        "-fx-font-size:13px;" +
+        "-fx-text-fill: white;"
+);
+
+titleBox.getChildren().addAll(title, description);
+
+
+// Spacer pushes date to the right
+Region spacer = new Region();
+HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+// Date
+Label day = new Label();
+Label date = new Label();
+
+LocalDate today = LocalDate.now();
+
+day.setText(today.format(
+        DateTimeFormatter.ofPattern("EEEE")
+));
+
+date.setText(today.format(
+        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+));
+
+VBox dateBox = new VBox(3);
+dateBox.setAlignment(Pos.CENTER_RIGHT);
+dateBox.getChildren().addAll(day, date);
+
+
+// Add everything to header
+header.getChildren().addAll(
+        titleBox,
+        spacer,
+        dateBox
+);
 
         VBox summaryCard = new VBox();
         summaryCard.setPadding(new Insets(20));
@@ -149,7 +190,7 @@ public class DailyReports {
         refreshButton.setPrefWidth(145);
         refreshButton.setPrefHeight(40);
         refreshButton.setStyle(
-                "-fx-background-color: #434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;");
@@ -179,13 +220,18 @@ public class DailyReports {
         });
 
         content.getChildren().addAll(
-                heading,
+                header,
                 summaryCard,
                 reportCard,
                 buttons);
 
-        root.setCenter(content);
-        return new Scene(root,1500,750);
+        BorderPane mainarea = new BorderPane();
+        mainarea.setTop(header);
+        mainarea.setCenter(content);
+        root.setCenter(mainarea);
+        return new Scene(root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
     }
 
     private static void generateReport(TextArea reportArea) {
