@@ -1,6 +1,6 @@
 package com.society.view;
 
-import com.society.view.Welcome.WelcomePage;
+import com.society.view.Welcome.LogInPage;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -9,9 +9,9 @@ public class Splash extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        WelcomePage login = new WelcomePage();
-        stage.setScene(login.createScene());
-        stage.show();
+       LogInPage logInPage = new LogInPage();
+       stage.setScene(logInPage.createScene(stage));
+       stage.show();
     }
 
 
