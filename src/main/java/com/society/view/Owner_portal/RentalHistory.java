@@ -16,32 +16,16 @@ public class RentalHistory {
 
     public static Scene createScene(Stage stage) {
 
-        // =========================
-        // ROOT
-        // =========================
-
         BorderPane root = new BorderPane();
+       
+        OwnerSidebar sidebar =new OwnerSidebar(stage);
 
-        // =========================
-        // SIDEBAR
-        // =========================
+        root.setLeft(sidebar.getSidebar());
 
-        OwnerSidebar sidebar =
-                new OwnerSidebar(stage);
-
-        root.setLeft(
-                sidebar.getSidebar()
-        );
-
-        // =========================
-        // MAIN CONTENT
-        // =========================
-
+       
         VBox mainContent = new VBox();
 
-        mainContent.setPadding(
-                new Insets(25, 35, 25, 35)
-        );
+        mainContent.setPadding( new Insets(25, 35, 25, 35) );
 
         mainContent.setSpacing(15);
 
@@ -49,49 +33,25 @@ public class RentalHistory {
                 Pos.TOP_LEFT
         );
 
-        mainContent.setStyle(
-                "-fx-background-color: #789098;"
-        );
+        mainContent.setStyle( "-fx-background-color: #b3adad;" );
 
-        // =========================
-        // HEADER
-        // =========================
-
-        Label title = new Label(
-                "Rental History"
-        );
+        Label title = new Label( "Rental History" );
 
         title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-font-size: 27px;-fx-font-weight: bold;-fx-text-fill: #102A43;"
         );
 
-        Label subtitle = new Label(
-                "View rental history of tenants"
-        );
+        Label subtitle = new Label( "View rental history of tenants");
 
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;"
-        );
+        subtitle.setStyle("-fx-font-size: 13px;-fx-text-fill: #263238;" );
 
-        VBox heading = new VBox(
-                5,
-                title,
-                subtitle
-        );
+        VBox heading = new VBox( 5,title,subtitle );
 
         mainContent.getChildren().add(
                 heading
         );
 
-        // =========================
-        // TABLE
-        // =========================
-
-        TableView<Rental> table =
-                new TableView<>();
+        TableView<Rental> table =new TableView<>();
 
         table.setPrefHeight(550);
 
@@ -99,9 +59,6 @@ public class RentalHistory {
                 TableView.CONSTRAINED_RESIZE_POLICY
         );
 
-        // =========================
-        // COLUMNS
-        // =========================
 
         TableColumn<Rental, String> tenantColumn =
                 new TableColumn<>("Tenant Name");
@@ -154,10 +111,7 @@ public class RentalHistory {
                 statusColumn
         );
 
-        // =========================
-        // SAMPLE DATA
-        // =========================
-
+       
         table.getItems().addAll(
 
                 new Rental(
@@ -197,45 +151,27 @@ public class RentalHistory {
                 )
         );
 
-        // =========================
-        // TABLE STYLE
-        // =========================
-
+        
         table.setStyle(
                 "-fx-background-color: white;" +
                 "-fx-border-color: #D5DDE0;"
         );
 
-        // =========================
-        // ADD TABLE
-        // =========================
-
+       
         mainContent.getChildren().add(
                 table
         );
 
-        // =========================
-        // CENTER
-        // =========================
-
+        
         root.setCenter(
                 mainContent
         );
 
-        // =========================
-        // SCENE
-        // =========================
-
-        return new Scene(
-                root,
-                1500,
-                750
+        return new Scene( root, 1500, 750
         );
     }
 
-    // =========================
-    // RENTAL CLASS
-    // =========================
+
 
     public static class Rental {
 

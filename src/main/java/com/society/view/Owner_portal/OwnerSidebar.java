@@ -12,159 +12,65 @@ public class OwnerSidebar {
     private VBox sidebar;
 
     public OwnerSidebar(Stage stage) {
-
         sidebar = new VBox(10);
+        sidebar.setPadding( new Insets(20) );
+        sidebar.setPrefWidth(300);
+        sidebar.setStyle("-fx-background-color: #4a4b4b;" );
 
-        sidebar.setPadding(
-                new Insets(20)
-        );
+        Label logo = new Label( "Society360");
+        logo.setStyle(  "-fx-font-size: 22px;-fx-font-weight: bold;-fx-text-fill: white;" );
+        Label portal = new Label( "Owner Portal" );
+        portal.setTextFill( Color.LIGHTBLUE );
 
-        sidebar.setPrefWidth(220);
+        Button dashboard = new Button("Dashboard" );
+        Button addTenant = new Button( "Add Tenant");
+        Button removeTenant = new Button( "Remove Tenant");
+        Button payments = new Button("View Payments" );
+        Button rentalHistory = new Button( "Rental History" );
+        Button profile = new Button( "Profile");
+        Button logout = new Button("Logout" );
 
-        sidebar.setStyle(
-                "-fx-background-color: #102A43;"
-        );
+        dashboard.setPrefSize(300, 40);
+        addTenant.setPrefSize(300, 40);
+        removeTenant.setPrefSize(300, 40);
+        payments.setPrefSize(300, 40);
+        rentalHistory.setPrefSize(300, 40);
+        profile.setPrefSize(300, 40);
+        logout.setPrefSize(300, 40);
 
-        // =========================
-        // LOGO
-        // =========================
+        sidebar.setSpacing(10);
 
-        Label logo = new Label(
-                "Society360"
-        );
+       
 
-        logo.setStyle(
-                "-fx-font-size: 20px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: white;"
-        );
+         dashboard.setStyle("-fx-background-color: #434141; -fx-text-fill: white;-fx-font-size: 16px;");
+         addTenant.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
+         removeTenant.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
+         payments.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
+         rentalHistory.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
+         profile.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
+         logout.setStyle("-fx-background-color: #434141; -fx-text-fill: white; -fx-font-size: 16px;");
 
-        Label portal = new Label(
-                "Owner Portal"
-        );
-
-        portal.setTextFill(
-                Color.LIGHTBLUE
-        );
-
-        // =========================
-        // BUTTONS
-        // =========================
-
-        Button dashboard = new Button(
-                "Dashboard"
-        );
-
-        Button addTenant = new Button(
-                "Add Tenant"
-        );
-
-        Button removeTenant = new Button(
-                "Remove Tenant"
-        );
-
-        Button payments = new Button(
-                "View Payments"
-        );
-
-        Button rentalHistory = new Button(
-                "Rental History"
-        );
-
-        Button profile = new Button(
-                "Profile"
-        );
-
-        Button logout = new Button(
-                "Logout"
-        );
-
-        // =========================
-        // BUTTON WIDTH
-        // =========================
-
-        dashboard.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        addTenant.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        removeTenant.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        payments.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        rentalHistory.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        profile.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        logout.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        // =========================
-        // SET ON ACTION
-        // =========================
-
-        dashboard.setOnAction(e -> {
-
-            stage.setScene(
-                    OwnerDashboard.createScene(stage)
-            );
+        
+        dashboard.setOnAction(e -> {stage.setScene(OwnerDashboard.createScene(stage) );
         });
 
-        addTenant.setOnAction(e -> {
-
-            stage.setScene(
-                    AddTenant.createScene(stage)
-            );
+        addTenant.setOnAction(e -> { stage.setScene( AddTenant.createScene(stage));
         });
 
-        removeTenant.setOnAction(e -> {
-
-            stage.setScene(
-                    RemoveTenant.createScene(stage)
-            );
+        removeTenant.setOnAction(e -> {stage.setScene(RemoveTenant.createScene(stage));
         });
 
-        payments.setOnAction(e -> {
-
-            stage.setScene(
-                    ViewPayments.createScene(stage)
-            );
+        payments.setOnAction(e -> {stage.setScene(ViewPayments.createScene(stage));
         });
 
-        rentalHistory.setOnAction(e -> {
-
-            stage.setScene(
-                    RentalHistory.createScene(stage)
-            );
+        rentalHistory.setOnAction(e -> {stage.setScene( RentalHistory.createScene(stage));
         });
 
-        profile.setOnAction(e -> {
-
-            stage.setScene(
-                    OwnerProfile.createScene(stage)
-            );
+        profile.setOnAction(e -> {stage.setScene( OwnerProfile.createScene(stage));
         });
 
-        logout.setOnAction(e -> {
-
-            System.out.println("Logout");
+        logout.setOnAction(e -> {System.out.println("Logout");
         });
-
-        // =========================
-        // ADD TO SIDEBAR
-        // =========================
 
         sidebar.getChildren().addAll(
                 logo,
@@ -180,7 +86,6 @@ public class OwnerSidebar {
     }
 
     public VBox getSidebar() {
-
-        return sidebar;
+     return sidebar;
     }
 }

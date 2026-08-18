@@ -15,94 +15,41 @@ import javafx.stage.Stage;
 public class ViewPayments {
 
     public static Scene createScene(Stage stage) {
-
-        // =========================
-        // ROOT
-        // =========================
-
+    
         BorderPane root = new BorderPane();
+        OwnerSidebar sidebar =new OwnerSidebar(stage);
 
-        // =========================
-        // SIDEBAR
-        // =========================
+        root.setLeft(sidebar.getSidebar());
 
-        OwnerSidebar sidebar =
-                new OwnerSidebar(stage);
-
-        root.setLeft(
-                sidebar.getSidebar()
-        );
-
-        // =========================
-        // MAIN CONTENT
-        // =========================
-
+       
         VBox mainContent = new VBox();
 
-        mainContent.setPadding(
-                new Insets(25, 35, 25, 35)
-        );
+        mainContent.setPadding( new Insets(25, 35, 25, 35) );
 
         mainContent.setSpacing(15);
 
-        mainContent.setAlignment(
-                Pos.TOP_LEFT
+        mainContent.setAlignment(Pos.TOP_LEFT);
+
+        mainContent.setStyle( "-fx-background-color: #b3adad;"
         );
 
-        mainContent.setStyle(
-                "-fx-background-color: #789098;"
+       
+        Label title = new Label( "Payments" );
+        title.setStyle( "-fx-font-size: 27px;-fx-font-weight: bold;-fx-text-fill: #102A43;"
         );
+         Label subtitle = new Label("View all rent and maintenance payments");
+ subtitle.setStyle("-fx-font-size: 13px;-fx-text-fill: #263238;" );
 
-        // =========================
-        // HEADER
-        // =========================
-
-        Label title = new Label(
-                "Payments"
-        );
-
-        title.setStyle(
-                "-fx-font-size: 27px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
-        );
-
-        Label subtitle = new Label(
-                "View all rent and maintenance payments"
-        );
-
-        subtitle.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #263238;"
-        );
-
-        VBox heading = new VBox(
-                5,
-                title,
-                subtitle
-        );
-
+        VBox heading = new VBox(5,title,subtitle);
         mainContent.getChildren().add(
                 heading
         );
-
-        // =========================
-        // TABLE
-        // =========================
-
-        TableView<Payment> table =
-                new TableView<>();
-
+        TableView<Payment> table = new TableView<>();
         table.setPrefHeight(500);
-
-        table.setColumnResizePolicy(
-                TableView.CONSTRAINED_RESIZE_POLICY
+        table.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY
         );
 
-        // =========================
-        // COLUMNS
-        // =========================
-
+        
         TableColumn<Payment, String> dateColumn =
                 new TableColumn<>("Date");
 
@@ -154,15 +101,13 @@ public class ViewPayments {
                 statusColumn
         );
 
-        // =========================
-        // SAMPLE DATA
-        // =========================
+       
 
         table.getItems().addAll(
 
                 new Payment(
                         "10 May 2025",
-                        "Rahul Sharma",
+                        "Aditi Hegde",
                         "A-101",
                         "May 2025 Rent",
                         "₹9,000",
@@ -189,7 +134,7 @@ public class ViewPayments {
 
                 new Payment(
                         "15 May 2025",
-                        "Priya Mehta",
+                        "Sanavi Gabale",
                         "B-201",
                         "May 2025 Rent",
                         "₹12,500",
@@ -206,9 +151,7 @@ public class ViewPayments {
                 table
         );
 
-        // =========================
-        // SUMMARY
-        // =========================
+       
 
         HBox summary = new HBox();
 
@@ -241,22 +184,10 @@ public class ViewPayments {
                 total
         );
 
-        mainContent.getChildren().add(
-                summary
+        mainContent.getChildren().add( summary
         );
 
-        // =========================
-        // CENTER
-        // =========================
-
-        root.setCenter(
-                mainContent
-        );
-
-        // =========================
-        // SCENE
-        // =========================
-
+        root.setCenter( mainContent);
         return new Scene(
                 root,
                 1500,
@@ -264,10 +195,7 @@ public class ViewPayments {
         );
     }
 
-    // =========================
-    // SUMMARY BOX
-    // =========================
-
+    
     private static VBox createSummaryBox(
             String title,
             String value
@@ -276,33 +204,21 @@ public class ViewPayments {
         VBox box = new VBox();
 
         box.setSpacing(5);
-
-        box.setPadding(
-                new Insets(15)
+        box.setPadding( new Insets(15)
         );
-
         box.setPrefWidth(200);
-
         box.setStyle(
-                "-fx-background-color: #F4F7F8;" +
-                "-fx-background-radius: 8;"
+                "-fx-background-color: #F4F7F8;-fx-background-radius: 8;");
+
+        Label titleLabel =new Label(title);
+
+        titleLabel.setStyle( "-fx-font-size: 13px;-fx-text-fill: #546E7A;"
         );
 
-        Label titleLabel =
-                new Label(title);
-
-        titleLabel.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #546E7A;"
-        );
-
-        Label valueLabel =
-                new Label(value);
+        Label valueLabel = new Label(value);
 
         valueLabel.setStyle(
-                "-fx-font-size: 20px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #102A43;"
+                "-fx-font-size: 20px;-fx-font-weight: bold;fx-text-fill: #102A43;"
         );
 
         box.getChildren().addAll(
@@ -313,10 +229,7 @@ public class ViewPayments {
         return box;
     }
 
-    // =========================
-    // PAYMENT CLASS
-    // =========================
-
+    
     public static class Payment {
 
         private String date;

@@ -11,19 +11,8 @@ public class Splash extends Application{
 
     @Override
     public void start(Stage stage) throws Exception {
-       stage.setTitle(
-                "Society360 - Owner Portal"
-        );
-
-        stage.setScene(OwnerDashboard.createScene(stage)
-        );
-
-        stage.show();
+       stage.setTitle( "Society360 - Owner Portal" );
+       stage.setScene(OwnerDashboard.createScene(stage));
+       stage.show();
     }
 }
-       
-        
-
-
-
-
