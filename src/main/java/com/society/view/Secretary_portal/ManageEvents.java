@@ -30,7 +30,7 @@ public class ManageEvents {
         VBox mainvb = new VBox(20);
         mainvb.setPadding(new Insets(25));
         mainvb.setPrefWidth(1220);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
+        mainvb.setStyle("-fx-background-color: #e8ddd5;");
 
         // HEADING
 
@@ -69,7 +69,7 @@ public class ManageEvents {
         addEventBtn.setPrefWidth(130);
         addEventBtn.setPrefHeight(40);
         addEventBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;"
@@ -191,7 +191,7 @@ public class ManageEvents {
         viewAllBtn.setPrefWidth(1180);
         viewAllBtn.setPrefHeight(40);
         viewAllBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;" +
