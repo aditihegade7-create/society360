@@ -29,7 +29,8 @@ public class ManageComplaints {
 
         VBox mainvb = new VBox(20);
         mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
+         mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setMaxWidth(Double.MAX_VALUE);
         mainvb.setStyle("-fx-background-color:#b3adad;");
 
         // HEADING
@@ -394,20 +395,43 @@ public class ManageComplaints {
 
         // SCROLL PANE
 
-        ScrollPane scrollPane =  new ScrollPane();
+        ScrollPane scrollPane = new ScrollPane();
 
-              
-        scrollPane.setContent(
-                complaintList
-        );
+        scrollPane.setContent(complaintList);
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(480);
 
+        // Horizontal scrollbar नको
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        // Vertical scrolling चालू राहील
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        // Background आणि border remove
         scrollPane.setStyle(
                 "-fx-background-color:transparent;" +
-                "-fx-border-color:transparent;"
+                "-fx-background-insets:0;" +
+                "-fx-border-color:transparent;" +
+                "-fx-padding:0;"
         );
+
+        // Complaint list full available width मध्ये
+        complaintList.setMaxWidth(Double.MAX_VALUE);
+        complaintList.setFillWidth(true);
+
+        scrollPane.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+
+        javafx.scene.Node verticalBar =
+                scrollPane.lookup(".scroll-bar:vertical");
+
+        if (verticalBar != null) {
+                verticalBar.setStyle(
+                        "-fx-opacity:0;" +
+                        "-fx-pref-width:0;"
+                );
+        }
+        });
 
         // SHOW OPEN COMPLAINTS BY DEFAULT
 
@@ -513,6 +537,8 @@ public class ManageComplaints {
                 sidebar,
                 mainvb
         );
+         HBox.setHgrow(mainvb, Priority.ALWAYS);
+
 
         // SCENE
 

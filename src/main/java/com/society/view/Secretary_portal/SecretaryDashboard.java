@@ -487,6 +487,7 @@ public class SecretaryDashboard {
                 mainvb,
                 ScreenSize.getWidth(),
                 ScreenSize.getHeight());
+        
         SecretaryDash = scene;
 
         return SecretaryDash;

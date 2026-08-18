@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -17,77 +19,140 @@ public class GenerateReports {
 
     public Scene createScene(Stage stage) {
 
-       
+        // ================= SIDEBAR =================
+
         SecretarySidebar sidebarObj = new SecretarySidebar();
         VBox sidebar = sidebarObj.createSidebar(stage);
 
+
+        // ================= MAIN CONTENT =================
+
         VBox mainvb = new VBox(20);
+
         mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
-       
+        mainvb.setMaxWidth(Double.MAX_VALUE);
 
-        Label heading = new Label("GENERATE REPORTS");               
-        heading.setStyle("-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#434141;");
+        mainvb.setStyle(
+                "-fx-background-color:#b3adad;"
+        );
 
 
-        Label title =   new Label("Generate Reports");              
-        title.setStyle("-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:#123C36;");
-        Label subtitle =   new Label("Generate and view society management reports");
-        subtitle.setStyle("-fx-font-size:13px;-fx-text-fill:black");
+        // ================= HEADING =================
+
+        Label heading = new Label("GENERATE REPORTS");
+
+        heading.setStyle(
+                "-fx-font-size:18px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#434141;"
+        );
+
+
+        // ================= TITLE =================
+
+        Label title = new Label("Generate Reports");
+
+        title.setStyle(
+                "-fx-font-size:20px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+
+        Label subtitle =
+                new Label("Generate and view society management reports");
+
+        subtitle.setStyle(
+                "-fx-font-size:13px;" +
+                "-fx-text-fill:black;"
+        );
+
+
         VBox titleBox = new VBox(5);
+
         titleBox.getChildren().addAll(
                 title,
                 subtitle
         );
 
-        // REPORT CARDS
+
+        // ================= STACKPANE =================
+
+        StackPane contentPane = new StackPane();
+
+        contentPane.getChildren().add(mainvb);
+
+
+        // ================= REPORT CARDS =================
 
         HBox row1 = new HBox(20);
         HBox row2 = new HBox(20);
+
         row1.setAlignment(Pos.CENTER_LEFT);
         row2.setAlignment(Pos.CENTER_LEFT);
+
+
+        // Resident Report
 
         VBox residentReport =
                 createReportCard(
                         "Resident Report",
-                        "View total residents and resident details"
+                        "View total residents and resident details",
+                        contentPane
                 );
 
+
+        // Payment Report
 
         VBox paymentReport =
                 createReportCard(
                         "Payment Report",
-                        "View pending, paid and overdue payments"
+                        "View pending, paid and overdue payments",
+                        contentPane
                 );
+
+
+        // Complaint Report
 
         VBox complaintReport =
                 createReportCard(
                         "Complaint Report",
-                        "View resident complaints and their status"
+                        "View resident complaints and their status",
+                        contentPane
                 );
 
+
+        // Visitor Report
 
         VBox visitorReport =
                 createReportCard(
                         "Visitor Report",
-                        "View visitor entry and exit records"
+                        "View visitor entry and exit records",
+                        contentPane
                 );
 
+
+        // Event Report
 
         VBox eventReport =
                 createReportCard(
                         "Event Report",
-                        "View upcoming and completed events"
+                        "View upcoming and completed events",
+                        contentPane
                 );
 
+
+        // Maintenance Report
 
         VBox maintenanceReport =
                 createReportCard(
                         "Maintenance Report",
-                        "View society maintenance records"
+                        "View society maintenance records",
+                        contentPane
                 );
 
+
+        // ================= ADD CARDS TO ROWS =================
 
         row1.getChildren().addAll(
                 residentReport,
@@ -103,12 +168,14 @@ public class GenerateReports {
         );
 
 
-        // DOWNLOAD / GENERATE BUTTON
+        // ================= GENERATE BUTTON =================
 
         Button generateBtn =
                 new Button("Generate Report");
+
         generateBtn.setPrefWidth(1180);
         generateBtn.setPrefHeight(45);
+
         generateBtn.setStyle(
                 "-fx-background-color:#434141;" +
                 "-fx-text-fill:white;" +
@@ -116,7 +183,8 @@ public class GenerateReports {
                 "-fx-background-radius:8;"
         );
 
-        // ADD EVERYTHING TO MAIN
+
+        // ================= MAIN CONTENT =================
 
         mainvb.getChildren().addAll(
                 heading,
@@ -126,34 +194,46 @@ public class GenerateReports {
                 generateBtn
         );
 
-        // ROOT
 
-        HBox root =
-                new HBox();
+        // ================= ROOT =================
+
+        HBox root = new HBox();
 
         root.getChildren().addAll(
                 sidebar,
-                mainvb
+                contentPane
         );
 
-        // generateReportsScene =
-        //         new Scene(root, 1500, 750);
+        HBox.setHgrow(
+                contentPane,
+                Priority.ALWAYS
+        );
 
-         Scene scene = new Scene(
+
+        // ================= SCENE =================
+
+        Scene scene = new Scene(
                 root,
                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
+                ScreenSize.getHeight()
+        );
+
         generateReportsScene = scene;
         return generateReportsScene;
     }
 
+      //  REPORT CARD METHOD
+    
 
     private VBox createReportCard(
             String reportName,
-            String description) {
+            String description,
+            StackPane contentPane) {
 
-        VBox card =
-                new VBox(10);
+
+        // ================= CARD =================
+
+        VBox card = new VBox(10);
 
         card.setPadding(
                 new Insets(20)
@@ -170,6 +250,8 @@ public class GenerateReports {
         );
 
 
+        // ================= REPORT NAME =================
+
         Label name =
                 new Label(reportName);
 
@@ -179,6 +261,8 @@ public class GenerateReports {
                 "-fx-text-fill:#123C36;"
         );
 
+
+        // ================= DESCRIPTION =================
 
         Label details =
                 new Label(description);
@@ -190,6 +274,8 @@ public class GenerateReports {
                 "-fx-text-fill:#777777;"
         );
 
+
+        // ================= VIEW BUTTON =================
 
         Button viewBtn =
                 new Button("View Report");
@@ -205,6 +291,125 @@ public class GenerateReports {
         );
 
 
+        // =====================================================
+        //                  BUTTON CLICK
+        // =====================================================
+
+        viewBtn.setOnAction(e -> {
+
+
+            // ================= POPUP =================
+
+            VBox reportPopup =
+                    new VBox(15);
+
+            reportPopup.setPrefWidth(400);
+            reportPopup.setMaxWidth(400);
+
+            reportPopup.setPrefHeight(250);
+            reportPopup.setMaxHeight(250);
+
+            reportPopup.setPadding(
+                    new Insets(25)
+            );
+
+            reportPopup.setStyle(
+                    "-fx-background-color:white;" +
+                    "-fx-background-radius:12;" +
+                    "-fx-border-color:#DDDDDD;" +
+                    "-fx-border-radius:12;"
+            );
+
+
+            // ================= POPUP TITLE =================
+
+            Label popupTitle =
+                    new Label(reportName);
+
+            popupTitle.setStyle(
+                    "-fx-font-size:20px;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-text-fill:#123C36;"
+            );
+
+
+            // ================= POPUP DESCRIPTION =================
+
+            Label popupText =
+                    new Label(description);
+
+            popupText.setWrapText(true);
+
+            popupText.setStyle(
+                    "-fx-font-size:13px;" +
+                    "-fx-text-fill:#666666;"
+            );
+
+
+            // ================= REPORT INFORMATION =================
+
+            Label reportInfo =
+                    new Label(
+                            "Report details will be displayed here."
+                    );
+
+            reportInfo.setStyle(
+                    "-fx-font-size:13px;" +
+                    "-fx-text-fill:#555555;"
+            );
+
+
+            // ================= CLOSE BUTTON =================
+
+            Button closeBtn =
+                    new Button("Close");
+
+            closeBtn.setPrefWidth(90);
+            closeBtn.setPrefHeight(35);
+
+            closeBtn.setStyle(
+                    "-fx-background-color:#434141;" +
+                    "-fx-text-fill:white;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-background-radius:7;"
+            );
+
+
+            // ================= CLOSE ACTION =================
+
+            closeBtn.setOnAction(
+                    event -> contentPane
+                            .getChildren()
+                            .remove(reportPopup)
+            );
+
+
+            // ================= ADD POPUP CONTENT =================
+
+            reportPopup.getChildren().addAll(
+                    popupTitle,
+                    popupText,
+                    reportInfo,
+                    closeBtn
+            );
+
+
+            // ================= SHOW POPUP =================
+
+            contentPane.getChildren().add(
+                    reportPopup
+            );
+
+
+            StackPane.setAlignment(
+                    reportPopup,
+                    Pos.CENTER
+            );
+        });
+
+
+        // ================= ADD CARD CONTENT =================
+
         card.getChildren().addAll(
                 name,
                 details,
@@ -215,3 +420,4 @@ public class GenerateReports {
         return card;
     }
 }
+

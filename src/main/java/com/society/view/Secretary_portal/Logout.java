@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -27,7 +28,8 @@ public class Logout {
 
         VBox mainvb = new VBox(20);
         mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
+         mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setMaxWidth(Double.MAX_VALUE);
         mainvb.setAlignment(Pos.TOP_CENTER);
         mainvb.setStyle("-fx-background-color:#b3adad;");
 
@@ -181,6 +183,9 @@ public class Logout {
                 sidebar,
                 mainvb
         );
+         HBox.setHgrow(mainvb, Priority.ALWAYS);
+
+
 
         // SCENE
 

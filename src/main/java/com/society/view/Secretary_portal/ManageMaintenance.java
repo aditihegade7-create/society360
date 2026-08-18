@@ -28,7 +28,8 @@ public class ManageMaintenance {
         VBox mainvb = new VBox(20);
 
         mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
+        mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setMaxWidth(Double.MAX_VALUE);
 
         mainvb.setStyle(
                 "-fx-background-color:#b3adad;"
@@ -453,6 +454,8 @@ public class ManageMaintenance {
                 sidebar,
                 mainvb
         );
+         HBox.setHgrow(mainvb, Priority.ALWAYS);
+
 
 
         // =====================================================
