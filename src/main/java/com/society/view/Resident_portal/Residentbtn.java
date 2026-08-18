@@ -48,7 +48,7 @@ public class Residentbtn {
         );
 
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
         // ================= HEADING =================
@@ -173,7 +173,7 @@ public class Residentbtn {
         payButton.setPrefHeight(38);
 
         payButton.setStyle(
-                "-fx-background-color: #789098;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
@@ -275,7 +275,7 @@ public class Residentbtn {
                 new VBox(18);
 
         content.getChildren().addAll(
-                heading,
+                
                 summaryBox,
                 currentTitle,
                 currentCard,
@@ -302,7 +302,11 @@ public class Residentbtn {
                 scrollPane
         );
 
-        root.setCenter(mainContent);
+ BorderPane mainarea = new BorderPane();
+ mainarea.setTop(heading);
+mainarea.setCenter(mainContent);
+heading.setStyle("-fx-background-color: #4e342e");
+        root.setCenter(mainarea);
 
         return new Scene(
                 root,
@@ -349,7 +353,7 @@ public class Residentbtn {
         );
 
         titleLabel.setTextFill(
-                Color.web("#607D8B")
+                Color.web("#4e342e")
         );
 
         Label amountLabel =
@@ -364,7 +368,7 @@ public class Residentbtn {
         );
 
         amountLabel.setTextFill(
-                Color.web("#263238")
+                Color.web("#4e342e")
         );
 
         Label descriptionLabel =
@@ -414,7 +418,7 @@ public class Residentbtn {
         );
 
         label.setTextFill(
-                Color.web("#607D8B")
+                Color.web("#4e342e")
         );
 
         Label value =
@@ -429,7 +433,7 @@ public class Residentbtn {
         );
 
         value.setTextFill(
-                Color.web("#263238")
+                Color.web("#4e342e")
         );
 
         Region spacer = new Region();
@@ -483,7 +487,7 @@ public class Residentbtn {
         );
 
         monthLabel.setTextFill(
-                Color.web("#263238")
+                Color.web("#4e342e")
         );
 
         Label amountLabel =
@@ -516,7 +520,7 @@ public class Residentbtn {
                 new Label(status);
 
         statusLabel.setStyle(
-                "-fx-background-color: #789098;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-padding: 5 12 5 12;" +
                 "-fx-background-radius: 15;" +

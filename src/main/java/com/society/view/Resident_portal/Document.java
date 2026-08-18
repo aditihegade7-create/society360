@@ -14,16 +14,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import javafx.stage.FileChooser;
+
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 public class Document {
 
     public Scene getDocumentScene(Stage stage) {
-
-
-
-
-
-    
 
         panel panelobj = new panel(stage);
 
@@ -32,6 +36,7 @@ public class Document {
         BorderPane root = new BorderPane();
 
         root.setLeft(panelobj.getSidebar());
+
 
         // ================= MAIN CONTENT =================
 
@@ -42,8 +47,9 @@ public class Document {
         );
 
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
+
 
         // ================= HEADING =================
 
@@ -59,6 +65,7 @@ public class Document {
 
         title.setTextFill(Color.WHITE);
 
+
         Label subtitle = new Label(
                 "Access and manage your society documents"
         );
@@ -69,12 +76,14 @@ public class Document {
 
         subtitle.setTextFill(Color.WHITE);
 
+
         VBox heading = new VBox(5);
 
         heading.getChildren().addAll(
                 title,
                 subtitle
         );
+
 
         // ================= SEARCH =================
 
@@ -83,6 +92,7 @@ public class Document {
         searchBox.setAlignment(
                 Pos.CENTER_LEFT
         );
+
 
         TextField searchField =
                 new TextField();
@@ -93,6 +103,7 @@ public class Document {
 
         searchField.setPrefWidth(280);
         searchField.setPrefHeight(35);
+
 
         ComboBox<String> category =
                 new ComboBox<>();
@@ -112,51 +123,82 @@ public class Document {
         category.setPrefWidth(170);
         category.setPrefHeight(35);
 
+
+        // ================= ADD DOCUMENT BUTTON =================
+
+        Button addDocumentButton =
+                new Button("+ Add Document");
+
+        addDocumentButton.setPrefHeight(35);
+
+        addDocumentButton.setStyle(
+                "-fx-background-color: #789098;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 5;"
+        );
+
+
         searchBox.getChildren().addAll(
                 searchField,
-                category
+                category,
+                addDocumentButton
         );
+
 
         // ================= DOCUMENT LIST =================
 
         VBox documentList =
                 new VBox(15);
 
+
         // Document 1
+
         VBox document1 = createDocument(
                 "Society Membership Certificate",
                 "Society",
                 "Issued: 10 August 2026",
                 "Available",
-                "View"
+                "View",
+                null
         );
 
+
         // Document 2
+
         VBox document2 = createDocument(
                 "Maintenance Payment Receipt",
                 "Financial",
                 "Issued: 05 August 2026",
                 "Available",
-                "View"
+                "View",
+                null
         );
 
+
         // Document 3
+
         VBox document3 = createDocument(
                 "Resident ID Card",
                 "Personal",
                 "Issued: 01 August 2026",
                 "Available",
-                "View"
+                "View",
+                null
         );
 
+
         // Document 4
+
         VBox document4 = createDocument(
                 "Parking Allotment Letter",
                 "Society",
                 "Issued: 25 July 2026",
                 "Available",
-                "View"
+                "View",
+                null
         );
+
 
         documentList.getChildren().addAll(
                 document1,
@@ -164,6 +206,7 @@ public class Document {
                 document3,
                 document4
         );
+
 
         // ================= SCROLL =================
 
@@ -182,6 +225,211 @@ public class Document {
                 Priority.ALWAYS
         );
 
+
+        // ================= ADD DOCUMENT ACTION =================
+
+        addDocumentButton.setOnAction(e -> {
+
+            FileChooser fileChooser =
+                    new FileChooser();
+
+            fileChooser.setTitle(
+                    "Select Document"
+            );
+
+
+            // Allow common document formats
+
+            FileChooser.ExtensionFilter extensionFilter =
+                    new FileChooser.ExtensionFilter(
+                            "Documents and Images",
+                            "*.pdf",
+                            "*.doc",
+                            "*.docx",
+                            "*.txt",
+                            "*.jpg",
+                            "*.jpeg",
+                            "*.png"
+                    );
+
+            fileChooser.getExtensionFilters().add(
+                    extensionFilter
+            );
+
+
+            // Open file chooser
+
+            File selectedFile =
+                    fileChooser.showOpenDialog(stage);
+
+
+            if (selectedFile != null) {
+
+                // ================= DOCUMENT TYPE =================
+
+                ChoiceDialog<String> typeDialog =
+                        new ChoiceDialog<>(
+                                "Personal",
+                                "Personal",
+                                "Society",
+                                "Financial",
+                                "Other"
+                        );
+
+                typeDialog.setTitle(
+                        "Document Type"
+                );
+
+                typeDialog.setHeaderText(
+                        "Select Document Type"
+                );
+
+                typeDialog.setContentText(
+                        "Document Type:"
+                );
+
+
+                typeDialog.showAndWait().ifPresent(
+                        selectedType -> {
+
+                            String fileName =
+                                    selectedFile.getName();
+
+
+                            String currentDate =
+                                    LocalDate.now().format(
+                                            DateTimeFormatter.ofPattern(
+                                                    "dd MMMM yyyy"
+                                            )
+                                    );
+
+
+                            // ================= CREATE NEW CARD =================
+
+                            VBox newDocument =
+                                    createDocument(
+                                            fileName,
+                                            selectedType,
+                                            "Uploaded: " + currentDate,
+                                            "Available",
+                                            "View",
+                                            selectedFile
+                                    );
+
+
+                            // Add uploaded document at top
+
+                            documentList
+                                    .getChildren()
+                                    .add(
+                                            0,
+                                            newDocument
+                                    );
+
+
+                            // Success message
+
+                            Alert alert =
+                                    new Alert(
+                                            Alert.AlertType.INFORMATION
+                                    );
+
+                            alert.setTitle(
+                                    "Document Uploaded"
+                            );
+
+                            alert.setHeaderText(
+                                    "Upload Successful"
+                            );
+
+                            alert.setContentText(
+                                    fileName +
+                                    "\n\nYour document has been added to the document list."
+                            );
+
+                            alert.showAndWait();
+
+                        }
+                );
+            }
+        });
+
+
+        // ================= SEARCH FUNCTION =================
+
+        searchField.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+
+                    String searchText =
+                            newValue.toLowerCase();
+
+                    for (javafx.scene.Node node :
+                            documentList.getChildren()) {
+
+                        VBox card =
+                                (VBox) node;
+
+                        String cardText =
+                                card.getUserData() != null
+                                ? card.getUserData().toString().toLowerCase()
+                                : "";
+
+                        card.setVisible(
+                                cardText.contains(searchText)
+                        );
+
+                        card.setManaged(
+                                cardText.contains(searchText)
+                        );
+                    }
+                }
+        );
+
+
+        // ================= CATEGORY FILTER =================
+
+        category.setOnAction(e -> {
+
+            String selectedCategory =
+                    category.getValue();
+
+
+            if (selectedCategory == null ||
+                    selectedCategory.equals("All")) {
+
+                for (javafx.scene.Node node :
+                        documentList.getChildren()) {
+
+                    node.setVisible(true);
+                    node.setManaged(true);
+                }
+
+                return;
+            }
+
+
+            for (javafx.scene.Node node :
+                    documentList.getChildren()) {
+
+                VBox card =
+                        (VBox) node;
+
+                String cardText =
+                        card.getUserData() != null
+                        ? card.getUserData().toString()
+                        : "";
+
+                boolean match =
+                        cardText.contains(
+                                selectedCategory
+                        );
+
+                card.setVisible(match);
+                card.setManaged(match);
+            }
+        });
+
+
         // ================= ADD CONTENT =================
 
         mainContent.getChildren().addAll(
@@ -190,14 +438,25 @@ public class Document {
                 scrollPane
         );
 
-        root.setCenter(mainContent);
+
+        BorderPane mainarea =
+                new BorderPane();
+
+        mainarea.setTop(heading);
+
+        mainarea.setCenter(mainContent);
+
+
+        root.setCenter(mainarea);
+
 
         return new Scene(
                 root,
-                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
-        
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+        );
     }
+
 
     // =====================================================
     // DOCUMENT CARD
@@ -208,20 +467,35 @@ public class Document {
             String documentType,
             String date,
             String status,
-            String buttonText) {
+            String buttonText,
+            File uploadedFile) {
+
 
         VBox card =
                 new VBox(10);
+
+
+        // Store information for search/filter
+
+        card.setUserData(
+                documentName +
+                " " +
+                documentType
+        );
+
 
         card.setPadding(
                 new Insets(18)
         );
 
+
         card.setMaxWidth(
                 Double.MAX_VALUE
         );
 
-        // Separate white box
+
+        // ================= WHITE CARD =================
+
         card.setStyle(
                 "-fx-background-color: white;" +
                 "-fx-background-radius: 10;" +
@@ -229,17 +503,21 @@ public class Document {
                 "-fx-border-radius: 10;"
         );
 
+
         // ================= TOP ROW =================
 
         HBox topRow =
                 new HBox();
 
+
         topRow.setAlignment(
                 Pos.CENTER_LEFT
         );
 
+
         Label documentLabel =
                 new Label(documentName);
+
 
         documentLabel.setFont(
                 Font.font(
@@ -249,20 +527,25 @@ public class Document {
                 )
         );
 
+
         documentLabel.setTextFill(
                 Color.web("#263238")
         );
 
+
         Region spacer =
                 new Region();
+
 
         HBox.setHgrow(
                 spacer,
                 Priority.ALWAYS
         );
 
+
         Label statusLabel =
                 new Label(status);
+
 
         statusLabel.setStyle(
                 "-fx-background-color: #789098;" +
@@ -272,19 +555,23 @@ public class Document {
                 "-fx-font-weight: bold;"
         );
 
+
         topRow.getChildren().addAll(
                 documentLabel,
                 spacer,
                 statusLabel
         );
 
+
         // ================= DETAILS =================
 
         HBox details =
                 new HBox(15);
 
+
         Label typeLabel =
                 new Label(documentType);
+
 
         typeLabel.setFont(
                 Font.font(
@@ -294,30 +581,37 @@ public class Document {
                 )
         );
 
+
         typeLabel.setTextFill(
                 Color.web("#546E7A")
         );
 
+
         Label dateLabel =
                 new Label(date);
+
 
         dateLabel.setFont(
                 Font.font("System", 13)
         );
 
+
         dateLabel.setTextFill(
                 Color.GRAY
         );
+
 
         details.getChildren().addAll(
                 typeLabel,
                 dateLabel
         );
 
-        // ================= BUTTONS =================
+
+        // ================= VIEW BUTTON =================
 
         Button viewButton =
                 new Button("View");
+
 
         viewButton.setStyle(
                 "-fx-background-color: #789098;" +
@@ -326,33 +620,73 @@ public class Document {
                 "-fx-background-radius: 5;"
         );
 
+
         viewButton.setOnAction(e -> {
 
-            Alert alert =
-                    new Alert(
-                            Alert.AlertType.INFORMATION
+            // If this is an uploaded document
+
+            if (uploadedFile != null) {
+
+                try {
+
+                    if (Desktop.isDesktopSupported()) {
+
+                        Desktop.getDesktop().open(
+                                uploadedFile
+                        );
+
+                    } else {
+
+                        showAlert(
+                                "View Document",
+                                "Your system does not support opening files automatically."
+                        );
+                    }
+
+                } catch (IOException ex) {
+
+                    showAlert(
+                            "Error",
+                            "Unable to open the document."
                     );
+                }
 
-            alert.setTitle("Document");
+            } else {
 
-            alert.setHeaderText(
-                    documentName
-            );
+                // Existing sample documents
 
-            alert.setContentText(
-                    "Document Type: "
-                    + documentType
-                    + "\n"
-                    + date
-                    + "\nStatus: "
-                    + status
-            );
+                Alert alert =
+                        new Alert(
+                                Alert.AlertType.INFORMATION
+                        );
 
-            alert.showAndWait();
+                alert.setTitle(
+                        "Document"
+                );
+
+                alert.setHeaderText(
+                        documentName
+                );
+
+                alert.setContentText(
+                        "Document Type: "
+                        + documentType
+                        + "\n"
+                        + date
+                        + "\nStatus: "
+                        + status
+                );
+
+                alert.showAndWait();
+            }
         });
+
+
+        // ================= DOWNLOAD BUTTON =================
 
         Button downloadButton =
                 new Button("Download");
+
 
         downloadButton.setStyle(
                 "-fx-background-color: white;" +
@@ -362,37 +696,97 @@ public class Document {
                 "-fx-font-weight: bold;"
         );
 
+
         downloadButton.setOnAction(e -> {
 
-            Alert alert =
-                    new Alert(
-                            Alert.AlertType.INFORMATION
-                    );
+            if (uploadedFile != null) {
 
-            alert.setTitle("Download");
+                FileChooser saveChooser =
+                        new FileChooser();
 
-            alert.setHeaderText(
-                    documentName
-            );
+                saveChooser.setTitle(
+                        "Save Document"
+                );
 
-            alert.setContentText(
-                    "Download option selected."
-            );
 
-            alert.showAndWait();
+                saveChooser.setInitialFileName(
+                        uploadedFile.getName()
+                );
+
+
+                File saveFile =
+                        saveChooser.showSaveDialog(
+                                null
+                        );
+
+
+                if (saveFile != null) {
+
+                    try {
+
+                        Files.copy(
+                                uploadedFile.toPath(),
+                                saveFile.toPath(),
+                                StandardCopyOption.REPLACE_EXISTING
+                        );
+
+
+                        showAlert(
+                                "Download",
+                                "Document downloaded successfully."
+                        );
+
+
+                    } catch (IOException ex) {
+
+                        showAlert(
+                                "Error",
+                                "Unable to download the document."
+                        );
+                    }
+                }
+
+            } else {
+
+                Alert alert =
+                        new Alert(
+                                Alert.AlertType.INFORMATION
+                        );
+
+                alert.setTitle(
+                        "Download"
+                );
+
+                alert.setHeaderText(
+                        documentName
+                );
+
+                alert.setContentText(
+                        "This is a sample document.\n"
+                        + "No actual file is attached."
+                );
+
+                alert.showAndWait();
+            }
         });
+
+
+        // ================= BUTTON BOX =================
 
         HBox buttonBox =
                 new HBox(10);
+
 
         buttonBox.setAlignment(
                 Pos.CENTER_RIGHT
         );
 
+
         buttonBox.getChildren().addAll(
                 viewButton,
                 downloadButton
         );
+
 
         // ================= ADD EVERYTHING =================
 
@@ -402,6 +796,30 @@ public class Document {
                 buttonBox
         );
 
+
         return card;
+    }
+
+
+    // =====================================================
+    // ALERT METHOD
+    // =====================================================
+
+    private void showAlert(
+            String title,
+            String message) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.INFORMATION
+                );
+
+        alert.setTitle(title);
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 }

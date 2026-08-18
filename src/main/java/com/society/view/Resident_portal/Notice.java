@@ -43,7 +43,7 @@ public class Notice {
         );
 
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
         // ================= HEADING =================
@@ -191,7 +191,7 @@ public class Notice {
                 new Button("View Details");
 
         button1.setStyle(
-                "-fx-background-color: #789098;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 5;"
@@ -289,7 +289,7 @@ public class Notice {
                 new Button("View Details");
 
         button2.setStyle(
-                "-fx-background-color: #789098;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 5;"
@@ -386,7 +386,7 @@ public class Notice {
                 new Button("View Details");
 
         button3.setStyle(
-                "-fx-background-color: #789098;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 5;"
@@ -484,7 +484,7 @@ public class Notice {
                 new Button("View Details");
 
         button4.setStyle(
-                "-fx-background-color: #789098;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 5;"
@@ -542,7 +542,16 @@ public class Notice {
                 scrollPane
         );
 
-        root.setCenter(mainContent);
+        
+BorderPane mainarea = new BorderPane();
+mainarea.setTop(heading);
+mainarea.setCenter(mainContent);
+heading.setStyle("-fx-background-color: #4e342e");
+
+
+root.setCenter(mainarea);        
+
+
 
         return new Scene(
                 root,

@@ -46,7 +46,7 @@ public class Community {
 
         // Background color
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
         // ================= TITLE =================
@@ -213,7 +213,15 @@ public class Community {
                 announcement
         );
 
-        root.setCenter(mainContent);
+        
+BorderPane mainarea = new BorderPane();
+mainarea.setTop(heading);
+mainarea.setCenter(mainContent);
+heading.setStyle("-fx-background-color: #4e342e");
+
+
+root.setCenter(mainarea);        
+
 
         return new Scene(
                 root,
@@ -371,7 +379,7 @@ public class Community {
                 new Button("View");
 
         viewButton.setStyle(
-                "-fx-background-color: #789098;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 5;"

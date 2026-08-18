@@ -43,7 +43,7 @@ public class Polls {
         root.setBackground(
                 new Background(
                         new BackgroundFill(
-                                Color.web("#b3adad"),
+                                Color.web("#e8ddd5"),
                                 CornerRadii.EMPTY,
                                 Insets.EMPTY
                         )
@@ -83,9 +83,9 @@ root.setLeft(panelobj.getSidebar());
 
         VBox header = new VBox(5);
 
-        header.setPadding(
-                new Insets(25, 30, 15, 30)
-        );
+      //  header.setPadding(
+            //    new Insets(25, 30, 15, 30)
+       // );
 
         header.getChildren().addAll(
                 title,
@@ -160,7 +160,7 @@ scrollPane.setVbarPolicy(
  scrollPane.setHbarPolicy(
         ScrollPane.ScrollBarPolicy.NEVER
  );
- scrollPane.setStyle("-fx-background-color: #b3adad");
+ scrollPane.setStyle("-fx-background-color: #e8ddd5");
  
 
 
@@ -172,7 +172,13 @@ scrollPane.setVbarPolicy(
         // PUT CONTENT INTO ROOT
         // =========================================================
 
-root.setCenter(scrollPane);        
+
+BorderPane mainarea = new BorderPane();
+mainarea.setTop(header);
+mainarea.setCenter(scrollPane);
+header.setStyle("-fx-background-color: #9d6565");
+
+root.setCenter(mainarea);        
 
 
         // =========================================================
@@ -571,7 +577,7 @@ scrollPane.setVbarPolicy(
  scrollPane.setHbarPolicy(
         ScrollPane.ScrollBarPolicy.NEVER
  );
- scrollPane.setStyle("-fx-background-color: #b3adad");
+ scrollPane.setStyle("-fx-background-color: #e8ddd5");
  
 
     

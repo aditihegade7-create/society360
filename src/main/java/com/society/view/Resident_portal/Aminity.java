@@ -32,7 +32,7 @@ public class Aminity {
         // ================= MAIN CONTENT =================
         VBox mainContent = new VBox(18);
         mainContent.setPadding(new Insets(25, 35, 25, 35));
-        mainContent.setStyle("-fx-background-color: #b3adad;");
+        mainContent.setStyle("-fx-background-color: #e8ddd5;");
 
         // ================= TITLE =================
         Label title = new Label("Book Amenity");
@@ -165,7 +165,15 @@ public class Aminity {
                 booking
         );
 
-        root.setCenter(mainContent);
+        
+BorderPane mainarea = new BorderPane();
+mainarea.setTop(heading);
+mainarea.setCenter(mainContent);
+heading.setStyle("-fx-background-color: #4e342e");
+
+
+root.setCenter(mainarea);        
+
 
         return new Scene(root, 
                  ScreenSize.getWidth(),
@@ -229,7 +237,7 @@ public class Aminity {
         bookButton.setPrefWidth(70);
 
         bookButton.setStyle(
-                "-fx-background-color: #0B4F8A;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 5;"

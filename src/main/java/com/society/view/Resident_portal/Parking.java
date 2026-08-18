@@ -11,7 +11,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-
 public class Parking {
 
     // Your assigned parking slot
@@ -19,14 +18,25 @@ public class Parking {
 
     public Scene getParkingScene(Stage stage) {
 
-        // ================= HEADER =================
+        // ==================================================
+        // SIDEBAR
+        // ==================================================
+
+        panel panelObj = new panel(stage);
+
+
+        // ==================================================
+        // HEADER
+        // ==================================================
 
         Label title = new Label("Smart Parking");
+
         title.setStyle(
                 "-fx-font-size: 26px;" +
                 "-fx-font-weight: bold;" +
                 "-fx-text-fill: white;"
         );
+
 
         Label subtitle = new Label(
                 "Check parking availability and monitor your assigned parking area"
@@ -37,41 +47,42 @@ public class Parking {
                 "-fx-text-fill: white;"
         );
 
-        VBox header = new VBox(5, title, subtitle);
 
-        header.setPadding(new Insets(20));
+        VBox header = new VBox(5);
+
+        header.getChildren().addAll(
+                title,
+                subtitle
+        );
+
+       // header.setPadding(new Insets(20));
 
         header.setStyle(
                 "-fx-background-color: #b3adad;"
         );
 
 
-        // ================= SIDEBAR =================
+        // ==================================================
+        // MAIN CONTENT
+        // ==================================================
 
-        panel panelObj = new panel(stage);
-     
-        
+        VBox mainContent = new VBox(25);
 
-        // ================= MAIN CONTENT =================
-
-
-        
-        VBox mainContent = new VBox(20);
-
-        mainContent.setPadding(new Insets(25));
-
-       
-
-        mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+        mainContent.setPadding(
+                new Insets(25)
         );
 
-VBox vBox = new VBox();
-vBox.getChildren().addAll(header,mainContent);
+        mainContent.setStyle(
+                "-fx-background-color: #e8ddd5;"
+        );
 
-        // ================= MY PARKING CARD =================
 
-        Label myParkingTitle = new Label("My Parking Area");
+        // ==================================================
+        // MY PARKING CARD
+        // ==================================================
+
+        Label myParkingTitle =
+                new Label("My Parking Area");
 
         myParkingTitle.setStyle(
                 "-fx-font-size: 20px;" +
@@ -80,17 +91,18 @@ vBox.getChildren().addAll(header,mainContent);
         );
 
 
-        Label mySlot = new Label(
-                "Assigned Parking: " + myParkingSlot
-        );
+        Label mySlot =
+                new Label("Assigned Parking: " + myParkingSlot);
 
         mySlot.setStyle(
                 "-fx-font-size: 16px;" +
-                "-fx-font-weight: bold;"
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #37474f;"
         );
 
 
-        Label myStatus = new Label("● AVAILABLE");
+        Label myStatus =
+                new Label("● AVAILABLE");
 
         myStatus.setStyle(
                 "-fx-text-fill: green;" +
@@ -106,9 +118,13 @@ vBox.getChildren().addAll(header,mainContent);
                 myStatus
         );
 
-        myParkingCard.setPadding(new Insets(20));
+        myParkingCard.setPadding(
+                new Insets(20)
+        );
 
-        myParkingCard.setMaxWidth(700);
+        myParkingCard.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
         myParkingCard.setStyle(
                 "-fx-background-color: white;" +
@@ -118,7 +134,9 @@ vBox.getChildren().addAll(header,mainContent);
         );
 
 
-        // ================= AVAILABILITY TITLE =================
+        // ==================================================
+        // PARKING AVAILABILITY CARD
+        // ==================================================
 
         Label availabilityTitle =
                 new Label("Parking Availability");
@@ -130,46 +148,115 @@ vBox.getChildren().addAll(header,mainContent);
         );
 
 
-        // ================= PARKING GRID =================
+        // ==================================================
+        // PARKING GRID
+        // ==================================================
 
-        GridPane parkingGrid = new GridPane();
+        GridPane parkingGrid =
+                new GridPane();
 
-        parkingGrid.setHgap(15);
+        parkingGrid.setHgap(20);
 
-        parkingGrid.setVgap(15);
+        parkingGrid.setVgap(20);
 
-        parkingGrid.setAlignment(Pos.CENTER);
-
-
-        // Create parking slots
-        addParkingSlot(parkingGrid, "P-01", 0, 0, false);
-        addParkingSlot(parkingGrid, "P-02", 1, 0, true);
-        addParkingSlot(parkingGrid, "P-03", 2, 0, false); // MY SLOT
-        addParkingSlot(parkingGrid, "P-04", 3, 0, false);
-
-        addParkingSlot(parkingGrid, "P-05", 0, 1, true);
-        addParkingSlot(parkingGrid, "P-06", 1, 1, false);
-        addParkingSlot(parkingGrid, "P-07", 2, 1, true);
-        addParkingSlot(parkingGrid, "P-08", 3, 1, false);
+        parkingGrid.setAlignment(
+                Pos.CENTER
+        );
 
 
-        // ================= SIMULATION =================
+        // P-01 to P-08
+
+        addParkingSlot(
+                parkingGrid,
+                "P-01",
+                0,
+                0,
+                false
+        );
+
+        addParkingSlot(
+                parkingGrid,
+                "P-02",
+                1,
+                0,
+                true
+        );
+
+        addParkingSlot(
+                parkingGrid,
+                "P-03",
+                2,
+                0,
+                false
+        );
+
+        addParkingSlot(
+                parkingGrid,
+                "P-04",
+                3,
+                0,
+                false
+        );
+
+
+        addParkingSlot(
+                parkingGrid,
+                "P-05",
+                0,
+                1,
+                true
+        );
+
+        addParkingSlot(
+                parkingGrid,
+                "P-06",
+                1,
+                1,
+                false
+        );
+
+        addParkingSlot(
+                parkingGrid,
+                "P-07",
+                2,
+                1,
+                true
+        );
+
+        addParkingSlot(
+                parkingGrid,
+                "P-08",
+                3,
+                1,
+                false
+        );
+
+
+        // ==================================================
+        // SIMULATION BUTTON
+        // ==================================================
 
         Button simulateButton =
-                new Button("🚗 Simulate Car Parking");
+                new Button("🚗  Simulate Car Parking");
 
         simulateButton.setStyle(
                 "-fx-background-color: #789098;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-font-size: 14px;" +
-                "-fx-padding: 10px 20px;"
+                "-fx-padding: 10px 20px;" +
+                "-fx-background-radius: 8px;"
         );
 
 
+        // ==================================================
+        // SIMULATION ACTION
+        // ==================================================
+
         simulateButton.setOnAction(event -> {
 
-            // Someone parks in your slot
+            // Change status
+
             myStatus.setText("● OCCUPIED");
 
             myStatus.setStyle(
@@ -180,11 +267,17 @@ vBox.getChildren().addAll(header,mainContent);
 
 
             // Notification
-            Alert alert = new Alert(Alert.AlertType.WARNING);
 
-            alert.setTitle("Smart Parking Alert");
+            Alert alert =
+                    new Alert(Alert.AlertType.WARNING);
 
-            alert.setHeaderText("Parking Alert!");
+            alert.setTitle(
+                    "Smart Parking Alert"
+            );
+
+            alert.setHeaderText(
+                    "Parking Alert!"
+            );
 
             alert.setContentText(
                     "A vehicle has been detected in your parking area "
@@ -196,17 +289,49 @@ vBox.getChildren().addAll(header,mainContent);
         });
 
 
-        // ================= MAIN CONTENT =================
+        // ==================================================
+        // WHITE PARKING AREA
+        // ==================================================
 
-        mainContent.getChildren().addAll(
-                myParkingCard,
+        VBox parkingArea =
+                new VBox(20);
+
+        parkingArea.setPadding(
+                new Insets(25)
+        );
+
+        parkingArea.setAlignment(
+                Pos.CENTER
+        );
+
+        parkingArea.setStyle(
+                "-fx-background-color: white;" +
+                "-fx-background-radius: 15;" +
+                "-fx-border-color: #789098;" +
+                "-fx-border-radius: 15;"
+        );
+
+
+        parkingArea.getChildren().addAll(
                 availabilityTitle,
                 parkingGrid,
                 simulateButton
         );
 
 
-        // ================= SCROLL =================
+        // ==================================================
+        // ADD CONTENT
+        // ==================================================
+
+        mainContent.getChildren().addAll(
+                myParkingCard,
+                parkingArea
+        );
+
+
+        // ==================================================
+        // SCROLL PANE
+        // ==================================================
 
         ScrollPane scrollPane =
                 new ScrollPane(mainContent);
@@ -221,57 +346,126 @@ vBox.getChildren().addAll(header,mainContent);
                 ScrollPane.ScrollBarPolicy.AS_NEEDED
         );
 
+        scrollPane.setStyle(
+                "-fx-background-color: #b3adad;" +
+                "-fx-control-inner-background: #b3adad;"
+        );
 
-        // ================= MAIN BORDERPANE =================
+
+        // ==================================================
+        // CENTER AREA
+        // HEADER + CONTENT
+        // ==================================================
+
+        BorderPane centerPane =
+                new BorderPane();
+
+        
+BorderPane mainarea = new BorderPane();
+mainarea.setTop(header);
+mainarea.setCenter(scrollPane);
+header.setStyle("-fx-background-color: #b3adad");
+
+
+
+
+        centerPane.setCenter(mainarea);
+
+
+        // ==================================================
+        // MAIN BORDERPANE
+        // ==================================================
 
         BorderPane borderPane =
                 new BorderPane();
 
-        borderPane.setLeft(panelObj.getSidebar());
+        // Sidebar
 
-       
+        borderPane.setLeft(
+                panelObj.getSidebar()
+        );
 
-        borderPane.setCenter(scrollPane);
+
+        // Center
+
+        borderPane.setCenter(
+                centerPane
+        );
 
 
-        return new Scene(borderPane,
-                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
-        
+        // Entire background
+
+        borderPane.setStyle(
+                "-fx-background-color: #b3adad;"
+        );
+
+
+        // ==================================================
+        // SCENE
+        // ==================================================
+
+        Scene scene = new Scene(
+                borderPane,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+        );
+
+
+        return scene;
     }
 
 
     // ==================================================
     // PARKING SLOT METHOD
     // ==================================================
-   
-  private void addParkingSlot(
-        GridPane grid,
-        String slotName,
-        int column,
-        int row,
-        boolean occupied) {
 
-    Label slot = new Label();
+    private void addParkingSlot(
+            GridPane grid,
+            String slotName,
+            int column,
+            int row,
+            boolean occupied) {
 
-    slot.setPrefSize(200, 120);
-    slot.setAlignment(Pos.CENTER);
 
-    
+        Label slot = new Label();
+
+
+        // Size of parking slot
+
+        slot.setPrefSize(
+                250,
+                150
+        );
+
+
+        slot.setAlignment(
+                Pos.CENTER
+        );
+
+
+        // ==================================================
+        // SLOT TEXT
+        // ==================================================
 
         if (slotName.equals(myParkingSlot)) {
 
             slot.setText(
-                    "⭐ " + slotName + "\nMY PARKING"
+                    "⭐ " + slotName +
+                    "\nMY PARKING"
             );
 
         } else {
 
-            slot.setText(slotName);
+            slot.setText(
+                    slotName
+            );
         }
 
 
+        // ==================================================
         // OCCUPIED
+        // ==================================================
+
         if (occupied) {
 
             slot.setStyle(
@@ -281,11 +475,16 @@ vBox.getChildren().addAll(header,mainContent);
                     "-fx-font-weight: bold;" +
                     "-fx-background-radius: 10;"
             );
-
         }
 
+
+        // ==================================================
         // MY PARKING
-        else if (slotName.equals(myParkingSlot)) {
+        // ==================================================
+
+        else if (
+                slotName.equals(myParkingSlot)
+        ) {
 
             slot.setStyle(
                     "-fx-background-color: #81c784;" +
@@ -297,10 +496,13 @@ vBox.getChildren().addAll(header,mainContent);
                     "-fx-border-width: 3;" +
                     "-fx-border-radius: 10;"
             );
-
         }
 
+
+        // ==================================================
         // AVAILABLE
+        // ==================================================
+
         else {
 
             slot.setStyle(
@@ -313,16 +515,12 @@ vBox.getChildren().addAll(header,mainContent);
         }
 
 
-        grid.add(slot, column, row);    
+        // Add slot to grid
+
+        grid.add(
+                slot,
+                column,
+                row
+        );
     }
 }
-
-
-
-
-
-
-
-
-        // ================= SIDEBAR =================
-       

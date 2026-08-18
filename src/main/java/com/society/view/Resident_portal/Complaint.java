@@ -42,7 +42,7 @@ public class Complaint {
         HBox mainArea = new HBox(25);
 
         mainArea.setPadding(new Insets(25, 35, 25, 35));
-        mainArea.setStyle("-fx-background-color: #b3adad;");
+        mainArea.setStyle("-fx-background-color: #e8ddd5");
 
         // =================================================
         // LEFT SIDE - RAISE COMPLAINT FORM
@@ -245,7 +245,7 @@ public class Complaint {
         });
 
         formBox.getChildren().addAll(
-                title,
+               title,
                 subtitle,
                 categoryLabel,
                 category,
@@ -330,8 +330,18 @@ public class Complaint {
                 complaintsBox
         );
 
-        root.setCenter(mainArea);
+Label newlLabel = new Label("Complaints ");
+ newlLabel.setFont(Font.font("System", FontWeight.BOLD, 24));
+        newlLabel.setTextFill(Color.web("#172B4D"));
 
+
+        
+ BorderPane mainarea2 = new BorderPane();
+ mainarea2.setTop(newlLabel);
+mainarea2.setCenter(mainArea);
+newlLabel.setStyle("-fx-background-color: #765252");
+        root.setCenter(mainarea2);
+      
         return new Scene(
                 root,
                  ScreenSize.getWidth(),

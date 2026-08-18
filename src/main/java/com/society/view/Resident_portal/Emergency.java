@@ -37,7 +37,7 @@ public Scene getEmergencyScene(Stage stage){
         );
 
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
         // ================= HEADING =================
@@ -263,7 +263,14 @@ public Scene getEmergencyScene(Stage stage){
                 serviceCards
         );
 
-        root.setCenter(mainContent);
+       
+BorderPane mainarea = new BorderPane();
+mainarea.setTop(heading);
+mainarea.setCenter(mainContent);
+
+
+root.setCenter(mainarea);        
+
 
         return new Scene(
                 root,

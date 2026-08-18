@@ -37,7 +37,7 @@ public class Bills {
 
         // YOUR REQUIRED BACKGROUND COLOR
         mainContent.setStyle(
-                "-fx-background-color: #b3adad;"
+                "-fx-background-color: #e8ddd5;"
         );
 
         // ================= TITLE =================
@@ -208,8 +208,8 @@ public class Bills {
         payButton.setPrefWidth(160);
 
         payButton.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-text-fill: #455A64;" +
+                "-fx-background-color: #4e342e;" +
+                "-fx-text-fill: #f3e5e2;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 6;"
         );
@@ -268,7 +268,16 @@ public class Bills {
                 buttonBox
         );
 
-        root.setCenter(mainContent);
+        
+BorderPane mainarea = new BorderPane();
+mainarea.setTop(heading);
+mainarea.setCenter(mainContent);
+heading.setStyle("-fx-background-color: #4e342e");
+
+
+root.setCenter(mainarea);        
+
+
 
         return new Scene(
                 root,
