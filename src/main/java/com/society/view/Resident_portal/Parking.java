@@ -3,8 +3,7 @@ package com.society.view.Resident_portal;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
-    
+import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -235,26 +234,30 @@ vBox.getChildren().addAll(header,mainContent);
         borderPane.setCenter(scrollPane);
 
 
-        return new Scene(borderPane, 1200, 700);
+        return new Scene(borderPane,
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight());
+        
     }
 
 
     // ==================================================
     // PARKING SLOT METHOD
     // ==================================================
+   
+  private void addParkingSlot(
+        GridPane grid,
+        String slotName,
+        int column,
+        int row,
+        boolean occupied) {
 
-    private void addParkingSlot(
-            GridPane grid,
-            String slotName,
-            int column,
-            int row,
-            boolean occupied) {
+    Label slot = new Label();
 
-        Label slot = new Label();
+    slot.setPrefSize(200, 120);
+    slot.setAlignment(Pos.CENTER);
 
-        slot.setPrefSize(130, 80);
-
-        slot.setAlignment(Pos.CENTER);
+    
 
         if (slotName.equals(myParkingSlot)) {
 
@@ -310,7 +313,7 @@ vBox.getChildren().addAll(header,mainContent);
         }
 
 
-        grid.add(slot, column, row);
+        grid.add(slot, column, row);    
     }
 }
 

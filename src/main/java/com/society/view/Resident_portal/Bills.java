@@ -1,6 +1,9 @@
 package com.society.view.Resident_portal;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
+
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -269,9 +272,9 @@ public class Bills {
 
         return new Scene(
                 root,
-                1200,
-                700
-        );
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight());
+
     }
 
     // =====================================================

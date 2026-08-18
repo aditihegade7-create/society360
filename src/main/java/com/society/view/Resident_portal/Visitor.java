@@ -1,5 +1,8 @@
 package com.society.view.Resident_portal;
 
+
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
 import javafx.stage.Stage;
 
 public class Visitor {
@@ -318,7 +322,10 @@ public class Visitor {
 
         root.setCenter(mainContent);
 
-        return new Scene(root, 1200, 700);
+        return new Scene(root, 
+         ScreenSize.getWidth(),
+        ScreenSize.getHeight());
+
     }
 
     // ================= VISITOR ROW =================

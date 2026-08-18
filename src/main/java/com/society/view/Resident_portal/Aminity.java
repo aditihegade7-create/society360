@@ -3,8 +3,7 @@ package com.society.view.Resident_portal;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
-
+import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -168,7 +167,10 @@ public class Aminity {
 
         root.setCenter(mainContent);
 
-        return new Scene(root, 1200, 700);
+        return new Scene(root, 
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight());
+        
     }
 
     // =====================================================

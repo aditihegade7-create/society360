@@ -1,6 +1,9 @@
 package com.society.view.Resident_portal;
 
 import javafx.scene.control.*;
+
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -264,9 +267,9 @@ public Scene getEmergencyScene(Stage stage){
 
         return new Scene(
                 root,
-                1200,
-                700
-        );
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight());
+
     }
 
     // =====================================================

@@ -2,6 +2,9 @@ package com.society.view.Resident_portal;
 
 
 import  javafx.scene.layout.Region;
+
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -214,9 +217,9 @@ public class Community {
 
         return new Scene(
                 root,
-                1200,
-                700
-        );
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight());
+        
     }
 
     // =====================================================

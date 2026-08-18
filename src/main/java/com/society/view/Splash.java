@@ -15,6 +15,5 @@ public class Splash extends Application{
     stage.setScene(residentDashboard.getResidentDashboardScene(stage));
     
     stage.show();
-
-}
+    }
 }
