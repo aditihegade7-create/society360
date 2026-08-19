@@ -34,6 +34,9 @@ public class ManageGuard {
 
         // ================= HEADER =================
 
+        mainvb.setStyle("-fx-background-color: #e8ddd5;");
+    
+        //Title
         Label title = new Label("Manage Guards");
         title.setStyle(
                 "-fx-font-size:28px;" +
@@ -63,6 +66,7 @@ public class ManageGuard {
         search.setPromptText("Search guard, phone...");
         search.setPrefHeight(45);
         search.setPrefWidth(750);
+        search.setStyle("-fx-background-color:#F8F9FA;-fx-border-color: #E1E5E8;-fx-border-radius:8;-fx-background-radius:8;-fx-font-size:14px;");
 
         search.setStyle(
                 "-fx-background-color:#F8F9FA;" +
