@@ -5,14 +5,13 @@
     "version": "0.2.0",
     "configurations": [
 
-        
         {
             "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "com.society.Main",
             "projectName": "project",
-            "vmArgs": " --module-path \"D:/java26//javafx-sdk-21.0.12//lib\" --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": " --module-path \"D://java26//javafx-sdk-21.0.12//lib\" --add-modules javafx.controls,javafx.fxml"
         }
     ]
 }
