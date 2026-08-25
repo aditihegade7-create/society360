@@ -42,8 +42,14 @@ public class OwnerDashboard {
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #4e342e;");
 
+        VBox v1 = new VBox();
         Label greeting = new Label("Good Morning, Owner 👋");
         greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill: #ffffff;");
+
+        
+        Label l1 = new Label("This is your dashboard");
+        l1.setStyle("-fx-font-size:12px;-fx-text-fill: #ffffff;");
+
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -63,7 +69,9 @@ public class OwnerDashboard {
         VBox vb1 = new VBox();
         vb1.getChildren().addAll(day, date);
 
-        header.getChildren().addAll(greeting,
+        v1.getChildren().addAll(greeting,l1);
+
+        header.getChildren().addAll(v1,
                 spacer,
                 
                 vb1);
@@ -112,7 +120,7 @@ public class OwnerDashboard {
         noticeBox.setPrefWidth(1100);
         noticeBox.setPrefHeight(100);
 
-        noticeBox.setStyle( "-fx-background-color: #E8F1F2;-fx-background-radius: 10;-fx-border-radius: 10;-fx-border-color: #D0DDE0;"
+        noticeBox.setStyle( "-fx-background-color: #f8f8fc;-fx-background-radius: 10;-fx-border-radius: 10;-fx-border-color: #D0DDE0;"
         );
 
         Label noticeHeading = new Label("Notice");

@@ -192,9 +192,7 @@ public class RentalHistory {
         );
 
        
-        mainContent.getChildren().add(
-                table
-        );
+        mainContent.getChildren().add( table );
 
         
         
@@ -204,8 +202,7 @@ public class RentalHistory {
        root.setCenter(mainarea);
        
 
-        return new Scene( root, 1500, 750
-        );
+        return new Scene( root, 1500, 750 );
     }
 
 

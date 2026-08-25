@@ -175,8 +175,7 @@ public class AddTenant {
                 saveButton
         );
 
-       
-         formCard.getChildren().addAll(
+       formCard.getChildren().addAll(
                 formHeading,
                 form,
                 buttons
@@ -188,7 +187,6 @@ public class AddTenant {
                 formCard
         );
 
-       
        BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
        mainarea.setCenter(mainContent);
