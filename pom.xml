@@ -19,7 +19,15 @@
             <artifactId>javafx-controls</artifactId>
             <version>21.0.2</version>
             <scope>compile</scope>
-        </dependency>          
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20251224</version>
+            <scope>compile</scope>
+        </dependency>
+                
     </dependencies>
 
 </project>
