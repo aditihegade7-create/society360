@@ -7,9 +7,9 @@ import javafx.application.Application;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
-        Application.launch(Splash.class,args);
-        
-        
+        Application.launch(Splash.class, args);
+
+        // Application.launch(Mysplash.class,args);
 
     }
 }
