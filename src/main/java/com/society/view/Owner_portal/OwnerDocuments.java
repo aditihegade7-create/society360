@@ -25,24 +25,16 @@ public class OwnerDocuments {
 
         BorderPane root = new BorderPane();
 
-        
         OwnerSidebar sidebar = new OwnerSidebar(stage);
         root.setLeft(sidebar.getSidebar());
 
-        
         VBox mainContent = new VBox(20);
 
-        mainContent.setPadding(
-                new Insets(30, 40, 30, 40)
-        );
+        mainContent.setPadding(new Insets(30, 40, 30, 40));
 
-        mainContent.setStyle(
-                "-fx-background-color: #e8ddd5;"
-        );
+        mainContent.setStyle("-fx-background-color: #e8ddd5;");
 
-       
-
-        HBox header = new HBox();
+       HBox header = new HBox();
         header.setPrefWidth(900);
         header.setPrefHeight(80);
         header.setPadding(new Insets(20));
@@ -61,9 +53,7 @@ public class OwnerDocuments {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        
-
-        Label day = new Label();
+         Label day = new Label();
         Label date = new Label();
 
         LocalDate today = LocalDate.now();
@@ -122,8 +112,6 @@ public class OwnerDocuments {
                 cardDescription
         );
 
-        
-
         HBox aadhaar = createDocumentRow(
                 stage,
                 "Aadhaar Card",
@@ -149,7 +137,6 @@ public class OwnerDocuments {
         );
 
         
-
         documentCard.getChildren().addAll(
                 cardHeading,
                 aadhaar,
@@ -183,14 +170,13 @@ public class OwnerDocuments {
                 saveButton
         );
 
-        
-        mainContent.getChildren().addAll(
+         mainContent.getChildren().addAll(
                 header,
                 documentCard,
                 buttonBox
         );
 
-        BorderPane mainarea = new BorderPane();
+       BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
        mainarea.setCenter(mainContent);
        root.setCenter(mainarea);
@@ -204,8 +190,7 @@ public class OwnerDocuments {
     }
 
 
-    
-    private static HBox createDocumentRow(
+     private static HBox createDocumentRow(
             Stage stage,
             String documentName,
             String documentType) {
@@ -228,7 +213,6 @@ public class OwnerDocuments {
         );
 
         
-
         Label icon = new Label("📄");
 
         icon.setStyle(
@@ -284,9 +268,7 @@ public class OwnerDocuments {
 
         
 
-        Button chooseButton = new Button(
-                "Choose File"
-        );
+        Button chooseButton = new Button( "Choose File" );
 
         chooseButton.setPrefWidth(110);
         chooseButton.setPrefHeight(34);
@@ -303,12 +285,9 @@ public class OwnerDocuments {
 
         chooseButton.setOnAction(e -> {
 
-            FileChooser fileChooser =
-                    new FileChooser();
+            FileChooser fileChooser = new FileChooser();
 
-            fileChooser.setTitle(
-                    "Select " + documentName
-            );
+            fileChooser.setTitle( "Select " + documentName );
 
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter(
@@ -317,8 +296,7 @@ public class OwnerDocuments {
                     )
             );
 
-            File file =
-                    fileChooser.showOpenDialog(stage);
+            File file =fileChooser.showOpenDialog(stage);
 
             if (file != null) {
 
