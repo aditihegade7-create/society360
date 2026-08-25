@@ -159,7 +159,7 @@ public class ManageResidents {
         profile4.setPrefWidth(50);
         profile4.setPrefHeight(50);
         profile4.setAlignment(Pos.CENTER);
-        profile4.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
+        profile4.setStyle("-fx-background-color: #E5E7EB;-fx-background-radius:50%;-fx-font-size:22px;");
         Label name4 = new Label("Manasi");
         name4.setPrefWidth(200);
         name4.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");

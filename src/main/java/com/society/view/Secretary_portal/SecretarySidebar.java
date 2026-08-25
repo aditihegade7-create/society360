@@ -9,433 +9,367 @@ import javafx.stage.Stage;
 
 public class SecretarySidebar {
 
-    public VBox createSidebar(Stage stage) {
+        public VBox createSidebar(Stage stage) {
 
-        // =====================================================
-        // SIDEBAR
-        // =====================================================
+                // =====================================================
+                // SIDEBAR
+                // =====================================================
 
-        VBox sidebar = new VBox();
+                VBox sidebar = new VBox();
 
-        sidebar.setPrefWidth(280);
-        sidebar.setPrefHeight(750);
-        sidebar.setStyle("-fx-background-color: #593a32;");
-        sidebar.setSpacing(14);
-        sidebar.setPadding(new Insets(20));
+                sidebar.setPrefWidth(280);
+                sidebar.setPrefHeight(750);
+                sidebar.setStyle("-fx-background-color: #593a32;");
+                sidebar.setSpacing(14);
+                sidebar.setPadding(new Insets(20));
 
+                // =====================================================
+                // LOGO
+                // =====================================================
 
-        // =====================================================
-        // LOGO
-        // =====================================================
+                Label logo = new Label("Society360");
 
-        Label logo = new Label("Society360");
+                logo.setLineSpacing(10);
+                logo.setAlignment(Pos.CENTER_LEFT);
 
-        logo.setLineSpacing(10);
-        logo.setAlignment(Pos.CENTER_LEFT);
+                logo.setStyle(
+                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:24px;" +
+                                                "-fx-font-weight:bold;");
 
-        logo.setStyle(
-                "-fx-text-fill:white;" +
-                "-fx-font-size:24px;" +
-                "-fx-font-weight:bold;"
-        );
+                // =====================================================
+                // PANEL NAME
+                // =====================================================
 
+                Label panel = new Label("Secretary Panel");
 
-        // =====================================================
-        // PANEL NAME
-        // =====================================================
+                panel.setStyle(
+                                "-fx-text-fill:lightgray;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-padding:5px;");
 
-        Label panel = new Label("Secretary Panel");
+                // =====================================================
+                // DASHBOARD
+                // =====================================================
 
-        panel.setStyle(
-                "-fx-text-fill:lightgray;" +
-                "-fx-font-size:14px;" +
-                "-fx-padding:5px;"
-        );
+                Button dashboardBtn = new Button("Dashboard");
 
+                dashboardBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-        // =====================================================
-        // DASHBOARD
-        // =====================================================
+                dashboardBtn.setOnAction(e -> {
 
-        Button dashboardBtn = new Button("Dashboard");
+                        SecretaryDashboard dashboard = new SecretaryDashboard();
 
-        dashboardBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                        stage.setScene(
+                                        dashboard.createScene(stage));
+                });
 
-        dashboardBtn.setOnAction(e -> {
+                // =====================================================
+                // MANAGE RESIDENTS
+                // =====================================================
 
-            SecretaryDashboard dashboard =
-                    new SecretaryDashboard();
+                Button residentsBtn = new Button("Manage Residents");
 
-            stage.setScene(
-                    dashboard.createScene(stage)
-            );
-        });
+                residentsBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
+                residentsBtn.setOnAction(e -> {
 
-        // =====================================================
-        // MANAGE RESIDENTS
-        // =====================================================
+                        ManageResidents residents = new ManageResidents();
 
-        Button residentsBtn = new Button("Manage Residents");
+                        stage.setScene(
+                                        residents.createScene(stage));
+                });
 
-        residentsBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                // =====================================================
+                // MANAGE OWNERS
+                // =====================================================
 
-        residentsBtn.setOnAction(e -> {
+                Button ownersBtn = new Button("Manage Owners");
 
-            ManageResidents residents =
-                    new ManageResidents();
+                ownersBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-            stage.setScene(
-                    residents.createScene(stage)
-            );
-        });
+                ownersBtn.setOnAction(e -> {
 
+                        ManageOwner owners = new ManageOwner();
 
-        // =====================================================
-        // MANAGE OWNERS
-        // =====================================================
+                        stage.setScene(
+                                        owners.createScene(stage));
+                });
 
-        Button ownersBtn = new Button("Manage Owners");
+                // =====================================================
+                // MANAGE GUARDS
+                // =====================================================
 
-        ownersBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                Button guardsBtn = new Button("Manage Guards");
 
-        ownersBtn.setOnAction(e -> {
+                guardsBtn.setStyle(
+                                "-fx-background-color: #4e342e" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-            ManageOwner owners =
-                    new ManageOwner();
+                guardsBtn.setOnAction(e -> {
 
-            stage.setScene(
-                    owners.createScene(stage)
-            );
-        });
+                        ManageGuard guards = new ManageGuard();
 
+                        stage.setScene(
+                                        guards.createScene(stage));
+                });
 
-        // =====================================================
-        // MANAGE GUARDS
-        // =====================================================
+                // =====================================================
+                // MANAGE NOTICES
+                // =====================================================
 
-        Button guardsBtn = new Button("Manage Guards");
+                Button noticesBtn = new Button("Manage Notices");
 
-        guardsBtn.setStyle(
-                "-fx-background-color: #4e342e" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                noticesBtn.setStyle(
+                                "-fx-background-color: #4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-        guardsBtn.setOnAction(e -> {
+                noticesBtn.setOnAction(e -> {
 
-            ManageGuard guards =
-                    new ManageGuard();
+                        ManageNotices notices = new ManageNotices();
 
-            stage.setScene(
-                    guards.createScene(stage)
-            );
-        });
-
+                        stage.setScene(
+                                        notices.createScene(stage));
+                });
 
-        // =====================================================
-        // MANAGE NOTICES
-        // =====================================================
+                // =====================================================
+                // MANAGE COMPLAINTS
+                // =====================================================
 
-        Button noticesBtn = new Button("Manage Notices");
+                Button complaintsBtn = new Button("Manage Complaints");
 
-        noticesBtn.setStyle(
-                "-fx-background-color: #4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                complaintsBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-        noticesBtn.setOnAction(e -> {
+                complaintsBtn.setOnAction(e -> {
 
-            ManageNotices notices =
-                    new ManageNotices();
+                        ManageComplaints complaints = new ManageComplaints();
 
-            stage.setScene(
-                    notices.createScene(stage)
-            );
-        });
-
-
-        // =====================================================
-        // MANAGE COMPLAINTS
-        // =====================================================
+                        stage.setScene(
+                                        complaints.createScene(stage));
+                });
 
-        Button complaintsBtn = new Button("Manage Complaints");
+                // =====================================================
+                // MANAGE MAINTENANCE
+                // =====================================================
 
-        complaintsBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                Button maintenanceBtn = new Button("Manage Maintenance");
 
-        complaintsBtn.setOnAction(e -> {
+                maintenanceBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-            ManageComplaints complaints =
-                    new ManageComplaints();
+                maintenanceBtn.setOnAction(e -> {
 
-            stage.setScene(
-                    complaints.createScene(stage)
-            );
-        });
+                        ManageMaintenance maintenance = new ManageMaintenance();
 
-
-        // =====================================================
-        // MANAGE MAINTENANCE
-        // =====================================================
+                        stage.setScene(
+                                        maintenance.createScene(stage));
+                });
 
-        Button maintenanceBtn =
-                new Button("Manage Maintenance");
+                // =====================================================
+                // MANAGE PAYMENTS
+                // =====================================================
 
-        maintenanceBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                Button paymentsBtn = new Button("Manage Payments");
 
-        maintenanceBtn.setOnAction(e -> {
+                paymentsBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-            ManageMaintenance maintenance =
-                    new ManageMaintenance();
+                paymentsBtn.setOnAction(e -> {
 
-            stage.setScene(
-                    maintenance.createScene(stage)
-            );
-        });
+                        ManagePayment payment = new ManagePayment();
 
-
-        // =====================================================
-        // MANAGE PAYMENTS
-        // =====================================================
+                        stage.setScene(
+                                        payment.createScene(stage));
+                });
 
-        Button paymentsBtn =
-                new Button("Manage Payments");
+                // =====================================================
+                // SOS ALERTS
+                // =====================================================
 
-        paymentsBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                Button sosBtn = new Button("View SOS Alerts");
 
-        paymentsBtn.setOnAction(e -> {
+                sosBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-            ManagePayment payment =
-                    new ManagePayment();
+                sosBtn.setOnAction(e -> {
 
-            stage.setScene(
-                    payment.createScene(stage)
-            );
-        });
+                        ViewSos sos = new ViewSos();
 
-
-        // =====================================================
-        // SOS ALERTS
-        // =====================================================
+                        stage.setScene(
+                                        sos.createScene(stage));
+                });
 
-        Button sosBtn =
-                new Button("View SOS Alerts");
+                // =====================================================
+                // MANAGE EVENTS
+                // =====================================================
 
-        sosBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                Button eventsBtn = new Button("Manage Events");
 
-        sosBtn.setOnAction(e -> {
+                eventsBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-            ViewSos sos =
-                    new ViewSos();
+                eventsBtn.setOnAction(e -> {
 
-            stage.setScene(
-                    sos.createScene(stage)
-            );
-        });
+                        ManageEvents events = new ManageEvents();
 
-
-        // =====================================================
-        // MANAGE EVENTS
-        // =====================================================
+                        stage.setScene(
+                                        events.createScene(stage));
+                });
 
-        Button eventsBtn =
-                new Button("Manage Events");
+                // =====================================================
+                // GENERATE REPORTS
+                // =====================================================
 
-        eventsBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
+                Button reportsBtn = new Button("Generate Reports");
 
-        eventsBtn.setOnAction(e -> {
+                reportsBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
 
-            ManageEvents events =
-                    new ManageEvents();
+                reportsBtn.setOnAction(e -> {
 
-            stage.setScene(
-                    events.createScene(stage)
-            );
-        });
+                        GenerateReports report = new GenerateReports();
 
+                        stage.setScene(
+                                        report.createScene(stage));
+                });
 
-        // =====================================================
-        // GENERATE REPORTS
-        // =====================================================
-
-        Button reportsBtn =
-                new Button("Generate Reports");
-
-        reportsBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
-
-        reportsBtn.setOnAction(e -> {
-
-            GenerateReports report =
-                    new GenerateReports();
-
-            stage.setScene(
-                    report.createScene(stage)
-            );
-        });
-
-
-        // =====================================================
-        // PROFILE
-        // =====================================================
-
-        Button profileBtn =
-                new Button("Profile");
-
-        profileBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
-
-        profileBtn.setOnAction(e -> {
-
-            Profile profile =
-                    new Profile();
-
-            stage.setScene(
-                    profile.createScene(stage)
-            );
-        });
-
-
-        // =====================================================
-        // LOGOUT
-        // =====================================================
-
-        Button logoutBtn =
-                new Button("Logout");
-
-        logoutBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-size:14px;" +
-                "-fx-alignment:CENTER-LEFT;" +
-                "-fx-pref-width:240px;" +
-                "-fx-pref-height:40px;"
-        );
-
-        logoutBtn.setOnAction(e -> {
-
-            Logout logout =
-                    new Logout();
-
-            stage.setScene(
-                    logout.createScene(stage)
-            );
-        });
-
-
-        // =====================================================
-        // ADD ALL COMPONENTS TO SIDEBAR
-        // =====================================================
-
-        sidebar.getChildren().addAll(
-
-                logo,
-                panel,
-
-                dashboardBtn,
-                residentsBtn,
-                ownersBtn,
-                guardsBtn,
-                noticesBtn,
-                complaintsBtn,
-                maintenanceBtn,
-                paymentsBtn,
-                sosBtn,
-                eventsBtn,
-                reportsBtn,
-                profileBtn,
-                logoutBtn
-        );
-
-
-        return sidebar;
-    }
+                // =====================================================
+                // PROFILE
+                // =====================================================
+
+                Button profileBtn = new Button("Profile");
+
+                profileBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
+
+                profileBtn.setOnAction(e -> {
+
+                        Profile profile = new Profile();
+
+                        stage.setScene(
+                                        profile.createScene(stage));
+                });
+
+                // =====================================================
+                // LOGOUT
+                // =====================================================
+
+                Button logoutBtn = new Button("Logout");
+
+                logoutBtn.setStyle(
+                                "-fx-background-color:#4e342e;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:white;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-alignment:CENTER-LEFT;" +
+                                                "-fx-pref-width:240px;" +
+                                                "-fx-pref-height:40px;");
+
+                logoutBtn.setOnAction(e -> {
+
+                        Logout logout = new Logout();
+
+                        stage.setScene(
+                                        logout.createScene(stage));
+                });
+
+                // =====================================================
+                // ADD ALL COMPONENTS TO SIDEBAR
+                // =====================================================
+
+                sidebar.getChildren().addAll(
+
+                                logo,
+                                panel,
+
+                                dashboardBtn,
+                                residentsBtn,
+                                ownersBtn,
+                                guardsBtn,
+                                noticesBtn,
+                                complaintsBtn,
+                                maintenanceBtn,
+                                paymentsBtn,
+                                sosBtn,
+                                eventsBtn,
+                                reportsBtn,
+                                profileBtn,
+                                logoutBtn);
+
+                return sidebar;
+        }
 }
