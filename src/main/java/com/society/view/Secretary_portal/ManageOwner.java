@@ -9,540 +9,191 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ManageOwner {
-
     private Scene Owners;
-
     public Scene createScene(Stage stage) {
-
-        // ================= SIDEBAR =================
-
-        SecretarySidebar sidebarObj = new SecretarySidebar();
+       SecretarySidebar sidebarObj = new SecretarySidebar();
         VBox sidebar = sidebarObj.createSidebar(stage);
-
-
-        // ================= MAIN =================
+    
 
         VBox mainvb = new VBox(10);
-
-        mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setPrefWidth(1220);
+        mainvb.setPrefHeight(750);
         mainvb.setPadding(new Insets(20));
         mainvb.setSpacing(10);
-
-        mainvb.setStyle(
-                "-fx-background-color:#b3adad;"
-        );
-
-
-        // ================= TITLE =================
-
+        mainvb.setStyle("-fx-background-color: #b3adad;");
+    
+        //Title
         Label title = new Label("Manage Owners");
+        title.setStyle("-fx-font-size:28px;-fx-font-weight:bold;-fx-text-fill:black");
 
-        title.setStyle(
-                "-fx-font-size:28px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:black;"
-        );
+        Label subtitle = new Label("View and manage all flat owners");
+        subtitle.setStyle("-fx-font-size:14px;-fx-text-fill:#777777;");
 
 
-        Label subtitle =
-                new Label("View and manage all flat owners");
-
-        subtitle.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-text-fill:#777777;"
-        );
-
-
-        // ================= SEARCH =================
-
+        // search+add - Button
+        
         TextField search = new TextField();
-
-        search.setPromptText(
-                "Search owner, flat no., phone..."
-        );
-
+        search.setPromptText("Search resident, flat no., phone...");
         search.setPrefHeight(45);
         search.setPrefWidth(750);
-
-        search.setStyle(
-                "-fx-background-color:#F8F9FA;" +
-                "-fx-border-color:#E1E5E8;" +
-                "-fx-border-radius:8;" +
-                "-fx-background-radius:8;" +
-                "-fx-font-size:14px;"
-        );
+        search.setStyle("-fx-background-color:#F8F9FA;-fx-border-color:#E1E5E8;-fx-border-radius:8;-fx-background-radius:8;-fx-font-size:14px;");
 
 
-        // ================= ADD OWNER BUTTON =================
-
-        Button addOwnerBtn =
-                new Button("+ Add New Owner");
-
-        addOwnerBtn.setPrefWidth(200);
-        addOwnerBtn.setPrefHeight(45);
-
-        addOwnerBtn.setStyle(
-                "-fx-background-color:#434141;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-weight:bold;" +
-                "-fx-background-radius:8;"
-        );
-
+        Button addResidentBtn = new Button("+ Add New Owner");
+        addResidentBtn.setPrefWidth(200);
+        addResidentBtn.setPrefHeight(45);
+        addResidentBtn.setStyle("-fx-background-color: #434141;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8");
 
         HBox searchBox = new HBox(15);
+        searchBox.setAlignment(Pos.CENTER_LEFT);
+        searchBox.getChildren().addAll(search,addResidentBtn);
 
-        searchBox.setAlignment(
-                Pos.CENTER_LEFT
+        
+        //Resident 1
+
+        HBox resident1 = new HBox(5);
+        resident1.setPrefWidth(1000);
+        resident1.setMaxWidth(1000);
+        resident1.setAlignment(Pos.CENTER_LEFT);
+        resident1.setPrefHeight(70);
+        resident1.setPadding(new Insets(20));
+        resident1.setStyle("-fx-background-color:white;-fx-background-radius:10;");
+
+        Label profile1 = new Label("👤");
+        profile1.setPrefWidth(50);
+        profile1.setPrefHeight(50);
+        profile1.setAlignment(Pos.CENTER);
+        profile1.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
+
+        Label name1 = new Label("vijay");
+        name1.setPrefWidth(220);
+        name1.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
+        Label flat1 = new Label("Flat: B-402");
+        flat1.setPrefWidth(150);
+        flat1.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
+        Label mobile1 = new Label("Mobile: 9876543210");
+        mobile1.setPrefWidth(220);
+        mobile1.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
+        Label status1 = new Label("Active");
+        status1.setPrefWidth(100);
+        status1.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
+        
+        resident1.getChildren().addAll(profile1,name1,flat1,mobile1,status1);
+
+        //Resident 2
+
+
+        HBox resident2 = new HBox(5);
+         resident2.setAlignment(Pos.CENTER_LEFT);
+        resident2.setPrefWidth(1000);
+        resident2.setMaxWidth(1000);
+        resident2.setPrefHeight(70);
+        resident2.setPadding(new Insets(20));
+        resident2.setStyle("-fx-background-color:white;-fx-background-radius:10;");
+
+        Label profile2 = new Label("👤");
+        profile2.setPrefWidth(50);
+        profile2.setPrefHeight(50);
+        profile2.setAlignment(Pos.CENTER);
+        profile2.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
+        Label name2 = new Label("Sachin");
+        name2.setPrefWidth(200);
+        name2.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
+        Label flat2 = new Label("Flat: B-402");
+        flat2.setPrefWidth(150);
+        flat2.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
+        Label mobile2 = new Label("Mobile: 9876543210");
+        mobile2.setPrefWidth(220);
+        mobile2.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
+        Label status2 = new Label("Active");
+        status2.setPrefWidth(100);
+        status2.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
+
+        resident2.getChildren().addAll(profile2,name2,flat2,mobile2,status2);
+
+        //Resident 3
+
+        HBox resident3 = new HBox(5);
+        resident3.setAlignment(Pos.CENTER_LEFT);
+        resident3.setMaxWidth(1000);
+        resident3.setPrefWidth(1000);
+        resident3.setPrefHeight(70);
+        resident3.setPadding(new Insets(20));
+        resident3.setStyle("-fx-background-color:white;-fx-background-radius:10;");
+
+        Label profile3 = new Label("👤");
+        profile3.setPrefWidth(50);
+        profile3.setPrefHeight(50);
+        profile3.setAlignment(Pos.CENTER);
+        profile3.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
+        Label name3 = new Label("Pramod");
+        name3.setPrefWidth(200);
+        name3.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
+        Label flat3= new Label("Flat: B-402");
+        flat3.setPrefWidth(150);
+        flat3.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
+        Label mobile3= new Label("Mobile: 9876543210");
+        mobile3.setPrefWidth(220);
+        mobile3.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
+        Label status3 = new Label("Samarth");
+        status3.setPrefWidth(100);
+        status3.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
+
+        resident3.getChildren().addAll(profile3,name3,flat3,mobile3,status3);
+
+         //Resident 4
+
+        HBox resident4 = new HBox(5);
+         resident4.setAlignment(Pos.CENTER_LEFT);
+        resident4.setPrefWidth(1000);
+        resident4.setMaxWidth(1000);
+        resident4.setPrefHeight(70);
+        resident4.setPadding(new Insets(20));
+        resident4.setStyle("-fx-background-color:white;-fx-background-radius:10;");
+
+
+        Label profile4= new Label("👤");
+        profile4.setPrefWidth(50);
+        profile4.setPrefHeight(50);
+        profile4.setAlignment(Pos.CENTER);
+        profile4.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
+        Label name4 = new Label("Ram");
+        name4.setPrefWidth(200);
+        name4.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
+        Label flat4 = new Label("Flat: B-402");
+        flat4.setPrefWidth(150);
+        flat4.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
+        Label mobile4 = new Label("Mobile: 9876543210");
+        mobile4.setPrefWidth(220);
+        mobile4.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
+        Label status4 = new Label("Inactive");
+        status4.setPrefWidth(100);
+        status4.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
+
+        resident4.getChildren().addAll(profile4,name4,flat4,mobile4,status4);
+
+
+        VBox vb = new VBox(40,resident1,resident2,resident3,resident4);
+        VBox.setMargin(resident1, new Insets(20, 0, 0, 0));
+        mainvb.getChildren().addAll(title,
+                                     subtitle,
+                                     searchBox,
+                                     vb
         );
-
-        searchBox.getChildren().addAll(
-                search,
-                addOwnerBtn
-        );
-
-
-        // =====================================================
-        //                    STACKPANE
-        // =====================================================
-
-        StackPane contentPane =
-                new StackPane();
-
-        contentPane.getChildren().add(
-                mainvb
-        );
-
-
-        // =====================================================
-        //                  ADD OWNER FORM
-        // =====================================================
-
-        VBox addOwnerBox =
-                new VBox(15);
-
-        addOwnerBox.setPrefWidth(450);
-        addOwnerBox.setMaxWidth(450);
-
-        addOwnerBox.setPrefHeight(300);
-        addOwnerBox.setMaxHeight(300);
-
-        addOwnerBox.setPadding(
-                new Insets(25)
-        );
-
-        addOwnerBox.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:12;" +
-                "-fx-border-color:#DDDDDD;" +
-                "-fx-border-radius:12;"
-        );
-
-
-        // Form Title
-
-        Label formTitle =
-                new Label("Add New Owner");
-
-        formTitle.setStyle(
-                "-fx-font-size:22px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#123C36;"
-        );
-
-
-        // Owner Name
-
-        TextField ownerName =
-                new TextField();
-
-        ownerName.setPromptText(
-                "Enter owner name"
-        );
-
-        ownerName.setPrefHeight(40);
-
-
-        // Flat Number
-
-        TextField flatNumber =
-                new TextField();
-
-        flatNumber.setPromptText(
-                "Enter flat number"
-        );
-
-        flatNumber.setPrefHeight(40);
-
-
-        // Mobile Number
-
-        TextField mobileNumber =
-                new TextField();
-
-        mobileNumber.setPromptText(
-                "Enter mobile number"
-        );
-
-        mobileNumber.setPrefHeight(40);
-
-
-        // ================= BUTTONS =================
-
-        Button saveBtn =
-                new Button("Save Owner");
-
-        saveBtn.setPrefWidth(130);
-        saveBtn.setPrefHeight(40);
-
-        saveBtn.setStyle(
-                "-fx-background-color:#434141;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-weight:bold;" +
-                "-fx-background-radius:7;"
-        );
-
-
-        Button cancelBtn =
-                new Button("Cancel");
-
-        cancelBtn.setPrefWidth(100);
-        cancelBtn.setPrefHeight(40);
-
-
-        HBox formButtons =
-                new HBox(10);
-
-        formButtons.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        formButtons.getChildren().addAll(
-                saveBtn,
-                cancelBtn
-        );
-
-
-        // Add form content
-
-        addOwnerBox.getChildren().addAll(
-                formTitle,
-                ownerName,
-                flatNumber,
-                mobileNumber,
-                formButtons
-        );
-
-
-        // Initially hide form
-
-        addOwnerBox.setVisible(false);
-
-
-        // =====================================================
-        //                 ADD BUTTON CLICK
-        // =====================================================
-
-        addOwnerBtn.setOnAction(e -> {
-
-            addOwnerBox.setVisible(true);
-
-            if (!contentPane.getChildren()
-                    .contains(addOwnerBox)) {
-
-                contentPane.getChildren()
-                        .add(addOwnerBox);
-            }
-
-            StackPane.setAlignment(
-                    addOwnerBox,
-                    Pos.CENTER
-            );
-        });
-
-
-        // =====================================================
-        //                    CANCEL
-        // =====================================================
-
-        cancelBtn.setOnAction(e -> {
-
-            addOwnerBox.setVisible(false);
-
-            contentPane.getChildren()
-                    .remove(addOwnerBox);
-        });
-
-
-        // =====================================================
-        //                    SAVE
-        // =====================================================
-
-        saveBtn.setOnAction(e -> {
-
-            String name =
-                    ownerName.getText();
-
-            String flat =
-                    flatNumber.getText();
-
-            String mobile =
-                    mobileNumber.getText();
-
-            if (!name.isEmpty()
-                    && !flat.isEmpty()
-                    && !mobile.isEmpty()) {
-
-                System.out.println(
-                        "Owner Saved: "
-                                + name
-                                + " | "
-                                + flat
-                                + " | "
-                                + mobile
-                );
-
-                ownerName.clear();
-                flatNumber.clear();
-                mobileNumber.clear();
-
-                addOwnerBox.setVisible(false);
-
-                contentPane.getChildren()
-                        .remove(addOwnerBox);
-            }
-        });
-
-
-        // =====================================================
-        //                    OWNER 1
-        // =====================================================
-
-        HBox resident1 =
-                createOwnerRow(
-                        "vijay",
-                        "B-402",
-                        "9876543210",
-                        "Active"
-                );
-
-
-        // =====================================================
-        //                    OWNER 2
-        // =====================================================
-
-        HBox resident2 =
-                createOwnerRow(
-                        "Sachin",
-                        "B-403",
-                        "9876543211",
-                        "Active"
-                );
-
-
-        // =====================================================
-        //                    OWNER 3
-        // =====================================================
-
-        HBox resident3 =
-                createOwnerRow(
-                        "Pramod",
-                        "B-404",
-                        "9876543212",
-                        "Active"
-                );
-
-
-        // =====================================================
-        //                    OWNER 4
-        // =====================================================
-
-        HBox resident4 =
-                createOwnerRow(
-                        "Ram",
-                        "B-405",
-                        "9876543213",
-                        "Inactive"
-                );
-
-
-        // ================= OWNER LIST =================
-
-        VBox vb =
-                new VBox(
-                        40,
-                        resident1,
-                        resident2,
-                        resident3,
-                        resident4
-                );
-
-        VBox.setMargin(
-                resident1,
-                new Insets(20, 0, 0, 0)
-        );
-
-
-        // ================= MAIN CONTENT =================
-
-        mainvb.getChildren().addAll(
-                title,
-                subtitle,
-                searchBox,
-                vb
-        );
-
-
-        // ================= ROOT =================
-
-        HBox root =
-                new HBox();
-
-        root.getChildren().addAll(
-                sidebar,
-                contentPane
-        );
-
-        HBox.setHgrow(
-                contentPane,
-                Priority.ALWAYS
-        );
-
-
-        // ================= SCENE =================
-
-        Scene scene =
-                new Scene(
-                        root,
-                        ScreenSize.getWidth(),
-                        ScreenSize.getHeight()
-                );
-
+       
+        HBox root = new HBox();
+        root.getChildren().addAll(sidebar,mainvb);
+        
+        // Scene scene = new Scene(root,1500,750);
+         Scene scene = new Scene(
+                root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight());
         Owners = scene;
-
         return Owners;
-    }
-
-
-    // =========================================================
-    //                 OWNER ROW METHOD
-    // =========================================================
-
-    private HBox createOwnerRow(
-            String ownerName,
-            String flat,
-            String mobile,
-            String status) {
-
-
-        HBox owner =
-                new HBox(5);
-
-        owner.setPrefWidth(1000);
-        owner.setMaxWidth(1000);
-        owner.setPrefHeight(70);
-
-        owner.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        owner.setPadding(
-                new Insets(20)
-        );
-
-        owner.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:10;"
-        );
-
-
-        // Profile
-
-        Label profile =
-                new Label("👤");
-
-        profile.setPrefWidth(50);
-        profile.setPrefHeight(50);
-
-        profile.setAlignment(
-                Pos.CENTER
-        );
-
-        profile.setStyle(
-                "-fx-background-color:#E5E7EB;" +
-                "-fx-background-radius:50%;" +
-                "-fx-font-size:22px;"
-        );
-
-
-        // Name
-
-        Label name =
-                new Label(ownerName);
-
-        name.setPrefWidth(220);
-
-        name.setStyle(
-                "-fx-font-size:16px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#123C36;"
-        );
-
-
-        // Flat
-
-        Label flatLabel =
-                new Label("Flat: " + flat);
-
-        flatLabel.setPrefWidth(150);
-
-        flatLabel.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#555555;"
-        );
-
-
-        // Mobile
-
-        Label mobileLabel =
-                new Label("Mobile: " + mobile);
-
-        mobileLabel.setPrefWidth(220);
-
-        mobileLabel.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-text-fill:#555555;"
-        );
-
-
-        // Status
-
-        Label statusLabel =
-                new Label(status);
-
-        statusLabel.setPrefWidth(100);
-
-        statusLabel.setStyle(
-                "-fx-text-fill:#2E9D63;" +
-                "-fx-font-weight:bold;"
-        );
-
-
-        owner.getChildren().addAll(
-                profile,
-                name,
-                flatLabel,
-                mobileLabel,
-                statusLabel
-        );
-
-
-        return owner;
     }
 }

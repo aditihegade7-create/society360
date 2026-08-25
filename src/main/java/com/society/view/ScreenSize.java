@@ -14,4 +14,5 @@ public class ScreenSize {
     public static double getHeight() {
         return SCREEN.getHeight();
     }
+    
 }

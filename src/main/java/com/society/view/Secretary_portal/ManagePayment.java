@@ -29,10 +29,9 @@ public class ManagePayment {
 
         VBox mainvb = new VBox(20);
         mainvb.setPadding(new Insets(25));
-        mainvb.setMaxWidth(Double.MAX_VALUE);
-        mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setPrefWidth(1220);
         mainvb.setStyle(
-                "-fx-background-color:#4e342e;"
+                "-fx-background-color:#b3adad;"
         );
 
         // HEADING
@@ -425,8 +424,6 @@ public class ManagePayment {
                 sidebar,
                 mainvb
         );
-         HBox.setHgrow(mainvb, Priority.ALWAYS);
-
 
         // SCENE
 

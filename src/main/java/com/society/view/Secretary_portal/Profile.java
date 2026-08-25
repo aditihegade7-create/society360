@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -27,8 +26,7 @@ public class Profile {
 
         VBox mainvb = new VBox(20);
         mainvb.setPadding(new Insets(25));
-         mainvb.setMaxWidth(Double.MAX_VALUE);
-        mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setPrefWidth(1220);
         mainvb.setStyle(
                 "-fx-background-color:#b3adad;"
         );
@@ -237,8 +235,6 @@ public class Profile {
                 sidebar,
                 mainvb
         );
-         HBox.setHgrow(mainvb, Priority.ALWAYS);
-
 
         // SCENE
       

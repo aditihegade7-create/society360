@@ -28,8 +28,7 @@ public class ViewSos {
 
         VBox mainvb = new VBox(20);
         mainvb.setPadding(new Insets(25));
-        mainvb.setMaxWidth(Double.MAX_VALUE);
-        mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setPrefWidth(1220);
         mainvb.setStyle(
                 "-fx-background-color:#b3adad;"
         );
@@ -302,8 +301,6 @@ public class ViewSos {
                 sidebar,
                 mainvb
         );
-         HBox.setHgrow(mainvb, Priority.ALWAYS);
-
 
         // SCENE
 
@@ -312,8 +309,6 @@ public class ViewSos {
                 root,
                 ScreenSize.getWidth(),
                 ScreenSize.getHeight());
-
-                
         viewSosScene = scene;        
         return viewSosScene;
     }

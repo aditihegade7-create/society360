@@ -1,6 +1,4 @@
 package com.society.view.Welcome;
-import com.society.controller.welcome.AuthController;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -250,8 +248,6 @@ public class SigninPage {
             VBox detailsBox,
             Stage stage) {
 
-                AuthController authController = new AuthController();
-
         detailsBox.getChildren().clear();
 
         // ROLE TITLE
@@ -477,116 +473,25 @@ public class SigninPage {
                 "-fx-background-radius:8;"
         );
 
+
         signupBtn.setOnAction(event -> {
 
-    if (!terms.isSelected()) {
+            if (!terms.isSelected()) {
 
-        showAlert(
-                "Terms Required",
-                "Please accept the Terms & Conditions."
-        );
+                showAlert(
+                        "Terms Required",
+                        "Please accept the Terms & Conditions."
+                );
 
-        return;
-    }
+                return;
+            }
 
-    String name = nameField.getText().trim();
-    String phone = phoneField.getText().trim();
-    String email = emailField.getText().trim();
-    String genderValue =
-            gender.getValue() == null ? "" : gender.getValue();
+            LogInPage loginPage =new LogInPage();
 
-    String dobValue =
-            dob.getValue() == null
-                    ? ""
-                    : dob.getValue().toString();
+            stage.setScene(loginPage.createScene(stage));
 
-    String passwordValue = password.getText();
-    String confirmValue = confirmPassword.getText();
-
-    // Basic validation
-
-    if (name.isEmpty()
-            || phone.isEmpty()
-            || email.isEmpty()
-            || genderValue.isEmpty()
-            || dobValue.isEmpty()
-            || passwordValue.isEmpty()
-            || confirmValue.isEmpty()) {
-
-        showAlert(
-                "Missing Details",
-                "Please fill all required details."
-        );
-
-        return;
-    }
-
-    if (!passwordValue.equals(confirmValue)) {
-
-        showAlert(
-                "Password Error",
-                "Password and Confirm Password do not match."
-        );
-
-        return;
-    }
-
-    // Firebase Authentication
-
-    String uid =
-            authController.signUp(
-                    email,
-                    passwordValue
-            );
-
-    if (uid == null) {
-
-        showAlert(
-                "Sign Up Failed",
-                "Unable to create account. Please check your details."
-        );
-
-        return;
-    }
-
-    // Firestore
-
-    boolean saved =
-            authController.saveUserToFirestore(
-                    uid,
-                    name,
-                    phone,
-                    dobValue,
-                    email,
-                    genderValue,
-                    role,
-                    "Society360"
-            );
-
-    if (saved) {
-
-        showAlert(
-                "Sign Up Successful",
-                "Your account has been created successfully."
-        );
-
-        LogInPage loginPage = new LogInPage();
-
-        stage.setScene(
-                loginPage.createScene(stage)
-        );
-
-        stage.show();
-
-    } else {
-
-        showAlert(
-                "Firestore Error",
-                "Account created, but user data could not be saved."
-        );
-    }
-});
-       
+            stage.show();
+        });
 
 
         // LOGIN

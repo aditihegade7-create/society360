@@ -1,7 +1,5 @@
 package com.society.view.Welcome;
 
-import com.society.controller.welcome.AuthController;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -183,8 +181,6 @@ public class LogInPage {
 
     private VBox createLoginCard(Stage stage) {
 
-        AuthController authController = new AuthController();
-
         VBox card =new VBox(16);
 
         card.setMaxWidth(450);
@@ -309,9 +305,6 @@ public class LogInPage {
 
         loginButton.setOnAction(event -> {
 
-                String email = username.getText().trim();
-                String pass = password.getText();
-
             if (
                     username.getText().isEmpty()
                     || password.getText().isEmpty()
@@ -326,22 +319,13 @@ public class LogInPage {
                 return;
             }
 
-            boolean success = authController.signIn(email, pass);
-
             // LOGIN SUCCESS
-            if(success){
+
             showAlert(
                     Alert.AlertType.INFORMATION,
                     "Login",
                     "Login successful!"
             );
-        } else {
-                showAlert(Alert.AlertType.ERROR,
-                        "Login Failed",
-                        "Invalid Email or password."
-                );
-        }
-        
         });
 
         // NEW ACCOUNT
