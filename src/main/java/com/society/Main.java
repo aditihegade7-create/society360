@@ -9,5 +9,7 @@ public class Main {
         System.out.println("Hello world!");
         Application.launch(Splash.class,args);
         
+        
+
     }
 }
