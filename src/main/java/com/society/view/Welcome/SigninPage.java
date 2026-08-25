@@ -1,4 +1,6 @@
 package com.society.view.Welcome;
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -50,7 +52,10 @@ public class SigninPage {
         signupCard.setAlignment(Pos.TOP_CENTER);
 
         signupCard.setStyle(
-                "-fx-background-color: #F8F3EE;" +
+                "-fx-background-color: #F8F3EE;"
+                +"-fx-border-color: #c7c3bd;"
+                + "-fx-border-radius: 15;"
+                + "-fx-border-width: 1.5;"+
                 "-fx-background-radius:15;"
         );
 
@@ -61,7 +66,7 @@ public class SigninPage {
         createTitle.setStyle(
                 "-fx-font-size:26px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#333333;"
+                "-fx-text-fill: #333333;"
         );
 
         Label createSubtitle =
@@ -69,7 +74,7 @@ public class SigninPage {
 
         createSubtitle.setStyle(
                 "-fx-font-size:13px;" +
-                "-fx-text-fill:#535050;"
+                "-fx-text-fill: #535050;"
         );
 
         // ROLE SELECTION
@@ -79,7 +84,7 @@ public class SigninPage {
         roleLabel.setStyle(
                 "-fx-font-size:13px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#555555;"
+                "-fx-text-fill: #555555;"
         );
 
         RadioButton owner =new RadioButton("Owner");
@@ -93,7 +98,7 @@ public class SigninPage {
         String roleStyle =
                 "-fx-font-size:16px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#4e342e;";
+                "-fx-text-fill: #4e342e;";
 
         owner.setStyle(roleStyle);
         resident.setStyle(roleStyle);
@@ -118,6 +123,38 @@ public class SigninPage {
                 guard
         );
 
+        //back to login page button
+
+        Button backToLoginBtn = new Button("← Back");
+
+        backToLoginBtn.setPrefWidth(100);
+        backToLoginBtn.setPrefHeight(40);
+
+        backToLoginBtn.setStyle(
+                "-fx-background-color: transparent;" +
+                "-fx-text-fill: #4e342e;" +
+                "-fx-font-size: 14px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-cursor: hand;"
+        );
+
+        backToLoginBtn.setOnAction(event -> {
+
+        LogInPage loginPage = new LogInPage();
+
+        stage.setScene(loginPage.createScene(stage));
+
+        stage.show();
+        });
+
+        StackPane.setAlignment(backToLoginBtn,
+                Pos.TOP_LEFT
+        );
+
+        StackPane.setMargin(backToLoginBtn,
+                new Insets(20, 0, 0, 25)
+        );
+
         // CONTINUE BUTTON
 
         Button continueBtn =new Button("Continue");
@@ -126,7 +163,7 @@ public class SigninPage {
         continueBtn.setPrefHeight(45);
 
         continueBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:15px;" +
                 "-fx-font-weight:bold;" +
@@ -148,9 +185,7 @@ public class SigninPage {
 
             RadioButton selectedRole =(RadioButton) roleGroup.getSelectedToggle();
 
-            // ---------------------------------------------
             // ROLE NOT SELECTED
-            // ---------------------------------------------
 
             if (selectedRole == null) {
 
@@ -190,6 +225,7 @@ public class SigninPage {
         // ADD CONTENT
 
         signupCard.getChildren().addAll(
+                backToLoginBtn,
                 createTitle,
                 createSubtitle,
 
@@ -206,8 +242,10 @@ public class SigninPage {
 
         root.setStyle(
                 "-fx-background-color:" +
-                "linear-gradient(to right, #D7CCC8, #D7CCC8);"
+                "linear-gradient(to right, #D7CCC8, #bfb1a7);"
         );
+
+
 
         StackPane.setAlignment(
                 signupCard,
@@ -218,15 +256,18 @@ public class SigninPage {
                 signupCard,
                 new Insets(
                         20,
-                        60,
+                        100,
                         20,
                         20
                 )
         );
 
+
+
         root.getChildren().addAll(
                 leftPanel,
-                signupCard
+                signupCard,
+                backToLoginBtn
         );
 
         // SCENE
@@ -234,8 +275,10 @@ public class SigninPage {
         signinScene =
                 new Scene(
                         root,
-                        1200,
-                        750
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+
+                        
                 );
 
         return signinScene;
@@ -257,7 +300,7 @@ public class SigninPage {
         roleTitle.setStyle(
                 "-fx-font-size:20px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#4e342e;"
+                "-fx-text-fill: #4e342e;"
         );
 
         // COMMON FIELDS
@@ -583,14 +626,14 @@ public class SigninPage {
 
         VBox panel =new VBox();
 
-        panel.setPrefWidth(450);
-        panel.setPrefHeight(400);
+        panel.setPrefWidth(550);
+        panel.setPrefHeight(500);
 
-        panel.setMinWidth(450);
-        panel.setMinHeight(400);
+        panel.setMinWidth(550);
+        panel.setMinHeight(500);
 
-        panel.setMaxWidth(440);
-        panel.setMaxHeight(400);
+        panel.setMaxWidth(540);
+        panel.setMaxHeight(500);
 
         panel.setAlignment(Pos.CENTER);
 
@@ -610,9 +653,9 @@ public class SigninPage {
         ImageView imageView =new ImageView(image);
 
 
-        imageView.setFitWidth(420);
+        imageView.setFitWidth(520);
 
-        imageView.setFitHeight(380);
+        imageView.setFitHeight(480);
 
         imageView.setPreserveRatio(false);
 
@@ -622,14 +665,14 @@ public class SigninPage {
 
         StackPane imageContainer =new StackPane(imageView);
 
-        imageContainer.setPrefWidth(500);
-        imageContainer.setPrefHeight(600);
+        imageContainer.setPrefWidth(600);
+        imageContainer.setPrefHeight(700);
 
-        imageContainer.setMinWidth(500);
-        imageContainer.setMinHeight(600);
+        imageContainer.setMinWidth(600);
+        imageContainer.setMinHeight(700);
 
-        imageContainer.setMaxWidth(500);
-        imageContainer.setMaxHeight(600);
+        imageContainer.setMaxWidth(600);
+        imageContainer.setMaxHeight(700);
 
 
         panel.getChildren().add(imageContainer);

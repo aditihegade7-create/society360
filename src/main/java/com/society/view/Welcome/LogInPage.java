@@ -1,5 +1,7 @@
 package com.society.view.Welcome;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -45,7 +47,7 @@ public class LogInPage {
 
         StackPane root = new StackPane();
 
-        root.setStyle("-fx-background-color: linear-gradient(to right, #E8DDD5, #E8DDD5);");
+        root.setStyle("-fx-background-color: linear-gradient(to right, #E8DDD5, #bfb1a7);");
 
         // LEFT IMAGE PANEL
         VBox leftPanel = createLeftPanel();
@@ -69,12 +71,12 @@ public class LogInPage {
 
         VBox loginCard =createLoginCard(stage);
 
-        loginCard.setPrefWidth(400);
-        loginCard.setMinWidth(400);
-        loginCard.setMaxWidth(400);
+        loginCard.setPrefWidth(500);
+        loginCard.setMinWidth(450);
+        loginCard.setMaxWidth(450);
 
-        loginCard.setPrefHeight(500);
-        loginCard.setMaxHeight(500);
+        loginCard.setPrefHeight(600);
+        loginCard.setMaxHeight(600);
 
         // RIGHT SIDE
 
@@ -87,7 +89,7 @@ public class LogInPage {
                 loginCard,
                 new Insets(
                         20,
-                        70,
+                        100,
                         20,
                         20
                 )
@@ -105,8 +107,9 @@ public class LogInPage {
         Scene loginScene =
                 new Scene(
                         root,
-                        1100,
-                        700
+                        ScreenSize.getWidth(),
+                        ScreenSize.getHeight()
+                
                 );
 
         stage.setTitle("Society360 - Login");
@@ -123,14 +126,14 @@ public class LogInPage {
 
         VBox panel = new VBox();
 
-        panel.setPrefWidth(450);
-        panel.setPrefHeight(400);
+        panel.setPrefWidth(550);
+        panel.setPrefHeight(500);
 
-        panel.setMinWidth(450);
-        panel.setMinHeight(400);
+        panel.setMinWidth(550);
+        panel.setMinHeight(500);
 
-        panel.setMaxWidth(440);
-        panel.setMaxHeight(400);
+        panel.setMaxWidth(540);
+        panel.setMaxHeight(500);
 
         panel.setAlignment(Pos.CENTER);
 
@@ -148,9 +151,9 @@ public class LogInPage {
 
         // IMAGE SIZE
         
-        imageView.setFitWidth(420);
+        imageView.setFitWidth(520);
 
-        imageView.setFitHeight(380);
+        imageView.setFitHeight(480);
 
         imageView.setPreserveRatio(false);
 
@@ -160,14 +163,14 @@ public class LogInPage {
 
         StackPane imageContainer =new StackPane(imageView);
 
-        imageContainer.setPrefWidth(500);
-        imageContainer.setPrefHeight(600);
+        imageContainer.setPrefWidth(600);
+        imageContainer.setPrefHeight(700);
 
-        imageContainer.setMinWidth(500);
-        imageContainer.setMinHeight(600);
+        imageContainer.setMinWidth(600);
+        imageContainer.setMinHeight(700);
 
-        imageContainer.setMaxWidth(500);
-        imageContainer.setMaxHeight(600);
+        imageContainer.setMaxWidth(600);
+        imageContainer.setMaxHeight(700);
 
         // ADD IMAGE
 
@@ -181,7 +184,7 @@ public class LogInPage {
 
     private VBox createLoginCard(Stage stage) {
 
-        VBox card =new VBox(16);
+        VBox card =new VBox(20);
 
         card.setMaxWidth(450);
 
@@ -197,7 +200,7 @@ public class LogInPage {
 
         // YOUR ORIGINAL COLOR / STYLE
         card.setStyle(
-                "-fx-background-color: #FFFDF9;"
+                "-fx-background-color: #F8F3EE;"
                 + "-fx-background-radius: 15;"
                 + "-fx-border-color: #c7c3bd;"
                 + "-fx-border-radius: 15;"
