@@ -1,7 +1,6 @@
 {
-<<<<<<< HEAD
+
     "java.configuration.updateBuildConfiguration": "interactive"
-=======
-    "java.configuration.updateBuildConfiguration": "automatic"
->>>>>>> e62375d8213f0bcf29078efe5b832bb323adab9b
+
+
 }

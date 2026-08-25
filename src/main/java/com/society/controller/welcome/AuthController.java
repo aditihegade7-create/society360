@@ -9,256 +9,112 @@ import org.json.JSONObject;
 
 public class AuthController {
 
-    private static final String API_KEY =
-            "AIzaSyAcyT5P1xMuNiTrIV1oRieZ4oft_GzUejA";
+        private static final String API_KEY = "AIzaSyAcyT5P1xMuNiTrIV1oRieZ4oft_GzUejA";
 
-    private static final String PROJECT_ID =
-            "society360-6db56";
 
-    // ================= SIGN UP =================
+        // ================= SIGN UP =================
 
-    public String signUp(String email, String password) {
+        public String signUp(String email, String password) {
 
-        JSONObject payload = new JSONObject()
-                .put("email", email)
-                .put("password", password)
-                .put("returnSecureToken", true);
+                JSONObject payload = new JSONObject()
+                                .put("email", email)
+                                .put("password", password)
+                                .put("returnSecureToken", true);
 
-        try {
+                try {
 
-            HttpClient client = HttpClient.newHttpClient();
+                        HttpClient client = HttpClient.newHttpClient();
 
-            URI uri = URI.create(
-                    "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="
-                            + API_KEY
-            );
+                        URI uri = URI.create(
+                                        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="
+                                                        + API_KEY);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Content-Type", "application/json")
-                    .POST(
-                            HttpRequest.BodyPublishers
-                                    .ofString(payload.toString())
-                    )
-                    .build();
+                        HttpRequest request = HttpRequest.newBuilder()
+                                        .uri(uri)
+                                        .header("Content-Type", "application/json")
+                                        .POST(
+                                                        HttpRequest.BodyPublishers
+                                                                        .ofString(payload.toString()))
+                                        .build();
 
-            HttpResponse<String> response =
-                    client.send(
-                            request,
-                            HttpResponse.BodyHandlers.ofString()
-                    );
+                        HttpResponse<String> response = client.send(
+                                        request,
+                                        HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("SIGN UP STATUS: "
-                    + response.statusCode());
+                        System.out.println("SIGN UP STATUS: "
+                                        + response.statusCode());
 
-            System.out.println("SIGN UP RESPONSE: "
-                    + response.body());
+                        System.out.println("SIGN UP RESPONSE: "
+                                        + response.body());
 
-            if (response.statusCode() == 200) {
+                        if (response.statusCode() == 200) {
 
-                JSONObject result =
-                        new JSONObject(response.body());
+                                JSONObject result = new JSONObject(response.body());
 
-                String uid =
-                        result.getString("localId");
+                                String uid = result.getString("localId");
 
-                return uid;
-            }
+                                return uid;
+                        }
 
-        } catch (Exception e) {
+                } catch (Exception e) {
 
-            e.printStackTrace();
+                        e.printStackTrace();
+                }
+
+                return null;
         }
 
-        return null;
-    }
+        // ================= FIRESTORE =================
 
+        // ================= LOGIN =================
 
-    // ================= FIRESTORE =================
+        public boolean signIn(
+                        String email,
+                        String password) {
 
-    public boolean saveUserToFirestore(
-            String uid,
-            String name,
-            String phone,
-            String dob,
-            String email,
-            String gender,
-            String role,
-            String society
-    ) {
+                JSONObject payload = new JSONObject()
+                                .put("email", email)
+                                .put("password", password)
+                                .put("returnSecureToken", true);
 
-        JSONObject fields = new JSONObject();
+                try {
 
-        fields.put(
-                "name",
-                new JSONObject().put("stringValue", name)
-        );
+                        HttpClient client = HttpClient.newHttpClient();
 
-        fields.put(
-                "phone",
-                new JSONObject().put("stringValue", phone)
-        );
+                        URI uri = URI.create(
+                                        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="
+                                                        + API_KEY);
 
-        fields.put(
-                "dob",
-                new JSONObject().put("stringValue", dob)
-        );
+                        HttpRequest request = HttpRequest.newBuilder()
+                                        .uri(uri)
+                                        .header(
+                                                        "Content-Type",
+                                                        "application/json")
+                                        .POST(
+                                                        HttpRequest.BodyPublishers
+                                                                        .ofString(
+                                                                                        payload.toString()))
+                                        .build();
 
-        fields.put(
-                "email",
-                new JSONObject().put("stringValue", email)
-        );
+                        HttpResponse<String> response = client.send(
+                                        request,
+                                        HttpResponse.BodyHandlers
+                                                        .ofString());
 
-        fields.put(
-                "gender",
-                new JSONObject().put("stringValue", gender)
-        );
+                        System.out.println(
+                                        response.statusCode());
 
-        fields.put(
-                "role",
-                new JSONObject().put("stringValue", role)
-        );
+                        System.out.println(
+                                        response.body());
 
-        fields.put(
-                "society",
-                new JSONObject().put("stringValue", society)
-        );
+                        return response.statusCode() == 200;
 
+                } catch (Exception e) {
 
-        JSONObject document = new JSONObject();
+                        e.printStackTrace();
 
-        document.put("fields", fields);
+                }
 
-
-        try {
-
-            HttpClient client =
-                    HttpClient.newHttpClient();
-
-            URI uri = URI.create(
-                    "https://firestore.googleapis.com/v1/projects/"
-                            + PROJECT_ID
-                            + "/databases/(default)/documents/users/"
-                            + uid
-            );
-
-
-            HttpRequest request =
-                    HttpRequest.newBuilder()
-                            .uri(uri)
-                            .header(
-                                    "Content-Type",
-                                    "application/json"
-                            )
-                            .method(
-                                    "PATCH",
-                                    HttpRequest.BodyPublishers
-                                            .ofString(
-                                                    document.toString()
-                                            )
-                            )
-                            .build();
-
-
-            HttpResponse<String> response =
-                    client.send(
-                            request,
-                            HttpResponse.BodyHandlers
-                                    .ofString()
-                    );
-
-
-            System.out.println(
-                    "FIRESTORE STATUS: "
-                            + response.statusCode()
-            );
-
-            System.out.println(
-                    "FIRESTORE RESPONSE: "
-                            + response.body()
-            );
-
-
-            return response.statusCode() == 200;
-
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
+                return false;
         }
-
-        return false;
-    }
-
-
-    // ================= LOGIN =================
-
-    public boolean signIn(
-            String email,
-            String password
-    ) {
-
-        JSONObject payload = new JSONObject()
-                .put("email", email)
-                .put("password", password)
-                .put("returnSecureToken", true);
-
-
-        try {
-
-            HttpClient client =
-                    HttpClient.newHttpClient();
-
-
-            URI uri = URI.create(
-                    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="
-                            + API_KEY
-            );
-
-
-            HttpRequest request =
-                    HttpRequest.newBuilder()
-                            .uri(uri)
-                            .header(
-                                    "Content-Type",
-                                    "application/json"
-                            )
-                            .POST(
-                                    HttpRequest.BodyPublishers
-                                            .ofString(
-                                                    payload.toString()
-                                            )
-                            )
-                            .build();
-
-
-            HttpResponse<String> response =
-                    client.send(
-                            request,
-                            HttpResponse.BodyHandlers
-                                    .ofString()
-                    );
-
-
-            System.out.println(
-                    response.statusCode()
-            );
-
-            System.out.println(
-                    response.body()
-            );
-
-
-            return response.statusCode() == 200;
-
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
-
-        return false;
-    }
 }

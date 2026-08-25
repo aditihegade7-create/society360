@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -69,6 +70,146 @@ public class ManageComplaints {
                 title,
                 subtitle
         );
+
+
+        Button addComplaintBtn = new Button("+ Add Complaint");
+
+                addComplaintBtn.setPrefWidth(150);
+                addComplaintBtn.setPrefHeight(40);
+
+                addComplaintBtn.setStyle(
+                        "-fx-background-color:#434141;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:7;"
+                );
+
+                addComplaintBtn.setOnAction(e -> {
+
+        Stage popupStage = new Stage();
+
+        VBox popup = new VBox(15);
+
+        popup.setPadding(new Insets(25));
+        popup.setAlignment(Pos.CENTER_LEFT);
+
+        popup.setPrefWidth(450);
+        popup.setPrefHeight(470);
+
+        popup.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:15;"
+        );
+
+        Label popupTitle = new Label("Add New Complaint");
+
+        popupTitle.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+        Label complaintLabel = new Label("Complaint");
+
+        TextField complaintField = new TextField();
+        complaintField.setPromptText("Enter complaint");
+        complaintField.setPrefHeight(40);
+
+        Label flatLabel = new Label("Flat Number");
+
+        TextField flatField = new TextField();
+        flatField.setPromptText("Enter flat number");
+        flatField.setPrefHeight(40);
+
+        Label dateLabel = new Label("Date");
+
+        TextField dateField = new TextField();
+        dateField.setPromptText("Enter date");
+        dateField.setPrefHeight(40);
+
+        Label descriptionLabel = new Label("Description");
+
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("Enter complaint description");
+        descriptionField.setPrefHeight(70);
+
+        Button cancelBtn = new Button("Cancel");
+
+        cancelBtn.setPrefWidth(100);
+        cancelBtn.setPrefHeight(40);
+
+        cancelBtn.setStyle(
+                "-fx-background-color:#E5E7EB;" +
+                "-fx-text-fill:#333333;" +
+                "-fx-background-radius:8;"
+        );
+
+    Button saveBtn = new Button("Save Complaint");
+
+    saveBtn.setPrefWidth(140);
+    saveBtn.setPrefHeight(40);
+
+    saveBtn.setStyle(
+            "-fx-background-color:#2E9D63;" +
+            "-fx-text-fill:white;" +
+            "-fx-font-weight:bold;" +
+            "-fx-background-radius:8;"
+    );
+
+    HBox buttonBox = new HBox(10);
+
+    buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+    buttonBox.getChildren().addAll(
+            cancelBtn,
+            saveBtn
+    );
+
+    popup.getChildren().addAll(
+            popupTitle,
+
+            complaintLabel,
+            complaintField,
+
+            flatLabel,
+            flatField,
+
+            dateLabel,
+            dateField,
+
+            descriptionLabel,
+            descriptionField,
+
+            buttonBox
+    );
+
+    Scene popupScene = new Scene(popup);
+
+    popupStage.setTitle("Add Complaint");
+    popupStage.setScene(popupScene);
+    popupStage.setResizable(false);
+
+    cancelBtn.setOnAction(event -> {
+        popupStage.close();
+    });
+
+    saveBtn.setOnAction(event -> {
+        popupStage.close();
+    });
+
+    popupStage.show();
+});
+
+                HBox complaintHeader = new HBox();
+
+                complaintHeader.setAlignment(Pos.CENTER_LEFT);
+
+                HBox.setHgrow(titleBox, Priority.ALWAYS);
+
+                complaintHeader.getChildren().addAll(
+                        titleBox,
+                        addComplaintBtn
+                );
 
         // STATUS BUTTONS
 
@@ -496,11 +637,143 @@ public class ManageComplaints {
                 "-fx-border-radius:7;"
         );
 
+        viewAllBtn.setOnAction(e -> {
+
+        Stage popupStage = new Stage();
+
+        VBox popup = new VBox(15);
+
+        popup.setPadding(new Insets(25));
+        popup.setAlignment(Pos.TOP_LEFT);
+
+        popup.setPrefWidth(600);
+        popup.setPrefHeight(550);
+
+        popup.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:15;"
+        );
+
+        Label popupTitle = new Label("All Complaints");
+
+        popupTitle.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+        VBox allComplaints = new VBox(12);
+
+        allComplaints.getChildren().addAll(
+
+                createComplaint(
+                        "Water Leakage in Bathroom",
+                        "B-402",
+                        "10 May 2025",
+                        "Open",
+                        "#FFF0D9",
+                        "#C47A20"
+                ),
+
+                createComplaint(
+                        "Parking Issue",
+                        "C-203",
+                        "09 May 2025",
+                        "Open",
+                        "#FFF0D9",
+                        "#C47A20"
+                ),
+
+                createComplaint(
+                        "Lift Not Working",
+                        "A-101",
+                        "10 May 2025",
+                        "In Progress",
+                        "#E7F0FF",
+                        "#3478C9"
+                ),
+
+                createComplaint(
+                        "Water Tank Cleaning",
+                        "B-305",
+                        "08 May 2025",
+                        "In Progress",
+                        "#E7F0FF",
+                        "#3478C9"
+                ),
+
+                createComplaint(
+                        "Garbage Not Collected",
+                        "B-305",
+                        "09 May 2025",
+                        "Resolved",
+                        "#E5F7EC",
+                        "#2E9D63"
+                ),
+
+                createComplaint(
+                        "Water Pressure Issue",
+                        "C-201",
+                        "06 May 2025",
+                        "Resolved",
+                        "#E5F7EC",
+                        "#2E9D63"
+                )
+        );
+
+        ScrollPane popupScroll = new ScrollPane();
+
+        popupScroll.setContent(allComplaints);
+
+        popupScroll.setFitToWidth(true);
+
+        popupScroll.setPrefHeight(420);
+
+        popupScroll.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-border-color:transparent;"
+        );
+
+        Button closeBtn = new Button("Close");
+
+        closeBtn.setPrefWidth(100);
+        closeBtn.setPrefHeight(40);
+
+        closeBtn.setStyle(
+                "-fx-background-color:#434141;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;"
+        );
+
+        HBox buttonBox = new HBox(closeBtn);
+
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        popup.getChildren().addAll(
+                popupTitle,
+                popupScroll,
+                buttonBox
+        );
+
+        Scene popupScene = new Scene(popup);
+
+        popupStage.setTitle("All Complaints");
+        popupStage.setScene(popupScene);
+        popupStage.setResizable(false);
+
+        closeBtn.setOnAction(event -> {
+                popupStage.close();
+        });
+
+        popupStage.show();
+        });
+
         // MAIN CONTENT
 
         mainvb.getChildren().addAll(
                 heading,
-                titleBox,
+                complaintHeader,
                 tabs,
                 scrollPane,
                 viewAllBtn
@@ -509,10 +782,11 @@ public class ManageComplaints {
         // ROOT
 
         HBox root = new HBox();
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
+        root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color::#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
+
 
         // SCENE
 

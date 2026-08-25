@@ -297,10 +297,11 @@ public class ViewSos {
         // ROOT
 
         HBox root =  new HBox();
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
+        root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color::#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
+
 
         // SCENE
 

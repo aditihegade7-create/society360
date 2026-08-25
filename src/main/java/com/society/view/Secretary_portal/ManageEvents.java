@@ -30,7 +30,7 @@ public class ManageEvents {
         VBox mainvb = new VBox(20);
         mainvb.setPadding(new Insets(25));
         mainvb.setPrefWidth(1220);
-        mainvb.setStyle("-fx-background-color: #e8ddd5;");
+        mainvb.setStyle("-fx-background-color: #b3adad;");
 
         // HEADING
 
@@ -69,7 +69,7 @@ public class ManageEvents {
         addEventBtn.setPrefWidth(130);
         addEventBtn.setPrefHeight(40);
         addEventBtn.setStyle(
-                "-fx-background-color: #4e342e;" +
+                "-fx-background-color: :#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;"
@@ -191,7 +191,7 @@ public class ManageEvents {
         viewAllBtn.setPrefWidth(1180);
         viewAllBtn.setPrefHeight(40);
         viewAllBtn.setStyle(
-                "-fx-background-color:#4e342e;" +
+                "-fx-background-color::#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;" +
@@ -210,10 +210,11 @@ public class ManageEvents {
         // ROOT
 
         HBox root =  new HBox();
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
+         root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color::#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
+
 
         // SCENE
 

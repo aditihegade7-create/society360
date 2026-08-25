@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -24,7 +25,7 @@ public class ManageGuard {
         mainvb.setPrefHeight(750);
         mainvb.setPadding(new Insets(20));
         mainvb.setSpacing(10);
-        mainvb.setStyle("-fx-background-color: #e8ddd5;");
+        mainvb.setStyle("-fx-background-color: #b3adad;");
     
         //Title
         Label title = new Label("Manage Guards");
@@ -43,14 +44,124 @@ public class ManageGuard {
         search.setStyle("-fx-background-color:#F8F9FA;-fx-border-color: #E1E5E8;-fx-border-radius:8;-fx-background-radius:8;-fx-font-size:14px;");
 
 
-        Button addResidentBtn = new Button("+ Add New Resident");
-        addResidentBtn.setPrefWidth(200);
-        addResidentBtn.setPrefHeight(45);
-        addResidentBtn.setStyle("-fx-background-color:#434141;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8");
+        Button addGuardBtn = new Button("+ Add New Guard");
+        addGuardBtn.setPrefWidth(200);
+        addGuardBtn.setPrefHeight(45);
+        addGuardBtn.setStyle("-fx-background-color:#434141;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8");
+
+        addGuardBtn.setOnAction(e -> {
+
+            Stage popupStage = new Stage();
+
+            VBox popup = new VBox(15);
+            popup.setPadding(new Insets(25));
+            popup.setAlignment(Pos.CENTER_LEFT);
+            popup.setPrefWidth(400);
+            popup.setPrefHeight(420);
+
+            popup.setStyle(
+                    "-fx-background-color:white;" +
+                    "-fx-background-radius:15;"
+            );
+
+            Label popupTitle = new Label("Add New Guard");
+            popupTitle.setStyle(
+                    "-fx-font-size:24px;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-text-fill:#123C36;"
+            );
+
+            Label nameLabel = new Label("Guard Name");
+
+            TextField nameField = new TextField();
+            nameField.setPromptText("Enter guard name");
+            nameField.setPrefHeight(40);
+
+            Label mobileLabel = new Label("Mobile Number");
+
+            TextField mobileField = new TextField();
+            mobileField.setPromptText("Enter mobile number");
+            mobileField.setPrefHeight(40);
+
+            Label shiftLabel = new Label("Shift");
+
+            TextField shiftField = new TextField();
+            shiftField.setPromptText("Enter shift");
+            shiftField.setPrefHeight(40);
+
+            Label emailLabel = new Label("Email");
+
+            TextField emailField = new TextField();
+            emailField.setPromptText("Enter email");
+            emailField.setPrefHeight(40);
+
+            Button cancelBtn = new Button("Cancel");
+            cancelBtn.setPrefWidth(100);
+            cancelBtn.setPrefHeight(40);
+
+            cancelBtn.setStyle(
+                    "-fx-background-color:#E5E7EB;" +
+                    "-fx-text-fill:#333333;" +
+                    "-fx-background-radius:8;"
+            );
+
+            Button saveBtn = new Button("Save Guard");
+            saveBtn.setPrefWidth(130);
+            saveBtn.setPrefHeight(40);
+
+            saveBtn.setStyle(
+                    "-fx-background-color:#2E9D63;" +
+                    "-fx-text-fill:white;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-background-radius:8;"
+            );
+
+            HBox buttonBox = new HBox(10);
+            buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+            buttonBox.getChildren().addAll(
+                    cancelBtn,
+                    saveBtn
+            );
+
+            popup.getChildren().addAll(
+                    popupTitle,
+
+                    nameLabel,
+                    nameField,
+
+                    mobileLabel,
+                    mobileField,
+
+                    shiftLabel,
+                    shiftField,
+
+                    emailLabel,
+                    emailField,
+
+                    buttonBox
+            );
+
+            Scene popupScene = new Scene(popup);
+
+            popupStage.setTitle("Add New Guard");
+            popupStage.setScene(popupScene);
+            popupStage.setResizable(false);
+
+            cancelBtn.setOnAction(event -> {
+                popupStage.close();
+            });
+
+            saveBtn.setOnAction(event -> {
+                popupStage.close();
+            });
+
+            popupStage.show();
+        });
 
         HBox searchBox = new HBox(15);
         searchBox.setAlignment(Pos.CENTER_LEFT);
-        searchBox.getChildren().addAll(search,addResidentBtn);
+        searchBox.getChildren().addAll(search,addGuardBtn);
 
         
         //Resident 1
@@ -187,7 +298,11 @@ public class ManageGuard {
         );
 
         HBox root = new HBox();
+         root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
         root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color::#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
+
         
         // Scene scene = new Scene(root,1500,750);
          Scene scene = new Scene(
