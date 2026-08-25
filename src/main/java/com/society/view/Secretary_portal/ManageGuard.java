@@ -24,7 +24,7 @@ public class ManageGuard {
         mainvb.setPrefHeight(750);
         mainvb.setPadding(new Insets(20));
         mainvb.setSpacing(10);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
+        mainvb.setStyle("-fx-background-color: #e8ddd5;");
     
         //Title
         Label title = new Label("Manage Guards");
@@ -40,7 +40,7 @@ public class ManageGuard {
         search.setPromptText("Search resident, flat no., phone...");
         search.setPrefHeight(45);
         search.setPrefWidth(750);
-        search.setStyle("-fx-background-color:#F8F9FA;-fx-border-color:#E1E5E8;-fx-border-radius:8;-fx-background-radius:8;-fx-font-size:14px;");
+        search.setStyle("-fx-background-color:#F8F9FA;-fx-border-color: #E1E5E8;-fx-border-radius:8;-fx-background-radius:8;-fx-font-size:14px;");
 
 
         Button addResidentBtn = new Button("+ Add New Resident");

@@ -19,7 +19,7 @@ public class SecretarySidebar {
 
         sidebar.setPrefWidth(280);
         sidebar.setPrefHeight(750);
-        sidebar.setStyle("-fx-background-color:#4e4b4b;");
+        sidebar.setStyle("-fx-background-color: #593a32;");
         sidebar.setSpacing(14);
         sidebar.setPadding(new Insets(20));
 
@@ -60,7 +60,7 @@ public class SecretarySidebar {
         Button dashboardBtn = new Button("Dashboard");
 
         dashboardBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -87,7 +87,7 @@ public class SecretarySidebar {
         Button residentsBtn = new Button("Manage Residents");
 
         residentsBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -114,7 +114,7 @@ public class SecretarySidebar {
         Button ownersBtn = new Button("Manage Owners");
 
         ownersBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -141,7 +141,7 @@ public class SecretarySidebar {
         Button guardsBtn = new Button("Manage Guards");
 
         guardsBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color: #4e342e" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -168,7 +168,7 @@ public class SecretarySidebar {
         Button noticesBtn = new Button("Manage Notices");
 
         noticesBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color: #4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -195,7 +195,7 @@ public class SecretarySidebar {
         Button complaintsBtn = new Button("Manage Complaints");
 
         complaintsBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -223,7 +223,7 @@ public class SecretarySidebar {
                 new Button("Manage Maintenance");
 
         maintenanceBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -251,7 +251,7 @@ public class SecretarySidebar {
                 new Button("Manage Payments");
 
         paymentsBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -279,7 +279,7 @@ public class SecretarySidebar {
                 new Button("View SOS Alerts");
 
         sosBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -307,7 +307,7 @@ public class SecretarySidebar {
                 new Button("Manage Events");
 
         eventsBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -335,7 +335,7 @@ public class SecretarySidebar {
                 new Button("Generate Reports");
 
         reportsBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -363,7 +363,7 @@ public class SecretarySidebar {
                 new Button("Profile");
 
         profileBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
@@ -391,7 +391,7 @@ public class SecretarySidebar {
                 new Button("Logout");
 
         logoutBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-size:14px;" +
