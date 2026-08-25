@@ -4,26 +4,14 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-<<<<<<< HEAD
-        {
-            "type": "java",
-            "name": "WelcomePage",
-            "request": "launch",
-            "mainClass": "com.society.view.Welcome.WelcomePage",
-            "projectName": "project"
-        },
-=======
 
-
-        
->>>>>>> c4f76ae7ad5e67a20f4d678b9bd0c08c877ad113
         {
             "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "com.society.Main",
             "projectName": "project",
-            "vmArgs": " --module-path \"D://java2026//javafx-sdk-21.0.12//lib\" --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": " --module-path \"D://java26//javafx-sdk-21.0.12//lib\" --add-modules javafx.controls,javafx.fxml"
         }
     ]
 }
