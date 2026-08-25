@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GuardProfile {
@@ -82,6 +83,8 @@ day.setText(today.format(
 date.setText(today.format(
         DateTimeFormatter.ofPattern("dd MMMM yyyy")
 ));
+day.setTextFill(Color.WHITE);
+date.setTextFill(Color.WHITE);
 
 VBox dateBox = new VBox(3);
 dateBox.setAlignment(Pos.CENTER_RIGHT);
