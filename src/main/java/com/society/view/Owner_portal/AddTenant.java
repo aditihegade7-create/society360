@@ -11,6 +11,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,10 +33,23 @@ public class AddTenant {
     root.setLeft(sidebar.getSidebar());
 
     VBox mainContent = new VBox();
-    mainContent.setPadding( new Insets(25, 35, 25, 35));
-    mainContent.setSpacing(18);
-    mainContent.setAlignment(Pos.TOP_LEFT);
-    mainContent.setStyle("-fx-background-color: #e8ddd5;" );
+        mainContent.setPadding(new Insets(25, 35, 25, 35));
+        mainContent.setSpacing(18);
+        mainContent.setAlignment(Pos.TOP_LEFT);
+
+        Image image = new Image(
+        AddTenant.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+
+        mainContent.setBackground(new Background(backgroundImage));
+        
 
     HBox header = new HBox();
         header.setPrefWidth(900);

@@ -10,6 +10,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -35,8 +41,19 @@ public class ViewPayments {
 
         mainContent.setAlignment(Pos.TOP_LEFT);
 
-        mainContent.setStyle( "-fx-background-color: #e8ddd5;"
+        Image image = new Image(
+        ViewPayments.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
         );
+
+        mainContent.setBackground(new Background(backgroundImage));
+        
 
         HBox header = new HBox();
         header.setPrefWidth(900);
@@ -47,7 +64,7 @@ public class ViewPayments {
 
         VBox vb = new VBox();
         Label greeting = new Label("Payments");
-        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill: #ffffff;");
+        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill: #e8ddd5;");
 
         Label description = new Label("View all rental and maintenance payment");
         description.setStyle("-fx-font-size:12px;-fx-text-fill: #ffffff;");

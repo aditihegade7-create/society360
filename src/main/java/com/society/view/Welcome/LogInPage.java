@@ -47,7 +47,21 @@ public class LogInPage {
 
         StackPane root = new StackPane();
 
-        root.setStyle("-fx-background-color: linear-gradient(to right, #E8DDD5, #bfb1a7);");
+        Image bgImage = new Image(
+                getClass().getResource("/background-Society360.jpeg").toExternalForm()
+        );
+
+        ImageView bgView = new ImageView(bgImage);
+
+        bgView.setPreserveRatio(false);
+        bgView.fitWidthProperty().bind(root.widthProperty());
+        bgView.fitHeightProperty().bind(root.heightProperty());
+
+        root.getChildren().add(bgView);
+
+        //StackPane root = new StackPane();
+
+        //root.setStyle("-fx-background-color: linear-gradient(to right, #E8DDD5, #bfb1a7);");
 
         // LEFT IMAGE PANEL
         VBox leftPanel = createLeftPanel();

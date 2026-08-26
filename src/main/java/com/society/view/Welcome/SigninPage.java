@@ -240,11 +240,29 @@ public class SigninPage {
 
         StackPane root =new StackPane();
 
-        root.setStyle(
-                "-fx-background-color:" +
-                "linear-gradient(to right, #D7CCC8, #bfb1a7);"
+        // ================= BACKGROUND IMAGE =================
+
+        Image bgImage = new Image(
+                getClass()
+                .getResource("/Background-Society360.jpeg")
+                .toExternalForm()
         );
 
+        ImageView bgView = new ImageView(bgImage);
+
+        bgView.setPreserveRatio(false);
+        bgView.setSmooth(true);
+
+        bgView.fitWidthProperty().bind(
+                root.widthProperty()
+        );
+
+        bgView.fitHeightProperty().bind(
+                root.heightProperty()
+        );
+
+        // Background first
+        root.getChildren().add(bgView);
 
 
         StackPane.setAlignment(
