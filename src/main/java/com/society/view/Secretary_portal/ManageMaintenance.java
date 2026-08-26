@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -66,6 +67,145 @@ public class ManageMaintenance {
         titleBox.getChildren().addAll(
                 title,
                 subtitle
+        );
+
+        Button addMaintenanceBtn = new Button("+ Add Maintenance");
+
+                addMaintenanceBtn.setPrefWidth(160);
+                addMaintenanceBtn.setPrefHeight(40);
+
+                addMaintenanceBtn.setStyle(
+                        "-fx-background-color:#434141;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:7;"
+                );
+
+                addMaintenanceBtn.setOnAction(e -> {
+
+        Stage popupStage = new Stage();
+
+        VBox popup = new VBox(15);
+
+        popup.setPadding(new Insets(25));
+        popup.setAlignment(Pos.CENTER_LEFT);
+
+        popup.setPrefWidth(450);
+        popup.setPrefHeight(450);
+
+        popup.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:15;"
+        );
+
+        Label popupTitle = new Label("Add Maintenance");
+
+        popupTitle.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+        Label nameLabel = new Label("Resident Name");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Enter resident name");
+        nameField.setPrefHeight(40);
+
+        Label flatLabel = new Label("Flat Number");
+
+        TextField flatField = new TextField();
+        flatField.setPromptText("Enter flat number");
+        flatField.setPrefHeight(40);
+
+        Label amountLabel = new Label("Amount");
+
+        TextField amountField = new TextField();
+        amountField.setPromptText("Enter maintenance amount");
+        amountField.setPrefHeight(40);
+
+        Label monthLabel = new Label("Month");
+
+        TextField monthField = new TextField();
+        monthField.setPromptText("Enter month");
+        monthField.setPrefHeight(40);
+
+        Button cancelBtn = new Button("Cancel");
+
+        cancelBtn.setPrefWidth(100);
+        cancelBtn.setPrefHeight(40);
+
+        cancelBtn.setStyle(
+                "-fx-background-color:#E5E7EB;" +
+                "-fx-text-fill:#333333;" +
+                "-fx-background-radius:8;"
+        );
+
+        Button saveBtn = new Button("Save");
+
+        saveBtn.setPrefWidth(120);
+        saveBtn.setPrefHeight(40);
+
+        saveBtn.setStyle(
+                "-fx-background-color:#2E9D63;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;"
+        );
+
+        HBox buttonBox = new HBox(10);
+
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        buttonBox.getChildren().addAll(
+                cancelBtn,
+                saveBtn
+        );
+
+        popup.getChildren().addAll(
+                popupTitle,
+
+                nameLabel,
+                nameField,
+
+                flatLabel,
+                flatField,
+
+                amountLabel,
+                amountField,
+
+                monthLabel,
+                monthField,
+
+                buttonBox
+        );
+
+        Scene popupScene = new Scene(popup);
+
+        popupStage.setTitle("Add Maintenance");
+        popupStage.setScene(popupScene);
+        popupStage.setResizable(false);
+
+        cancelBtn.setOnAction(event -> {
+                popupStage.close();
+        });
+
+        saveBtn.setOnAction(event -> {
+                popupStage.close();
+        });
+
+        popupStage.show();
+        });
+
+        HBox maintenanceHeader = new HBox();
+
+        maintenanceHeader.setAlignment(Pos.CENTER_LEFT);
+
+        HBox.setHgrow(titleBox, Priority.ALWAYS);
+
+        maintenanceHeader.getChildren().addAll(
+                titleBox,
+                addMaintenanceBtn
         );
 
         // STATUS BUTTONS
@@ -420,13 +560,151 @@ public class ManageMaintenance {
         viewAllBtn.setPrefHeight(40);
 
         viewAllBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#434141" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;" +
                 "-fx-border-color:#EEEEEE;" +
                 "-fx-border-radius:7;"
         );
+
+        viewAllBtn.setOnAction(e -> {
+
+    Stage popupStage = new Stage();
+
+    VBox popup = new VBox(15);
+
+    popup.setPadding(new Insets(25));
+    popup.setAlignment(Pos.TOP_LEFT);
+
+    popup.setPrefWidth(650);
+    popup.setPrefHeight(550);
+
+    popup.setStyle(
+            "-fx-background-color:white;" +
+            "-fx-background-radius:15;"
+    );
+
+    Label popupTitle = new Label("All Maintenance");
+
+    popupTitle.setStyle(
+            "-fx-font-size:24px;" +
+            "-fx-font-weight:bold;" +
+            "-fx-text-fill:#123C36;"
+    );
+
+    VBox allMaintenance = new VBox(12);
+
+    allMaintenance.getChildren().addAll(
+
+            createMaintenance(
+                    "Diya Wadhwa",
+                    "B-402",
+                    "₹2500",
+                    "May 2025",
+                    "Pending",
+                    "#FFF0D9",
+                    "#C47A20"
+            ),
+
+            createMaintenance(
+                    "Rahul Sharma",
+                    "A-101",
+                    "₹2500",
+                    "May 2025",
+                    "Pending",
+                    "#FFF0D9",
+                    "#C47A20"
+            ),
+
+            createMaintenance(
+                    "Aarav Mehta",
+                    "A-201",
+                    "₹2500",
+                    "May 2025",
+                    "Paid",
+                    "#E5F7EC",
+                    "#2E9D63"
+            ),
+
+            createMaintenance(
+                    "Priya Sharma",
+                    "B-102",
+                    "₹2500",
+                    "May 2025",
+                    "Paid",
+                    "#E5F7EC",
+                    "#2E9D63"
+            ),
+
+            createMaintenance(
+                    "Vikram Deshmukh",
+                    "A-305",
+                    "₹5000",
+                    "April 2025",
+                    "Overdue",
+                    "#FDE8E8",
+                    "#D9534F"
+            ),
+
+            createMaintenance(
+                    "Meena Shah",
+                    "B-404",
+                    "₹5000",
+                    "April 2025",
+                    "Overdue",
+                    "#FDE8E8",
+                    "#D9534F"
+            )
+    );
+
+        ScrollPane popupScroll = new ScrollPane();
+
+        popupScroll.setContent(allMaintenance);
+
+        popupScroll.setFitToWidth(true);
+
+        popupScroll.setPrefHeight(420);
+
+        popupScroll.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-border-color:transparent;"
+        );
+
+        Button closeBtn = new Button("Close");
+
+        closeBtn.setPrefWidth(100);
+        closeBtn.setPrefHeight(40);
+
+        closeBtn.setStyle(
+                "-fx-background-color:#434141;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;"
+        );
+
+        HBox buttonBox = new HBox(closeBtn);
+
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        popup.getChildren().addAll(
+                popupTitle,
+                popupScroll,
+                buttonBox
+        );
+
+        Scene popupScene = new Scene(popup);
+
+        popupStage.setTitle("All Maintenance");
+        popupStage.setScene(popupScene);
+        popupStage.setResizable(false);
+
+        closeBtn.setOnAction(event -> {
+                popupStage.close();
+        });
+
+        popupStage.show();
+        });
 
 
         // =====================================================
@@ -435,7 +713,7 @@ public class ManageMaintenance {
 
         mainvb.getChildren().addAll(
                 heading,
-                titleBox,
+                maintenanceHeader,
                 tabs,
                 scrollPane,
                 viewAllBtn
@@ -449,11 +727,10 @@ public class ManageMaintenance {
         HBox root =
                 new HBox();
 
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
-
+         root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color:#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
 
         // =====================================================
         // SCENE

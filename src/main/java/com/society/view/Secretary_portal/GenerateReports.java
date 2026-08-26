@@ -110,7 +110,7 @@ public class GenerateReports {
         generateBtn.setPrefWidth(1180);
         generateBtn.setPrefHeight(45);
         generateBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color::#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:8;"
@@ -198,7 +198,7 @@ public class GenerateReports {
         viewBtn.setPrefHeight(30);
 
         viewBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color::#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:6;"
