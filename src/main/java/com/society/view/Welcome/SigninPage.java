@@ -55,6 +55,13 @@ public class SigninPage {
                 signupCard.setPadding(new Insets(25));
 
                 signupCard.setAlignment(Pos.TOP_CENTER);
+        signupCard.setStyle(
+                "-fx-background-color: #F8F3EE;"
+                +"-fx-border-color: #c7c3bd;"
+                + "-fx-border-radius: 15;"
+                + "-fx-border-width: 1.5;"+
+                "-fx-background-radius:15;"
+        );
 
                 signupCard.setStyle(
                                 "-fx-background-color: #F8F3EE;" +
@@ -68,6 +75,11 @@ public class SigninPage {
                 // =================================================
 
                 Label createTitle = new Label("Create Account");
+        createTitle.setStyle(
+                "-fx-font-size:26px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill: #333333;"
+        );
 
                 createTitle.setStyle(
                                 "-fx-font-size:26px;" +
@@ -76,6 +88,10 @@ public class SigninPage {
 
                 Label createSubtitle = new Label(
                                 "Join Society360 and simplify your life");
+        createSubtitle.setStyle(
+                "-fx-font-size:13px;" +
+                "-fx-text-fill: #535050;"
+        );
 
                 createSubtitle.setStyle(
                                 "-fx-font-size:13px;" +

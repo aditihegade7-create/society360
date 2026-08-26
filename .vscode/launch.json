@@ -10,10 +10,18 @@
             "request": "launch",
             "mainClass": "com.society.Main",
             "projectName": "project",
+<<<<<<< HEAD
 
             "vmArgs": " --module-path \"D://java26//javafx-sdk-21.0.12//lib\" --add-modules javafx.controls,javafx.fxml"
 
 
+=======
+<<<<<<< HEAD
+            "vmArgs": " --module-path \"D:/java26//javafx-sdk-21.0.12//lib\" --add-modules javafx.controls,javafx.fxml"
+=======
+            "vmArgs": " --module-path \"D://java26//javafx-sdk-21.0.12//lib\" --add-modules javafx.controls,javafx.fxml"
+>>>>>>> 79634e7c299176f3090710199436c8a9c9d68931
+>>>>>>> 5d0172e0a7932dd56d5882c55a640f02d3e203e0
         }
     ]
 }
