@@ -1,6 +1,8 @@
 package com.society.view.Secretary_portal;
 
 import com.society.view.ScreenSize;
+import com.society.view.Authentication.LoginPage;
+import com.society.view.Welcome.LogInPage;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -140,6 +142,9 @@ public class Logout {
         // LOGOUT ACTION
 
         logoutBtn.setOnAction(e -> {
+
+                LogInPage loginPage = new LogInPage();
+                stage.setScene(loginPage.createScene(stage));
 
             Label loggedOut =
                     new Label("You have been logged out.");

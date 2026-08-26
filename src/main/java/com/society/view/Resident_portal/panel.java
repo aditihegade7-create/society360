@@ -1,5 +1,7 @@
 package com.society.view.Resident_portal;
 
+import com.society.view.Welcome.LogInPage;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -155,6 +157,11 @@ public class panel {
 
         Button logoutBtn = new Button("Logout");
         logoutBtn.setStyle("-fx-background-color: #4e342e;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
+
+        logoutBtn.setOnAction(event ->{
+            LogInPage loginPage = new LogInPage();
+                stage.setScene(loginPage.createScene(stage));
+        });
 
 
         sidebar.getChildren().addAll(logo,

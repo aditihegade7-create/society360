@@ -1,5 +1,7 @@
 package com.society.view.Owner_portal;
 
+import com.society.view.Welcome.LogInPage;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -79,7 +81,10 @@ public class OwnerSidebar {
         });
         
 
-        logout.setOnAction(e -> {System.out.println("Logout");
+        logout.setOnAction(e -> {
+            LogInPage loginPage = new LogInPage();
+            stage.setScene(loginPage.createScene(stage));
+            System.out.println("Logout");
         });
 
         sidebar.getChildren().addAll(

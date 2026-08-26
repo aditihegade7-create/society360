@@ -1,14 +1,13 @@
 package com.society.view.Welcome;
 
-import com.society.controller.welcome.AuthController;
+import com.society.controller.welcome.UserController;
+import com.society.dao.Welcome.UserDao;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,13 +17,17 @@ public class SigninPage {
 
         private Scene signinScene;
 
-        private static final String DARK_BROWN = "#4e342e";
+        private final UserController controller = new UserController();
 
-        // MAIN SCENE
+        // =====================================================
+        // CREATE SCENE
+        // =====================================================
 
         public Scene createScene(Stage stage) {
 
-                // LEFT SIDE
+                // =================================================
+                // LEFT PANEL
+                // =================================================
 
                 VBox leftPanel = createLeftPanel();
 
@@ -36,7 +39,9 @@ public class SigninPage {
                                 leftPanel,
                                 new Insets(20, 20, 20, 50));
 
-                // RIGHT SIDE - CREATE ACCOUNT
+                // =================================================
+                // SIGNUP CARD
+                // =================================================
 
                 VBox signupCard = new VBox(15);
 
@@ -52,35 +57,40 @@ public class SigninPage {
                 signupCard.setAlignment(Pos.TOP_CENTER);
 
                 signupCard.setStyle(
-                                "-fx-background-color: #F8F3EE;"
-                                                + "-fx-border-color: #c7c3bd;"
-                                                + "-fx-border-radius: 15;"
-                                                + "-fx-border-width: 1.5;" +
+                                "-fx-background-color: #F8F3EE;" +
+                                                "-fx-border-color: #c7c3bd;" +
+                                                "-fx-border-radius: 15;" +
+                                                "-fx-border-width: 1.5;" +
                                                 "-fx-background-radius:15;");
 
+                // =================================================
                 // TITLE
+                // =================================================
 
                 Label createTitle = new Label("Create Account");
 
                 createTitle.setStyle(
                                 "-fx-font-size:26px;" +
                                                 "-fx-font-weight:bold;" +
-                                                "-fx-text-fill: #333333;");
+                                                "-fx-text-fill:#333333;");
 
-                Label createSubtitle = new Label("Join Society360 and simplify your life");
+                Label createSubtitle = new Label(
+                                "Join Society360 and simplify your life");
 
                 createSubtitle.setStyle(
                                 "-fx-font-size:13px;" +
-                                                "-fx-text-fill: #535050;");
+                                                "-fx-text-fill:#535050;");
 
+                // =================================================
                 // ROLE SELECTION
+                // =================================================
 
                 Label roleLabel = new Label("I am a");
 
                 roleLabel.setStyle(
                                 "-fx-font-size:13px;" +
                                                 "-fx-font-weight:bold;" +
-                                                "-fx-text-fill: #555555;");
+                                                "-fx-text-fill:#555555;");
 
                 RadioButton owner = new RadioButton("Owner");
 
@@ -92,7 +102,7 @@ public class SigninPage {
 
                 String roleStyle = "-fx-font-size:16px;" +
                                 "-fx-font-weight:bold;" +
-                                "-fx-text-fill: #4e342e;";
+                                "-fx-text-fill:#4e342e;";
 
                 owner.setStyle(roleStyle);
                 resident.setStyle(roleStyle);
@@ -107,6 +117,7 @@ public class SigninPage {
                 guard.setToggleGroup(roleGroup);
 
                 VBox roles = new VBox(25);
+
                 roles.setAlignment(Pos.CENTER_LEFT);
 
                 roles.getChildren().addAll(
@@ -115,7 +126,9 @@ public class SigninPage {
                                 secretary,
                                 guard);
 
-                // back to login page button
+                // =================================================
+                // BACK BUTTON
+                // =================================================
 
                 Button backToLoginBtn = new Button("← Back");
 
@@ -123,28 +136,25 @@ public class SigninPage {
                 backToLoginBtn.setPrefHeight(40);
 
                 backToLoginBtn.setStyle(
-                                "-fx-background-color: transparent;" +
-                                                "-fx-text-fill: #4e342e;" +
-                                                "-fx-font-size: 14px;" +
-                                                "-fx-font-weight: bold;" +
-                                                "-fx-cursor: hand;");
+                                "-fx-background-color:transparent;" +
+                                                "-fx-text-fill:#4e342e;" +
+                                                "-fx-font-size:14px;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-cursor:hand;");
 
                 backToLoginBtn.setOnAction(event -> {
 
                         LogInPage loginPage = new LogInPage();
 
-                        stage.setScene(loginPage.createScene(stage));
+                        stage.setScene(
+                                        loginPage.createScene(stage));
 
                         stage.show();
                 });
 
-                StackPane.setAlignment(backToLoginBtn,
-                                Pos.TOP_LEFT);
-
-                StackPane.setMargin(backToLoginBtn,
-                                new Insets(20, 0, 0, 25));
-
+                // =================================================
                 // CONTINUE BUTTON
+                // =================================================
 
                 Button continueBtn = new Button("Continue");
 
@@ -152,13 +162,15 @@ public class SigninPage {
                 continueBtn.setPrefHeight(45);
 
                 continueBtn.setStyle(
-                                "-fx-background-color: #4e342e;" +
+                                "-fx-background-color:#4e342e;" +
                                                 "-fx-text-fill:white;" +
                                                 "-fx-font-size:15px;" +
                                                 "-fx-font-weight:bold;" +
                                                 "-fx-background-radius:8;");
 
+                // =================================================
                 // DETAILS BOX
+                // =================================================
 
                 VBox detailsBox = new VBox(12);
 
@@ -167,15 +179,15 @@ public class SigninPage {
                 detailsBox.setVisible(false);
                 detailsBox.setManaged(false);
 
+                // =================================================
                 // CONTINUE ACTION
+                // =================================================
 
                 continueBtn.setOnAction(event -> {
 
-                        RadioButton selectedRole = (RadioButton) roleGroup.getSelectedToggle();
+                        Toggle selected = roleGroup.getSelectedToggle();
 
-                        // ROLE NOT SELECTED
-
-                        if (selectedRole == null) {
+                        if (selected == null) {
 
                                 showAlert(
                                                 "Role Required",
@@ -184,9 +196,7 @@ public class SigninPage {
                                 return;
                         }
 
-                        // SHOW DETAILS
-
-                        String role = selectedRole.getText();
+                        String role = ((RadioButton) selected).getText();
 
                         createRoleForm(
                                         role,
@@ -196,7 +206,6 @@ public class SigninPage {
                         detailsBox.setVisible(true);
                         detailsBox.setManaged(true);
 
-                        // Hide role selection after Continue
                         roleLabel.setVisible(false);
                         roleLabel.setManaged(false);
 
@@ -207,26 +216,28 @@ public class SigninPage {
                         continueBtn.setManaged(false);
                 });
 
+                // =================================================
                 // ADD CONTENT
+                // =================================================
 
                 signupCard.getChildren().addAll(
                                 backToLoginBtn,
                                 createTitle,
                                 createSubtitle,
-
                                 roleLabel,
                                 roles,
                                 continueBtn,
-
                                 detailsBox);
 
-                // MAIN ROOT
+                // =================================================
+                // ROOT
+                // =================================================
 
                 StackPane root = new StackPane();
 
                 root.setStyle(
                                 "-fx-background-color:" +
-                                                "linear-gradient(to right, #D7CCC8, #bfb1a7);");
+                                                "linear-gradient(to right,#D7CCC8,#bfb1a7);");
 
                 StackPane.setAlignment(
                                 signupCard,
@@ -242,22 +253,23 @@ public class SigninPage {
 
                 root.getChildren().addAll(
                                 leftPanel,
-                                signupCard,
-                                backToLoginBtn);
+                                signupCard);
 
+                // =================================================
                 // SCENE
+                // =================================================
 
                 signinScene = new Scene(
                                 root,
                                 ScreenSize.getWidth(),
-                                ScreenSize.getHeight()
-
-                );
+                                ScreenSize.getHeight());
 
                 return signinScene;
         }
 
+        // =====================================================
         // ROLE FORM
+        // =====================================================
 
         private void createRoleForm(
                         String role,
@@ -266,16 +278,20 @@ public class SigninPage {
 
                 detailsBox.getChildren().clear();
 
+                // =================================================
                 // ROLE TITLE
+                // =================================================
 
                 Label roleTitle = new Label(role + " Details");
 
                 roleTitle.setStyle(
                                 "-fx-font-size:20px;" +
                                                 "-fx-font-weight:bold;" +
-                                                "-fx-text-fill: #4e342e;");
+                                                "-fx-text-fill:#4e342e;");
 
+                // =================================================
                 // COMMON FIELDS
+                // =================================================
 
                 TextField nameField = createTextField("Full Name");
 
@@ -308,7 +324,9 @@ public class SigninPage {
 
                 PasswordField confirmPassword = new PasswordField();
 
-                confirmPassword.setPromptText("Confirm Password");
+                confirmPassword.setPromptText(
+                                "Confirm Password");
+
                 confirmPassword.setPrefHeight(40);
                 confirmPassword.setMaxWidth(350);
 
@@ -320,9 +338,11 @@ public class SigninPage {
                                 emailField,
                                 gender);
 
+                // =================================================
                 // RESIDENT
+                // =================================================
 
-                if (role.equals("Resident")) {
+                if (role.equalsIgnoreCase("Resident")) {
 
                         TextField flatNo = createTextField("Flat Number");
 
@@ -335,7 +355,7 @@ public class SigninPage {
                         residentTypeLabel.setStyle(
                                         "-fx-font-size:13px;" +
                                                         "-fx-font-weight:bold;" +
-                                                        "-fx-text-fill: #3d3d3d;");
+                                                        "-fx-text-fill:#3d3d3d;");
 
                         RadioButton ownerOption = new RadioButton("Owner");
 
@@ -343,13 +363,16 @@ public class SigninPage {
 
                         ToggleGroup residentTypeGroup = new ToggleGroup();
 
-                        ownerOption.setToggleGroup(residentTypeGroup);
+                        ownerOption.setToggleGroup(
+                                        residentTypeGroup);
 
-                        residentOption.setToggleGroup(residentTypeGroup);
+                        residentOption.setToggleGroup(
+                                        residentTypeGroup);
 
                         HBox residentTypeBox = new HBox(20);
 
-                        residentTypeBox.setAlignment(Pos.CENTER_LEFT);
+                        residentTypeBox.setAlignment(
+                                        Pos.CENTER_LEFT);
 
                         residentTypeBox.getChildren().addAll(
                                         ownerOption,
@@ -357,7 +380,6 @@ public class SigninPage {
 
                         TextField ownerName = createTextField("Owner Name");
 
-                        // Initially hidden
                         ownerName.setVisible(false);
                         ownerName.setManaged(false);
 
@@ -384,15 +406,18 @@ public class SigninPage {
                                         ownerName);
                 }
 
+                // =================================================
                 // OWNER
+                // =================================================
 
-                else if (role.equals("Owner")) {
+                else if (role.equalsIgnoreCase("Owner")) {
 
                         TextField flatNo = createTextField("Flat Number");
 
                         TextField aadhar = createTextField("Aadhar Number");
 
-                        TextField address = createTextField("Permanent Address");
+                        TextField address = createTextField(
+                                        "Permanent Address");
 
                         TextField society = createTextField("Society Name");
 
@@ -405,13 +430,16 @@ public class SigninPage {
                                         society);
                 }
 
+                // =================================================
                 // GUARD
+                // =================================================
 
-                else if (role.equals("Guard")) {
+                else if (role.equalsIgnoreCase("Guard")) {
 
                         DatePicker joiningDate = new DatePicker();
 
-                        joiningDate.setPromptText("Joining Date");
+                        joiningDate.setPromptText(
+                                        "Joining Date");
 
                         joiningDate.setPrefHeight(40);
                         joiningDate.setMaxWidth(350);
@@ -428,9 +456,11 @@ public class SigninPage {
                                         society);
                 }
 
+                // =================================================
                 // SECRETARY
+                // =================================================
 
-                else if (role.equals("Secretary")) {
+                else if (role.equalsIgnoreCase("Secretary")) {
 
                         TextField aadhar = createTextField("Aadhar Number");
 
@@ -443,15 +473,20 @@ public class SigninPage {
                                         society);
                 }
 
+                // =================================================
                 // TERMS
+                // =================================================
 
-                CheckBox terms = new CheckBox("I agree to the Terms & Conditions and Privacy Policy");
+                CheckBox terms = new CheckBox(
+                                "I agree to the Terms & Conditions and Privacy Policy");
 
                 terms.setStyle(
                                 "-fx-font-size:11px;" +
                                                 "-fx-text-fill:#777777;");
 
+                // =================================================
                 // SIGN UP BUTTON
+                // =================================================
 
                 Button signupBtn = new Button("Sign Up");
 
@@ -467,8 +502,10 @@ public class SigninPage {
 
                 signupBtn.setOnAction(event -> {
 
-                        AuthController authController=new AuthController();
-                        authController.signUp(emailField.getText(), password.getText());
+                        // =============================================
+                        // TERMS VALIDATION
+                        // =============================================
+
                         if (!terms.isSelected()) {
 
                                 showAlert(
@@ -478,17 +515,124 @@ public class SigninPage {
                                 return;
                         }
 
+                        // =============================================
+                        // ROLE
+                        // =============================================
+
+                        String selectedRole = role;
+
+                        // =============================================
+                        // GET FORM DATA
+                        // =============================================
+
+                        String name = nameField.getText().trim();
+
+                        String email = emailField.getText().trim();
+
+                        String pass = password.getText();
+
+                        String confirmPass = confirmPassword.getText();
+
+                        // =============================================
+                        // BASIC VALIDATION
+                        // =============================================
+
+                        if (name.isEmpty()
+                                        || email.isEmpty()
+                                        || pass.isEmpty()
+                                        || confirmPass.isEmpty()) {
+
+                                showAlert(
+                                                "Missing Details",
+                                                "Please fill all required fields.");
+
+                                return;
+                        }
+
+                        // =============================================
+                        // PASSWORD VALIDATION
+                        // =============================================
+
+                        if (!pass.equals(confirmPass)) {
+
+                                showAlert(
+                                                "Password Error",
+                                                "Password and Confirm Password do not match.");
+
+                                return;
+                        }
+
+                        if (pass.length() < 6) {
+
+                                showAlert(
+                                                "Password Error",
+                                                "Password must contain at least 6 characters.");
+
+                                return;
+                        }
+
+                        // =============================================
+                        // FIREBASE SIGN UP
+                        // =============================================
+
+                        // =============================================
+                        // SIGN UP + FIRESTORE SAVE
+                        // =============================================
+
+                        boolean saved = controller.addUser(
+                                        name,
+                                        email,
+                                        pass,
+                                        selectedRole);
+
+                        if (!saved) {
+
+                                showAlert(
+                                                "Registration Failed",
+                                                "Unable to create account or save user information.");
+
+                                return;
+                        }
+
+                        // =============================================
+                        // FIRESTORE FAILED
+                        // =============================================
+
+                        // =============================================
+                        // SUCCESS
+                        // =============================================
+
+                        showAlert(
+                                        "Sign Up Successful",
+                                        "Your account has been created successfully!");
+
+                        // =============================================
+                        // CLEAR FIELDS
+                        // =============================================
+
+                        nameField.clear();
+                        emailField.clear();
+                        password.clear();
+                        confirmPassword.clear();
+                        terms.setSelected(false);
+
+                        // =============================================
+                        // GO TO LOGIN
+                        // =============================================
 
                         LogInPage loginPage = new LogInPage();
 
-                        stage.setScene(loginPage.createScene(stage));
+                        stage.setScene(
+                                        loginPage.createScene(stage));
 
                         stage.show();
                 });
-
+                // =================================================
                 // LOGIN
+                // =================================================
 
-                Label accountText = new Label("Already have an account?");
+                Label accountText = new Label(
+                                "Already have an account?");
 
                 accountText.setStyle(
                                 "-fx-text-fill:#666666;" +
@@ -506,7 +650,8 @@ public class SigninPage {
 
                         LogInPage loginPage = new LogInPage();
 
-                        stage.setScene(loginPage.createScene(stage));
+                        stage.setScene(
+                                        loginPage.createScene(stage));
 
                         stage.show();
                 });
@@ -519,15 +664,22 @@ public class SigninPage {
                                 accountText,
                                 loginBtn);
 
+                // =================================================
+                // ADD FINAL CONTROLS
+                // =================================================
+
                 detailsBox.getChildren().addAll(
                                 terms,
                                 signupBtn,
                                 loginBox);
         }
 
-        // TEXT FIELD STYLE
+        // =====================================================
+        // TEXT FIELD
+        // =====================================================
 
-        private TextField createTextField(String prompt) {
+        private TextField createTextField(
+                        String prompt) {
 
                 TextField field = new TextField();
 
@@ -536,21 +688,19 @@ public class SigninPage {
                 field.setPrefHeight(40);
                 field.setMaxWidth(350);
 
-                field.setStyle(
-                                "-fx-background-color: #FFFDF9;" +
-                                                "-fx-border-color: #bdbab7;" +
-                                                "-fx-border-radius:8;" +
-                                                "-fx-background-radius:8;" +
-                                                "-fx-font-size:14px;");
-
                 return field;
         }
 
+        // =====================================================
         // ALERT
+        // =====================================================
 
-        private void showAlert(String title, String message) {
+        private void showAlert(
+                        String title,
+                        String message) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Alert alert = new Alert(
+                                Alert.AlertType.INFORMATION);
 
                 alert.setTitle(title);
                 alert.setHeaderText(null);
@@ -559,58 +709,35 @@ public class SigninPage {
                 alert.showAndWait();
         }
 
-        // LEFT IMAGE PANEL
+        // =====================================================
+        // LEFT PANEL
+        // =====================================================
 
         private VBox createLeftPanel() {
 
-                VBox panel = new VBox();
+                VBox leftPanel = new VBox(15);
 
-                panel.setPrefWidth(550);
-                panel.setPrefHeight(500);
+                leftPanel.setAlignment(
+                                Pos.CENTER);
 
-                panel.setMinWidth(550);
-                panel.setMinHeight(500);
+                Label title = new Label("Society360");
 
-                panel.setMaxWidth(540);
-                panel.setMaxHeight(500);
+                title.setStyle(
+                                "-fx-font-size:42px;" +
+                                                "-fx-font-weight:bold;" +
+                                                "-fx-text-fill:#4e342e;");
 
-                panel.setAlignment(Pos.CENTER);
+                Label subtitle = new Label(
+                                "Smart Society Management System");
 
-                panel.setPadding(new Insets(0));
+                subtitle.setStyle(
+                                "-fx-font-size:16px;" +
+                                                "-fx-text-fill:#5d4037;");
 
-                panel.setStyle(
-                                "-fx-background-color:" +
-                                                DARK_BROWN + ";");
+                leftPanel.getChildren().addAll(
+                                title,
+                                subtitle);
 
-                // LOAD IMAGE
-
-                Image image = new Image(getClass().getResourceAsStream("/image.png"));
-
-                ImageView imageView = new ImageView(image);
-
-                imageView.setFitWidth(520);
-
-                imageView.setFitHeight(480);
-
-                imageView.setPreserveRatio(false);
-
-                imageView.setSmooth(true);
-
-                // IMAGE CONTAINER
-
-                StackPane imageContainer = new StackPane(imageView);
-
-                imageContainer.setPrefWidth(600);
-                imageContainer.setPrefHeight(700);
-
-                imageContainer.setMinWidth(600);
-                imageContainer.setMinHeight(700);
-
-                imageContainer.setMaxWidth(600);
-                imageContainer.setMaxHeight(700);
-
-                panel.getChildren().add(imageContainer);
-
-                return panel;
+                return leftPanel;
         }
 }
