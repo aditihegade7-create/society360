@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -231,10 +232,10 @@ public class Profile {
         // ROOT
 
         HBox root =  new HBox();
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
+        root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color::#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
 
         // SCENE
       

@@ -1,6 +1,8 @@
 package com.society.view.Secretary_portal;
 
 import com.society.view.ScreenSize;
+import com.society.view.Authentication.LoginPage;
+import com.society.view.Welcome.LogInPage;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -140,6 +143,9 @@ public class Logout {
 
         logoutBtn.setOnAction(e -> {
 
+                LogInPage loginPage = new LogInPage();
+                stage.setScene(loginPage.createScene(stage));
+
             Label loggedOut =
                     new Label("You have been logged out.");
 
@@ -176,11 +182,12 @@ public class Logout {
         // ROOT
 
         HBox root = new HBox();
-                
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
+        root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color::#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
+       
+        
 
         // SCENE
 

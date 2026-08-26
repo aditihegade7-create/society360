@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -22,11 +23,12 @@ public class ManageResidents {
         VBox sidebar = sidebarObj.createSidebar(stage);
 
         VBox mainvb = new VBox(10);
-        mainvb.setPrefWidth(1220);
-        mainvb.setPrefHeight(750);
+        mainvb.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         mainvb.setPadding(new Insets(20));
         mainvb.setSpacing(10);
         mainvb.setStyle("-fx-background-color:#b3adad;");
+        mainvb.setMaxWidth(Double.MAX_VALUE);
+        mainvb.setMaxHeight(Double.MAX_VALUE);
 
         // Title
         Label title = new Label("Manage Residents");
@@ -50,9 +52,104 @@ public class ManageResidents {
         addResidentBtn.setStyle(
                 "-fx-background-color:#434141;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8");
 
-        HBox searchBox = new HBox(15);
-        searchBox.setAlignment(Pos.CENTER_LEFT);
-        searchBox.getChildren().addAll(search, addResidentBtn);
+
+                addResidentBtn.setOnAction(e -> {
+
+                Stage popupStage = new Stage();
+
+                VBox popup = new VBox(15);
+                popup.setPadding(new Insets(25));
+                popup.setAlignment(Pos.CENTER_LEFT);
+                popup.setPrefWidth(400);
+                popup.setPrefHeight(450);
+
+                popup.setStyle(
+                        "-fx-background-color:white;" +
+                        "-fx-background-radius:15;"
+                );
+
+                Label popupTitle = new Label("Add New Resident");
+                popupTitle.setStyle(
+                        "-fx-font-size:24px;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-text-fill:#123C36;"
+                );
+
+                Label nameLabel = new Label("Resident Name");
+                TextField nameField = new TextField();
+                nameField.setPromptText("Enter resident name");
+                nameField.setPrefHeight(40);
+
+                Label flatLabel = new Label("Flat Number");
+                TextField flatField = new TextField();
+                flatField.setPromptText("Enter flat number");
+                flatField.setPrefHeight(40);
+
+                Label mobileLabel = new Label("Mobile Number");
+                TextField mobileField = new TextField();
+                mobileField.setPromptText("Enter mobile number");
+                mobileField.setPrefHeight(40);
+
+                Label emailLabel = new Label("Email");
+                TextField emailField = new TextField();
+                emailField.setPromptText("Enter email");
+                emailField.setPrefHeight(40);
+
+                Button saveBtn = new Button("Save Resident");
+                saveBtn.setPrefWidth(150);
+                saveBtn.setPrefHeight(40);
+                saveBtn.setStyle(
+                        "-fx-background-color:#2E9D63;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:8;"
+                );
+
+                Button cancelBtn = new Button("Cancel");
+                cancelBtn.setPrefWidth(100);
+                cancelBtn.setPrefHeight(40);
+                cancelBtn.setStyle(
+                        "-fx-background-color:#E5E7EB;" +
+                        "-fx-text-fill:#333333;" +
+                        "-fx-background-radius:8;"
+                );
+
+                HBox buttonBox = new HBox(10);
+                buttonBox.setAlignment(Pos.CENTER_RIGHT);
+                buttonBox.getChildren().addAll(cancelBtn, saveBtn);
+
+                popup.getChildren().addAll(
+                        popupTitle,
+                        nameLabel,
+                        nameField,
+                        flatLabel,
+                        flatField,
+                        mobileLabel,
+                        mobileField,
+                        emailLabel,
+                        emailField,
+                        buttonBox
+                );
+
+                Scene popupScene = new Scene(popup);
+
+                popupStage.setTitle("Add New Resident");
+                popupStage.setScene(popupScene);
+                popupStage.setResizable(false);
+
+                cancelBtn.setOnAction(event -> popupStage.close());
+
+                saveBtn.setOnAction(event -> {
+                        // Later Firebase/Firestore madhye data save karu
+                        popupStage.close();
+                });
+
+                popupStage.show();
+                });
+
+                 HBox searchBox = new HBox(15);
+                 searchBox.setAlignment(Pos.CENTER_LEFT);
+                 searchBox.getChildren().addAll(search, addResidentBtn);
 
         // Resident 1
 
@@ -159,7 +256,7 @@ public class ManageResidents {
         profile4.setPrefWidth(50);
         profile4.setPrefHeight(50);
         profile4.setAlignment(Pos.CENTER);
-        profile4.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
+        profile4.setStyle("-fx-background-color: #E5E7EB;-fx-background-radius:50%;-fx-font-size:22px;");
         Label name4 = new Label("Manasi");
         name4.setPrefWidth(200);
         name4.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
@@ -214,7 +311,10 @@ public class ManageResidents {
                 vb);
 
         HBox root = new HBox();
-        root.getChildren().addAll(sidebar, mainvb);
+        root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        root.getChildren().addAll(sidebar,mainvb);
+        root.setStyle("-fx-background-color::#434141;");
+        HBox.setHgrow(mainvb,Priority.ALWAYS);
 
         // Scene scene = new Scene(root,1500,750);
         Scene scene = new Scene(

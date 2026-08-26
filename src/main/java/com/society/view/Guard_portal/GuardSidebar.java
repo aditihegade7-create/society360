@@ -1,5 +1,7 @@
 package com.society.view.Guard_portal;
 
+import com.society.view.Welcome.LogInPage;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -113,6 +115,9 @@ public class GuardSidebar {
         );
 
         logoutButton.setOnAction(e -> {
+
+                LogInPage loginPage = new LogInPage();
+                stage.setScene(loginPage.createScene(stage));
 
             System.out.println("Logout clicked");
 
