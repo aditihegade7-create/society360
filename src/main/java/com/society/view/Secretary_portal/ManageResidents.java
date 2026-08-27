@@ -10,318 +10,676 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class ManageResidents {
 
     private Scene Resident;
 
-    public Scene createScene(Stage stage) {
+    public Scene createScene(javafx.stage.Stage stage) {
+
+        // =====================================================
+        // SIDEBAR
+        // =====================================================
 
         SecretarySidebar sidebarObj = new SecretarySidebar();
         VBox sidebar = sidebarObj.createSidebar(stage);
 
+        // =====================================================
+        // MAIN CONTENT
+        // =====================================================
+
         VBox mainvb = new VBox(10);
+
         mainvb.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         mainvb.setPadding(new Insets(20));
         mainvb.setSpacing(10);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
-        mainvb.setMaxWidth(Double.MAX_VALUE);
-        mainvb.setMaxHeight(Double.MAX_VALUE);
 
-        // Title
+        mainvb.setStyle(
+                "-fx-background-color:#b3adad;"
+        );
+
+        // =====================================================
+        // TITLE
+        // =====================================================
+
         Label title = new Label("Manage Residents");
-        title.setStyle("-fx-font-size:28px;-fx-font-weight:bold;-fx-text-fill:black");
 
-        Label subtitle = new Label("View and manage all residents");
-        subtitle.setStyle("-fx-font-size:14px;-fx-text-fill:#777777;");
+        title.setStyle(
+                "-fx-font-size:28px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:black;"
+        );
 
-        // search+add - Button
+        Label subtitle = new Label(
+                "View and manage all residents"
+        );
+
+        subtitle.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+        // =====================================================
+        // SEARCH
+        // =====================================================
 
         TextField search = new TextField();
-        search.setPromptText("Search resident, flat no., phone...");
+
+        search.setPromptText(
+                "Search resident, flat no., phone..."
+        );
+
         search.setPrefHeight(45);
         search.setPrefWidth(750);
-        search.setStyle(
-                "-fx-background-color:#F8F9FA;-fx-border-color:#E1E5E8;-fx-border-radius:8;-fx-background-radius:8;-fx-font-size:14px;");
 
-        Button addResidentBtn = new Button("+ Add New Resident");
+        search.setStyle(
+                "-fx-background-color:#F8F9FA;" +
+                "-fx-border-color:#E1E5E8;" +
+                "-fx-border-radius:8;" +
+                "-fx-background-radius:8;" +
+                "-fx-font-size:14px;"
+        );
+
+        // =====================================================
+        // ADD RESIDENT BUTTON
+        // =====================================================
+
+        Button addResidentBtn = new Button(
+                "+ Add New Resident"
+        );
+
         addResidentBtn.setPrefWidth(200);
         addResidentBtn.setPrefHeight(45);
+
         addResidentBtn.setStyle(
-                "-fx-background-color:#434141;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8");
+                "-fx-background-color:#434141;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;"
+        );
 
+        // =====================================================
+        // SEARCH BOX
+        // =====================================================
 
-                addResidentBtn.setOnAction(e -> {
+        HBox searchBox = new HBox(15);
 
-                Stage popupStage = new Stage();
+        searchBox.setAlignment(
+                Pos.CENTER_LEFT
+        );
 
-                VBox popup = new VBox(15);
-                popup.setPadding(new Insets(25));
-                popup.setAlignment(Pos.CENTER_LEFT);
-                popup.setPrefWidth(400);
-                popup.setPrefHeight(450);
+        searchBox.getChildren().addAll(
+                search,
+                addResidentBtn
+        );
 
-                popup.setStyle(
-                        "-fx-background-color:white;" +
-                        "-fx-background-radius:15;"
-                );
+        // =====================================================
+        // RESIDENT 1
+        // =====================================================
 
-                Label popupTitle = new Label("Add New Resident");
-                popupTitle.setStyle(
-                        "-fx-font-size:24px;" +
-                        "-fx-font-weight:bold;" +
-                        "-fx-text-fill:#123C36;"
-                );
+        HBox resident1 = createResidentRow(
+                "Shravani",
+                "B-402",
+                "9876543210",
+                "Active"
+        );
 
-                Label nameLabel = new Label("Resident Name");
-                TextField nameField = new TextField();
-                nameField.setPromptText("Enter resident name");
-                nameField.setPrefHeight(40);
+        // =====================================================
+        // RESIDENT 2
+        // =====================================================
 
-                Label flatLabel = new Label("Flat Number");
-                TextField flatField = new TextField();
-                flatField.setPromptText("Enter flat number");
-                flatField.setPrefHeight(40);
+        HBox resident2 = createResidentRow(
+                "Sudharshana",
+                "B-402",
+                "9876543210",
+                "Active"
+        );
 
-                Label mobileLabel = new Label("Mobile Number");
-                TextField mobileField = new TextField();
-                mobileField.setPromptText("Enter mobile number");
-                mobileField.setPrefHeight(40);
+        // =====================================================
+        // RESIDENT 3
+        // =====================================================
 
-                Label emailLabel = new Label("Email");
-                TextField emailField = new TextField();
-                emailField.setPromptText("Enter email");
-                emailField.setPrefHeight(40);
+        HBox resident3 = createResidentRow(
+                "Jiya",
+                "B-402",
+                "9876543210",
+                "Active"
+        );
 
-                Button saveBtn = new Button("Save Resident");
-                saveBtn.setPrefWidth(150);
-                saveBtn.setPrefHeight(40);
-                saveBtn.setStyle(
-                        "-fx-background-color:#2E9D63;" +
-                        "-fx-text-fill:white;" +
-                        "-fx-font-weight:bold;" +
-                        "-fx-background-radius:8;"
-                );
+        // =====================================================
+        // RESIDENT 4
+        // =====================================================
 
-                Button cancelBtn = new Button("Cancel");
-                cancelBtn.setPrefWidth(100);
-                cancelBtn.setPrefHeight(40);
-                cancelBtn.setStyle(
-                        "-fx-background-color:#E5E7EB;" +
-                        "-fx-text-fill:#333333;" +
-                        "-fx-background-radius:8;"
-                );
+        HBox resident4 = createResidentRow(
+                "Manasi",
+                "B-402",
+                "9876543210",
+                "Inactive"
+        );
 
-                HBox buttonBox = new HBox(10);
-                buttonBox.setAlignment(Pos.CENTER_RIGHT);
-                buttonBox.getChildren().addAll(cancelBtn, saveBtn);
+        // =====================================================
+        // RESIDENT 5
+        // =====================================================
 
-                popup.getChildren().addAll(
-                        popupTitle,
-                        nameLabel,
-                        nameField,
-                        flatLabel,
-                        flatField,
-                        mobileLabel,
-                        mobileField,
-                        emailLabel,
-                        emailField,
-                        buttonBox
-                );
+        HBox resident5 = createResidentRow(
+                "Dhanashree",
+                "B-402",
+                "9876543210",
+                "Active"
+        );
 
-                Scene popupScene = new Scene(popup);
+        // =====================================================
+        // RESIDENT LIST
+        // =====================================================
 
-                popupStage.setTitle("Add New Resident");
-                popupStage.setScene(popupScene);
-                popupStage.setResizable(false);
+        VBox vb = new VBox(
+                30,
+                resident1,
+                resident2,
+                resident3,
+                resident4,
+                resident5
+        );
 
-                cancelBtn.setOnAction(event -> popupStage.close());
+        VBox.setMargin(
+                resident1,
+                new Insets(20, 0, 0, 0)
+        );
 
-                saveBtn.setOnAction(event -> {
-                        // Later Firebase/Firestore madhye data save karu
-                        popupStage.close();
-                });
+        // =====================================================
+        // ADD MAIN CONTENT
+        // =====================================================
 
-                popupStage.show();
-                });
-
-                 HBox searchBox = new HBox(15);
-                 searchBox.setAlignment(Pos.CENTER_LEFT);
-                 searchBox.getChildren().addAll(search, addResidentBtn);
-
-        // Resident 1
-
-        HBox resident1 = new HBox(5);
-        resident1.setPrefWidth(1000);
-        resident1.setMaxWidth(1000);
-        resident1.setAlignment(Pos.CENTER_LEFT);
-        resident1.setPrefHeight(70);
-        resident1.setPadding(new Insets(20));
-        resident1.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile1 = new Label("👤");
-        profile1.setPrefWidth(50);
-        profile1.setPrefHeight(50);
-        profile1.setAlignment(Pos.CENTER);
-        profile1.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-
-        Label name1 = new Label("Shravani");
-        name1.setPrefWidth(220);
-        name1.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat1 = new Label("Flat: B-402");
-        flat1.setPrefWidth(150);
-        flat1.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile1 = new Label("Mobile: 9876543210");
-        mobile1.setPrefWidth(220);
-        mobile1.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status1 = new Label("Active");
-        status1.setPrefWidth(100);
-        status1.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident1.getChildren().addAll(profile1, name1, flat1, mobile1, status1);
-
-        // Resident 2
-
-        HBox resident2 = new HBox(5);
-        resident2.setAlignment(Pos.CENTER_LEFT);
-        resident2.setPrefWidth(1000);
-        resident2.setMaxWidth(1000);
-        resident2.setPrefHeight(70);
-        resident2.setPadding(new Insets(20));
-        resident2.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile2 = new Label("👤");
-        profile2.setPrefWidth(50);
-        profile2.setPrefHeight(50);
-        profile2.setAlignment(Pos.CENTER);
-        profile2.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-        Label name2 = new Label("Sudharshana");
-        name2.setPrefWidth(200);
-        name2.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat2 = new Label("Flat: B-402");
-        flat2.setPrefWidth(150);
-        flat2.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile2 = new Label("Mobile: 9876543210");
-        mobile2.setPrefWidth(220);
-        mobile2.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status2 = new Label("Active");
-        status2.setPrefWidth(100);
-        status2.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident2.getChildren().addAll(profile2, name2, flat2, mobile2, status2);
-
-        // Resident 3
-
-        HBox resident3 = new HBox(5);
-        resident3.setAlignment(Pos.CENTER_LEFT);
-        resident3.setMaxWidth(1000);
-        resident3.setPrefWidth(1000);
-        resident3.setPrefHeight(70);
-        resident3.setPadding(new Insets(20));
-        resident3.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile3 = new Label("👤");
-        profile3.setPrefWidth(50);
-        profile3.setPrefHeight(50);
-        profile3.setAlignment(Pos.CENTER);
-        profile3.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-        Label name3 = new Label("Jiya");
-        name3.setPrefWidth(200);
-        name3.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat3 = new Label("Flat: B-402");
-        flat3.setPrefWidth(150);
-        flat3.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile3 = new Label("Mobile: 9876543210");
-        mobile3.setPrefWidth(220);
-        mobile3.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status3 = new Label("Active");
-        status3.setPrefWidth(100);
-        status3.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident3.getChildren().addAll(profile3, name3, flat3, mobile3, status3);
-
-        // Resident 4
-
-        HBox resident4 = new HBox(5);
-        resident4.setAlignment(Pos.CENTER_LEFT);
-        resident4.setPrefWidth(1000);
-        resident4.setMaxWidth(1000);
-        resident4.setPrefHeight(70);
-        resident4.setPadding(new Insets(20));
-        resident4.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile4 = new Label("👤");
-        profile4.setPrefWidth(50);
-        profile4.setPrefHeight(50);
-        profile4.setAlignment(Pos.CENTER);
-        profile4.setStyle("-fx-background-color: #E5E7EB;-fx-background-radius:50%;-fx-font-size:22px;");
-        Label name4 = new Label("Manasi");
-        name4.setPrefWidth(200);
-        name4.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat4 = new Label("Flat: B-402");
-        flat4.setPrefWidth(150);
-        flat4.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile4 = new Label("Mobile: 9876543210");
-        mobile4.setPrefWidth(220);
-        mobile4.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status4 = new Label("Inactive");
-        status4.setPrefWidth(100);
-        status4.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident4.getChildren().addAll(profile4, name4, flat4, mobile4, status4);
-
-        // Resident 5
-
-        HBox resident5 = new HBox(5);
-        resident5.setAlignment(Pos.CENTER_LEFT);
-        resident5.setMaxWidth(1000);
-        resident5.setPrefWidth(1000);
-        resident5.setPrefHeight(70);
-        resident5.setPadding(new Insets(20));
-        resident5.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile5 = new Label("👤");
-        profile5.setPrefWidth(50);
-        profile5.setPrefHeight(50);
-        profile5.setAlignment(Pos.CENTER);
-        profile5.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-        Label name5 = new Label("Dhanashree");
-        name5.setPrefWidth(200);
-        name5.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat5 = new Label("Flat: B-402");
-        flat5.setPrefWidth(150);
-        flat5.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile5 = new Label("Mobile: 9876543210");
-        mobile5.setPrefWidth(220);
-        mobile5.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status5 = new Label("Active");
-        status5.setPrefWidth(100);
-        status5.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident5.getChildren().addAll(profile5, name5, flat5, mobile5, status5);
-
-        VBox vb = new VBox(30, resident1, resident2, resident3, resident4, resident5);
-        VBox.setMargin(resident1, new Insets(20, 0, 0, 0));
-
-        mainvb.getChildren().addAll(title,
+        mainvb.getChildren().addAll(
+                title,
                 subtitle,
                 searchBox,
-                vb);
+                vb
+        );
+
+        // =====================================================
+        // ROOT
+        // =====================================================
 
         HBox root = new HBox();
-        root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-        root.getChildren().addAll(sidebar,mainvb);
-        root.setStyle("-fx-background-color::#434141;");
-        HBox.setHgrow(mainvb,Priority.ALWAYS);
 
-        // Scene scene = new Scene(root,1500,750);
+        root.setMaxSize(
+                Double.MAX_VALUE,
+                Double.MAX_VALUE
+        );
+
+        root.getChildren().addAll(
+                sidebar,
+                mainvb
+        );
+
+        root.setStyle(
+                "-fx-background-color:#434141;"
+        );
+
+        HBox.setHgrow(
+                mainvb,
+                Priority.ALWAYS
+        );
+
+        // =====================================================
+        // STACKPANE
+        // =====================================================
+
+        StackPane stackPane = new StackPane();
+
+        stackPane.getChildren().add(root);
+
+        // =====================================================
+        // ADD RESIDENT SMALL POPUP
+        // =====================================================
+
+        VBox popup = new VBox(12);
+
+        popup.setPadding(
+                new Insets(25)
+        );
+
+        popup.setAlignment(
+                Pos.TOP_LEFT
+        );
+
+        popup.setPrefWidth(430);
+        popup.setMaxWidth(430);
+        popup.setPrefHeight(400);
+        popup.setMaxHeight(400);
+
+        popup.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:15;" +
+                "-fx-effect:dropshadow(gaussian, rgba(0,0,0,0.30), 20, 0.2, 0, 5);"
+        );
+
+        // =====================================================
+        // POPUP TITLE
+        // =====================================================
+
+        Label popupTitle = new Label(
+                "Add New Resident"
+        );
+
+        popupTitle.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+        // =====================================================
+        // NAME
+        // =====================================================
+
+        Label nameLabel = new Label(
+                "Resident Name"
+        );
+
+        nameLabel.setStyle(
+                "-fx-font-weight:bold;"
+        );
+
+        TextField nameField = new TextField();
+
+        nameField.setPromptText(
+                "Enter resident name"
+        );
+
+        nameField.setPrefHeight(40);
+
+        // =====================================================
+        // FLAT
+        // =====================================================
+
+        Label flatLabel = new Label(
+                "Flat Number"
+        );
+
+        flatLabel.setStyle(
+                "-fx-font-weight:bold;"
+        );
+
+        TextField flatField = new TextField();
+
+        flatField.setPromptText(
+                "Enter flat number"
+        );
+
+        flatField.setPrefHeight(40);
+
+        // =====================================================
+        // MOBILE
+        // =====================================================
+
+        Label mobileLabel = new Label(
+                "Mobile Number"
+        );
+
+        mobileLabel.setStyle(
+                "-fx-font-weight:bold;"
+        );
+
+        TextField mobileField = new TextField();
+
+        mobileField.setPromptText(
+                "Enter mobile number"
+        );
+
+        mobileField.setPrefHeight(40);
+
+        // =====================================================
+        // EMAIL
+        // =====================================================
+
+        Label emailLabel = new Label(
+                "Email"
+        );
+
+        emailLabel.setStyle(
+                "-fx-font-weight:bold;"
+        );
+
+        TextField emailField = new TextField();
+
+        emailField.setPromptText(
+                "Enter email"
+        );
+
+        emailField.setPrefHeight(40);
+
+        // =====================================================
+        // CANCEL BUTTON
+        // =====================================================
+
+        Button cancelBtn = new Button(
+                "Cancel"
+        );
+
+        cancelBtn.setPrefWidth(100);
+        cancelBtn.setPrefHeight(40);
+
+        cancelBtn.setStyle(
+                "-fx-background-color:#E5E7EB;" +
+                "-fx-text-fill:#333333;" +
+                "-fx-background-radius:8;"
+        );
+
+        // =====================================================
+        // SAVE BUTTON
+        // =====================================================
+
+        Button saveBtn = new Button(
+                "Save Resident"
+        );
+
+        saveBtn.setPrefWidth(140);
+        saveBtn.setPrefHeight(40);
+
+        saveBtn.setStyle(
+                "-fx-background-color:#2E9D63;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;"
+        );
+
+        // =====================================================
+        // BUTTON BOX
+        // =====================================================
+
+        HBox buttonBox = new HBox(10);
+
+        buttonBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        buttonBox.setPadding(
+                new Insets(10, 0, 0, 0)
+        );
+
+        buttonBox.getChildren().addAll(
+                cancelBtn,
+                saveBtn
+        );
+
+        // =====================================================
+        // POPUP CONTENT
+        // =====================================================
+
+        popup.getChildren().addAll(
+
+                popupTitle,
+
+                nameLabel,
+                nameField,
+
+                flatLabel,
+                flatField,
+
+                mobileLabel,
+                mobileField,
+
+                emailLabel,
+                emailField,
+
+                buttonBox
+        );
+
+        // =====================================================
+        // DARK BACKGROUND OVERLAY
+        // =====================================================
+
+        VBox overlay = new VBox();
+
+        overlay.setStyle(
+                "-fx-background-color:rgba(0,0,0,0.35);"
+        );
+
+        // =====================================================
+        // POPUP CONTAINER
+        // =====================================================
+
+        StackPane popupContainer = new StackPane();
+
+        popupContainer.setAlignment(
+                Pos.CENTER
+        );
+
+        popupContainer.getChildren().add(
+                popup
+        );
+
+        // =====================================================
+        // ADD POPUP TO STACKPANE
+        // =====================================================
+
+        StackPane popupLayer = new StackPane();
+
+        popupLayer.setPickOnBounds(true);
+
+        popupLayer.getChildren().addAll(
+                overlay,
+                popupContainer
+        );
+
+        // Initially popup hidden
+        popupLayer.setVisible(false);
+
+        stackPane.getChildren().add(
+                popupLayer
+        );
+
+        // =====================================================
+        // ADD BUTTON CLICK
+        // =====================================================
+
+        addResidentBtn.setOnAction(e -> {
+
+            popupLayer.setVisible(true);
+
+        });
+
+        // =====================================================
+        // CANCEL BUTTON
+        // =====================================================
+
+        cancelBtn.setOnAction(e -> {
+
+            popupLayer.setVisible(false);
+
+            nameField.clear();
+            flatField.clear();
+            mobileField.clear();
+            emailField.clear();
+
+        });
+
+        // =====================================================
+        // SAVE BUTTON
+        // =====================================================
+
+        saveBtn.setOnAction(e -> {
+
+            String name =
+                    nameField.getText();
+
+            String flat =
+                    flatField.getText();
+
+            String mobile =
+                    mobileField.getText();
+
+            String email =
+                    emailField.getText();
+
+            System.out.println(
+                    "Resident Name: " + name
+            );
+
+            System.out.println(
+                    "Flat Number: " + flat
+            );
+
+            System.out.println(
+                    "Mobile: " + mobile
+            );
+
+            System.out.println(
+                    "Email: " + email
+            );
+
+            // Later Firebase / Firestore save
+
+            popupLayer.setVisible(false);
+
+            nameField.clear();
+            flatField.clear();
+            mobileField.clear();
+            emailField.clear();
+
+        });
+
+        // =====================================================
+        // SCENE
+        // =====================================================
+
         Scene scene = new Scene(
-                root,
+                stackPane,
                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
+                ScreenSize.getHeight()
+        );
+
         Resident = scene;
+
         return Resident;
+    }
+
+    // =========================================================
+    // RESIDENT ROW METHOD
+    // =========================================================
+
+    private HBox createResidentRow(
+            String residentName,
+            String flatNumber,
+            String mobile,
+            String statusText
+    ) {
+
+        HBox residentRow = new HBox(5);
+
+        residentRow.setPrefWidth(1000);
+        residentRow.setMaxWidth(1000);
+        residentRow.setPrefHeight(70);
+
+        residentRow.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        residentRow.setPadding(
+                new Insets(20)
+        );
+
+        residentRow.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:10;"
+        );
+
+        // =====================================================
+        // PROFILE
+        // =====================================================
+
+        Label profile = new Label("👤");
+
+        profile.setPrefWidth(50);
+        profile.setPrefHeight(50);
+
+        profile.setAlignment(
+                Pos.CENTER
+        );
+
+        profile.setStyle(
+                "-fx-background-color:#E5E7EB;" +
+                "-fx-background-radius:50%;" +
+                "-fx-font-size:22px;"
+        );
+
+        // =====================================================
+        // NAME
+        // =====================================================
+
+        Label name = new Label(
+                residentName
+        );
+
+        name.setPrefWidth(200);
+
+        name.setStyle(
+                "-fx-font-size:16px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+        // =====================================================
+        // FLAT
+        // =====================================================
+
+        Label flat = new Label(
+                "Flat: " + flatNumber
+        );
+
+        flat.setPrefWidth(150);
+
+        flat.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#555555;"
+        );
+
+        // =====================================================
+        // MOBILE
+        // =====================================================
+
+        Label mobileLabel = new Label(
+                "Mobile: " + mobile
+        );
+
+        mobileLabel.setPrefWidth(220);
+
+        mobileLabel.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-text-fill:#555555;"
+        );
+
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        Label status = new Label(
+                statusText
+        );
+
+        status.setPrefWidth(100);
+
+        status.setStyle(
+                "-fx-text-fill:#2E9D63;" +
+                "-fx-font-weight:bold;"
+        );
+
+        // =====================================================
+        // ADD CHILDREN
+        // =====================================================
+
+        residentRow.getChildren().addAll(
+                profile,
+                name,
+                flat,
+                mobileLabel,
+                status
+        );
+
+        return residentRow;
     }
 }
