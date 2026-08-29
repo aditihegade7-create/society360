@@ -3,6 +3,8 @@ package com.society.view.Owner_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,7 +28,7 @@ public class RemoveTenant {
          root.setLeft( sidebar.getSidebar() );
 
          VBox mainContent = new VBox();
-         mainContent.setPadding(new Insets(30, 40, 30, 40));
+         mainContent.setPadding(new Insets(25,35,25,35));
          mainContent.setSpacing(20);
          mainContent.setAlignment(
                 Pos.TOP_LEFT
@@ -36,9 +38,7 @@ public class RemoveTenant {
 
         
         HBox header = new HBox();
-        header.setPrefWidth(900);
-        header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
+        header.setPadding(new Insets(25,35,25,35));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #4e342e;");
 
@@ -84,7 +84,7 @@ public class RemoveTenant {
         tenantCard.setStyle( "-fx-background-color: #F4F7F8;-fx-background-radius: 12;" );
 
        
-        Label cardTitle = new Label( "Tenant Details"  );
+        Label cardTitle = new Label("Tenant Details");
        cardTitle.setStyle("-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
 
         Label cardSubtitle = new Label("Enter the details of the tenant you want to remove");
@@ -183,7 +183,7 @@ public class RemoveTenant {
         Label information = new Label(  "Please verify the tenant name and flat number before removing the tenant.");
         information.setPadding( new Insets(14));
         information.setMaxWidth( 1000);
-        information.setStyle( "-fx-background-color: #E8F1F2;-fx-background-radius: 8;-fx-text-fill: #263238;");
+        information.setStyle( "-fx-background-color: #e3a3a3;-fx-background-radius: 8;-fx-font-weight:bold;-fx-text-fill: #0a0a0a;");
 
         mainContent.getChildren().addAll(
                 header,
@@ -197,8 +197,8 @@ public class RemoveTenant {
        
         return new Scene(
                 root,
-                1500,
-                750
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight()
         );
     }
 

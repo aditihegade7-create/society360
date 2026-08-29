@@ -32,13 +32,10 @@ public class OwnerDashboard {
         VBox mainContent = new VBox();
         mainContent.setPadding(new Insets(25, 35, 25, 35));
         mainContent.setSpacing(20);
-        mainContent.setAlignment(Pos.TOP_LEFT);
         mainContent.setStyle("-fx-background-color: #e8ddd5;");
 
         HBox header = new HBox();
-        header.setPrefWidth(900);
-        header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
+        header.setPadding(new Insets(25,35,25,35));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #4e342e;");
 
@@ -50,12 +47,10 @@ public class OwnerDashboard {
         Label l1 = new Label("This is your dashboard");
         l1.setStyle("-fx-font-size:12px;-fx-text-fill: #ffffff;");
 
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        
-        Label day = new Label();
+         Label day = new Label();
         Label date = new Label();
 
         LocalDate today = LocalDate.now();
@@ -73,7 +68,6 @@ public class OwnerDashboard {
 
         header.getChildren().addAll(v1,
                 spacer,
-                
                 vb1);
 
         mainContent.getChildren().add(header);

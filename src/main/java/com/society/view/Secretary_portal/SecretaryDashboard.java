@@ -17,9 +17,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class SecretaryDashboard {
-    private Scene SecretaryDash;
+    private static Scene SecretaryDash;
 
-    public Scene createScene(Stage stage) {
+    public static Scene createScene(Stage stage) {
 
         VBox sidebar = new VBox();
         sidebar.setPrefWidth(280);
@@ -487,7 +487,7 @@ public class SecretaryDashboard {
                 mainvb,
                 ScreenSize.getWidth(),
                 ScreenSize.getHeight());
-        SecretaryDash = scene;
+                SecretaryDash = scene;
 
         return SecretaryDash;
     }

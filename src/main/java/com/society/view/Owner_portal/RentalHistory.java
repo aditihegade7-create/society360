@@ -4,6 +4,8 @@ package com.society.view.Owner_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,7 +33,7 @@ public class RentalHistory {
        
         VBox mainContent = new VBox();
 
-        mainContent.setPadding( new Insets(25, 35, 25, 35) );
+        mainContent.setPadding( new Insets(25,35,25,35) );
 
         mainContent.setSpacing(15);
 
@@ -42,9 +44,7 @@ public class RentalHistory {
         mainContent.setStyle( "-fx-background-color: #e8ddd5;" );
 
        HBox header = new HBox();
-        header.setPrefWidth(900);
-        header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
+        header.setPadding(new Insets(25,35,25,35));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #4e342e;");
 
@@ -100,6 +100,7 @@ public class RentalHistory {
         tenantColumn.setCellValueFactory(
                 new PropertyValueFactory<>("tenant")
         );
+        tenantColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Rental, String> flatColumn =
                 new TableColumn<>("Flat / Unit");
@@ -107,6 +108,7 @@ public class RentalHistory {
         flatColumn.setCellValueFactory(
                 new PropertyValueFactory<>("flat")
         );
+        flatColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Rental, String> moveInColumn =
                 new TableColumn<>("Move-in Date");
@@ -114,6 +116,7 @@ public class RentalHistory {
         moveInColumn.setCellValueFactory(
                 new PropertyValueFactory<>("moveIn")
         );
+        moveInColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Rental, String> moveOutColumn =
                 new TableColumn<>("Move-out Date");
@@ -121,6 +124,7 @@ public class RentalHistory {
         moveOutColumn.setCellValueFactory(
                 new PropertyValueFactory<>("moveOut")
         );
+        moveOutColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Rental, String> rentColumn =
                 new TableColumn<>("Rent (Monthly)");
@@ -128,6 +132,8 @@ public class RentalHistory {
         rentColumn.setCellValueFactory(
                 new PropertyValueFactory<>("rent")
         );
+        rentColumn.setStyle("-fx-alignment:CENTER;");
+        
 
         TableColumn<Rental, String> statusColumn =
                 new TableColumn<>("Status");
@@ -135,6 +141,7 @@ public class RentalHistory {
         statusColumn.setCellValueFactory(
                 new PropertyValueFactory<>("status")
         );
+        statusColumn.setStyle("-fx-alignment:CENTER;");
 
         table.getColumns().addAll(
                 tenantColumn,
@@ -202,7 +209,8 @@ public class RentalHistory {
        root.setCenter(mainarea);
        
 
-        return new Scene( root, 1500, 750 );
+        return new Scene( root, ScreenSize.getWidth(),
+                ScreenSize.getHeight() );
     }
 
 

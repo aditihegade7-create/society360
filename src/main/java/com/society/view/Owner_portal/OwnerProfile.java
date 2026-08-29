@@ -3,6 +3,8 @@ package com.society.view.Owner_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,7 +24,7 @@ public class OwnerProfile {
     public static Scene createScene(Stage stage) {
 
         BorderPane root = new BorderPane();
-
+                
         OwnerSidebar sidebar = new OwnerSidebar(stage);
 
         root.setLeft( sidebar.getSidebar()
@@ -30,19 +32,15 @@ public class OwnerProfile {
 
         VBox mainContent = new VBox();
 
-        mainContent.setPadding(new Insets(30, 40, 30, 40));
+        mainContent.setPadding(new Insets(25,35,25,35));
 
         mainContent.setSpacing(20);
-
-        mainContent.setAlignment( Pos.TOP_LEFT);
 
         mainContent.setStyle( "-fx-background-color: #e8ddd5;" );
 
 
         HBox header = new HBox();
-        header.setPrefWidth(900);
-        header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
+        header.setPadding(new Insets(25,35,25,35));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #4e342e;");
 
@@ -81,11 +79,11 @@ public class OwnerProfile {
 
         Label title = new Label("Owner Profile" );
 
-        title.setStyle( "-fx-font-size: 27px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
+        title.setStyle( "-fx-font-size: 24px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
 
         Label subtitle = new Label("View and manage your personal details");
 
-        subtitle.setStyle("-fx-font-size: 13px;-fx-text-fill: #263238;" );
+        subtitle.setStyle("-fx-font-size: 12px;-fx-text-fill: #263238;" );
 
         
 
@@ -212,8 +210,7 @@ public class OwnerProfile {
                 "-fx-background-color: #ffffff;-fx-text-fill: #4e342e;-fx-font-weight: bold;-fx-background-radius: 7;"
         );
 
-        saveButton.setStyle(
-                "-fx-background-color: #4e342e;-fx-text-fill: #ffffff;-fx-font-weight: bold;-fx-background-radius: 7;"
+        saveButton.setStyle("-fx-background-color: #4e342e;-fx-text-fill: #ffffff;-fx-font-weight: bold;-fx-background-radius: 7;"
         );
 
         
@@ -272,9 +269,9 @@ public class OwnerProfile {
        root.setCenter(mainarea);
        
         return new Scene(
-                root,
-                1500,
-                750
+                 root,
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight()
         );
     }
 

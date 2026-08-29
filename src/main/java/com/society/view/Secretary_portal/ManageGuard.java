@@ -1,5 +1,8 @@
 package com.society.view.Secretary_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
@@ -7,196 +10,541 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ManageGuard {
-    private Scene guard; 
+
+    private Scene manageGuardScene;
     public Scene createScene(Stage stage) {
+
+        BorderPane root = new BorderPane();
         SecretarySidebar sidebarObj = new SecretarySidebar();
         VBox sidebar = sidebarObj.createSidebar(stage);
 
+        root.setLeft(sidebar);
 
-                VBox mainvb = new VBox(10);
-        mainvb.setPrefWidth(1220);
-        mainvb.setPrefHeight(750);
-        mainvb.setPadding(new Insets(20));
-        mainvb.setSpacing(10);
-        mainvb.setStyle("-fx-background-color: #e8ddd5;");
-    
-        //Title
-        Label title = new Label("Manage Guards");
-        title.setStyle("-fx-font-size:28px;-fx-font-weight:bold;-fx-text-fill:black");
+        BorderPane mainarea = new BorderPane();
 
-        Label subtitle = new Label("View and manage Security guards");
-        subtitle.setStyle("-fx-font-size:14px;-fx-text-fill:#777777;");
+        HBox header = new HBox();
 
+        header.setPrefHeight(80);
+        header.setMinHeight(80);
+        header.setMaxHeight(80);
 
-        // search+add - Button
-        
-        TextField search = new TextField();
-        search.setPromptText("Search resident, flat no., phone...");
-        search.setPrefHeight(45);
-        search.setPrefWidth(750);
-        search.setStyle("-fx-background-color:#F8F9FA;-fx-border-color: #E1E5E8;-fx-border-radius:8;-fx-background-radius:8;-fx-font-size:14px;");
-
-
-        Button addResidentBtn = new Button("+ Add New Resident");
-        addResidentBtn.setPrefWidth(200);
-        addResidentBtn.setPrefHeight(45);
-        addResidentBtn.setStyle("-fx-background-color:#434141;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:8");
-
-        HBox searchBox = new HBox(15);
-        searchBox.setAlignment(Pos.CENTER_LEFT);
-        searchBox.getChildren().addAll(search,addResidentBtn);
-
-        
-        //Resident 1
-
-        HBox resident1 = new HBox(5);
-        resident1.setPrefWidth(1000);
-        resident1.setMaxWidth(1000);
-        resident1.setAlignment(Pos.CENTER_LEFT);
-        resident1.setPrefHeight(70);
-        resident1.setPadding(new Insets(20));
-        resident1.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile1 = new Label("👤");
-        profile1.setPrefWidth(50);
-        profile1.setPrefHeight(50);
-        profile1.setAlignment(Pos.CENTER);
-        profile1.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-
-        Label name1 = new Label("Rajesh Kumar");
-        name1.setPrefWidth(220);
-        name1.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat1 = new Label("Flat: B-402");
-        flat1.setPrefWidth(150);
-        flat1.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile1 = new Label("Mobile: 9876543210");
-        mobile1.setPrefWidth(220);
-        mobile1.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status1 = new Label("Active");
-        status1.setPrefWidth(100);
-        status1.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident1.getChildren().addAll(profile1,name1,flat1,mobile1,status1);
-
-        //Resident 2
-
-
-        HBox resident2 = new HBox(5);
-        resident2.setAlignment(Pos.CENTER_LEFT);
-        resident2.setPrefWidth(1000);
-        resident2.setMaxWidth(1000);
-        resident2.setPrefHeight(70);
-        resident2.setPadding(new Insets(20));
-        resident2.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile2 = new Label("👤");
-        profile2.setPrefWidth(50);
-        profile2.setPrefHeight(50);
-        profile2.setAlignment(Pos.CENTER);
-        profile2.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-        Label name2 = new Label("Sunil Yadav");
-        name2.setPrefWidth(200);
-        name2.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat2 = new Label("Flat: B-402");
-        flat2.setPrefWidth(150);
-        flat2.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile2 = new Label("Mobile: 9876543210");
-        mobile2.setPrefWidth(220);
-        mobile2.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status2 = new Label("Active");
-        status2.setPrefWidth(100);
-        status2.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident2.getChildren().addAll(profile2,name2,flat2,mobile2,status2);
-
-        //Resident 3
-
-        HBox resident3 = new HBox(5);
-        resident3.setAlignment(Pos.CENTER_LEFT);
-        resident3.setMaxWidth(1000);
-        resident3.setPrefWidth(1000);
-        resident3.setPrefHeight(70);
-        resident3.setPadding(new Insets(20));
-        resident3.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-        Label profile3 = new Label("👤");
-        profile3.setPrefWidth(50);
-        profile3.setPrefHeight(50);
-        profile3.setAlignment(Pos.CENTER);
-        profile3.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-        Label name3 = new Label("Mahesh Jagtap");
-        name3.setPrefWidth(200);
-        name3.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat3= new Label("Flat: B-402");
-        flat3.setPrefWidth(150);
-        flat3.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile3= new Label("Mobile: 9876543210");
-        mobile3.setPrefWidth(220);
-        mobile3.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status3 = new Label("Active");
-        status3.setPrefWidth(100);
-        status3.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident3.getChildren().addAll(profile3,name3,flat3,mobile3,status3);
-
-         //Resident 4
-
-        HBox resident4 = new HBox(5);
-        resident4.setAlignment(Pos.CENTER_LEFT);
-        resident4.setPrefWidth(1000);
-        resident4.setMaxWidth(1000);
-        resident4.setPrefHeight(70);
-        resident4.setPadding(new Insets(20));
-        resident4.setStyle("-fx-background-color:white;-fx-background-radius:10;");
-
-
-        Label profile4= new Label("👤");
-        profile4.setPrefWidth(50);
-        profile4.setPrefHeight(50);
-        profile4.setAlignment(Pos.CENTER);
-        profile4.setStyle("-fx-background-color:#E5E7EB;-fx-background-radius:50%;-fx-font-size:22px");
-        Label name4 = new Label("Ramesh More");
-        name4.setPrefWidth(200);
-        name4.setStyle("-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#123C36");
-        Label flat4 = new Label("Flat: B-402");
-        flat4.setPrefWidth(150);
-        flat4.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#555555;");
-        Label mobile4 = new Label("Mobile: 9876543210");
-        mobile4.setPrefWidth(220);
-        mobile4.setStyle("-fx-font-size:14px;-fx-text-fill:#555555;");
-        Label status4 = new Label("Inactive");
-        status4.setPrefWidth(100);
-        status4.setStyle("-fx-text-fill:#2E9D63;-fx-font-weight:bold;");
-
-        resident4.getChildren().addAll(profile4,name4,flat4,mobile4,status4);
-
-
-        VBox vb = new VBox(40,resident1,resident2,resident3,resident4);
-        VBox.setMargin(resident1, new Insets(20, 0, 0, 0));
-
-        mainvb.getChildren().addAll(title,
-                                     subtitle,
-                                     searchBox,
-                                     vb
+        header.setPadding(
+                new Insets(20)
         );
 
-        HBox root = new HBox();
-        root.getChildren().addAll(sidebar,mainvb);
+        header.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        header.setStyle(
+                "-fx-background-color:#4e342e;"
+        );
+
+        VBox headerText = new VBox(4);
+
+
+        Label greeting = new Label(
+                "Manage Guards"
+        );
+
+        greeting.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        Label description = new Label(
+                "View and manage security guards"
+        );
+
+        description.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        headerText.getChildren().addAll(
+                greeting,
+                description
+        );
+
+        Region spacer = new Region();
+
+        HBox.setHgrow(
+                spacer,
+                Priority.ALWAYS
+        );
+
+        Label day = new Label();
+
+        Label date = new Label();
+
+        LocalDate today = LocalDate.now();
+
+
+        day.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern("EEEE")
+                )
+        );
+
+
+        date.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                )
+        );
+
+
+        day.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+        date.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        VBox dateBox = new VBox(4);
+
+        dateBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+
+        dateBox.getChildren().addAll(
+                day,
+                date
+        );
+
+
+        header.getChildren().addAll(
+                headerText,
+                spacer,
+                dateBox
+        );
+
+
+        VBox mainContent = new VBox(20);
+
+        mainContent.setPadding(
+                new Insets(25, 30, 25, 30)
+        );
+
+        mainContent.setStyle(
+                "-fx-background-color:#e8ddd5;"
+        );
+
+
+        Label sectionTitle = new Label(
+                "SECURITY GUARDS"
+        );
+
+        sectionTitle.setStyle(
+                "-fx-font-size:18px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#434141;"
+        );
+
+
+        Button addGuardBtn = new Button(
+                "+ Add Guard"
+        );
+
+        addGuardBtn.setPrefWidth(130);
+
+        addGuardBtn.setPrefHeight(40);
+
+        addGuardBtn.setStyle(
+                "-fx-background-color:#4e342e;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;"
+        );
+
+
+
+        Region guardSpacer = new Region();
+
+        HBox.setHgrow(
+                guardSpacer,
+                Priority.ALWAYS
+        );
+
+
+        HBox guardHeader = new HBox();
+
+        guardHeader.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+
+        guardHeader.getChildren().addAll(
+                sectionTitle,
+                guardSpacer,
+                addGuardBtn
+        );
+
+
+        TextField searchField = new TextField();
+
+        searchField.setPromptText(
+                "Search guard name, mobile number..."
+        );
+
+        searchField.setPrefHeight(40);
+
+        searchField.setPrefWidth(1180);
+
+        searchField.setStyle(
+                "-fx-background-color:#F8F9FA;" +
+                "-fx-border-color:#E1E5E8;" +
+                "-fx-border-radius:8;" +
+                "-fx-background-radius:8;" +
+                "-fx-font-size:13px;"
+        );
+
+        VBox guardList = new VBox(15);
+
+        guardList.setPadding(
+                new Insets(5, 0, 5, 0)
+        );
+        VBox guard1 = createGuard(
+                "Rajesh Kumar",
+                "9876543210",
+                "Morning Shift",
+                "Active"
+        );
+
+        VBox guard2 = createGuard(
+                "Sunil Yadav",
+                "9876543211",
+                "Night Shift",
+                "Active"
+        );
+
+
+        VBox guard3 = createGuard(
+                "Mahesh Jagtap",
+                "9876543212",
+                "Morning Shift",
+                "Active"
+        );
+
+
+        VBox guard4 = createGuard(
+                "Ramesh More",
+                "9876543213",
+                "Evening Shift",
+                "Inactive"
+        );
+
+
+        VBox guard5 = createGuard(
+                "Vijay Patil",
+                "9876543214",
+                "Night Shift",
+                "Active"
+        );
+
+        VBox guard6 = createGuard(
+                "Suresh Shinde",
+                "9876543215",
+                "Evening Shift",
+                "Active"
+        );
+
+        guardList.getChildren().addAll(
+                guard1,
+                guard2,
+                guard3,
+                guard4,
+                guard5,
+                guard6
+        );
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        scrollPane.setContent(
+                guardList
+        );
+
+        scrollPane.setFitToWidth(true);
+
+        scrollPane.setPrefHeight(450);
+
+        scrollPane.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-border-color:transparent;"
+        );
+
+
+        Button viewAllBtn = new Button(
+                "View All Guards"
+        );
+
+        viewAllBtn.setPrefWidth(1180);
+
+        viewAllBtn.setPrefHeight(40);
+
+        viewAllBtn.setStyle(
+                "-fx-background-color:#4e342e;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;" +
+                "-fx-border-color:#EEEEEE;" +
+                "-fx-border-radius:7;"
+        );
+
+        searchField.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+
+                    String searchText =
+                            newValue.toLowerCase().trim();
+
+                    guardList.getChildren().clear();
+
+                    if (searchText.isEmpty()) {
+
+                        guardList.getChildren().addAll(
+                                guard1,
+                                guard2,
+                                guard3,
+                                guard4,
+                                guard5,
+                                guard6
+                        );
+
+                    } else {
+
+                        if (containsGuard(
+                                "Rajesh Kumar",
+                                "9876543210",
+                                searchText)) {
+
+                            guardList.getChildren().add(guard1);
+                        }
+
+
+                        if (containsGuard(
+                                "Sunil Yadav",
+                                "9876543211",
+                                searchText)) {
+
+                            guardList.getChildren().add(guard2);
+                        }
+
+
+                        if (containsGuard(
+                                "Mahesh Jagtap",
+                                "9876543212",
+                                searchText)) {
+
+                            guardList.getChildren().add(guard3);
+                        }
+
+
+                        if (containsGuard(
+                                "Ramesh More",
+                                "9876543213",
+                                searchText)) {
+
+                            guardList.getChildren().add(guard4);
+                        }
+
+
+                        if (containsGuard(
+                                "Vijay Patil",
+                                "9876543214",
+                                searchText)) {
+
+                            guardList.getChildren().add(guard5);
+                        }
+
+
+                        if (containsGuard(
+                                "Suresh Shinde",
+                                "9876543215",
+                                searchText)) {
+
+                            guardList.getChildren().add(guard6);
+                        }
+                    }
+                }
+        );
+
+
         
-        // Scene scene = new Scene(root,1500,750);
-         Scene scene = new Scene(
+        mainContent.getChildren().addAll(
+                guardHeader,
+                searchField,
+                scrollPane,
+                viewAllBtn
+        );
+
+
+        
+        mainarea.setTop(header);
+
+        mainarea.setCenter(mainContent);
+
+
+        root.setCenter(
+                mainarea
+        );
+
+
+        
+        Scene scene = new Scene(
                 root,
                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
+                ScreenSize.getHeight()
+        );
+
+
+        manageGuardScene = scene;
+
+        return manageGuardScene;
+    }
+
+
+    
+    private VBox createGuard(
+            String guardName,
+            String mobile,
+            String shift,
+            String statusText) {
+
+
+        VBox guard = new VBox(10);
+
+
+        guard.setPadding(
+                new Insets(18)
+        );
+
+
+        guard.setPrefHeight(90);
+
+
+        guard.setMaxWidth(1180);
+
+
+        guard.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:10;" +
+                "-fx-border-color:#EEEEEE;" +
+                "-fx-border-radius:10;"
+        );
+
+
+       
+        Label name = new Label(
+                guardName
+        );
+
+
+        name.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+
         
-        guard = scene;
+        Label details = new Label(
+                "Mobile: " + mobile +
+                "    |    " +
+                "Shift: " + shift
+        );
+
+
+        details.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+
+        
+        Label status = new Label(
+                statusText
+        );
+
+
+        if (statusText.equals("Active")) {
+
+            status.setStyle(
+                    "-fx-background-color:#E5F7EC;" +
+                    "-fx-text-fill:#2E9D63;" +
+                    "-fx-font-size:10px;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:5px 10px;" +
+                    "-fx-background-radius:12;"
+            );
+
+        } else {
+
+            status.setStyle(
+                    "-fx-background-color:#EAF0F6;" +
+                    "-fx-text-fill:#55708A;" +
+                    "-fx-font-size:10px;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:5px 10px;" +
+                    "-fx-background-radius:12;"
+            );
+        }
+
+
+        
+        HBox bottom = new HBox();
+
+
+        bottom.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+
+        HBox.setHgrow(
+                details,
+                Priority.ALWAYS
+        );
+
+
+        bottom.getChildren().addAll(
+                details,
+                status
+        );
+
+
+        guard.getChildren().addAll(
+                name,
+                bottom
+        );
+
+
         return guard;
     }
-    
+
+
+   
+    private boolean containsGuard(
+            String name,
+            String mobile,
+            String searchText) {
+
+
+        return name.toLowerCase().contains(searchText)
+                || mobile.contains(searchText);
+    }
 }

@@ -7,195 +7,441 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ManageNotices {
 
+    
+
     private Scene manageNoticesScene;
     public Scene createScene(Stage stage) {
+
+        BorderPane root = new BorderPane();
         SecretarySidebar sidebarObj = new SecretarySidebar();
+
         VBox sidebar = sidebarObj.createSidebar(stage);
-        
+        root.setLeft(sidebar);
+        BorderPane mainarea = new BorderPane();
 
-        VBox mainvb = new VBox(20);
-        mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
-        mainvb.setStyle("-fx-background-color:#b3adad");
-
-
-        Label heading = new Label("MANAGE NOTICES");
-        heading.setStyle("-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#434141;");
-
-
-        Label title = new Label("Manage Notices");
-        title.setStyle("-fx-font-size:20px;-fx-font-weight:bold;-fx-text-fill:black");
-
-        Label subtitle = new Label("Create, edit and manage society notices");
-        subtitle.setStyle("-fx-font-size:13px;-fx-text-fill:#777777;");
-
-        Button addNoticeBtn = new Button("+ Add Notice");
-        addNoticeBtn.setPrefWidth(120);
-        addNoticeBtn.setPrefHeight(38);
-        addNoticeBtn.setStyle("-fx-background-color:#434141;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:7;");
-
-
-        VBox headingBox = new VBox(5);
-        headingBox.getChildren().addAll(
-                title,
-                subtitle
-        );
 
         HBox header = new HBox();
-        header.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(headingBox,Priority.ALWAYS);
+        header.setPrefWidth(900);
+        header.setPrefHeight(80);
+
+        header.setMinHeight(80);
+        header.setMaxHeight(80);
+
+        header.setPadding(new Insets(20));
+        header.setAlignment( Pos.CENTER_LEFT);
+        header.setStyle("-fx-background-color:#4e342e;"
+        );
+
+        VBox headerText = new VBox(4);
+        Label greeting = new Label("Manage Notices"
+        );
+
+        greeting.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#ffffff;"
+        );
+
+        Label description = new Label(
+                "Create, edit and manage society notices"
+        );
+
+        description.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        headerText.getChildren().addAll(
+                greeting,
+                description
+        );
+
+        Region spacer = new Region();
+
+        HBox.setHgrow(
+                spacer,
+                Priority.ALWAYS
+        );
+
+        Label date = new Label(
+                "Society Notice Portal"
+        );
+
+        date.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        VBox dateBox = new VBox();
+
+        dateBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        dateBox.getChildren().add(
+                date
+        );
+
+
         header.getChildren().addAll(
-                headingBox,
-                addNoticeBtn
+                headerText,
+                spacer,
+                dateBox
         );
 
 
-        VBox notice1 = new VBox(8);
-        notice1.setPadding(new Insets(20));
-        notice1.setPrefHeight(95);
-        notice1.setStyle("-fx-background-color:white;-fx-background-radius:8;-fx-border-color:#EEEEEE;-fx-border-radius:8;");
 
+        VBox mainContent = new VBox(20);
 
-        Label notice1Title = new Label("▣  Water Supply Maintenance");
-        notice1Title.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#123C36;");
-        Label notice1Text = new Label(
-                "The water supply will be unavailable on " +
-                "12 May 2025 from 10:00 PM to 6:00 AM."
-        );
-        notice1Text.setStyle("-fx-font-size:11px;-fx-text-fill:#777777;");
-
-
-        Label notice1Date = new Label("10 May 2025");
-        notice1Date.setStyle("-fx-font-size:10px;-fx-text-fill:#777777;");
-
-
-        Label published1 = new Label("Published");
-        published1.setStyle("-fx-background-color:#434141;-fx-text-fill:white;-fx-font-size:10px;-fx-font-weight:bold;-fx-padding:5px 9px;-fx-background-radius:12;");
-
-
-        HBox notice1Bottom = new HBox(10);
-        notice1Bottom.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(notice1Date,Priority.ALWAYS);
-        notice1Bottom.getChildren().addAll(
-                notice1Date,
-                published1
+        mainContent.setPadding(
+                new Insets(25, 30, 25, 30)
         );
 
-        notice1.getChildren().addAll(
-                notice1Title,
-                notice1Text,
-                notice1Bottom
-        );
-        VBox notice2 = new VBox(8);
-        notice2.setPadding(new Insets(20));
-        notice2.setPrefHeight(95);
-        notice2.setStyle("-fx-background-color:white;-fx-background-radius:8;-fx-border-color:#EEEEEE;-fx-border-radius:8;");
-
-
-        Label notice2Title = new Label("▣  Society Meeting");
-        notice2Title.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#123C36;");
-        Label notice2Text = new Label(
-                "All residents are requested to attend the " +
-                "monthly meeting on 12 May 2025."
-        );
-        notice2Text.setStyle("-fx-font-size:11px;-fx-text-fill:#777777;");
-        Label notice2Date = new Label("08 May 2025");             
-        notice2Date.setStyle("-fx-font-size:10px;-fx-text-fill:#777777;");
-
-
-        Label published2 = new Label("Published");             
-        published2.setStyle(
-                "-fx-background-color:#434141;-fx-text-fill:white;-fx-font-size:10px;-fx-font-weight:bold;-fx-padding:5px 9px;-fx-background-radius:12;");
-
-
-        HBox notice2Bottom = new HBox(10);
-        notice2Bottom.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(notice2Date,Priority.ALWAYS);
-        notice2Bottom.getChildren().addAll(
-                notice2Date,
-                published2
-        );
-
-        notice2.getChildren().addAll(
-                notice2Title,
-                notice2Text,
-                notice2Bottom
+        mainContent.setStyle(
+                "-fx-background-color:#e8ddd5;"
         );
 
 
-        VBox notice3 = new VBox(8);
-        notice3.setPadding(new Insets(20));
-        notice3.setPrefHeight(95);
-        notice3.setStyle("-fx-background-color:white;-fx-background-radius:8;-fx-border-color:#EEEEEE;-fx-border-radius:8;");
-
-
-        Label notice3Title = new Label("▣  Parking Rule Update");
-        notice3Title.setStyle("-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#123C36;");
-        Label notice3Text = new Label(
-                "New parking rules are effective from " +
-                "15 May 2025."
+        
+        Button publishedBtn = new Button(
+                "Published (2)"
         );
 
-        notice3Text.setStyle("-fx-font-size:11px;-fx-text-fill:#777777;");
-        Label notice3Date =  new Label("05 May 2025");
-        notice3Date.setStyle("-fx-font-size:10px;-fx-text-fill:#777777;");
-
-
-        Label draft =  new Label("Draft");
-        draft.setStyle("-fx-background-color:#434141;-fx-text-fill:white;-fx-font-size:10px;-fx-font-weight:bold;-fx-padding:5px 9px;-fx-background-radius:12;");
-
-
-        HBox notice3Bottom = new HBox(10);
-        notice3Bottom.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(notice3Date,Priority.ALWAYS);
-        notice3Bottom.getChildren().addAll(
-                notice3Date,
-                draft
+        Button draftBtn = new Button(
+                "Draft (1)"
         );
 
-        notice3.getChildren().addAll(
-                notice3Title,
-                notice3Text,
-                notice3Bottom
+
+        publishedBtn.setPrefWidth(150);
+        publishedBtn.setPrefHeight(40);
+
+        draftBtn.setPrefWidth(150);
+        draftBtn.setPrefHeight(40);
+
+        String normalStyle =
+                "-fx-background-color:transparent;" +
+                "-fx-text-fill:#777777;" +
+                "-fx-font-weight:bold;" +
+                "-fx-font-size:12px;";
+
+
+        String activeStyle =
+                "-fx-background-color:transparent;" +
+                "-fx-text-fill:#123C36;" +
+                "-fx-font-weight:bold;" +
+                "-fx-font-size:12px;" +
+                "-fx-border-color:#0B4F4A;" +
+                "-fx-border-width:0 0 2 0;";
+
+
+        publishedBtn.setStyle(
+                activeStyle
         );
 
-        Button viewAllBtn =  new Button("View All Notices");
-        viewAllBtn.setPrefWidth(1180);
-        viewAllBtn.setPrefHeight(40);
-        viewAllBtn.setStyle("-fx-background-color:#434141;;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:7;-fx-border-color:#EEEEEE;-fx-border-radius:7;");
+        draftBtn.setStyle(
+                normalStyle
+        );
 
-        mainvb.getChildren().addAll(
-                heading,
-                header,
-                notice1,
-                notice2,
-                notice3,
+        HBox tabs = new HBox(25);
+
+        tabs.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        tabs.getChildren().addAll(
+                publishedBtn,
+                draftBtn
+        );
+
+        VBox noticeList = new VBox(15);
+
+        noticeList.setPadding(
+                new Insets(5, 0, 5, 0)
+        );
+
+        VBox publishedNotice1 = createNotice(
+                "Water Supply Maintenance",
+                "The water supply will be unavailable on 12 May 2025 from 10:00 PM to 6:00 AM.",
+                "10 May 2025",
+                "Published",
+                "#E5F7EC",
+                "#2E9D63"
+        );
+
+
+        VBox publishedNotice2 = createNotice(
+                "Society Meeting",
+                "All residents are requested to attend the monthly meeting on 12 May 2025.",
+                "08 May 2025",
+                "Published",
+                "#E5F7EC",
+                "#2E9D63"
+        );
+
+
+       
+
+        VBox draftNotice1 = createNotice(
+                "Parking Rule Update",
+                "New parking rules are effective from 15 May 2025.",
+                "05 May 2025",
+                "Draft",
+                "#FFF0D9",
+                "#C47A20"
+        );
+
+
+       
+        noticeList.getChildren().addAll(
+                publishedNotice1,
+                publishedNotice2
+        );
+
+
+        
+        ScrollPane scrollPane = new ScrollPane();
+
+        scrollPane.setContent(
+                noticeList
+        );
+
+        scrollPane.setFitToWidth(
+                true
+        );
+
+        scrollPane.setPrefHeight(
+                450
+        );
+
+        scrollPane.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-border-color:transparent;"
+        );
+
+
+        
+        publishedBtn.setOnAction(e -> {
+
+            noticeList.getChildren().clear();
+
+            noticeList.getChildren().addAll(
+                    publishedNotice1,
+                    publishedNotice2
+            );
+
+            publishedBtn.setStyle(
+                    activeStyle
+            );
+
+            draftBtn.setStyle(
+                    normalStyle
+            );
+        });
+
+        draftBtn.setOnAction(e -> {
+
+            noticeList.getChildren().clear();
+
+            noticeList.getChildren().add(
+                    draftNotice1
+            );
+
+            publishedBtn.setStyle(
+                    normalStyle
+            );
+
+            draftBtn.setStyle(
+                    activeStyle
+            );
+        });
+
+
+
+        Button viewAllBtn = new Button(
+                "View All Notices"
+        );
+
+        viewAllBtn.setPrefWidth(
+                1180
+        );
+
+        viewAllBtn.setPrefHeight(
+                40
+        );
+
+        viewAllBtn.setStyle(
+                "-fx-background-color:#4e342e;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;" +
+                "-fx-border-color:#EEEEEE;" +
+                "-fx-border-radius:7;"
+        );
+
+
+        
+
+        mainContent.getChildren().addAll(
+                tabs,
+                scrollPane,
                 viewAllBtn
         );
 
-        HBox root = new HBox(10);
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
+
+        
+        mainarea.setTop(
+                header
         );
 
-        HBox rootBox = new HBox();
-        rootBox.getChildren().addAll(sidebar,mainvb);
+        mainarea.setCenter(
+                mainContent
+        );
+
+
+        root.setCenter(
+                mainarea
+        );
+
+
         
-        // Scene scene = new Scene(rootBox,1500,750);
-         Scene scene = new Scene(
-                rootBox,
+        Scene scene = new Scene(
+                root,
                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
+                ScreenSize.getHeight()
+        );
+
         manageNoticesScene = scene;
+
         return manageNoticesScene;
     }
+
+
     
+    private VBox createNotice(
+            String noticeTitle,
+            String noticeText,
+            String noticeDate,
+            String statusText,
+            String statusBackground,
+            String statusColor) {
+
+
+       
+        VBox notice = new VBox(10);
+
+        notice.setPadding(
+                new Insets(18)
+        );
+
+        notice.setPrefHeight(
+                100
+        );
+
+        notice.setMaxWidth(
+                1180
+        );
+
+        notice.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:10;" +
+                "-fx-border-color:#EEEEEE;" +
+                "-fx-border-radius:10;"
+        );
+
+
+       
+        Label title = new Label(
+                "▣  " + noticeTitle
+        );
+
+        title.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+
+        
+        Label text = new Label(
+                noticeText
+        );
+
+        text.setWrapText(
+                true
+        );
+
+        text.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+
+        
+        Label date = new Label(
+                noticeDate
+        );
+
+        date.setStyle(
+                "-fx-font-size:10px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+
+        
+
+        Label status = new Label(
+                statusText
+        );
+
+        status.setStyle(
+                "-fx-background-color:" +
+                statusBackground + ";" +
+                "-fx-text-fill:" +
+                statusColor + ";" +
+                "-fx-font-size:10px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-padding:5px 10px;" +
+                "-fx-background-radius:12;"
+        );
+
+
+       
+        HBox bottom = new HBox();
+
+        bottom.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        HBox.setHgrow(
+                date,
+                Priority.ALWAYS
+        );
+
+        bottom.getChildren().addAll(
+                date,
+                status
+        );
+
+
+        
+        notice.getChildren().addAll(
+                title,
+                text,
+                bottom
+        );
+
+
+        return notice;
+    }
 }

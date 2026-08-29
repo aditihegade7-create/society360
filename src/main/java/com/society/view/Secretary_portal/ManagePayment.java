@@ -1,5 +1,8 @@
 package com.society.view.Secretary_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
@@ -8,83 +11,139 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ManagePayment {
 
-    // Private Scene variable
     private Scene managePaymentScene;
 
     public Scene createScene(Stage stage) {
 
-        // SIDEBAR
-
+        
+        BorderPane root = new BorderPane();
         SecretarySidebar sidebarObj = new SecretarySidebar();
+
         VBox sidebar = sidebarObj.createSidebar(stage);
 
-        // MAIN CONTENT
+        root.setLeft(sidebar);
+        BorderPane mainarea = new BorderPane();
+        HBox header = new HBox();
 
-        VBox mainvb = new VBox(20);
-        mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
-        mainvb.setStyle(
-                "-fx-background-color:#b3adad;"
+        header.setPrefHeight(80);
+        header.setMinHeight(80);
+        header.setMaxHeight(80);
+
+        header.setPadding(new Insets(20));
+
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        header.setStyle(
+                "-fx-background-color:#4e342e;"
         );
 
-        // HEADING
+       
+        VBox headerText = new VBox(4);
 
-        Label heading =  new Label("MANAGE PAYMENTS");
-        heading.setStyle(
-                "-fx-font-size:18px;" +
+        Label greeting = new Label(
+                "Manage Payments"
+        );
+
+        greeting.setStyle(
+                "-fx-font-size:24px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#434141;"
+                "-fx-text-fill:#ffffff;"
         );
 
-        // TITLE
+        Label description = new Label(
+                "View and manage society payment records"
+        );
 
-        Label title =  new Label("Manage Payments");
-               
+        description.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#ffffff;"
+        );
 
-        title.setStyle(
-                "-fx-font-size:20px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:black;"
+        headerText.getChildren().addAll(
+                greeting,
+                description
+        );
+
+        Region spacer = new Region();
+
+        HBox.setHgrow(
+                spacer,
+                Priority.ALWAYS
+        );
+        Label day = new Label();
+
+        Label date = new Label();
+
+        LocalDate today = LocalDate.now();
+
+        day.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern("EEEE")
+                )
+        );
+
+        date.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                )
+        );
+
+        day.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+        date.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+        VBox dateBox = new VBox(4);
+
+        dateBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        dateBox.getChildren().addAll(
+                day,
+                date
         );
 
 
-        Label subtitle =
-                new Label(
-                        "View and manage society payment records"
-                );
-
-        subtitle.setStyle(
-                "-fx-font-size:13px;" +
-                "-fx-text-fill:#777777;"
+        header.getChildren().addAll(
+                headerText,
+                spacer,
+                dateBox
         );
 
+       
+        VBox mainContent = new VBox(20);
 
-        VBox titleBox = new VBox(5);
-
-        titleBox.getChildren().addAll(
-                title,
-                subtitle
+        mainContent.setPadding(
+                new Insets(25, 30, 25, 30)
         );
 
+        mainContent.setStyle(
+                "-fx-background-color:#e8ddd5;"
+        );
+        Button pendingBtn = new Button(
+                "Pending (8)"
+        );
 
-        // STATUS BUTTONS
+        Button paidBtn = new Button(
+                "Paid (32)"
+        );
 
-        Button pendingBtn =
-                new Button("Pending (8)");
-
-        Button paidBtn =
-                new Button("Paid (32)");
-
-        Button overdueBtn =
-                new Button("Overdue (5)");
-
+        Button overdueBtn = new Button(
+                "Overdue (5)"
+        );
 
         pendingBtn.setPrefWidth(150);
         pendingBtn.setPrefHeight(40);
@@ -94,9 +153,6 @@ public class ManagePayment {
 
         overdueBtn.setPrefWidth(150);
         overdueBtn.setPrefHeight(40);
-
-        // BUTTON STYLES
-
         String normalStyle =
                 "-fx-background-color:transparent;" +
                 "-fx-text-fill:#777777;" +
@@ -111,16 +167,12 @@ public class ManagePayment {
                 "-fx-border-color:#0B4F4A;" +
                 "-fx-border-width:0 0 2 0;";
 
-
         pendingBtn.setStyle(activeStyle);
         paidBtn.setStyle(normalStyle);
         overdueBtn.setStyle(normalStyle);
 
+        HBox tabs = new HBox(25);
 
-        // TABS
-
-        HBox tabs =  new HBox(25);
-               
         tabs.setAlignment(
                 Pos.CENTER_LEFT
         );
@@ -131,16 +183,11 @@ public class ManagePayment {
                 overdueBtn
         );
 
-        // PAYMENT LIST
-
-        VBox paymentList =  new VBox(15);
-               
+        VBox paymentList = new VBox(15);
 
         paymentList.setPadding(
                 new Insets(5, 0, 5, 0)
         );
-
-        // PENDING PAYMENTS
 
         VBox pending1 = createPayment(
                 "Diya Wadhwa",
@@ -192,7 +239,7 @@ public class ManagePayment {
                 "#C47A20"
         );
 
-        // PAID PAYMENTS
+        
 
         VBox paid1 = createPayment(
                 "Aarav Mehta",
@@ -254,8 +301,7 @@ public class ManagePayment {
                 "#2E9D63"
         );
 
-        // OVERDUE PAYMENTS
-
+        
         VBox overdue1 = createPayment(
                 "Vikram Deshmukh",
                 "A-305",
@@ -306,24 +352,7 @@ public class ManagePayment {
                 "#D9534F"
         );
 
-
-        // SCROLL PANE
-
-        ScrollPane scrollPane =  new ScrollPane();
-               
-        scrollPane.setContent(
-                paymentList
-        );
-
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(450);
-
-        scrollPane.setStyle(
-                "-fx-background-color:transparent;" +
-                "-fx-border-color:transparent;"
-        );
-
-        // SHOW PENDING BY DEFAULT
+        
 
         paymentList.getChildren().addAll(
                 pending1,
@@ -333,11 +362,28 @@ public class ManagePayment {
                 pending5
         );
 
-        // PENDING BUTTON
+       
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        scrollPane.setContent(
+                paymentList
+        );
+
+        scrollPane.setFitToWidth(true);
+
+        scrollPane.setPrefHeight(480);
+
+        scrollPane.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-border-color:transparent;"
+        );
+
 
         pendingBtn.setOnAction(e -> {
 
             paymentList.getChildren().clear();
+
             paymentList.getChildren().addAll(
                     pending1,
                     pending2,
@@ -351,12 +397,11 @@ public class ManagePayment {
             overdueBtn.setStyle(normalStyle);
         });
 
-
-        // PAID BUTTON
-
+       
         paidBtn.setOnAction(e -> {
 
             paymentList.getChildren().clear();
+
             paymentList.getChildren().addAll(
                     paid1,
                     paid2,
@@ -371,8 +416,6 @@ public class ManagePayment {
             overdueBtn.setStyle(normalStyle);
         });
 
-
-        // OVERDUE BUTTON
 
         overdueBtn.setOnAction(e -> {
 
@@ -391,14 +434,18 @@ public class ManagePayment {
             overdueBtn.setStyle(activeStyle);
         });
 
-        // VIEW ALL BUTTON
+        
 
+        Button viewAllBtn = new Button(
+                "View All Payments"
+        );
 
-        Button viewAllBtn = new Button("View All Payments");
         viewAllBtn.setPrefWidth(1180);
+
         viewAllBtn.setPrefHeight(40);
+
         viewAllBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;" +
@@ -406,37 +453,28 @@ public class ManagePayment {
                 "-fx-border-radius:7;"
         );
 
-        // ADD EVERYTHING TO MAIN
 
-        mainvb.getChildren().addAll(
-                heading,
-                titleBox,
+        mainContent.getChildren().addAll(
                 tabs,
                 scrollPane,
                 viewAllBtn
         );
 
-        // ROOT
+        mainarea.setTop(header);
 
+        mainarea.setCenter(mainContent);
 
-        HBox root =  new HBox();
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
-
-        // SCENE
-
-        // managePaymentScene =   new Scene(root, 1500, 750);
-         Scene scene = new Scene(
+        root.setCenter(mainarea);
+        Scene scene = new Scene(
                 root,
                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
+                ScreenSize.getHeight()
+        );
+
         managePaymentScene = scene;
+
         return managePaymentScene;
     }
-
-    // PAYMENT CARD METHOD
 
     private VBox createPayment(
             String residentName,
@@ -447,14 +485,16 @@ public class ManagePayment {
             String statusBackground,
             String statusColor) {
 
+        VBox payment = new VBox(10);
 
-        VBox payment =  new VBox(10);
         payment.setPadding(
                 new Insets(18)
         );
 
         payment.setPrefHeight(90);
+
         payment.setMaxWidth(1180);
+
         payment.setStyle(
                 "-fx-background-color:white;" +
                 "-fx-background-radius:10;" +
@@ -462,34 +502,34 @@ public class ManagePayment {
                 "-fx-border-radius:10;"
         );
 
-        // RESIDENT NAME
 
-        Label name =  new Label(residentName);
+        Label name = new Label(
+                residentName
+        );
+
         name.setStyle(
                 "-fx-font-size:14px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#123C36;"
         );
 
-        // DETAILS
-
-        Label details =
-                new Label(
-                        "Flat: " + flatNo +
-                        "    |    " +
-                        "Amount: " + amount +
-                        "    |    " +
-                        month
-                );
+        Label details = new Label(
+                "Flat: " + flatNo +
+                "    |    " +
+                "Amount: " + amount +
+                "    |    " +
+                month
+        );
 
         details.setStyle(
                 "-fx-font-size:11px;" +
                 "-fx-text-fill:#777777;"
         );
 
-        // STATUS
+        Label status = new Label(
+                statusText
+        );
 
-        Label status =  new Label(residentName);
         status.setStyle(
                 "-fx-background-color:" +
                 statusBackground + ";" +
@@ -501,9 +541,8 @@ public class ManagePayment {
                 "-fx-background-radius:12;"
         );
 
-        // BOTTOM ROW
-
         HBox bottom = new HBox();
+
         bottom.setAlignment(
                 Pos.CENTER_LEFT
         );
@@ -518,12 +557,10 @@ public class ManagePayment {
                 status
         );
 
-
         payment.getChildren().addAll(
                 name,
                 bottom
         );
-
 
         return payment;
     }

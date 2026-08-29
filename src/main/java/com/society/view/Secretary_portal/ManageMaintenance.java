@@ -8,73 +8,162 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ManageMaintenance {
 
-    // Private Scene variable
+    
     private Scene manageMaintenanceScene;
-
     public Scene createScene(Stage stage) {
 
+        BorderPane root = new BorderPane();
         SecretarySidebar sidebarObj = new SecretarySidebar();
+
         VBox sidebar = sidebarObj.createSidebar(stage);
+        root.setLeft(sidebar);
+        BorderPane mainarea = new BorderPane();
 
-        // MAIN CONTENT
+        HBox header = new HBox();
 
-        VBox mainvb = new VBox(20);
+        header.setPrefHeight(80);
+        header.setMinHeight(80);
+        header.setMaxHeight(80);
 
-        mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
-
-        mainvb.setStyle(
-                "-fx-background-color:#b3adad;"
+        header.setPadding(
+                new Insets(20)
         );
 
-        Label heading =   new Label(" MANAGE MAINTENANCE");
-        heading.setStyle(
+        header.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        header.setStyle(
+                "-fx-background-color:#4e342e;"
+        );
+
+        VBox headerText = new VBox(4);
+
+        Label greeting = new Label(
+                "Manage Maintenance"
+        );
+
+        greeting.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        Label description = new Label(
+                "View and manage society maintenance records"
+        );
+
+        description.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        headerText.getChildren().addAll(
+                greeting,
+                description
+        );
+
+
+        Region spacer = new Region();
+
+        HBox.setHgrow(
+                spacer,
+                Priority.ALWAYS
+        );
+
+        Label day = new Label();
+        Label date = new Label();
+
+        java.time.LocalDate today =
+                java.time.LocalDate.now();
+
+
+        day.setText(
+                today.format(
+                        java.time.format.DateTimeFormatter.ofPattern(
+                                "EEEE"
+                        )
+                )
+        );
+
+
+        date.setText(
+                today.format(
+                        java.time.format.DateTimeFormatter.ofPattern(
+                                "dd MMMM yyyy"
+                        )
+                )
+        );
+
+
+        day.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+        date.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        VBox dateBox = new VBox(4);
+
+        dateBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+
+        dateBox.getChildren().addAll(
+                day,
+                date
+        );
+
+        header.getChildren().addAll(
+                headerText,
+                spacer,
+                dateBox
+        );
+
+        VBox mainContent = new VBox(20);
+
+        mainContent.setPadding(
+                new Insets(25, 30, 25, 30)
+        );
+
+        mainContent.setStyle(
+                "-fx-background-color:#e8ddd5;"
+        );
+        Label sectionTitle = new Label(
+                "MAINTENANCE RECORDS"
+        );
+
+        sectionTitle.setStyle(
                 "-fx-font-size:18px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#434141;"
         );
 
-
-        Label title =   new Label("Manage Maintenance");
-        title.setStyle(
-                "-fx-font-size:20px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:black;"
+        Button pendingBtn = new Button(
+                "Pending (8)"
         );
 
-
-        Label subtitle =
-                new Label(
-                        "View and manage society maintenance records"
-                );
-
-        subtitle.setStyle(
-                "-fx-font-size:13px;" +
-                "-fx-text-fill:#777777;"
+        Button paidBtn = new Button(
+                "Paid (32)"
         );
 
-
-        VBox titleBox = new VBox(5);
-
-        titleBox.getChildren().addAll(
-                title,
-                subtitle
+        Button overdueBtn = new Button(
+                "Overdue (5)"
         );
-
-        // STATUS BUTTONS
-
-        Button pendingBtn = new Button("Pending (8)");
-        Button paidBtn = new Button("Paid (32)");
-        
-        Button overdueBtn =
-                new Button("Overdue (5)");
 
 
         pendingBtn.setPrefWidth(150);
@@ -85,9 +174,6 @@ public class ManageMaintenance {
 
         overdueBtn.setPrefWidth(150);
         overdueBtn.setPrefHeight(40);
-
-        // BUTTON STYLES
-
         String normalStyle =
                 "-fx-background-color:transparent;" +
                 "-fx-text-fill:#777777;" +
@@ -104,16 +190,24 @@ public class ManageMaintenance {
                 "-fx-border-width:0 0 2 0;";
 
 
-        pendingBtn.setStyle(activeStyle);
-        paidBtn.setStyle(normalStyle);
-        overdueBtn.setStyle(normalStyle);
+        pendingBtn.setStyle(
+                activeStyle
+        );
 
-        // TABS
+        paidBtn.setStyle(
+                normalStyle
+        );
+
+        overdueBtn.setStyle(
+                normalStyle
+        );
 
         HBox tabs = new HBox(25);
+
         tabs.setAlignment(
                 Pos.CENTER_LEFT
         );
+
 
         tabs.getChildren().addAll(
                 pendingBtn,
@@ -121,14 +215,11 @@ public class ManageMaintenance {
                 overdueBtn
         );
 
-        // MAINTENANCE LIST
+        VBox maintenanceList = new VBox(15);
 
-        VBox maintenanceList = new VBox(15);          
         maintenanceList.setPadding(
                 new Insets(5, 0, 5, 0)
         );
-
-        // PENDING - 8 RECORDS
 
         VBox pending1 = createMaintenance(
                 "Diya Wadhwa",
@@ -140,6 +231,7 @@ public class ManageMaintenance {
                 "#C47A20"
         );
 
+
         VBox pending2 = createMaintenance(
                 "Rahul Sharma",
                 "A-101",
@@ -149,6 +241,7 @@ public class ManageMaintenance {
                 "#FFF0D9",
                 "#C47A20"
         );
+
 
         VBox pending3 = createMaintenance(
                 "Neha Patil",
@@ -160,6 +253,7 @@ public class ManageMaintenance {
                 "#C47A20"
         );
 
+
         VBox pending4 = createMaintenance(
                 "Amit Kulkarni",
                 "B-305",
@@ -169,6 +263,7 @@ public class ManageMaintenance {
                 "#FFF0D9",
                 "#C47A20"
         );
+
 
         VBox pending5 = createMaintenance(
                 "Pooja Singh",
@@ -180,6 +275,7 @@ public class ManageMaintenance {
                 "#C47A20"
         );
 
+
         VBox pending6 = createMaintenance(
                 "Rohan Joshi",
                 "C-102",
@@ -189,6 +285,7 @@ public class ManageMaintenance {
                 "#FFF0D9",
                 "#C47A20"
         );
+
 
         VBox pending7 = createMaintenance(
                 "Sneha Patil",
@@ -200,6 +297,7 @@ public class ManageMaintenance {
                 "#C47A20"
         );
 
+
         VBox pending8 = createMaintenance(
                 "Kunal Shah",
                 "B-201",
@@ -209,8 +307,6 @@ public class ManageMaintenance {
                 "#FFF0D9",
                 "#C47A20"
         );
-
-        // PAID - 6 SAMPLE RECORDS
 
         VBox paid1 = createMaintenance(
                 "Aarav Mehta",
@@ -222,6 +318,7 @@ public class ManageMaintenance {
                 "#2E9D63"
         );
 
+
         VBox paid2 = createMaintenance(
                 "Priya Sharma",
                 "B-102",
@@ -231,6 +328,7 @@ public class ManageMaintenance {
                 "#E5F7EC",
                 "#2E9D63"
         );
+
 
         VBox paid3 = createMaintenance(
                 "Vivek Patil",
@@ -242,6 +340,7 @@ public class ManageMaintenance {
                 "#2E9D63"
         );
 
+
         VBox paid4 = createMaintenance(
                 "Anjali Joshi",
                 "A-402",
@@ -251,6 +350,7 @@ public class ManageMaintenance {
                 "#E5F7EC",
                 "#2E9D63"
         );
+
 
         VBox paid5 = createMaintenance(
                 "Riya Singh",
@@ -262,6 +362,7 @@ public class ManageMaintenance {
                 "#2E9D63"
         );
 
+
         VBox paid6 = createMaintenance(
                 "Sahil More",
                 "C-104",
@@ -272,8 +373,8 @@ public class ManageMaintenance {
                 "#2E9D63"
         );
 
-        // OVERDUE - 5 RECORDS
 
+        
         VBox overdue1 = createMaintenance(
                 "Vikram Deshmukh",
                 "A-305",
@@ -283,6 +384,7 @@ public class ManageMaintenance {
                 "#FDE8E8",
                 "#D9534F"
         );
+
 
         VBox overdue2 = createMaintenance(
                 "Meena Shah",
@@ -294,6 +396,7 @@ public class ManageMaintenance {
                 "#D9534F"
         );
 
+
         VBox overdue3 = createMaintenance(
                 "Akash Patil",
                 "C-202",
@@ -303,6 +406,7 @@ public class ManageMaintenance {
                 "#FDE8E8",
                 "#D9534F"
         );
+
 
         VBox overdue4 = createMaintenance(
                 "Nisha Kulkarni",
@@ -314,6 +418,7 @@ public class ManageMaintenance {
                 "#D9534F"
         );
 
+
         VBox overdue5 = createMaintenance(
                 "Rohit Sharma",
                 "B-302",
@@ -324,24 +429,6 @@ public class ManageMaintenance {
                 "#D9534F"
         );
 
-        // SCROLL PANE
-
-        ScrollPane scrollPane = new ScrollPane();
-
-                
-        scrollPane.setContent(
-                maintenanceList
-        );
-
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(450);
-
-        scrollPane.setStyle(
-                "-fx-background-color:transparent;" +
-                "-fx-border-color:transparent;"
-        );
-
-        // SHOW PENDING BY DEFAULT
 
         maintenanceList.getChildren().addAll(
                 pending1,
@@ -354,11 +441,26 @@ public class ManageMaintenance {
                 pending8
         );
 
-        // PENDING BUTTON
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        scrollPane.setContent(
+                maintenanceList
+        );
+
+        scrollPane.setFitToWidth(true);
+
+        scrollPane.setPrefHeight(450);
+
+        scrollPane.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-border-color:transparent;"
+        );
 
         pendingBtn.setOnAction(e -> {
 
             maintenanceList.getChildren().clear();
+
             maintenanceList.getChildren().addAll(
                     pending1,
                     pending2,
@@ -370,16 +472,24 @@ public class ManageMaintenance {
                     pending8
             );
 
-            pendingBtn.setStyle(activeStyle);
-            paidBtn.setStyle(normalStyle);
-            overdueBtn.setStyle(normalStyle);
-        });
 
-        // PAID BUTTON
+            pendingBtn.setStyle(
+                    activeStyle
+            );
+
+            paidBtn.setStyle(
+                    normalStyle
+            );
+
+            overdueBtn.setStyle(
+                    normalStyle
+            );
+        });
 
         paidBtn.setOnAction(e -> {
 
             maintenanceList.getChildren().clear();
+
             maintenanceList.getChildren().addAll(
                     paid1,
                     paid2,
@@ -389,16 +499,24 @@ public class ManageMaintenance {
                     paid6
             );
 
-            pendingBtn.setStyle(normalStyle);
-            paidBtn.setStyle(activeStyle);
-            overdueBtn.setStyle(normalStyle);
-        });
 
-        // OVERDUE BUTTON
+            pendingBtn.setStyle(
+                    normalStyle
+            );
+
+            paidBtn.setStyle(
+                    activeStyle
+            );
+
+            overdueBtn.setStyle(
+                    normalStyle
+            );
+        });
 
         overdueBtn.setOnAction(e -> {
 
             maintenanceList.getChildren().clear();
+
             maintenanceList.getChildren().addAll(
                     overdue1,
                     overdue2,
@@ -407,20 +525,32 @@ public class ManageMaintenance {
                     overdue5
             );
 
-            pendingBtn.setStyle(normalStyle);
-            paidBtn.setStyle(normalStyle);
-            overdueBtn.setStyle(activeStyle);
+
+            pendingBtn.setStyle(
+                    normalStyle
+            );
+
+            paidBtn.setStyle(
+                    normalStyle
+            );
+
+            overdueBtn.setStyle(
+                    activeStyle
+            );
         });
 
 
-        // VIEW ALL BUTTON
+       
+        Button viewAllBtn = new Button(
+                "View All Maintenance"
+        );
 
-        Button viewAllBtn =  new Button("View All Maintenance");           
         viewAllBtn.setPrefWidth(1180);
+
         viewAllBtn.setPrefHeight(40);
 
         viewAllBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;" +
@@ -428,52 +558,36 @@ public class ManageMaintenance {
                 "-fx-border-radius:7;"
         );
 
-
-        // =====================================================
-        // ADD EVERYTHING TO MAIN
-        // =====================================================
-
-        mainvb.getChildren().addAll(
-                heading,
-                titleBox,
+        mainContent.getChildren().addAll(
+                sectionTitle,
                 tabs,
                 scrollPane,
                 viewAllBtn
         );
 
+        mainarea.setTop(
+                header
+        );
 
-        // =====================================================
-        // ROOT
-        // =====================================================
+        mainarea.setCenter(
+                mainContent
+        );
 
-        HBox root =
-                new HBox();
-
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
+        root.setCenter(
+                mainarea
         );
 
 
-        // =====================================================
-        // SCENE
-        // =====================================================
-
-        // manageMaintenanceScene =
-        //         new Scene(root, 1500, 750);
-
-         Scene scene = new Scene(
+        Scene scene = new Scene(
                 root,
                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
-         manageMaintenanceScene= scene;
+                ScreenSize.getHeight()
+        );
+
+        manageMaintenanceScene = scene;
+
         return manageMaintenanceScene;
     }
-
-
-    // =========================================================
-    // MAINTENANCE CARD METHOD
-    // =========================================================
 
     private VBox createMaintenance(
             String residentName,
@@ -485,14 +599,14 @@ public class ManageMaintenance {
             String statusColor) {
 
 
-        VBox maintenance =
-                new VBox(10);
+        VBox maintenance = new VBox(10);
 
         maintenance.setPadding(
                 new Insets(18)
         );
 
         maintenance.setPrefHeight(90);
+
         maintenance.setMaxWidth(1180);
 
         maintenance.setStyle(
@@ -502,13 +616,9 @@ public class ManageMaintenance {
                 "-fx-border-radius:10;"
         );
 
-
-        // =====================================================
-        // RESIDENT NAME
-        // =====================================================
-
-        Label name =
-                new Label(residentName);
+        Label name = new Label(
+                residentName
+        );
 
         name.setStyle(
                 "-fx-font-size:14px;" +
@@ -516,32 +626,22 @@ public class ManageMaintenance {
                 "-fx-text-fill:#123C36;"
         );
 
-
-        // =====================================================
-        // DETAILS
-        // =====================================================
-
-        Label details =
-                new Label(
-                        "Flat: " + flatNo +
-                        "    |    " +
-                        "Amount: " + amount +
-                        "    |    " +
-                        month
-                );
+        Label details = new Label(
+                "Flat: " + flatNo +
+                "    |    " +
+                "Amount: " + amount +
+                "    |    " +
+                month
+        );
 
         details.setStyle(
                 "-fx-font-size:11px;" +
                 "-fx-text-fill:#777777;"
         );
 
-
-        // =====================================================
-        // STATUS
-        // =====================================================
-
-        Label status =
-                new Label(statusText);
+        Label status = new Label(
+                statusText
+        );
 
         status.setStyle(
                 "-fx-background-color:" +
@@ -555,21 +655,19 @@ public class ManageMaintenance {
         );
 
 
-        // =====================================================
-        // BOTTOM ROW
-        // =====================================================
-
-        HBox bottom =
-                new HBox();
+        
+        HBox bottom = new HBox();
 
         bottom.setAlignment(
                 Pos.CENTER_LEFT
         );
 
+
         HBox.setHgrow(
                 details,
                 Priority.ALWAYS
         );
+
 
         bottom.getChildren().addAll(
                 details,

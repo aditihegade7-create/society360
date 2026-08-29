@@ -3,6 +3,8 @@ package com.society.view.Owner_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -29,7 +31,7 @@ public class ViewPayments {
        
         VBox mainContent = new VBox();
 
-        mainContent.setPadding( new Insets(25, 35, 25, 35) );
+        mainContent.setPadding( new Insets(25,35,25,35) );
 
         mainContent.setSpacing(15);
 
@@ -39,9 +41,7 @@ public class ViewPayments {
         );
 
         HBox header = new HBox();
-        header.setPrefWidth(900);
-        header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
+        header.setPadding(new Insets(25,35,25,35));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #4e342e;");
 
@@ -92,6 +92,7 @@ public class ViewPayments {
         dateColumn.setCellValueFactory(
                 new PropertyValueFactory<>("date")
         );
+        dateColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Payment, String> tenantColumn =
                 new TableColumn<>("Tenant");
@@ -99,6 +100,7 @@ public class ViewPayments {
         tenantColumn.setCellValueFactory(
                 new PropertyValueFactory<>("tenant")
         );
+         tenantColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Payment, String> flatColumn =
                 new TableColumn<>("Flat / Unit");
@@ -106,6 +108,7 @@ public class ViewPayments {
         flatColumn.setCellValueFactory(
                 new PropertyValueFactory<>("flat")
         );
+        flatColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Payment, String> paymentColumn =
                 new TableColumn<>("For");
@@ -113,6 +116,7 @@ public class ViewPayments {
         paymentColumn.setCellValueFactory(
                 new PropertyValueFactory<>("paymentFor")
         );
+        paymentColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Payment, String> amountColumn =
                 new TableColumn<>("Amount");
@@ -120,6 +124,7 @@ public class ViewPayments {
         amountColumn.setCellValueFactory(
                 new PropertyValueFactory<>("amount")
         );
+        amountColumn.setStyle("-fx-alignment:CENTER;");
 
         TableColumn<Payment, String> statusColumn =
                 new TableColumn<>("Status");
@@ -127,6 +132,7 @@ public class ViewPayments {
         statusColumn.setCellValueFactory(
                 new PropertyValueFactory<>("status")
         );
+        statusColumn.setStyle("-fx-alignment:CENTER;");
 
         table.getColumns().addAll(
                 dateColumn,
@@ -180,7 +186,9 @@ public class ViewPayments {
 
         table.setStyle(
                 "-fx-background-color: white;" +
-                "-fx-border-color: #D5DDE0;"
+                "-fx-border-color: #D5DDE0;" +
+                "-fx-alignment:CENTER;"
+
         );
 
         mainContent.getChildren().add(
@@ -230,8 +238,8 @@ public class ViewPayments {
        
         return new Scene(
                 root,
-                1500,
-                750
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight()
         );
     }
 

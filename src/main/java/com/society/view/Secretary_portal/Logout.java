@@ -29,7 +29,7 @@ public class Logout {
         mainvb.setPadding(new Insets(25));
         mainvb.setPrefWidth(1220);
         mainvb.setAlignment(Pos.TOP_CENTER);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
+        mainvb.setStyle("-fx-background-color:#e8ddd5;");
 
         // HEADING
 

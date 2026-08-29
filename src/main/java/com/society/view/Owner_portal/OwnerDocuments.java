@@ -1,5 +1,6 @@
 package com.society.view.Owner_portal;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,98 +23,72 @@ import javafx.stage.Stage;
 public class OwnerDocuments {
 
     public static Scene createScene(Stage stage) {
-
-        BorderPane root = new BorderPane();
-
-        OwnerSidebar sidebar = new OwnerSidebar(stage);
+       BorderPane root = new BorderPane();
+       OwnerSidebar sidebar = new OwnerSidebar(stage);
         root.setLeft(sidebar.getSidebar());
-
-        VBox mainContent = new VBox(20);
-
-        mainContent.setPadding(new Insets(30, 40, 30, 40));
-
-        mainContent.setStyle("-fx-background-color: #e8ddd5;");
-
-       HBox header = new HBox();
-        header.setPrefWidth(900);
-        header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color: #4e342e;");
-
-        VBox vb = new VBox();
-        Label greeting = new Label("Owner Documents");
-        greeting.setStyle("-fx-font-size:24px;-fx-font-weight:bold;-fx-text-fill: #ffffff;");
-
-        Label description = new Label("View Owner documents");
-        description.setStyle("-fx-font-size:12px;-fx-text-fill: #ffffff;");
-
-        vb.getChildren().addAll(greeting,description);
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-         Label day = new Label();
-        Label date = new Label();
-
-        LocalDate today = LocalDate.now();
-
-        day.setText(today.format(
-                DateTimeFormatter.ofPattern("EEEE")));
-        day.setStyle("-fx-text-fill: #ffffff"); 
-        date.setText(today.format(
-                DateTimeFormatter.ofPattern("dd MMMM yyyy")));
-         date.setStyle("-fx-text-fill: #ffffff");
-        VBox vb1 = new VBox();
-        vb1.getChildren().addAll(day, date);
-
-        header.getChildren().addAll(vb,
-                spacer,
-                vb1);
-       
-        VBox documentCard = new VBox(18);
-
-        documentCard.setPadding(
-                new Insets(25)
-        );
-
-        documentCard.setStyle(
-                "-fx-background-color: #ffffff;"+
-                "-fx-background-radius: 15;" +
-                "-fx-border-color: #E5E7EB;" +
-                "-fx-border-radius: 15;"
-        );
+        BorderPane mainArea = new BorderPane();
 
         
-
-        Label cardTitle = new Label(
-                "Required Documents"
+        HBox header = new HBox();
+        header.setPadding( new Insets(25,35,25,35) );
+         header.setAlignment( Pos.CENTER_LEFT );
+         header.setStyle("-fx-background-color:#4e342e;"
         );
 
-        cardTitle.setStyle(
-                "-fx-font-size: 19px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #333333;"
+       
+        VBox titleBox = new VBox(3);
+        Label greeting = new Label("Owner Documents");
+        greeting.setStyle(  "-fx-font-size:24px;" +"-fx-font-weight:bold;" +"-fx-text-fill:white;");
+
+        Label description = new Label("View and manage your important documents");
+        description.setStyle("-fx-font-size:12px;" +"-fx-text-fill:#eeeeee;");
+        titleBox.getChildren().addAll( greeting, description);
+
+       
+        Region headerSpacer = new Region();
+        HBox.setHgrow( headerSpacer, Priority.ALWAYS
+        );
+        VBox dateBox = new VBox(3);
+        dateBox.setAlignment(Pos.CENTER_RIGHT );
+        LocalDate today = LocalDate.now();
+        Label day = new Label(today.format(DateTimeFormatter.ofPattern("EEEE"))
+        );
+         day.setStyle("-fx-font-size:13px;" +"-fx-font-weight:bold;" +"-fx-text-fill:white;"
+        );
+        Label date = new Label( today.format( DateTimeFormatter.ofPattern("dd MMMM yyyy"))
         );
 
-        Label cardDescription = new Label(
-                "Upload documents in PDF format"
+        date.setStyle("-fx-font-size:12px;" + "-fx-text-fill:#eeeeee;"
         );
 
-        cardDescription.setStyle(
-                "-fx-font-size: 13px;" +
-                "-fx-text-fill: #888888;"
+        dateBox.getChildren().addAll(day,date );
+        header.getChildren().addAll(
+                titleBox,
+                headerSpacer,
+                dateBox
         );
+
+        mainArea.setTop(header);
+        VBox content = new VBox(20);
+
+        content.setPadding( new Insets(30, 40, 30, 40));
+        content.setStyle("-fx-background-color:#e8ddd5;" );
+       
+        VBox documentCard = new VBox(18);
+        documentCard.setPadding(new Insets(25));
+        documentCard.setStyle("-fx-background-color:white;" +"-fx-background-radius:15;" +"-fx-border-color:#E5E7EB;" +"-fx-border-radius:15;");
+
+        Label cardTitle = new Label( "Required Documents");
+        cardTitle.setStyle("-fx-font-size:19px;" +"-fx-font-weight:bold;" +"-fx-text-fill:#333333;");
+
+        Label cardDescription = new Label("Upload your documents in PDF format");
+        cardDescription.setStyle("-fx-font-size:13px;" +"-fx-text-fill:#888888;" );
 
         VBox cardHeading = new VBox(4);
+        cardHeading.getChildren().addAll(cardTitle,cardDescription);
 
-        cardHeading.getChildren().addAll(
-                cardTitle,
-                cardDescription
-        );
-
-        HBox aadhaar = createDocumentRow(
-                stage,
+        
+        HBox aadhaar = createDocumentRow( stage,
                 "Aadhaar Card",
                 "Identity Proof"
         );
@@ -136,7 +111,6 @@ public class OwnerDocuments {
                 "Address Document"
         );
 
-        
         documentCard.getChildren().addAll(
                 cardHeading,
                 aadhaar,
@@ -148,40 +122,36 @@ public class OwnerDocuments {
         
         HBox buttonBox = new HBox();
 
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-
-        Button saveButton = new Button(
-                "Save Documents"
+        buttonBox.setAlignment(
+                Pos.CENTER_RIGHT
         );
+
+        Button saveButton = new Button("Save Documents");
 
         saveButton.setPrefWidth(170);
         saveButton.setPrefHeight(42);
 
         saveButton.setStyle(
-                "-fx-background-color: #4e342e;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-size: 14px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-background-radius: 8;" +
-                "-fx-cursor: hand;"
+                "-fx-background-color:#4e342e;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-size:14px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
         );
 
-        buttonBox.getChildren().add(
-                saveButton
-        );
+        buttonBox.getChildren().add(saveButton);
 
-         mainContent.getChildren().addAll(
-                header,
+        
+        content.getChildren().addAll(
                 documentCard,
                 buttonBox
         );
 
-       BorderPane mainarea = new BorderPane();
-       mainarea.setTop(header);
-       mainarea.setCenter(mainContent);
-       root.setCenter(mainarea);
-       
+        mainArea.setCenter(content);
+        root.setCenter(mainArea);
 
+        
         return new Scene(
                 root,
                 ScreenSize.getWidth(),
@@ -190,75 +160,52 @@ public class OwnerDocuments {
     }
 
 
-     private static HBox createDocumentRow(
+    
+    private static HBox createDocumentRow(
             Stage stage,
             String documentName,
             String documentType) {
 
         HBox row = new HBox(15);
 
-        row.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        row.setPadding(
-                new Insets(15)
-        );
-
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPadding( new Insets(15));
         row.setStyle(
-                "-fx-background-color: #F8FAFC;" +
-                "-fx-background-radius: 10;" +
-                "-fx-border-color: #E8EBEF;" +
-                "-fx-border-radius: 10;"
+                "-fx-background-color:#F8FAFC;" +
+                "-fx-background-radius:10;" +
+                "-fx-border-color:#E8EBEF;" +
+                "-fx-border-radius:10;"
         );
 
         
         Label icon = new Label("📄");
-
-        icon.setStyle(
-                "-fx-font-size: 25px;"
-        );
+        icon.setStyle("-fx-font-size:25px;");
 
         
-        Label name = new Label(
-                documentName
-        );
-
+        Label name = new Label(documentName);
         name.setStyle(
-                "-fx-font-size: 15px;" +
-                "-fx-font-weight: bold;" +
-                "-fx-text-fill: #333333;"
+                "-fx-font-size:15px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
         );
 
-        Label type = new Label(
-                documentType
-        );
-
-        type.setStyle(
-                "-fx-font-size: 11px;" +
-                "-fx-text-fill: #888888;"
-        );
+        Label type = new Label( documentType);
+        type.setStyle( "-fx-font-size:11px;" + "-fx-text-fill:#888888;" );
 
         VBox information = new VBox(3);
-
-        information.setPrefWidth(220);
+         information.setPrefWidth(200);
 
         information.getChildren().addAll(
                 name,
                 type
         );
 
+        
+        Label fileName = new Label( "No file selected" );
+
+        fileName.setStyle("-fx-font-size:12px;" +"-fx-text-fill:#999999;");
+
        
-
-        Label fileName = new Label(
-                "No file selected"
-        );
-
-        fileName.setStyle(
-                "-fx-font-size: 12px;" +
-                "-fx-text-fill: #999999;"
-        );
-
         Region spacer = new Region();
 
         HBox.setHgrow(
@@ -267,27 +214,83 @@ public class OwnerDocuments {
         );
 
         
+        final File[] selectedFile = new File[1];
 
-        Button chooseButton = new Button( "Choose File" );
+        
+        Button previewButton = new Button("Preview" );
+        previewButton.setPrefWidth(90);
+        previewButton.setPrefHeight(34);
+
+        previewButton.setStyle(
+                "-fx-background-color:#4e342e;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;" +
+                "-fx-cursor:hand;"
+        );
+
+        
+        previewButton.setOnAction(e -> {
+
+            if (selectedFile[0] != null) {
+
+                try {
+
+                    if (Desktop.isDesktopSupported()) {
+
+                        Desktop.getDesktop().open(
+                                selectedFile[0]
+                        );
+
+                    } else {
+
+                        fileName.setText(
+                                "Preview not supported"
+                        );
+
+                    }
+
+                } catch (Exception ex) {
+
+                    fileName.setText(
+                            "Unable to open file"
+                    );
+
+                    ex.printStackTrace();
+                }
+
+            } else {
+
+                fileName.setText(
+                        "Please select a file first"
+                );
+
+                fileName.setStyle(
+                        "-fx-font-size:12px;" +
+                        "-fx-text-fill:red;"
+                );
+            }
+        });
+
+        
+        Button chooseButton = new Button("Choose File");
 
         chooseButton.setPrefWidth(110);
         chooseButton.setPrefHeight(34);
-
         chooseButton.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-border-color: #4e342e;" +
-                "-fx-border-radius: 7;" +
-                "-fx-background-radius: 7;" +
-                "-fx-text-fill: #4e342e;" +
-                "-fx-font-weight: bold;" +
-                "-fx-cursor: hand;"
+                "-fx-background-color:white;" +
+                "-fx-border-color:#4e342e;" +
+                "-fx-border-radius:7;" +
+                "-fx-background-radius:7;" +
+                "-fx-text-fill:#4e342e;" +
+                "-fx-font-weight:bold;" +
+                "-fx-cursor:hand;"
         );
 
-        chooseButton.setOnAction(e -> {
+        
+        chooseButton.setOnAction(e -> { FileChooser fileChooser = new FileChooser();
 
-            FileChooser fileChooser = new FileChooser();
-
-            fileChooser.setTitle( "Select " + documentName );
+            fileChooser.setTitle( "Select " + documentName);
 
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter(
@@ -296,27 +299,30 @@ public class OwnerDocuments {
                     )
             );
 
-            File file =fileChooser.showOpenDialog(stage);
+            File file = fileChooser.showOpenDialog(stage);
 
             if (file != null) {
+
+                selectedFile[0] = file;
 
                 fileName.setText(
                         file.getName()
                 );
 
                 fileName.setStyle(
-                        "-fx-font-size: 12px;" +
-                        "-fx-text-fill: #4e3425;" +
-                        "-fx-font-weight: bold;"
+                        "-fx-font-size:12px;" +
+                        "-fx-text-fill:#4e342e;" +
+                        "-fx-font-weight:bold;"
                 );
             }
         });
 
-        row.getChildren().addAll(
+         row.getChildren().addAll(
                 icon,
                 information,
                 fileName,
                 spacer,
+                previewButton,
                 chooseButton
         );
 

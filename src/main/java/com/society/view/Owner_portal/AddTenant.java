@@ -3,6 +3,8 @@ package com.society.view.Owner_portal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.society.view.ScreenSize;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,7 +37,7 @@ public class AddTenant {
     HBox header = new HBox();
         header.setPrefWidth(900);
         header.setPrefHeight(80);
-        header.setPadding(new Insets(20));
+        header.setPadding(new Insets(25,35,25,35));
         header.setAlignment(Pos.CENTER_LEFT);
         header.setStyle("-fx-background-color: #4e342e;");
 
@@ -50,8 +52,6 @@ public class AddTenant {
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        
 
         Label day = new Label();
         Label date = new Label();
@@ -79,7 +79,6 @@ public class AddTenant {
         formCard.setMaxWidth( 1050);
         formCard.setStyle( "-fx-background-color: #efeff3;-fx-background-radius: 12;" );
 
-        
         Label formTitle = new Label("Tenant Information" );
         formTitle.setStyle( "-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
 
@@ -91,20 +90,16 @@ public class AddTenant {
         form.setHgap(25);
         form.setVgap(10);
 
-        
         Label nameLabel = createLabel("Full Name");
         TextField nameField = createField("Enter full name");
         Label phoneLabel = createLabel("Phone Number");
         TextField phoneField = createField("Enter phone number");
 
-
         Label emailLabel = createLabel("Email");
         TextField emailField = createField("Enter email address");
 
-
         Label flatLabel = createLabel("Flat / Unit Number");
         TextField flatField =createField("Enter flat number");
-
 
         Label moveInLabel = createLabel("Move-in Date");
         DatePicker moveInDate =new DatePicker();
@@ -112,19 +107,16 @@ public class AddTenant {
         moveInDate.setPrefWidth(320);
         moveInDate.setPrefHeight(38);
 
-
         Label rentLabel = createLabel("Monthly Rent");
         TextField rentField = createField("Enter monthly rent");
 
         Label depositLabel = createLabel("Security Deposit");
         TextField depositField =createField("Enter security deposit");
 
-
         Label idLabel = createLabel("ID Proof Number");
         TextField idField =createField("Enter ID proof number");
 
-
-        Label emergencyLabel = createLabel("Emergency Contact");
+       Label emergencyLabel = createLabel("Emergency Contact");
         TextField emergencyField = createField("Enter emergency contact");
 
         form.add( nameLabel, 0, 0 );
@@ -194,8 +186,8 @@ public class AddTenant {
        
         return new Scene(
                 root,
-                1500,
-                750
+                 ScreenSize.getWidth(),
+                ScreenSize.getHeight()
         );
     }
 

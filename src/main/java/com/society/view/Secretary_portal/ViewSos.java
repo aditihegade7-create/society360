@@ -1,5 +1,8 @@
 package com.society.view.Secretary_portal;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
@@ -8,76 +11,148 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ViewSos {
 
-    // Private Scene variable
     private Scene viewSosScene;
 
     public Scene createScene(Stage stage) {
-
-
+        BorderPane root = new BorderPane();
         SecretarySidebar sidebarObj = new SecretarySidebar();
+
         VBox sidebar = sidebarObj.createSidebar(stage);
 
-        // MAIN CONTENT
+        root.setLeft(sidebar);
+        BorderPane mainarea = new BorderPane();
+        HBox header = new HBox();
 
-        VBox mainvb = new VBox(20);
-        mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
-        mainvb.setStyle(
-                "-fx-background-color:#b3adad;"
+        header.setPrefWidth(900);
+        header.setPrefHeight(80);
+
+        header.setMinHeight(80);
+        header.setMaxHeight(80);
+
+        header.setPadding(
+                new Insets(20)
         );
 
-        // HEADING
+        header.setAlignment(
+                Pos.CENTER_LEFT
+        );
 
-        Label heading =
-                new Label("VIEW SOS ALERTS");
+        header.setStyle(
+                "-fx-background-color:#4e342e;"
+        );
+        VBox headerText = new VBox(4);
 
-        heading.setStyle(
-                "-fx-font-size:18px;" +
+        Label greeting = new Label(
+                "View SOS Alerts"
+        );
+
+        greeting.setStyle(
+                "-fx-font-size:24px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#434141;"
-        );
-
-        // TITLE
-
-        Label title = new Label("SOS Alerts");
-        title.setStyle(
-                "-fx-font-size:20px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:black;"
+                "-fx-text-fill:#ffffff;"
         );
 
 
-        Label subtitle =
-                new Label(
-                        "View and manage emergency alerts from residents"
-                );
+        Label description = new Label(
+                "View and manage emergency alerts from residents"
+        );
 
-        subtitle.setStyle(
-                "-fx-font-size:13px;" +
-                "-fx-text-fill:#777777;"
+        description.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#ffffff;"
         );
 
 
-        VBox titleBox = new VBox(5);
-        titleBox.getChildren().addAll(
-                title,
-                subtitle
+        headerText.getChildren().addAll(
+                greeting,
+                description
+        );
+        Region spacer = new Region();
+
+        HBox.setHgrow(
+                spacer,
+                Priority.ALWAYS
+        );
+        Label day = new Label();
+
+        Label date = new Label();
+
+        LocalDate today = LocalDate.now();
+
+
+        day.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern("EEEE")
+                )
         );
 
-        // FILTER BUTTONS
+
+        date.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                )
+        );
 
 
-        Button activeBtn =  new Button("Active (3)");
-        Button resolvedBtn = new Button("Resolved (5)");              
-        Button allBtn = new Button("All Alerts");
-                
+        day.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+        date.setStyle(
+                "-fx-text-fill:#ffffff;"
+        );
+
+
+        VBox dateBox = new VBox(4);
+
+        dateBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        dateBox.getChildren().addAll(
+                day,
+                date
+        );
+
+        header.getChildren().addAll(
+                headerText,
+                spacer,
+                dateBox
+        );
+        VBox mainContent = new VBox(20);
+
+        mainContent.setPadding(
+                new Insets(25, 30, 25, 30)
+        );
+
+        mainContent.setStyle(
+                "-fx-background-color:#e8ddd5;"
+        );
+
+
+       
+        Button activeBtn = new Button(
+                "Active (3)"
+ );
+
+        Button resolvedBtn = new Button(
+                "Resolved (5)"
+        );
+
+        Button allBtn = new Button(
+                "All Alerts"
+        );
+
+
         activeBtn.setPrefWidth(140);
         activeBtn.setPrefHeight(40);
 
@@ -87,6 +162,8 @@ public class ViewSos {
         allBtn.setPrefWidth(140);
         allBtn.setPrefHeight(40);
 
+
+       
 
         String normalStyle =
                 "-fx-background-color:transparent;" +
@@ -105,27 +182,37 @@ public class ViewSos {
 
 
         activeBtn.setStyle(activeStyle);
+
         resolvedBtn.setStyle(normalStyle);
+
         allBtn.setStyle(normalStyle);
 
 
-        HBox tabs = new HBox(25);              
-        tabs.setAlignment(Pos.CENTER_LEFT);
+        
+
+        HBox tabs = new HBox(25);
+
+        tabs.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
         tabs.getChildren().addAll(
                 activeBtn,
                 resolvedBtn,
                 allBtn
         );
 
-        // SOS LIST
 
-        VBox sosList =  new VBox(15);              
+        
+
+        VBox sosList = new VBox(15);
+
         sosList.setPadding(
                 new Insets(5, 0, 5, 0)
         );
 
-        // ACTIVE ALERTS
 
+        
         VBox sos1 = createSos(
                 "Diya Wadhwa",
                 "B-402",
@@ -133,6 +220,7 @@ public class ViewSos {
                 "10:30 AM",
                 "Active"
         );
+
 
         VBox sos2 = createSos(
                 "Rahul Sharma",
@@ -142,6 +230,7 @@ public class ViewSos {
                 "Active"
         );
 
+
         VBox sos3 = createSos(
                 "Neha Patil",
                 "C-203",
@@ -150,8 +239,8 @@ public class ViewSos {
                 "Active"
         );
 
-        // RESOLVED ALERTS
 
+        
         VBox sos4 = createSos(
                 "Amit Kulkarni",
                 "B-305",
@@ -159,6 +248,7 @@ public class ViewSos {
                 "09:20 AM",
                 "Resolved"
         );
+
 
         VBox sos5 = createSos(
                 "Pooja Singh",
@@ -168,6 +258,7 @@ public class ViewSos {
                 "Resolved"
         );
 
+
         VBox sos6 = createSos(
                 "Rohan Joshi",
                 "C-102",
@@ -175,6 +266,7 @@ public class ViewSos {
                 "07:30 AM",
                 "Resolved"
         );
+
 
         VBox sos7 = createSos(
                 "Sneha Patil",
@@ -184,6 +276,7 @@ public class ViewSos {
                 "Resolved"
         );
 
+
         VBox sos8 = createSos(
                 "Kunal Shah",
                 "B-201",
@@ -192,19 +285,24 @@ public class ViewSos {
                 "Resolved"
         );
 
-        // SHOW ACTIVE BY DEFAULT
 
+        
         sosList.getChildren().addAll(
                 sos1,
                 sos2,
                 sos3
         );
 
-        // SCROLL PANE
 
-        ScrollPane scrollPane =  new ScrollPane();
-        scrollPane.setContent(sosList);
+        
+        ScrollPane scrollPane = new ScrollPane();
+
+        scrollPane.setContent(
+                sosList
+        );
+
         scrollPane.setFitToWidth(true);
+
         scrollPane.setPrefHeight(450);
 
         scrollPane.setStyle(
@@ -212,11 +310,11 @@ public class ViewSos {
                 "-fx-border-color:transparent;"
         );
 
-        // ACTIVE BUTTON
 
         activeBtn.setOnAction(e -> {
 
             sosList.getChildren().clear();
+
             sosList.getChildren().addAll(
                     sos1,
                     sos2,
@@ -224,16 +322,16 @@ public class ViewSos {
             );
 
             activeBtn.setStyle(activeStyle);
+
             resolvedBtn.setStyle(normalStyle);
+
             allBtn.setStyle(normalStyle);
         });
 
-        
-        // RESOLVED BUTTON
-       
         resolvedBtn.setOnAction(e -> {
 
             sosList.getChildren().clear();
+
             sosList.getChildren().addAll(
                     sos4,
                     sos5,
@@ -243,16 +341,16 @@ public class ViewSos {
             );
 
             activeBtn.setStyle(normalStyle);
+
             resolvedBtn.setStyle(activeStyle);
+
             allBtn.setStyle(normalStyle);
         });
-
-
-        // ALL BUTTON
 
         allBtn.setOnAction(e -> {
 
             sosList.getChildren().clear();
+
             sosList.getChildren().addAll(
                     sos1,
                     sos2,
@@ -265,17 +363,22 @@ public class ViewSos {
             );
 
             activeBtn.setStyle(normalStyle);
+
             resolvedBtn.setStyle(normalStyle);
+
             allBtn.setStyle(activeStyle);
         });
 
-        // VIEW ALL BUTTON
+        Button viewAllBtn = new Button(
+                "View All SOS Alerts"
+        );
 
-        Button viewAllBtn =  new Button("View All SOS Alerts");
         viewAllBtn.setPrefWidth(1180);
+
         viewAllBtn.setPrefHeight(40);
+
         viewAllBtn.setStyle(
-                "-fx-background-color:#434141;" +
+                "-fx-background-color:#4e342e;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:7;" +
@@ -283,37 +386,29 @@ public class ViewSos {
                 "-fx-border-radius:7;"
         );
 
-        // ADD EVERYTHING TO MAIN
 
-        mainvb.getChildren().addAll(
-                heading,
-                titleBox,
+        
+        mainContent.getChildren().addAll(
                 tabs,
                 scrollPane,
                 viewAllBtn
         );
 
+        mainarea.setTop(header);
 
-        // ROOT
+        mainarea.setCenter(mainContent);
+        root.setCenter(mainarea);
 
-        HBox root =  new HBox();
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
-        );
-
-        // SCENE
-
-        // viewSosScene = new Scene(root, 1500, 750);
-         Scene scene = new Scene(
+        Scene scene = new Scene(
                 root,
                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
-        viewSosScene = scene;        
+                ScreenSize.getHeight()
+        );
+
+        viewSosScene = scene;
+
         return viewSosScene;
     }
-
-    // SOS CARD METHOD
 
     private VBox createSos(
             String residentName,
@@ -323,14 +418,14 @@ public class ViewSos {
             String statusText) {
 
 
-        VBox sos =
-                new VBox(10);
+        VBox sos = new VBox(10);
 
         sos.setPadding(
                 new Insets(18)
         );
 
         sos.setPrefHeight(95);
+
         sos.setMaxWidth(1180);
 
         sos.setStyle(
@@ -340,17 +435,23 @@ public class ViewSos {
                 "-fx-border-radius:10;"
         );
 
-        // TOP ROW
 
-        Label name = new Label(residentName);
+        Label name = new Label(
+                residentName
+        );
+
         name.setStyle(
                 "-fx-font-size:14px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#123C36;"
         );
 
-        Label status =
-                new Label(statusText);
+
+       
+        Label status = new Label(
+                statusText
+        );
+
 
         if (statusText.equals("Active")) {
 
@@ -376,8 +477,8 @@ public class ViewSos {
         }
 
 
-        HBox topRow =  new HBox();
-               
+        
+        HBox topRow = new HBox();
 
         topRow.setAlignment(
                 Pos.CENTER_LEFT
@@ -392,25 +493,18 @@ public class ViewSos {
                 name,
                 status
         );
-
-        // DETAILS
-
-        Label details =
-                new Label(
-                        "Flat: " + flatNo +
-                        "    |    " +
-                        "Emergency: " + emergencyType +
-                        "    |    " +
-                        "Time: " + time
-                );
+        Label details = new Label(
+                "Flat: " + flatNo +
+                "    |    " +
+                "Emergency: " + emergencyType +
+                "    |    " +
+                "Time: " + time
+        );
 
         details.setStyle(
                 "-fx-font-size:11px;" +
                 "-fx-text-fill:#777777;"
         );
-
-        // ADD TO CARD
-
         sos.getChildren().addAll(
                 topRow,
                 details

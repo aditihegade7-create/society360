@@ -45,16 +45,14 @@ public class OwnerSidebar {
 
         sidebar.setSpacing(10);
 
-       
-
-         dashboard.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white;-fx-font-size: 16px;");
-         addTenant.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white; -fx-font-size: 16px;");
-         removeTenant.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white; -fx-font-size: 16px;");
-         payments.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white; -fx-font-size: 16px;");
-         rentalHistory.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white; -fx-font-size: 16px;");
-        ownerDocuments.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white; -fx-font-size: 16px;");
-         profile.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white; -fx-font-size: 16px;");
-         logout.setStyle("-fx-background-color: #4e423e; -fx-text-fill: white; -fx-font-size: 16px;");
+         dashboard.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white;-fx-font-size: 16px;");
+         addTenant.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         removeTenant.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         payments.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         rentalHistory.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         ownerDocuments.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         profile.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
+         logout.setStyle("-fx-background-color: #4e342e; -fx-text-fill: white; -fx-font-size: 16px;");
 
         
         dashboard.setOnAction(e -> {stage.setScene(OwnerDashboard.createScene(stage) );

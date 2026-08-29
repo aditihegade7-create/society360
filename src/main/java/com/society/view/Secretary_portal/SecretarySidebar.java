@@ -7,13 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class SecretarySidebar {
+public class SecretarySidebar{
 
     public VBox createSidebar(Stage stage) {
-
-        // =====================================================
-        // SIDEBAR
-        // =====================================================
 
         VBox sidebar = new VBox();
 
@@ -23,10 +19,6 @@ public class SecretarySidebar {
         sidebar.setSpacing(14);
         sidebar.setPadding(new Insets(20));
 
-
-        // =====================================================
-        // LOGO
-        // =====================================================
 
         Label logo = new Label("Society360");
 
@@ -40,10 +32,7 @@ public class SecretarySidebar {
         );
 
 
-        // =====================================================
-        // PANEL NAME
-        // =====================================================
-
+        
         Label panel = new Label("Secretary Panel");
 
         panel.setStyle(
@@ -52,10 +41,6 @@ public class SecretarySidebar {
                 "-fx-padding:5px;"
         );
 
-
-        // =====================================================
-        // DASHBOARD
-        // =====================================================
 
         Button dashboardBtn = new Button("Dashboard");
 
@@ -80,10 +65,6 @@ public class SecretarySidebar {
         });
 
 
-        // =====================================================
-        // MANAGE RESIDENTS
-        // =====================================================
-
         Button residentsBtn = new Button("Manage Residents");
 
         residentsBtn.setStyle(
@@ -105,11 +86,6 @@ public class SecretarySidebar {
                     residents.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // MANAGE OWNERS
-        // =====================================================
 
         Button ownersBtn = new Button("Manage Owners");
 
@@ -133,11 +109,6 @@ public class SecretarySidebar {
             );
         });
 
-
-        // =====================================================
-        // MANAGE GUARDS
-        // =====================================================
-
         Button guardsBtn = new Button("Manage Guards");
 
         guardsBtn.setStyle(
@@ -159,11 +130,6 @@ public class SecretarySidebar {
                     guards.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // MANAGE NOTICES
-        // =====================================================
 
         Button noticesBtn = new Button("Manage Notices");
 
@@ -187,11 +153,6 @@ public class SecretarySidebar {
             );
         });
 
-
-        // =====================================================
-        // MANAGE COMPLAINTS
-        // =====================================================
-
         Button complaintsBtn = new Button("Manage Complaints");
 
         complaintsBtn.setStyle(
@@ -213,11 +174,6 @@ public class SecretarySidebar {
                     complaints.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // MANAGE MAINTENANCE
-        // =====================================================
 
         Button maintenanceBtn =
                 new Button("Manage Maintenance");
@@ -241,12 +197,6 @@ public class SecretarySidebar {
                     maintenance.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // MANAGE PAYMENTS
-        // =====================================================
-
         Button paymentsBtn =
                 new Button("Manage Payments");
 
@@ -269,12 +219,6 @@ public class SecretarySidebar {
                     payment.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // SOS ALERTS
-        // =====================================================
-
         Button sosBtn =
                 new Button("View SOS Alerts");
 
@@ -297,12 +241,6 @@ public class SecretarySidebar {
                     sos.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // MANAGE EVENTS
-        // =====================================================
-
         Button eventsBtn =
                 new Button("Manage Events");
 
@@ -325,12 +263,6 @@ public class SecretarySidebar {
                     events.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // GENERATE REPORTS
-        // =====================================================
-
         Button reportsBtn =
                 new Button("Generate Reports");
 
@@ -353,12 +285,6 @@ public class SecretarySidebar {
                     report.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // PROFILE
-        // =====================================================
-
         Button profileBtn =
                 new Button("Profile");
 
@@ -381,12 +307,6 @@ public class SecretarySidebar {
                     profile.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // LOGOUT
-        // =====================================================
-
         Button logoutBtn =
                 new Button("Logout");
 
@@ -409,17 +329,10 @@ public class SecretarySidebar {
                     logout.createScene(stage)
             );
         });
-
-
-        // =====================================================
-        // ADD ALL COMPONENTS TO SIDEBAR
-        // =====================================================
-
         sidebar.getChildren().addAll(
 
                 logo,
                 panel,
-
                 dashboardBtn,
                 residentsBtn,
                 ownersBtn,
