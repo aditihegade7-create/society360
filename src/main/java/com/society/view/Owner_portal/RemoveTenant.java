@@ -1,12 +1,13 @@
 package com.society.view.Owner_portal;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -22,6 +23,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class RemoveTenant {
 
@@ -39,7 +41,7 @@ public class RemoveTenant {
         );
 
        Image image = new Image(
-        RemoveTenant.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+        RemoveTenant.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -51,7 +53,6 @@ public class RemoveTenant {
 
         mainContent.setBackground(new Background(backgroundImage));
         
-
         
         HBox header = new HBox();
         header.setPrefWidth(900);
@@ -99,14 +100,14 @@ public class RemoveTenant {
         tenantCard.setSpacing(20);
         tenantCard.setMaxWidth( 1000 );
 
-        tenantCard.setStyle( "-fx-background-color: #F4F7F8;-fx-background-radius: 12;" );
+        tenantCard.setStyle( "-fx-background-color: #a47970;-fx-background-radius: 12;" );
 
        
         Label cardTitle = new Label( "Tenant Details"  );
        cardTitle.setStyle("-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
 
         Label cardSubtitle = new Label("Enter the details of the tenant you want to remove");
-        cardSubtitle.setStyle( "-fx-font-size: 12px;-fx-text-fill: #546E7A;" );
+        cardSubtitle.setStyle( "-fx-font-size: 12px;-fx-text-fill: #102A43;" );
 
         VBox cardHeading = new VBox(  4, cardTitle,cardSubtitle );
         GridPane form = new GridPane();
@@ -123,9 +124,12 @@ public class RemoveTenant {
          TextField flatField = new TextField();
         flatField.setPromptText("Enter flat number");
 
-        Label dateLabel = new Label( "Move-out Date" );
-        TextField dateField = new TextField();
-        dateField.setPromptText("Enter move-out date");
+        Label moveOutLabel = new Label("Move-Out Date");
+        DatePicker moveOutDate =new DatePicker();
+        moveOutDate.setPromptText("Select date" );
+        moveOutDate.setPrefWidth(320);
+        moveOutDate.setPrefHeight(38);
+
 
         
         Label reasonLabel = new Label("Reason");
@@ -136,18 +140,18 @@ public class RemoveTenant {
         nameField.setPrefWidth(380);
         flatField.setPrefWidth(380);
 
-        dateField.setPrefWidth(380);
+        moveOutDate.setPrefWidth(380);
         reasonField.setPrefWidth(380);
 
         nameField.setPrefHeight(40);
         flatField.setPrefHeight(40);
 
-        dateField.setPrefHeight(40);
+        moveOutDate.setPrefHeight(40);
         reasonField.setPrefHeight(40);
 
         styleLabel(nameLabel);
         styleLabel(flatLabel);
-        styleLabel(dateLabel);
+        styleLabel(moveOutLabel);
         styleLabel(reasonLabel);
 
         
@@ -156,7 +160,7 @@ public class RemoveTenant {
         nameField.setStyle(fieldStyle);
         flatField.setStyle(fieldStyle);
 
-        dateField.setStyle(fieldStyle);
+        moveOutDate.setStyle(fieldStyle);
         reasonField.setStyle(fieldStyle);
 
         
@@ -164,9 +168,9 @@ public class RemoveTenant {
         form.add(flatLabel,1,0 );
         form.add(nameField,0,1 );
         form.add( flatField,1,1 );
-        form.add( dateLabel, 0, 2 );
+        form.add( moveOutLabel, 0, 2 );
         form.add(reasonLabel, 1, 2 );
-        form.add(dateField,0,3 );
+        form.add(moveOutDate,0,3 );
         form.add( reasonField, 1, 3);
 
         
@@ -198,7 +202,7 @@ public class RemoveTenant {
                 buttons
         );
 
-        Label information = new Label(  "Please verify the tenant name and flat number before removing the tenant.");
+        Label information = new Label("*Please verify the tenant name and flat number before removing the tenant.");
         information.setPadding( new Insets(14));
         information.setMaxWidth( 1000);
         information.setStyle( "-fx-background-color: #E8F1F2;-fx-background-radius: 8;-fx-text-fill: #263238;");
@@ -208,6 +212,20 @@ public class RemoveTenant {
                 tenantCard,
                 information
         );
+
+        // ===== REMOVE TENANT ANIMATION =====
+
+        animateHeader(header);
+
+        animateTenantCard(tenantCard);
+
+        animateInformation(information);
+
+        animateButton(clearButton);
+
+        animateButton(removeButton);
+
+
        BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
        mainarea.setCenter(mainContent);
@@ -227,4 +245,94 @@ public class RemoveTenant {
                 "-fx-text-fill: #37474F;"
         );
     }
+
+    // ================= HEADER ANIMATION =================
+
+private static void animateHeader(HBox header) {
+
+    header.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(600),
+            header
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    fade.play();
+}
+
+
+// ================= TENANT CARD ANIMATION =================
+
+private static void animateTenantCard(VBox card) {
+
+    card.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(700),
+            card
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(200));
+
+    fade.play();
+}
+
+
+// ================= INFORMATION ANIMATION =================
+
+private static void animateInformation(Label information) {
+
+    information.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(600),
+            information
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(500));
+
+    fade.play();
+}
+
+
+// ================= BUTTON HOVER ANIMATION =================
+
+private static void animateButton(Button button) {
+
+    button.setOnMouseEntered(e -> {
+
+        if (!button.isDisabled()) {
+
+            ScaleTransition scale = new ScaleTransition(
+                    Duration.millis(120),
+                    button
+            );
+
+            scale.setToX(1.05);
+            scale.setToY(1.05);
+
+            scale.play();
+        }
+    });
+
+    button.setOnMouseExited(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                Duration.millis(120),
+                button
+        );
+
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+
+        scale.play();
+    });
+}
 }

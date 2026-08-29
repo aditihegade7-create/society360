@@ -1,8 +1,10 @@
 package com.society.view.Owner_portal;
-
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -38,7 +40,7 @@ public class AddTenant {
         mainContent.setAlignment(Pos.TOP_LEFT);
 
         Image image = new Image(
-        AddTenant.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+        AddTenant.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -50,7 +52,6 @@ public class AddTenant {
 
         mainContent.setBackground(new Background(backgroundImage));
         
-
     HBox header = new HBox();
         header.setPrefWidth(900);
         header.setPrefHeight(80);
@@ -71,7 +72,6 @@ public class AddTenant {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         
-
         Label day = new Label();
         Label date = new Label();
 
@@ -96,14 +96,14 @@ public class AddTenant {
         formCard.setPadding( new Insets(20, 25, 20, 25));
         formCard.setSpacing(15);
         formCard.setMaxWidth( 1050);
-        formCard.setStyle( "-fx-background-color: #efeff3;-fx-background-radius: 12;" );
+        formCard.setStyle( "-fx-background-color: #a47970;-fx-background-radius: 12;" );
 
         
         Label formTitle = new Label("Tenant Information" );
         formTitle.setStyle( "-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #102A43;" );
 
         Label formSubtitle = new Label("Please provide the required tenant details");
-        formSubtitle.setStyle("-fx-font-size: 12px;-fx-text-fill: #546E7A;");
+        formSubtitle.setStyle("-fx-font-size: 12px;-fx-text-fill: #102A43;");
 
         VBox formHeading = new VBox( 3, formTitle, formSubtitle);
         GridPane form = new GridPane();
@@ -185,6 +185,48 @@ public class AddTenant {
         clearButton.setStyle("-fx-background-color: #ffffff;-fx-text-fill: #4e342e;-fx-font-weight: bold;-fx-background-radius: 7;" );
         saveButton.setStyle("-fx-background-color: #4e342e;-fx-text-fill: #ffffff;-fx-font-weight: bold;-fx-background-radius: 7;" );
 
+        // Button click animation
+        clearButton.setOnAction(e -> {
+
+        ScaleTransition scale = new ScaleTransition(javafx.util.Duration.millis(120),saveButton);
+        scale.setFromX(1.0);
+        scale.setFromY(1.0);
+        scale.setToX(1.08);
+        scale.setToY(1.08);
+        scale.setAutoReverse(true);
+        scale.setCycleCount(2);
+
+        scale.play();
+
+        // Clear all fields
+        nameField.clear();
+        phoneField.clear();
+        emailField.clear();
+        flatField.clear();
+        moveInDate.setValue(null);
+        rentField.clear();
+        depositField.clear();
+        idField.clear();
+        emergencyField.clear();
+        remarksArea.clear();
+        });
+
+
+        saveButton.setOnAction(e -> {
+
+         ScaleTransition scale = new ScaleTransition(javafx.util.Duration.millis(120),clearButton);
+
+        scale.setFromX(1.0);
+        scale.setFromY(1.0);
+        scale.setToX(1.08);
+        scale.setToY(1.08);
+        scale.setAutoReverse(true);
+        scale.setCycleCount(2);
+
+        scale.play();
+
+        });
+
         HBox buttons = new HBox();
         buttons.setSpacing(12);
         buttons.setAlignment(Pos.CENTER_RIGHT );
@@ -199,12 +241,16 @@ public class AddTenant {
                 form,
                 buttons
         );
-
        
         mainContent.getChildren().addAll(
                 header,
                 formCard
         );
+
+        // Page opening animations
+        animateHeader(header);
+        animateForm(formCard);
+        animateButtons(clearButton, saveButton);
 
        BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
@@ -218,18 +264,131 @@ public class AddTenant {
         );
     }
 
+    // ================= HEADER ANIMATION =================
+
+private static void animateHeader(HBox header) {
+
+    header.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            javafx.util.Duration.millis(600),
+            header
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    fade.play();
+}
+
+
+// ================= FORM CARD ANIMATION =================
+
+private static void animateForm(VBox formCard) {
+
+    formCard.setOpacity(0);
+    formCard.setScaleX(0.95);
+    formCard.setScaleY(0.95);
+
+    FadeTransition fade = new FadeTransition(
+            javafx.util.Duration.millis(700),
+            formCard
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(javafx.util.Duration.millis(200));
+
+    ScaleTransition scale = new ScaleTransition(
+            javafx.util.Duration.millis(700),
+            formCard
+    );
+
+    scale.setFromX(0.95);
+    scale.setFromY(0.95);
+
+    scale.setToX(1.0);
+    scale.setToY(1.0);
+
+    scale.setDelay(javafx.util.Duration.millis(200));
+
+    fade.play();
+    scale.play();
+}
+
+
+// ================= BUTTON HOVER ANIMATION =================
+
+private static void animateButtons(
+        Button clearButton,
+        Button saveButton) {
+
+    clearButton.setOnMouseEntered(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                javafx.util.Duration.millis(150),
+                clearButton
+        );
+
+        scale.setToX(1.06);
+        scale.setToY(1.06);
+
+        scale.play();
+    });
+
+    clearButton.setOnMouseExited(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                javafx.util.Duration.millis(150),
+                clearButton
+        );
+
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+
+        scale.play();
+    });
+
+
+    saveButton.setOnMouseEntered(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                javafx.util.Duration.millis(150),
+                saveButton
+        );
+
+        scale.setToX(1.06);
+        scale.setToY(1.06);
+
+        scale.play();
+    });
+
+    saveButton.setOnMouseExited(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                javafx.util.Duration.millis(150),
+                saveButton
+        );
+
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+
+        scale.play();
+    });
+}
+
    
-    private static Label createLabel( String text
-    ) {
+    private static Label createLabel( String text) 
+    {
         Label label = new Label(text);
         label.setStyle( "-fx-font-size: 12px;-fx-font-weight: bold;-fx-text-fill: #37474F;" );
         return label;
     }
 
-      private static TextField createField( String prompt
-    ) {
+      private static TextField createField(String prompt) 
+      {
         TextField field =new TextField();
-        field.setPromptText( prompt  );
+        field.setPromptText(prompt);
         field.setPrefWidth(320);
         field.setPrefHeight(38);
         field.setStyle("-fx-background-color: white;-fx-border-color: #CBD5D8;-fx-border-radius: 6;-fx-background-radius: 6;" );

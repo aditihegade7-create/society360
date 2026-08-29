@@ -1,11 +1,12 @@
 package com.society.view.Owner_portal;
-
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
 import com.society.view.ScreenSize;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,6 +25,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class OwnerDocuments {
 
@@ -39,7 +41,7 @@ public class OwnerDocuments {
         mainContent.setPadding(new Insets(30, 40, 30, 40));
 
         Image image = new Image(
-        OwnerDocuments.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+        OwnerDocuments.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -52,7 +54,7 @@ public class OwnerDocuments {
         mainContent.setBackground(new Background(backgroundImage));
         
 
-       HBox header = new HBox();
+        HBox header = new HBox();
         header.setPrefWidth(900);
         header.setPrefHeight(80);
         header.setPadding(new Insets(20));
@@ -96,14 +98,13 @@ public class OwnerDocuments {
         );
 
         documentCard.setStyle(
-                "-fx-background-color: #ffffff;"+
+                "-fx-background-color: #a47970;"+
                 "-fx-background-radius: 15;" +
                 "-fx-border-color: #E5E7EB;" +
                 "-fx-border-radius: 15;"
         );
 
         
-
         Label cardTitle = new Label(
                 "Required Documents"
         );
@@ -194,6 +195,14 @@ public class OwnerDocuments {
                 buttonBox
         );
 
+        // ===== DOCUMENT PAGE ANIMATION =====
+
+        animateHeader(header);
+
+        animateDocumentCard(documentCard);
+
+        animateButton(buttonBox);
+
        BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
        mainarea.setCenter(mainContent);
@@ -267,7 +276,6 @@ public class OwnerDocuments {
         );
 
        
-
         Label fileName = new Label(
                 "No file selected"
         );
@@ -340,4 +348,105 @@ public class OwnerDocuments {
 
         return row;
     }
+    // ================= HEADER ANIMATION =================
+
+private static void animateHeader(HBox header) {
+
+    header.setOpacity(0);
+    header.setTranslateY(-25);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(500),
+            header
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    TranslateTransition slide = new TranslateTransition(
+            Duration.millis(500),
+            header
+    );
+
+    slide.setFromY(-25);
+    slide.setToY(0);
+
+    fade.play();
+    slide.play();
+}
+
+
+// ================= DOCUMENT CARD ANIMATION =================
+
+private static void animateDocumentCard(VBox card) {
+
+    card.setOpacity(0);
+    card.setTranslateY(30);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(700),
+            card
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    TranslateTransition slide = new TranslateTransition(
+            Duration.millis(700),
+            card
+    );
+
+    slide.setFromY(30);
+    slide.setToY(0);
+
+    fade.play();
+    slide.play();
+}
+
+
+// ================= BUTTON ANIMATION =================
+
+private static void animateButton(HBox buttonBox) {
+
+    buttonBox.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(600),
+            buttonBox
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(500));
+
+    fade.play();
+
+    Button button = (Button) buttonBox.getChildren().get(0);
+
+    button.setOnMouseEntered(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                Duration.millis(120),
+                button
+        );
+
+        scale.setToX(1.05);
+        scale.setToY(1.05);
+
+        scale.play();
+    });
+
+    button.setOnMouseExited(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                Duration.millis(120),
+                button
+        );
+
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+
+        scale.play();
+    });
+}
 }

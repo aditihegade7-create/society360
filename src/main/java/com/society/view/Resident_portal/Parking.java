@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 public class Parking {
@@ -67,14 +68,24 @@ public class Parking {
         // ==================================================
 
         VBox mainContent = new VBox(25);
+ mainContent.setPadding(new Insets(25, 35, 25, 35));
+        mainContent.setSpacing(20);
+        mainContent.setAlignment(Pos.TOP_LEFT);
 
-        mainContent.setPadding(
-                new Insets(25)
+        Image image = new Image(
+        Parking.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
         );
 
-        mainContent.setStyle(
-                "-fx-background-color: #e8ddd5;"
-        );
+        mainContent.setBackground(new Background(backgroundImage));
 
 
         // ==================================================

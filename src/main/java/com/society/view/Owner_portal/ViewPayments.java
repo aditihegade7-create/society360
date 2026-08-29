@@ -1,8 +1,9 @@
 package com.society.view.Owner_portal;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,6 +23,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ViewPayments {
 
@@ -42,7 +44,7 @@ public class ViewPayments {
         mainContent.setAlignment(Pos.TOP_LEFT);
 
         Image image = new Image(
-        ViewPayments.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+        ViewPayments.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -74,8 +76,6 @@ public class ViewPayments {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        
-
         Label day = new Label();
         Label date = new Label();
 
@@ -102,7 +102,6 @@ public class ViewPayments {
         table.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY
         );
 
-        
         TableColumn<Payment, String> dateColumn =
                 new TableColumn<>("Date");
 
@@ -154,8 +153,6 @@ public class ViewPayments {
                 statusColumn
         );
 
-       
-
         table.getItems().addAll(
 
                 new Payment(
@@ -204,8 +201,6 @@ public class ViewPayments {
                 table
         );
 
-       
-
         HBox summary = new HBox();
 
         summary.setSpacing(15);
@@ -239,6 +234,11 @@ public class ViewPayments {
 
         mainContent.getChildren().add( summary
         );
+        // ================= ANIMATIONS =================
+
+        animateHeader(header);
+        animateTable(table);
+        animateSummary(summary);
 
         BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
@@ -250,6 +250,110 @@ public class ViewPayments {
                 1500,
                 750
         );
+}
+
+        // ================= HEADER ANIMATION =================
+
+private static void animateHeader(HBox header) {
+
+    header.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(600),
+            header
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    fade.play();
+}
+
+
+// ================= TABLE ANIMATION =================
+
+private static void animateTable(TableView<Payment> table) {
+
+    table.setOpacity(0);
+    table.setScaleX(0.97);
+    table.setScaleY(0.97);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(700),
+            table
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(200));
+
+    ScaleTransition scale = new ScaleTransition(
+            Duration.millis(700),
+            table
+    );
+
+    scale.setFromX(0.97);
+    scale.setFromY(0.97);
+
+    scale.setToX(1.0);
+    scale.setToY(1.0);
+
+    scale.setDelay(Duration.millis(200));
+
+    fade.play();
+    scale.play();
+}
+
+
+// ================= SUMMARY BOX ANIMATION =================
+
+private static void animateSummary(HBox summary) {
+
+    summary.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(600),
+            summary
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    fade.setDelay(Duration.millis(500));
+
+    fade.play();
+
+    // Hover effect for summary boxes
+
+    for (javafx.scene.Node node : summary.getChildren()) {
+
+        node.setOnMouseEntered(e -> {
+
+            ScaleTransition scale = new ScaleTransition(
+                    Duration.millis(150),
+                    node
+            );
+
+            scale.setToX(1.05);
+            scale.setToY(1.05);
+
+            scale.play();
+        });
+
+        node.setOnMouseExited(e -> {
+
+            ScaleTransition scale = new ScaleTransition(
+                    Duration.millis(150),
+                    node
+            );
+
+            scale.setToX(1.0);
+            scale.setToY(1.0);
+
+            scale.play();
+        });
+    }
+
     }
 
     
@@ -269,7 +373,7 @@ public class ViewPayments {
 
         Label titleLabel =new Label(title);
 
-        titleLabel.setStyle( "-fx-font-size: 13px;-fx-text-fill: #546E7A;"
+        titleLabel.setStyle( "-fx-font-size: 13px;-fx-text-fill: #4e342e;"
         );
 
         Label valueLabel = new Label(value);

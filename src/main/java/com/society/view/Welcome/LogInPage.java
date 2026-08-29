@@ -1,18 +1,19 @@
 package com.society.view.Welcome;
-
 import com.society.view.ScreenSize;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -21,7 +22,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -47,9 +47,7 @@ public class LogInPage {
 
         StackPane root = new StackPane();
 
-        Image bgImage = new Image(
-                getClass().getResource("/background-Society360.jpeg").toExternalForm()
-        );
+        Image bgImage = new Image(getClass().getResource("/background-Society360.jpeg").toExternalForm());
 
         ImageView bgView = new ImageView(bgImage);
 
@@ -59,9 +57,6 @@ public class LogInPage {
 
         root.getChildren().add(bgView);
 
-        //StackPane root = new StackPane();
-
-        //root.setStyle("-fx-background-color: linear-gradient(to right, #E8DDD5, #bfb1a7);");
 
         // LEFT IMAGE PANEL
         VBox leftPanel = createLeftPanel();
@@ -118,8 +113,7 @@ public class LogInPage {
 
         // SCENE
 
-        Scene loginScene =
-                new Scene(
+        Scene loginScene =new Scene(
                         root,
                         ScreenSize.getWidth(),
                         ScreenSize.getHeight()
@@ -232,8 +226,7 @@ public class LogInPage {
 
         Label title =new Label("Welcome Back! 👋");
 
-        title.setFont(
-                Font.font(
+        title.setFont(Font.font(
                         "Arial",
                         FontWeight.BOLD,
                         28
@@ -245,16 +238,14 @@ public class LogInPage {
 
         Label subtitle =new Label(" Login to continue to Society360");
 
-        subtitle.setFont(
-                Font.font(
+        subtitle.setFont(Font.font(
                         "Arial",
                         14
                 )
         );
 
         subtitle.setTextFill(Color.web(BROWN));
-        VBox titleBox =
-                new VBox(
+        VBox titleBox =new VBox(
                         6,
                         title,
                         subtitle
@@ -288,10 +279,60 @@ public class LogInPage {
 
         // FORGOT PASSWORD
 
-        Hyperlink forgot =
-                new Hyperlink("Forgot Password?");
+        Hyperlink forgot =new Hyperlink("Forgot Password?");
 
         forgot.setTextFill(Color.web(PRIMARY_BROWN));
+
+                forgot.setOnAction(event -> {
+
+        TextInputDialog emailDialog =new TextInputDialog();
+
+        emailDialog.setTitle("Forgot Password");
+        emailDialog.setHeaderText("Reset your password");
+        emailDialog.setContentText("Enter your Email:");
+
+        emailDialog.showAndWait().ifPresent(email -> {
+
+                if (email.trim().isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Forgot Password",
+                        "Please enter your Email."
+                );
+
+                return;
+                }
+
+                // Temporary OTP for testing
+                String otp = "123456";
+
+                TextInputDialog otpDialog =
+                        new TextInputDialog();
+
+                otpDialog.setTitle("OTP Verification");
+                otpDialog.setHeaderText(
+                        "OTP has been sent to " + email
+                );
+                otpDialog.setContentText("Enter OTP:");
+
+                otpDialog.showAndWait().ifPresent(inputOtp -> {
+
+                if (inputOtp.equals(otp)) {
+
+                        showResetPasswordDialog(stage, email);
+
+                } else {
+
+                        showAlert(
+                                Alert.AlertType.ERROR,
+                                "OTP Verification",
+                                "Invalid OTP. Please try again."
+                        );
+                }
+                });
+        });
+        });
 
         HBox rememberRow = new HBox();
 
@@ -312,7 +353,7 @@ public class LogInPage {
 
         // LOGIN BUTTON
 
-        Button loginButton =new Button("Login   →");
+        Button loginButton =new Button("Login  →");
 
         loginButton.setPrefHeight(52);
 
@@ -336,6 +377,8 @@ public class LogInPage {
                 return;
             }
 
+
+
             // LOGIN SUCCESS
 
             showAlert(
@@ -347,14 +390,12 @@ public class LogInPage {
 
         // NEW ACCOUNT
 
-        Label account =
-                new Label("Don't have an account?");
+        Label account =new Label("Don't have an account?");
 
         account.setTextFill(Color.web(TEXT));
 
 
-        Hyperlink signup =
-                new Hyperlink("Sign up");
+        Hyperlink signup =new Hyperlink("Sign up");
 
         signup.setTextFill(Color.web(PRIMARY_BROWN));
 
@@ -417,6 +458,124 @@ public class LogInPage {
                 + "-fx-font-weight: bold;"
                 + "-fx-cursor: hand;";
     }
+
+    private void showResetPasswordDialog(
+        Stage stage,
+        String email
+) {
+
+    Dialog<ButtonType> dialog =
+            new Dialog<>();
+
+    dialog.setTitle("Reset Password");
+    dialog.setHeaderText(
+            "Create a new password"
+    );
+
+    ButtonType resetButton =
+            new ButtonType("Reset Password");
+
+    dialog.getDialogPane()
+            .getButtonTypes()
+            .addAll(
+                    resetButton,
+                    ButtonType.CANCEL
+            );
+
+    VBox box = new VBox(12);
+
+    box.setPadding(new Insets(20));
+
+    Label emailLabel =
+            new Label("Email: " + email);
+
+    PasswordField newPassword =
+            new PasswordField();
+
+    newPassword.setPromptText(
+            "Enter new password"
+    );
+
+    newPassword.setPrefHeight(40);
+
+    newPassword.setStyle(inputStyle());
+
+    PasswordField confirmPassword =
+            new PasswordField();
+
+    confirmPassword.setPromptText(
+            "Confirm new password"
+    );
+
+    confirmPassword.setPrefHeight(40);
+
+    confirmPassword.setStyle(inputStyle());
+
+    box.getChildren().addAll(
+            emailLabel,
+            newPassword,
+            confirmPassword
+    );
+
+    dialog.getDialogPane()
+            .setContent(box);
+
+    dialog.setResultConverter(button -> {
+
+        if (button == resetButton) {
+
+            String password =
+                    newPassword.getText();
+
+            String confirm =
+                    confirmPassword.getText();
+
+            if (password.isEmpty()
+                    || confirm.isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Reset Password",
+                        "Please enter both passwords."
+                );
+
+                return null;
+            }
+
+            if (!password.equals(confirm)) {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Reset Password",
+                        "Passwords do not match."
+                );
+
+                return null;
+            }
+
+            if (password.length() < 6) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Reset Password",
+                        "Password must contain at least 6 characters."
+                );
+
+                return null;
+            }
+
+            showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Password Reset",
+                    "Password reset successfully!"
+            );
+        }
+
+        return button;
+    });
+
+    dialog.showAndWait();
+}
 
     // ALERT
 

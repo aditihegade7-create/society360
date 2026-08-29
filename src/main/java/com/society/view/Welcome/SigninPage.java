@@ -1,6 +1,5 @@
 package com.society.view.Welcome;
 import com.society.view.ScreenSize;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -69,8 +68,7 @@ public class SigninPage {
                 "-fx-text-fill: #333333;"
         );
 
-        Label createSubtitle =
-                new Label("Join Society360 and simplify your life");
+        Label createSubtitle =new Label("Join Society360 and simplify your life");
 
         createSubtitle.setStyle(
                 "-fx-font-size:13px;" +
@@ -242,11 +240,7 @@ public class SigninPage {
 
         // ================= BACKGROUND IMAGE =================
 
-        Image bgImage = new Image(
-                getClass()
-                .getResource("/Background-Society360.jpeg")
-                .toExternalForm()
-        );
+        Image bgImage = new Image(getClass().getResource("/Background-Society360.jpeg").toExternalForm());
 
         ImageView bgView = new ImageView(bgImage);
 
@@ -290,13 +284,8 @@ public class SigninPage {
 
         // SCENE
 
-        signinScene =
-                new Scene(
-                        root,
-                ScreenSize.getWidth(),
-                ScreenSize.getHeight()
-
-                        
+        signinScene =new Scene(root,ScreenSize.getWidth(),ScreenSize.getHeight()
+             
                 );
 
         return signinScene;
@@ -518,6 +507,29 @@ public class SigninPage {
                 "-fx-text-fill:#777777;"
         );
 
+        terms.setOnAction(e -> {
+
+        if (terms.isSelected()) {
+
+                Alert termsAlert = new Alert(Alert.AlertType.INFORMATION);
+
+                termsAlert.setTitle("Terms & Conditions");
+                termsAlert.setHeaderText("Society360 - Terms & Conditions");
+
+                termsAlert.setContentText(
+                        "By creating an account on Society360, you agree to:\n\n" +
+                        "• Provide correct and valid personal information.\n" +
+                        "• Keep your password and account details secure.\n" +
+                        "• Use the Society360 system only for genuine purposes.\n" +
+                        "• Respect the privacy of other society members.\n" +
+                        "• Your information will be used only for society management.\n\n" +
+                        "By continuing, you agree to the Terms & Conditions and Privacy Policy."
+                );
+
+                termsAlert.showAndWait();
+        }
+        });
+
 
         // SIGN UP BUTTON
         
@@ -560,13 +572,12 @@ public class SigninPage {
         Label accountText =new Label("Already have an account?");
 
         accountText.setStyle(
-                "-fx-text-fill:#666666;" +
+                "-fx-text-fill: #666666;" +
                 "-fx-font-size:12px;"
         );
 
 
-        Button loginBtn =
-                new Button("Login");
+        Button loginBtn =new Button("Login");
 
         loginBtn.setStyle(
                 "-fx-background-color:transparent;" +

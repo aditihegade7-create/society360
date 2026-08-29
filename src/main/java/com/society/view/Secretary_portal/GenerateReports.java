@@ -1,12 +1,19 @@
 package com.society.view.Secretary_portal;
 
 import com.society.view.ScreenSize;
+import com.society.view.Resident_portal.Bills;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -22,9 +29,24 @@ public class GenerateReports {
         VBox sidebar = sidebarObj.createSidebar(stage);
 
         VBox mainvb = new VBox(20);
-        mainvb.setPadding(new Insets(25));
-        mainvb.setPrefWidth(1220);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
+        mainvb.setPadding(new Insets(25, 35, 25, 35));
+        mainvb.setSpacing(20);
+        mainvb.setAlignment(Pos.TOP_LEFT);
+
+        Image image = new Image(
+        GenerateReports.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
+        );
+
+        mainvb.setBackground(new Background(backgroundImage));
        
 
         Label heading = new Label("GENERATE REPORTS");               

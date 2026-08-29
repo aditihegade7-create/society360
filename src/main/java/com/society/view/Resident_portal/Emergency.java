@@ -1,12 +1,18 @@
 package com.society.view.Resident_portal;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
@@ -31,14 +37,24 @@ public Scene getEmergencyScene(Stage stage){
         // ================= MAIN CONTENT =================
 
         VBox mainContent = new VBox(20);
+         mainContent.setPadding(new Insets(25, 35, 25, 35));
+        mainContent.setSpacing(20);
+        mainContent.setAlignment(Pos.TOP_LEFT);
 
-        mainContent.setPadding(
-                new Insets(30, 40, 30, 40)
+        Image image = new Image(
+        Emergency.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
         );
 
-        mainContent.setStyle(
-                "-fx-background-color: #e8ddd5;"
-        );
+        mainContent.setBackground(new Background(backgroundImage));
 
         // ================= HEADING =================
 

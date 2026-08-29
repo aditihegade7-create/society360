@@ -1,9 +1,10 @@
 
 package com.society.view.Owner_portal;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,6 +24,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class RentalHistory {
 
@@ -46,7 +48,7 @@ public class RentalHistory {
         );
 
         Image image = new Image(
-        RentalHistory.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+        RentalHistory.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -205,12 +207,18 @@ public class RentalHistory {
 
         
         table.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-border-color: #D5DDE0;"
+                "-fx-background-color: #4e342e;" +
+                "-fx-border-color: #4e342e;"
         );
 
        
         mainContent.getChildren().add( table );
+
+        // ===== RENTAL HISTORY ANIMATION =====
+
+                animateHeader(header);
+
+                animateTable(table);
 
         
         
@@ -222,6 +230,83 @@ public class RentalHistory {
 
         return new Scene( root, 1500, 750 );
     }
+
+    // ================= HEADER ANIMATION =================
+
+private static void animateHeader(HBox header) {
+
+    header.setOpacity(0);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(600),
+            header
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    fade.play();
+}
+
+
+// ================= TABLE ANIMATION =================
+
+private static void animateTable(TableView<Rental> table) {
+
+    table.setOpacity(0);
+    table.setScaleX(0.97);
+    table.setScaleY(0.97);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(700),
+            table
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(250));
+
+    ScaleTransition scale = new ScaleTransition(
+            Duration.millis(700),
+            table
+    );
+
+    scale.setFromX(0.97);
+    scale.setFromY(0.97);
+    scale.setToX(1.0);
+    scale.setToY(1.0);
+    scale.setDelay(Duration.millis(250));
+
+    fade.play();
+    scale.play();
+
+    // Table hover effect
+    table.setOnMouseEntered(e -> {
+
+        ScaleTransition hover = new ScaleTransition(
+                Duration.millis(150),
+                table
+        );
+
+        hover.setToX(1.005);
+        hover.setToY(1.005);
+
+        hover.play();
+    });
+
+    table.setOnMouseExited(e -> {
+
+        ScaleTransition hover = new ScaleTransition(
+                Duration.millis(150),
+                table
+        );
+
+        hover.setToX(1.0);
+        hover.setToY(1.0);
+
+        hover.play();
+    });
+}
 
 
 

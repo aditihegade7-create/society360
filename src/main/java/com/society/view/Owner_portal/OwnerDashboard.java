@@ -1,10 +1,11 @@
 package com.society.view.Owner_portal;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
 import com.society.view.ScreenSize;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,6 +25,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class OwnerDashboard {
 
@@ -41,7 +43,7 @@ public class OwnerDashboard {
         mainContent.setAlignment(Pos.TOP_LEFT);
 
         Image image = new Image(
-        OwnerDashboard.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+        OwnerDashboard.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -163,6 +165,19 @@ public class OwnerDashboard {
         );
 
         mainContent.getChildren().add(noticeBox);
+
+// ===== DASHBOARD ANIMATION =====
+
+        animateCard(totalTenants, 0);
+        animateCard(rentReceived, 100);
+        animateCard(pendingAmount, 200);
+        animateCard(upcomingDue, 300);
+
+        animateBox(incomeOverview, 400);
+        animateBox(activity, 500);
+        animateBox(noticeBox, 600);
+
+
         BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
        mainarea.setCenter(mainContent);
@@ -371,4 +386,70 @@ public class OwnerDashboard {
 
         return row;
     }
+    private static void animateCard(VBox card, int delay) {
+
+    card.setOpacity(0);
+    card.setTranslateY(30);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(500),
+            card
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(delay));
+
+    TranslateTransition slide = new TranslateTransition(
+            Duration.millis(500),
+            card
+    );
+
+    slide.setFromY(30);
+    slide.setToY(0);
+    slide.setDelay(Duration.millis(delay));
+
+    ScaleTransition scale = new ScaleTransition(
+            Duration.millis(300),
+            card
+    );
+
+    scale.setFromX(0.95);
+    scale.setFromY(0.95);
+    scale.setToX(1);
+    scale.setToY(1);
+    scale.setDelay(Duration.millis(delay));
+
+    fade.play();
+    slide.play();
+    scale.play();
+}
+
+
+private static void animateBox(VBox box, int delay) {
+
+    box.setOpacity(0);
+    box.setTranslateY(25);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(600),
+            box
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(delay));
+
+    TranslateTransition slide = new TranslateTransition(
+            Duration.millis(600),
+            box
+    );
+
+    slide.setFromY(25);
+    slide.setToY(0);
+    slide.setDelay(Duration.millis(delay));
+
+    fade.play();
+    slide.play();
+}
 }

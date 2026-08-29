@@ -12,6 +12,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -42,8 +48,24 @@ public class Visitor {
         root.setLeft(panelobj.getSidebar());
 
         VBox mainContent = new VBox(18);
-        mainContent.setPadding(new Insets(25, 35, 25, 35));
-        mainContent.setStyle("-fx-background-color: #e8ddd5;");
+         mainContent.setPadding(new Insets(25, 35, 25, 35));
+        mainContent.setSpacing(20);
+        mainContent.setAlignment(Pos.TOP_LEFT);
+
+        Image image = new Image(
+        Visitor.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
+        );
+
+        mainContent.setBackground(new Background(backgroundImage));
 
         // ================= TITLE =================
         Label title = new Label("Invite / Pre-Approve Visitor");

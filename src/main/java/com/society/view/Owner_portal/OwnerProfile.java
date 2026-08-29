@@ -1,8 +1,10 @@
 package com.society.view.Owner_portal;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,6 +24,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class OwnerProfile {
 
@@ -42,8 +45,7 @@ public class OwnerProfile {
 
         mainContent.setAlignment( Pos.TOP_LEFT);
 
-        Image image = new Image(
-        OwnerProfile.class.getResource("/background-Dashboard1.jpeg").toExternalForm());
+        Image image = new Image(OwnerProfile.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
@@ -55,8 +57,6 @@ public class OwnerProfile {
 
         mainContent.setBackground(new Background(backgroundImage));
         
-
-
         HBox header = new HBox();
         header.setPrefWidth(900);
         header.setPrefHeight(80);
@@ -77,7 +77,6 @@ public class OwnerProfile {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         
-
         Label day = new Label();
         Label date = new Label();
 
@@ -106,20 +105,19 @@ public class OwnerProfile {
         subtitle.setStyle("-fx-font-size: 13px;-fx-text-fill: #263238;" );
 
         
-
         VBox profileCard = new VBox();
         profileCard.setPadding(new Insets(25));
         profileCard.setSpacing(20);
         profileCard.setMaxWidth( 900);
 
-        profileCard.setStyle("-fx-background-color: #F4F7F8;-fx-background-radius: 12;");
+        profileCard.setStyle("-fx-background-color: #a47970;-fx-background-radius: 12;");
 
         
         Label profileTitle = new Label( "Personal Information");
         profileTitle.setStyle( "-fx-font-size: 18px;-fx-font-weight: bold;-fx-text-fill: #102A43;");
 
         Label profileSubtitle = new Label("Your registered owner information" );
-        profileSubtitle.setStyle("-fx-font-size: 12px;-fx-text-fill: #546E7A;");
+        profileSubtitle.setStyle("-fx-font-size: 12px;-fx-text-fill: #102A43;");
 
         VBox profileHeading = new VBox(4, profileTitle,profileSubtitle);
 
@@ -216,7 +214,6 @@ public class OwnerProfile {
         form.add(ownerIdField,1, 5);
 
         
-
         Button editButton =new Button("Edit Profile");
         Button saveButton =new Button("Save Changes");
 
@@ -283,6 +280,16 @@ public class OwnerProfile {
                 profileCard
         );
 
+        // ===== PROFILE PAGE ANIMATION =====
+
+        animateHeader(header);
+
+        animateProfileCard(profileCard);
+
+        animateButton(editButton);
+
+        animateButton(saveButton);
+
         
         BorderPane mainarea = new BorderPane();
        mainarea.setTop(header);
@@ -305,4 +312,96 @@ public class OwnerProfile {
                 "-fx-font-size: 12px;-fx-font-weight: bold;-fx-text-fill: #37474F;"
         );
     }
+
+    // ================= HEADER ANIMATION =================
+
+private static void animateHeader(HBox header) {
+
+    header.setOpacity(0);
+    header.setTranslateY(-25);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(500),
+            header
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+
+    TranslateTransition slide = new TranslateTransition(
+            Duration.millis(500),
+            header
+    );
+
+    slide.setFromY(-25);
+    slide.setToY(0);
+
+    fade.play();
+    slide.play();
+}
+
+
+// ================= PROFILE CARD ANIMATION =================
+
+private static void animateProfileCard(VBox profileCard) {
+
+    profileCard.setOpacity(0);
+    profileCard.setTranslateY(35);
+
+    FadeTransition fade = new FadeTransition(
+            Duration.millis(700),
+            profileCard
+    );
+
+    fade.setFromValue(0);
+    fade.setToValue(1);
+    fade.setDelay(Duration.millis(250));
+
+    TranslateTransition slide = new TranslateTransition(
+            Duration.millis(700),
+            profileCard
+    );
+
+    slide.setFromY(35);
+    slide.setToY(0);
+    slide.setDelay(Duration.millis(250));
+
+    fade.play();
+    slide.play();
+}
+
+
+// ================= BUTTON HOVER ANIMATION =================
+
+private static void animateButton(Button button) {
+
+    button.setOnMouseEntered(e -> {
+
+        if (!button.isDisabled()) {
+
+            ScaleTransition scale = new ScaleTransition(
+                    Duration.millis(120),
+                    button
+            );
+
+            scale.setToX(1.05);
+            scale.setToY(1.05);
+
+            scale.play();
+        }
+    });
+
+    button.setOnMouseExited(e -> {
+
+        ScaleTransition scale = new ScaleTransition(
+                Duration.millis(120),
+                button
+        );
+
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+
+        scale.play();
+    });
+}
 }

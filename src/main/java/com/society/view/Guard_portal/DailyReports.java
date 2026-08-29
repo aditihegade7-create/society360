@@ -7,6 +7,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -20,6 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import com.society.view.ScreenSize;
+import com.society.view.Resident_portal.Community;
 
 public class DailyReports {
 
@@ -32,9 +39,28 @@ public class DailyReports {
         root.setLeft(sidebar.getSidebar());
 
         VBox content = new VBox();
-        content.setPadding(new Insets(25, 40, 25, 40));
-        content.setSpacing(18);
-        content.setStyle("-fx-background-color: #e8ddd5;");
+        //content.setPadding(new Insets(25, 40, 25, 40));
+        //content.setSpacing(18);
+        //content.setStyle("-fx-background-color: #e8ddd5;");
+
+        content.setPadding(new Insets(25, 35, 25, 35));
+        content.setSpacing(20);
+        content.setAlignment(Pos.TOP_LEFT);
+
+        Image image = new Image(
+        DailyReports.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
+        );
+
+        content.setBackground(new Background(backgroundImage));
 
 
        HBox header = new HBox();

@@ -12,6 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -46,14 +52,25 @@ private Scene residentDashboardScene;
         // ================= MAIN CONTENT =================
 
         VBox mainContent = new VBox(20);
+ mainContent.setPadding(new Insets(25, 35, 25, 35));
+        mainContent.setSpacing(20);
+        mainContent.setAlignment(Pos.TOP_LEFT);
 
-        mainContent.setPadding(
-                new Insets(25, 30, 25, 30)
+        Image image = new Image(
+        ResidentDashboard.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
         );
 
-        mainContent.setStyle(
-                "-fx-background-color: #e8ddd5;"
-        );
+        mainContent.setBackground(new Background(backgroundImage));
+
 
         // ================= HEADER =================
 

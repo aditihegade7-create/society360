@@ -8,6 +8,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -35,18 +41,24 @@ public class ManualVisitorEntry {
         root.setLeft(sidebar.getSidebar());
 
         VBox content = new VBox();
+        content.setPadding(new Insets(25, 35, 25, 35));
+        content.setSpacing(20);
+        content.setAlignment(Pos.TOP_LEFT);
 
-        content.setPadding(
-                new Insets(25, 40, 25, 40)
+        Image image = new Image(
+        ManualVisitorEntry.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
         );
 
-        content.setSpacing(18);
-
-        content.setFillWidth(true);
-
-        content.setStyle(
-                "-fx-background-color: #e8ddd5;"
-        );
+        content.setBackground(new Background(backgroundImage));
 
         HBox header = new HBox();
 header.setPadding(new Insets(25, 35, 25, 35));

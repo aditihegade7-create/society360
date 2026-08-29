@@ -14,6 +14,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -41,8 +47,27 @@ public class Complaint {
         // ================= MAIN CONTENT =================
         HBox mainArea = new HBox(25);
 
-        mainArea.setPadding(new Insets(25, 35, 25, 35));
-        mainArea.setStyle("-fx-background-color: #e8ddd5");
+       // mainArea.setPadding(new Insets(25, 35, 25, 35));
+        //mainArea.setStyle("-fx-background-color: #e8ddd5");
+
+         mainArea.setPadding(new Insets(25, 35, 25, 35));
+        mainArea.setSpacing(20);
+        mainArea.setAlignment(Pos.TOP_LEFT);
+
+        Image image = new Image(
+        Complaint.class.getResource("/background-Dashboard5.jpeg").toExternalForm());
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
+        );
+
+        mainArea.setBackground(new Background(backgroundImage));
 
         // =================================================
         // LEFT SIDE - RAISE COMPLAINT FORM
