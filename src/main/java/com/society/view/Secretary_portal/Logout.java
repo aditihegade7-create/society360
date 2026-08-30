@@ -87,21 +87,7 @@ public class Logout {
                 "-fx-text-fill:#777777;"
         );
 
-        // BUTTONS
-
-        Button cancelBtn =
-                new Button("Cancel");
-
-        cancelBtn.setPrefWidth(120);
-        cancelBtn.setPrefHeight(40);
-        cancelBtn.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-text-fill:#123C36;" +
-                "-fx-font-weight:bold;" +
-                "-fx-border-color:#0B4F4A;" +
-                "-fx-border-radius:7;" +
-                "-fx-background-radius:7;"
-        );
+        // BUTTON
 
 
         Button logoutBtn =
@@ -122,21 +108,8 @@ public class Logout {
                 Pos.CENTER
         );
         buttons.getChildren().addAll(
-                cancelBtn,
                 logoutBtn
         );
-
-
-        // CANCEL ACTION
-
-        cancelBtn.setOnAction(e -> {
-            SecretaryDashboard dashboard =
-                    new SecretaryDashboard();
-
-            stage.setScene(
-                    dashboard.createScene(stage)
-            );
-        });
 
 
         // LOGOUT ACTION

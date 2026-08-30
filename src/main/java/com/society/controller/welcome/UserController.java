@@ -242,6 +242,10 @@ public class UserController {
         }
     }
 
+    public User getResidentByFlatNo(String flatNo) {
+
+        return dao.getResidentByFlatNo(flatNo);
+    }
     // =====================================================
     // DELETE USER
     // =====================================================
