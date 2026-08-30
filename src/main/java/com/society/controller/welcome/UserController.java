@@ -16,7 +16,9 @@ public class UserController {
     // =====================================================
     // ADD USER
     // =====================================================
-    public boolean addUser(
+    public boolean 
+    
+    addUser(
             String name,
             String email,
             String password,

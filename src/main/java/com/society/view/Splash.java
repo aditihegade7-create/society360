@@ -205,13 +205,12 @@ public class Splash extends Application {
         // =====================================================
 
         Scene scene = new Scene(
-                root,
-                1100,
-                700
+                root
         );
 
 
         stage.setTitle("Society360");
+        stage.setMaximized(true);
 
         stage.setScene(scene);
 

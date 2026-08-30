@@ -207,8 +207,8 @@ private Scene residentDashboardScene;
 
         bookAmenity.setOnAction(e -> {
 
-            Aminity booking =
-                    new Aminity();
+            AmenitiesBooking booking =
+                    new AmenitiesBooking();
 
             stage.setScene( booking.getAminityScene(stage));
         });

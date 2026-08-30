@@ -2,6 +2,11 @@ package com.society.view.Resident_portal;
 
 import javafx.scene.layout.Region;
 
+import com.google.cloud.firestore.Firestore;
+import com.society.config.FirebaseConfig;
+import com.society.controller.Resident_Controller.ComplaintController;
+import com.society.dao.Resident_dao.ComplaintDAO;
+import com.society.model.Resident_model.ComplaintModel;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
@@ -24,10 +29,30 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class Complaint {
-    public Scene getComplaintScene(Stage stage){
 
+    private final ComplaintController complaintController;
 
+    // Change this later to logged-in resident flat
+    private final String currentFlatNumber = "A-201";
 
+    // Selected image file
+    private java.io.File selectedFile;
+
+    public Complaint() {
+
+        Firestore firestore =
+                FirebaseConfig.getFirestore();
+
+        ComplaintDAO complaintDAO =
+                new ComplaintDAO(firestore);
+
+        complaintController =
+                new ComplaintController(
+                        complaintDAO
+                );
+    }
+
+    public Scene getComplaintScene(Stage stage) {
 
         // ================= SIDEBAR =================
         panel panelobj = new panel(stage);
@@ -35,14 +60,18 @@ public class Complaint {
         // ================= ROOT =================
         BorderPane root = new BorderPane();
 
-        // Existing sidebar
         root.setLeft(panelobj.getSidebar());
 
         // ================= MAIN CONTENT =================
         HBox mainArea = new HBox(25);
 
-        mainArea.setPadding(new Insets(25, 35, 25, 35));
-        mainArea.setStyle("-fx-background-color: #e8ddd5");
+        mainArea.setPadding(
+                new Insets(25, 35, 25, 35)
+        );
+
+        mainArea.setStyle(
+                "-fx-background-color: #e8ddd5"
+        );
 
         // =================================================
         // LEFT SIDE - RAISE COMPLAINT FORM
@@ -52,23 +81,43 @@ public class Complaint {
 
         formBox.setPrefWidth(500);
 
-        Label title = new Label("Raise a Complaint");
-        title.setFont(Font.font("System", FontWeight.BOLD, 24));
-        title.setTextFill(Color.web("#172B4D"));
+        Label title =
+                new Label("Raise a Complaint");
 
-        Label subtitle = new Label(
-                "Report an issue to the society management"
+        title.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        24
+                )
         );
 
+        title.setTextFill(
+                Color.web("#172B4D")
+        );
+
+        Label subtitle =
+                new Label(
+                        "Report an issue to the society management"
+                );
+
         subtitle.setTextFill(Color.GRAY);
-        subtitle.setFont(Font.font("System", 13));
 
-        // Complaint Category
-        Label categoryLabel = new Label("Complaint Category");
+        subtitle.setFont(
+                Font.font("System", 13)
+        );
 
-        ComboBox<String> category = new ComboBox<>();
+        // ================= CATEGORY =================
 
-        category.setPromptText("Select Category");
+        Label categoryLabel =
+                new Label("Complaint Category");
+
+        ComboBox<String> category =
+                new ComboBox<>();
+
+        category.setPromptText(
+                "Select Category"
+        );
 
         category.getItems().addAll(
                 "Maintenance",
@@ -81,14 +130,19 @@ public class Complaint {
                 "Other"
         );
 
-        category.setMaxWidth(Double.MAX_VALUE);
+        category.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         category.setPrefHeight(38);
 
-        // Complaint Title
+        // ================= TITLE =================
+
         Label complaintTitleLabel =
                 new Label("Complaint Title");
 
-        TextField complaintTitle = new TextField();
+        TextField complaintTitle =
+                new TextField();
 
         complaintTitle.setPromptText(
                 "Brief title of your complaint"
@@ -96,11 +150,13 @@ public class Complaint {
 
         complaintTitle.setPrefHeight(38);
 
-        // Description
+        // ================= DESCRIPTION =================
+
         Label descriptionLabel =
                 new Label("Description");
 
-        TextArea description = new TextArea();
+        TextArea description =
+                new TextArea();
 
         description.setPromptText(
                 "Describe your issue in detail"
@@ -110,27 +166,37 @@ public class Complaint {
 
         description.setWrapText(true);
 
-        // Upload Image
-        Label imageLabel =
-                new Label("Upload Image (Optional)");
+        // ================= IMAGE =================
 
-        Button chooseFile = new Button("Choose File");
+        Label imageLabel =
+                new Label(
+                        "Upload Image (Optional)"
+                );
+
+        Button chooseFile =
+                new Button("Choose File");
 
         Label fileName =
                 new Label("No file chosen");
 
-        fileName.setTextFill(Color.GRAY);
+        fileName.setTextFill(
+                Color.GRAY
+        );
 
-        HBox fileBox = new HBox(10);
+        HBox fileBox =
+                new HBox(10);
 
-        fileBox.setAlignment(Pos.CENTER_LEFT);
+        fileBox.setAlignment(
+                Pos.CENTER_LEFT
+        );
 
         fileBox.getChildren().addAll(
                 chooseFile,
                 fileName
         );
 
-        // File chooser
+        // ================= FILE CHOOSER =================
+
         chooseFile.setOnAction(e -> {
 
             javafx.stage.FileChooser fileChooser =
@@ -140,32 +206,42 @@ public class Complaint {
                     "Select Complaint Image"
             );
 
-            java.io.File file =
+            selectedFile =
                     fileChooser.showOpenDialog(stage);
 
-            if (file != null) {
-                fileName.setText(file.getName());
+            if (selectedFile != null) {
+
+                fileName.setText(
+                        selectedFile.getName()
+                );
             }
         });
 
-        // Preferred Date
+        // ================= DATE =================
+
         Label dateLabel =
                 new Label("Preferred Date");
 
         DatePicker preferredDate =
                 new DatePicker();
 
-        preferredDate.setPromptText("Select date");
+        preferredDate.setPromptText(
+                "Select date"
+        );
 
-        preferredDate.setMaxWidth(Double.MAX_VALUE);
+        preferredDate.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
         preferredDate.setPrefHeight(38);
 
-        // Buttons
+        // ================= BUTTONS =================
+
         Button clearButton =
                 new Button("Clear");
 
         clearButton.setPrefWidth(90);
+
         clearButton.setPrefHeight(35);
 
         clearButton.setStyle(
@@ -179,6 +255,7 @@ public class Complaint {
                 new Button("Submit Complaint");
 
         submitButton.setPrefWidth(145);
+
         submitButton.setPrefHeight(35);
 
         submitButton.setStyle(
@@ -188,38 +265,55 @@ public class Complaint {
                 "-fx-background-radius: 5;"
         );
 
-        HBox buttonBox = new HBox(10);
+        HBox buttonBox =
+                new HBox(10);
 
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        buttonBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
 
         buttonBox.getChildren().addAll(
                 clearButton,
                 submitButton
         );
 
-        // Clear
+        // ================= CLEAR =================
+
         clearButton.setOnAction(e -> {
 
             category.setValue(null);
+
             complaintTitle.clear();
+
             description.clear();
+
             preferredDate.setValue(null);
 
-            fileName.setText("No file chosen");
+            selectedFile = null;
+
+            fileName.setText(
+                    "No file chosen"
+            );
         });
 
-        // Submit
+        // ================= SUBMIT =================
+
         submitButton.setOnAction(e -> {
 
             if (category.getValue() == null
-                    || complaintTitle.getText().isEmpty()
-                    || description.getText().isEmpty()
+                    || complaintTitle.getText().trim().isEmpty()
+                    || description.getText().trim().isEmpty()
                     || preferredDate.getValue() == null) {
 
                 Alert alert =
-                        new Alert(Alert.AlertType.WARNING);
+                        new Alert(
+                                Alert.AlertType.WARNING
+                        );
 
-                alert.setTitle("Missing Information");
+                alert.setTitle(
+                        "Missing Information"
+                );
+
                 alert.setHeaderText(null);
 
                 alert.setContentText(
@@ -230,33 +324,124 @@ public class Complaint {
 
             } else {
 
-                Alert alert =
-                        new Alert(Alert.AlertType.INFORMATION);
+                try {
 
-                alert.setTitle("Complaint Submitted");
-                alert.setHeaderText(null);
+                    String date =
+                            preferredDate
+                                    .getValue()
+                                    .toString();
 
-                alert.setContentText(
-                        "Your complaint has been submitted successfully."
-                );
+                    String imageName = "";
 
-                alert.showAndWait();
+                    if (selectedFile != null) {
+
+                        imageName =
+                                selectedFile.getName();
+                    }
+
+                    ComplaintModel complaint =
+                            complaintController.submitComplaint(
+
+                                    currentFlatNumber,
+
+                                    category.getValue(),
+
+                                    complaintTitle
+                                            .getText()
+                                            .trim(),
+
+                                    description
+                                            .getText()
+                                            .trim(),
+
+                                    imageName,
+
+                                    date
+                            );
+
+                    Alert alert =
+                            new Alert(
+                                    Alert.AlertType.INFORMATION
+                            );
+
+                    alert.setTitle(
+                            "Complaint Submitted"
+                    );
+
+                    alert.setHeaderText(null);
+
+                    alert.setContentText(
+                            "Your complaint has been submitted successfully."
+                    );
+
+                    alert.showAndWait();
+
+                    // Clear form after successful submission
+                    category.setValue(null);
+
+                    complaintTitle.clear();
+
+                    description.clear();
+
+                    preferredDate.setValue(null);
+
+                    selectedFile = null;
+
+                    fileName.setText(
+                            "No file chosen"
+                    );
+
+                } catch (Exception ex) {
+
+                    ex.printStackTrace();
+
+                    Alert alert =
+                            new Alert(
+                                    Alert.AlertType.ERROR
+                            );
+
+                    alert.setTitle(
+                            "Error"
+                    );
+
+                    alert.setHeaderText(null);
+
+                    alert.setContentText(
+                            "Failed to save complaint:\n"
+                                    + ex.getMessage()
+                    );
+
+                    alert.showAndWait();
+                }
             }
         });
 
         formBox.getChildren().addAll(
-               title,
+
+                title,
+
                 subtitle,
+
                 categoryLabel,
+
                 category,
+
                 complaintTitleLabel,
+
                 complaintTitle,
+
                 descriptionLabel,
+
                 description,
+
                 imageLabel,
+
                 fileBox,
+
                 dateLabel,
+
                 preferredDate,
+
                 buttonBox
         );
 
@@ -281,45 +466,57 @@ public class Complaint {
         );
 
         Label viewAll =
-                new Label("View all your raised complaints");
+                new Label(
+                        "View all your raised complaints"
+                );
 
-        viewAll.setTextFill(Color.GRAY);
+        viewAll.setTextFill(
+                Color.GRAY
+        );
 
         // Complaint 1
-        VBox complaint1 = createComplaint(
-                "Lift not working",
-                "A-201",
-                "10 May 2025",
-                "In Progress",
-                "#FFF0D6",
-                "#D97706"
-        );
+        VBox complaint1 =
+                createComplaint(
+                        "Lift not working",
+                        "A-201",
+                        "10 May 2025",
+                        "In Progress",
+                        "#FFF0D6",
+                        "#D97706"
+                );
 
         // Complaint 2
-        VBox complaint2 = createComplaint(
-                "Water leakage in lobby",
-                "A-198",
-                "08 May 2025",
-                "Resolved",
-                "#DFF6E5",
-                "#16803C"
-        );
+        VBox complaint2 =
+                createComplaint(
+                        "Water leakage in lobby",
+                        "A-198",
+                        "08 May 2025",
+                        "Resolved",
+                        "#DFF6E5",
+                        "#16803C"
+                );
 
         // Complaint 3
-        VBox complaint3 = createComplaint(
-                "Garbage not cleared",
-                "A-192",
-                "02 May 2025",
-                "Closed",
-                "#EEF0F3",
-                "#6B7280"
-        );
+        VBox complaint3 =
+                createComplaint(
+                        "Garbage not cleared",
+                        "A-192",
+                        "02 May 2025",
+                        "Closed",
+                        "#EEF0F3",
+                        "#6B7280"
+                );
 
         complaintsBox.getChildren().addAll(
+
                 myComplaints,
+
                 viewAll,
+
                 complaint1,
+
                 complaint2,
+
                 complaint3
         );
 
@@ -330,23 +527,45 @@ public class Complaint {
                 complaintsBox
         );
 
-Label newlLabel = new Label("Complaints ");
- newlLabel.setFont(Font.font("System", FontWeight.BOLD, 24));
-        newlLabel.setTextFill(Color.web("#172B4D"));
+        Label newlLabel =
+                new Label("Complaints ");
 
+        newlLabel.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        24
+                )
+        );
 
-        
- BorderPane mainarea2 = new BorderPane();
- mainarea2.setTop(newlLabel);
-mainarea2.setCenter(mainArea);
-newlLabel.setStyle("-fx-background-color: #765252");
-        root.setCenter(mainarea2);
-      
+        newlLabel.setTextFill(
+                Color.web("#172B4D")
+        );
+
+        BorderPane mainarea2 =
+                new BorderPane();
+
+        mainarea2.setTop(
+                newlLabel
+        );
+
+        mainarea2.setCenter(
+                mainArea
+        );
+
+        newlLabel.setStyle(
+                "-fx-background-color: #765252"
+        );
+
+        root.setCenter(
+                mainarea2
+        );
+
         return new Scene(
                 root,
-                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
-        
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+        );
     }
 
     // =====================================================
@@ -361,9 +580,12 @@ newlLabel.setStyle("-fx-background-color: #765252");
             String background,
             String textColor) {
 
-        VBox card = new VBox(8);
+        VBox card =
+                new VBox(8);
 
-        card.setPadding(new Insets(15));
+        card.setPadding(
+                new Insets(15)
+        );
 
         card.setStyle(
                 "-fx-background-color: white;" +
@@ -388,16 +610,18 @@ newlLabel.setStyle("-fx-background-color: #765252");
                         flat + "        " + date
                 );
 
-        details.setTextFill(Color.GRAY);
+        details.setTextFill(
+                Color.GRAY
+        );
 
         Label statusLabel =
                 new Label(status);
 
         statusLabel.setStyle(
-                "-fx-background-color: " +
-                background + ";" +
-                "-fx-text-fill: " +
-                textColor + ";" +
+                "-fx-background-color: "
+                        + background + ";" +
+                "-fx-text-fill: "
+                        + textColor + ";" +
                 "-fx-padding: 5 10 5 10;" +
                 "-fx-background-radius: 12;"
         );
@@ -409,7 +633,8 @@ newlLabel.setStyle("-fx-background-color: #765252");
                 Pos.CENTER_LEFT
         );
 
-        Region spacer = new Region();
+        Region spacer =
+                new Region();
 
         HBox.setHgrow(
                 spacer,
@@ -430,7 +655,3 @@ newlLabel.setStyle("-fx-background-color: #765252");
         return card;
     }
 }
-
-
-
-   

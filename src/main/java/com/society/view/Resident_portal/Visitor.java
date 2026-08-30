@@ -1,8 +1,14 @@
 package com.society.view.Resident_portal;
 
-
+import com.google.cloud.firestore.Firestore;
+import com.society.controller.Resident_Controller.VisitorController;
+import com.society.dao.Resident_dao.VisitorDAO;
+import com.society.model.Resident_model.VisitorModel;
+import com.society.util.resident_util.QRCodeUtil;
+import com.society.config.FirebaseConfig;
 import com.society.view.ScreenSize;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +18,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -21,82 +29,204 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
 import javafx.stage.Stage;
 
+import java.nio.file.Path;
+import java.util.List;
+
 public class Visitor {
-    public Scene getVisitorScene(Stage stage){
-        panel panelobj = new panel(stage);
- 
 
+    private VisitorController visitorController;
 
- 
+    public Scene getVisitorScene(Stage stage) {
 
-    
-        // ================= SIDEBAR =================
-        
+        /*
+         * USE YOUR EXISTING FIREBASE CONFIG
+         */
+        Firestore firestore =
+                FirebaseConfig.getFirestore();
 
-        // ================= MAIN CONTENT =================
-        BorderPane root = new BorderPane();
+        /*
+         * DAO
+         */
+        VisitorDAO visitorDAO =
+                new VisitorDAO(firestore);
 
-        root.setLeft(panelobj.getSidebar());
+        /*
+         * CONTROLLER
+         */
+        visitorController =
+                new VisitorController(visitorDAO);
 
-        VBox mainContent = new VBox(18);
-        mainContent.setPadding(new Insets(25, 35, 25, 35));
-        mainContent.setStyle("-fx-background-color: #e8ddd5;");
+        panel panelobj =
+                new panel(stage);
+
+        BorderPane root =
+                new BorderPane();
+
+        root.setLeft(
+                panelobj.getSidebar()
+        );
+
+        VBox mainContent =
+                new VBox(18);
+
+        mainContent.setPadding(
+                new Insets(
+                        25,
+                        35,
+                        25,
+                        35
+                )
+        );
+
+        mainContent.setStyle(
+                "-fx-background-color: #e8ddd5;"
+        );
 
         // ================= TITLE =================
-        Label title = new Label("Invite / Pre-Approve Visitor");
-        title.setFont(Font.font("System", FontWeight.BOLD, 24));
-        title.setTextFill(Color.web("#172B4D"));
 
-        Label subtitle = new Label("Add visitor details to allow entry");
-        subtitle.setFont(Font.font("System", 13));
-        subtitle.setTextFill(Color.GRAY);
+        Label title =
+                new Label(
+                        "Invite / Pre-Approve Visitor"
+                );
 
-        VBox heading = new VBox(5);
-        heading.getChildren().addAll(title, subtitle);
+        title.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        24
+                )
+        );
+
+        title.setTextFill(
+                Color.web("#172B4D")
+        );
+
+        Label subtitle =
+                new Label(
+                        "Add visitor details to allow entry"
+                );
+
+        subtitle.setFont(
+                Font.font(
+                        "System",
+                        13
+                )
+        );
+
+        subtitle.setTextFill(
+                Color.GRAY
+        );
+
+        VBox heading =
+                new VBox(5);
+
+        heading.getChildren().addAll(
+                title,
+                subtitle
+        );
 
         // ================= FORM =================
-        GridPane form = new GridPane();
+
+        GridPane form =
+                new GridPane();
 
         form.setHgap(25);
         form.setVgap(15);
 
-        ColumnConstraints col1 = new ColumnConstraints();
+        ColumnConstraints col1 =
+                new ColumnConstraints();
+
         col1.setPercentWidth(50);
 
-        ColumnConstraints col2 = new ColumnConstraints();
+        ColumnConstraints col2 =
+                new ColumnConstraints();
+
         col2.setPercentWidth(50);
 
-        form.getColumnConstraints().addAll(col1, col2);
+        form.getColumnConstraints()
+                .addAll(
+                        col1,
+                        col2
+                );
 
-        // Visitor Name
-        Label visitorNameLabel = new Label("Visitor Name");
-        TextField visitorName = new TextField();
-        visitorName.setPromptText("Enter full name");
+        // ================= NAME =================
+
+        Label visitorNameLabel =
+                new Label(
+                        "Visitor Name"
+                );
+
+        TextField visitorName =
+                new TextField();
+
+        visitorName.setPromptText(
+                "Enter full name"
+        );
+
         visitorName.setPrefHeight(38);
 
-        VBox visitorNameBox = new VBox(6);
-        visitorNameBox.getChildren().addAll(visitorNameLabel, visitorName);
+        VBox visitorNameBox =
+                new VBox(6);
 
-        // Phone Number
-        Label phoneLabel = new Label("Phone Number");
-        TextField phoneNumber = new TextField();
-        phoneNumber.setPromptText("Enter mobile number");
+        visitorNameBox.getChildren()
+                .addAll(
+                        visitorNameLabel,
+                        visitorName
+                );
+
+        // ================= PHONE =================
+
+        Label phoneLabel =
+                new Label(
+                        "Phone Number"
+                );
+
+        TextField phoneNumber =
+                new TextField();
+
+        phoneNumber.setPromptText(
+                "Enter mobile number"
+        );
+
         phoneNumber.setPrefHeight(38);
 
-        VBox phoneBox = new VBox(6);
-        phoneBox.getChildren().addAll(phoneLabel, phoneNumber);
+        VBox phoneBox =
+                new VBox(6);
 
-        form.add(visitorNameBox, 0, 0);
-        form.add(phoneBox, 1, 0);
+        phoneBox.getChildren()
+                .addAll(
+                        phoneLabel,
+                        phoneNumber
+                );
 
-        // Purpose
-        Label purposeLabel = new Label("Purpose of Visit");
+        form.add(
+                visitorNameBox,
+                0,
+                0
+        );
 
-        ComboBox<String> purpose = new ComboBox<>();
-        purpose.setPromptText("Select purpose");
+        form.add(
+                phoneBox,
+                1,
+                0
+        );
+
+        // ================= PURPOSE =================
+
+        Label purposeLabel =
+                new Label(
+                        "Purpose of Visit"
+                );
+
+        ComboBox<String> purpose =
+                new ComboBox<>();
+
+        purpose.setPromptText(
+                "Select purpose"
+        );
+
         purpose.getItems().addAll(
                 "Personal Visit",
                 "Family Visit",
@@ -104,31 +234,77 @@ public class Visitor {
                 "Delivery",
                 "Other"
         );
-        purpose.setMaxWidth(Double.MAX_VALUE);
+
+        purpose.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         purpose.setPrefHeight(38);
 
-        VBox purposeBox = new VBox(6);
-        purposeBox.getChildren().addAll(purposeLabel, purpose);
+        VBox purposeBox =
+                new VBox(6);
 
-        // Visit Date
-        Label dateLabel = new Label("Visit Date");
+        purposeBox.getChildren()
+                .addAll(
+                        purposeLabel,
+                        purpose
+                );
 
-        DatePicker visitDate = new DatePicker();
-        visitDate.setPromptText("Select date");
-        visitDate.setMaxWidth(Double.MAX_VALUE);
+        // ================= DATE =================
+
+        Label dateLabel =
+                new Label(
+                        "Visit Date"
+                );
+
+        DatePicker visitDate =
+                new DatePicker();
+
+        visitDate.setPromptText(
+                "Select date"
+        );
+
+        visitDate.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         visitDate.setPrefHeight(38);
 
-        VBox dateBox = new VBox(6);
-        dateBox.getChildren().addAll(dateLabel, visitDate);
+        VBox dateBox =
+                new VBox(6);
 
-        form.add(purposeBox, 0, 1);
-        form.add(dateBox, 1, 1);
+        dateBox.getChildren()
+                .addAll(
+                        dateLabel,
+                        visitDate
+                );
 
-        // Visit Time
-        Label timeLabel = new Label("Visit Time");
+        form.add(
+                purposeBox,
+                0,
+                1
+        );
 
-        ComboBox<String> visitTime = new ComboBox<>();
-        visitTime.setPromptText("Select time");
+        form.add(
+                dateBox,
+                1,
+                1
+        );
+
+        // ================= TIME =================
+
+        Label timeLabel =
+                new Label(
+                        "Visit Time"
+                );
+
+        ComboBox<String> visitTime =
+                new ComboBox<>();
+
+        visitTime.setPromptText(
+                "Select time"
+        );
+
         visitTime.getItems().addAll(
                 "08:00 AM",
                 "09:00 AM",
@@ -144,17 +320,36 @@ public class Visitor {
                 "07:00 PM",
                 "08:00 PM"
         );
-        visitTime.setMaxWidth(Double.MAX_VALUE);
+
+        visitTime.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         visitTime.setPrefHeight(38);
 
-        VBox timeBox = new VBox(6);
-        timeBox.getChildren().addAll(timeLabel, visitTime);
+        VBox timeBox =
+                new VBox(6);
 
-        // Flat Visit
-        Label flatLabel = new Label("Flat Visit");
+        timeBox.getChildren()
+                .addAll(
+                        timeLabel,
+                        visitTime
+                );
 
-        ComboBox<String> flatVisit = new ComboBox<>();
-        flatVisit.setPromptText("Select flat to visit");
+        // ================= FLAT =================
+
+        Label flatLabel =
+                new Label(
+                        "Flat Visit"
+                );
+
+        ComboBox<String> flatVisit =
+                new ComboBox<>();
+
+        flatVisit.setPromptText(
+                "Select flat to visit"
+        );
+
         flatVisit.getItems().addAll(
                 "A-101",
                 "A-102",
@@ -163,51 +358,121 @@ public class Visitor {
                 "B-102",
                 "B-103"
         );
-        flatVisit.setMaxWidth(Double.MAX_VALUE);
+
+        flatVisit.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         flatVisit.setPrefHeight(38);
 
-        VBox flatBox = new VBox(6);
-        flatBox.getChildren().addAll(flatLabel, flatVisit);
+        VBox flatBox =
+                new VBox(6);
 
-        form.add(timeBox, 0, 2);
-        form.add(flatBox, 1, 2);
+        flatBox.getChildren()
+                .addAll(
+                        flatLabel,
+                        flatVisit
+                );
 
-        // Gate Entry
-        Label gateLabel = new Label("Gate Entry");
+        form.add(
+                timeBox,
+                0,
+                2
+        );
 
-        ComboBox<String> gateEntry = new ComboBox<>();
-        gateEntry.setPromptText("Select Gate");
+        form.add(
+                flatBox,
+                1,
+                2
+        );
+
+        // ================= GATE =================
+
+        Label gateLabel =
+                new Label(
+                        "Gate Entry"
+                );
+
+        ComboBox<String> gateEntry =
+                new ComboBox<>();
+
+        gateEntry.setPromptText(
+                "Select Gate"
+        );
+
         gateEntry.getItems().addAll(
                 "Main Gate",
                 "Gate 2",
                 "Service Gate"
         );
-        gateEntry.setMaxWidth(Double.MAX_VALUE);
-        gateEntry.setPrefHeight(38);
 
-        VBox gateBox = new VBox(6);
-        gateBox.getChildren().addAll(gateLabel, gateEntry);
-
-        // Vehicle Number
-        Label vehicleLabel = new Label("Vehicle Number (Optional)");
-
-        TextField vehicleNumber = new TextField();
-        vehicleNumber.setPromptText("Enter vehicle number");
-        vehicleNumber.setPrefHeight(38);
-
-        VBox vehicleBox = new VBox(6);
-        vehicleBox.getChildren().addAll(vehicleLabel, vehicleNumber);
-
-        form.add(gateBox, 0, 3);
-        form.add(vehicleBox, 1, 3);
-
-        // ================= NOTE =================
-        Label note = new Label(
-                "Note: Visitor will receive a QR code / OTP for gate entry."
+        gateEntry.setMaxWidth(
+                Double.MAX_VALUE
         );
 
-        note.setPadding(new Insets(10));
-        note.setMaxWidth(Double.MAX_VALUE);
+        gateEntry.setPrefHeight(38);
+
+        VBox gateBox =
+                new VBox(6);
+
+        gateBox.getChildren()
+                .addAll(
+                        gateLabel,
+                        gateEntry
+                );
+
+        // ================= VEHICLE =================
+
+        Label vehicleLabel =
+                new Label(
+                        "Vehicle Number (Optional)"
+                );
+
+        TextField vehicleNumber =
+                new TextField();
+
+        vehicleNumber.setPromptText(
+                "Enter vehicle number"
+        );
+
+        vehicleNumber.setPrefHeight(38);
+
+        VBox vehicleBox =
+                new VBox(6);
+
+        vehicleBox.getChildren()
+                .addAll(
+                        vehicleLabel,
+                        vehicleNumber
+                );
+
+        form.add(
+                gateBox,
+                0,
+                3
+        );
+
+        form.add(
+                vehicleBox,
+                1,
+                3
+        );
+
+        // ================= NOTE =================
+
+        Label note =
+                new Label(
+                        "Note: Visitor will receive a QR code / OTP for gate entry."
+                );
+
+        note.setPadding(
+                new Insets(10)
+        );
+
+        note.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         note.setStyle(
                 "-fx-background-color: #EAF2FF;" +
                 "-fx-text-fill: #315B9A;" +
@@ -216,7 +481,10 @@ public class Visitor {
         );
 
         // ================= BUTTONS =================
-        Button clearBtn = new Button("Clear");
+
+        Button clearBtn =
+                new Button("Clear");
+
         clearBtn.setPrefWidth(90);
         clearBtn.setPrefHeight(35);
 
@@ -227,7 +495,9 @@ public class Visitor {
                 "-fx-background-radius: 5;"
         );
 
-        Button sendInviteBtn = new Button("Send Invite");
+        Button sendInviteBtn =
+                new Button("Send Invite");
+
         sendInviteBtn.setPrefWidth(120);
         sendInviteBtn.setPrefHeight(35);
 
@@ -238,12 +508,23 @@ public class Visitor {
                 "-fx-background-radius: 5;"
         );
 
-        HBox buttons = new HBox(10);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
-        buttons.getChildren().addAll(clearBtn, sendInviteBtn);
+        HBox buttons =
+                new HBox(10);
 
-        // Clear button
+        buttons.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        buttons.getChildren()
+                .addAll(
+                        clearBtn,
+                        sendInviteBtn
+                );
+
+        // ================= CLEAR =================
+
         clearBtn.setOnAction(e -> {
+
             visitorName.clear();
             phoneNumber.clear();
             vehicleNumber.clear();
@@ -255,101 +536,374 @@ public class Visitor {
             gateEntry.setValue(null);
         });
 
-        // Send Invite button
+        // ================= SEND INVITE =================
+
         sendInviteBtn.setOnAction(e -> {
 
-            if (visitorName.getText().isEmpty()
-                    || phoneNumber.getText().isEmpty()
+            // VALIDATION
+
+            if (visitorName.getText()
+                    .trim()
+                    .isEmpty()
+                    || phoneNumber.getText()
+                    .trim()
+                    .isEmpty()
                     || purpose.getValue() == null
                     || visitDate.getValue() == null
                     || visitTime.getValue() == null
                     || flatVisit.getValue() == null
                     || gateEntry.getValue() == null) {
 
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Missing Information");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill all required visitor details.");
-                alert.showAndWait();
-
-            } else {
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Invitation Sent");
-                alert.setHeaderText(null);
-                alert.setContentText(
-                        "Visitor invitation sent successfully!"
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Missing Information",
+                        "Please fill all required visitor details."
                 );
-                alert.showAndWait();
+
+                return;
             }
+
+            // PHONE VALIDATION
+
+            if (!phoneNumber.getText()
+                    .trim()
+                    .matches("\\d{10}")) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Invalid Phone",
+                        "Please enter a valid 10 digit phone number."
+                );
+
+                return;
+            }
+
+            sendInviteBtn.setDisable(true);
+
+            /*
+             * FIRESTORE WORK SHOULD NOT
+             * BLOCK THE JAVAFX UI THREAD.
+             */
+
+            Thread thread =
+                    new Thread(() -> {
+
+                        try {
+
+                            // =========================
+                            // 1. SAVE VISITOR
+                            // =========================
+
+                            VisitorModel visitor =
+                                    visitorController.sendInvite(
+                                            visitorName.getText().trim(),
+                                            phoneNumber.getText().trim(),
+                                            purpose.getValue(),
+                                            visitDate.getValue().toString(),
+                                            visitTime.getValue(),
+                                            flatVisit.getValue(),
+                                            gateEntry.getValue(),
+                                            vehicleNumber.getText().trim()
+                                    );
+
+                            // =========================
+                            // 2. CREATE QR DATA
+                            // =========================
+
+                            String qrData =
+                                    "SOC360:"
+                                            + visitor.getQrToken();
+
+                            // =========================
+                            // 3. QR FILE NAME
+                            // =========================
+
+                            String safeName =
+                                    visitor.getVisitorName()
+                                            .replaceAll(
+                                                    "[^a-zA-Z0-9]",
+                                                    "_"
+                                            );
+
+                            String fileName =
+                                    safeName
+                                            + "_"
+                                            + visitor.getId()
+                                            + ".png";
+
+                            // =========================
+                            // 4. GENERATE QR
+                            // =========================
+
+                            Path qrPath =
+                                    QRCodeUtil.generateQRCode(
+                                            qrData,
+                                            fileName
+                                    );
+
+                            // =========================
+                            // 5. SHOW RESULT
+                            // =========================
+
+                            Platform.runLater(() -> {
+
+                                sendInviteBtn
+                                        .setDisable(false);
+
+                                showQRCode(
+                                        visitor,
+                                        qrPath
+                                );
+
+                            });
+
+                        } catch (Exception ex) {
+
+                            ex.printStackTrace();
+
+                            Platform.runLater(() -> {
+
+                                sendInviteBtn
+                                        .setDisable(false);
+
+                                showAlert(
+                                        Alert.AlertType.ERROR,
+                                        "Error",
+                                        "Visitor could not be saved.\n\n"
+                                                + ex.getMessage()
+                                );
+                            });
+                        }
+
+                    });
+
+            thread.setDaemon(true);
+            thread.start();
         });
 
-        // ================= TODAY'S INVITED VISITORS =================
+        // ================= TODAY'S VISITORS =================
 
-        Label todayTitle = new Label("Today's Invited Visitors");
-        todayTitle.setFont(Font.font("System", FontWeight.BOLD, 16));
+        Label todayTitle =
+                new Label(
+                        "Today's Invited Visitors"
+                );
 
-        HBox visitor1 = createVisitorRow(
-                "Rahul Sharma",
-                "Service Visit",
-                "A-101",
-                "10:00 AM",
-                "Approved"
+        todayTitle.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        16
+                )
         );
 
-        HBox visitor2 = createVisitorRow(
-                "Delivery Partner",
-                "Delivery",
-                "A-101",
-                "11:30 AM",
-                "Approved"
-        );
+        VBox visitorList =
+                new VBox(8);
 
-        VBox visitorList = new VBox(8);
-        visitorList.getChildren().addAll(visitor1, visitor2);
-
-        // ================= ADD EVERYTHING =================
-
-        mainContent.getChildren().addAll(
-                heading,
-                form,
-                note,
-                buttons,
-               
-                todayTitle,
+        /*
+         * Load actual Firestore visitors
+         */
+        loadTodayVisitors(
                 visitorList
         );
 
-        
- BorderPane mainarea = new BorderPane();
- mainarea.setTop(heading);
-mainarea.setCenter(mainContent);
-heading.setStyle("-fx-background-color: #4e342e");
-        root.setCenter(mainarea);
+        // ================= ADD EVERYTHING =================
 
-        return new Scene(root, 
-         ScreenSize.getWidth(),
-        ScreenSize.getHeight());
+        mainContent.getChildren()
+                .addAll(
+                        heading,
+                        form,
+                        note,
+                        buttons,
+                        todayTitle,
+                        visitorList
+                );
 
+        root.setCenter(
+                mainContent
+        );
+
+        return new Scene(
+                root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+        );
     }
 
-    // ================= VISITOR ROW =================
+    // =====================================================
+    // SHOW QR CODE
+    // =====================================================
+
+    private void showQRCode(
+            VisitorModel visitor,
+            Path qrPath
+    ) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.INFORMATION
+                );
+
+        alert.setTitle(
+                "Visitor Invitation"
+        );
+
+        alert.setHeaderText(
+                "Invitation Sent Successfully!"
+        );
+
+        Image image =
+                new Image(
+                        qrPath.toUri().toString()
+                );
+
+        ImageView imageView =
+                new ImageView(image);
+
+        imageView.setFitWidth(300);
+        imageView.setFitHeight(300);
+        imageView.setPreserveRatio(true);
+
+        Label visitorLabel =
+                new Label(
+                        "Visitor: "
+                                + visitor.getVisitorName()
+                );
+
+        Label flatLabel =
+                new Label(
+                        "Flat: "
+                                + visitor.getFlatNumber()
+                );
+
+        Label dateLabel =
+                new Label(
+                        "Date: "
+                                + visitor.getVisitDate()
+                );
+
+        Label timeLabel =
+                new Label(
+                        "Time: "
+                                + visitor.getVisitTime()
+                );
+
+        Label gateLabel =
+                new Label(
+                        "Gate: "
+                                + visitor.getGate()
+                );
+
+        VBox content =
+                new VBox(10);
+
+        content.setAlignment(
+                Pos.CENTER
+        );
+
+        content.getChildren()
+                .addAll(
+                        visitorLabel,
+                        flatLabel,
+                        dateLabel,
+                        timeLabel,
+                        gateLabel,
+                        imageView
+                );
+
+        alert.getDialogPane()
+                .setContent(content);
+
+        alert.showAndWait();
+    }
+
+    // =====================================================
+    // LOAD TODAY'S VISITORS
+    // =====================================================
+
+    private void loadTodayVisitors(
+            VBox visitorList
+    ) {
+
+        Thread thread =
+                new Thread(() -> {
+
+                    try {
+
+                        List<VisitorModel> visitors =
+                                visitorController
+                                        .getTodayVisitors();
+
+                        Platform.runLater(() -> {
+
+                            visitorList
+                                    .getChildren()
+                                    .clear();
+
+                            for (VisitorModel visitor :
+                                    visitors) {
+
+                                HBox row =
+                                        createVisitorRow(
+                                                visitor.getVisitorName(),
+                                                visitor.getPurpose(),
+                                                visitor.getFlatNumber(),
+                                                visitor.getVisitTime(),
+                                                visitor.getStatus()
+                                        );
+
+                                visitorList
+                                        .getChildren()
+                                        .add(row);
+                            }
+
+                        });
+
+                    } catch (Exception ex) {
+
+                        ex.printStackTrace();
+
+                    }
+
+                });
+
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    // =====================================================
+    // VISITOR ROW
+    // =====================================================
 
     private HBox createVisitorRow(
             String name,
             String purpose,
             String flat,
             String time,
-            String status) {
+            String status
+    ) {
 
-        Label nameLabel = new Label(name);
-        nameLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        Label nameLabel =
+                new Label(name);
 
-        Label purposeLabel = new Label(purpose);
-        Label flatLabel = new Label(flat);
-        Label timeLabel = new Label(time);
+        nameLabel.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        13
+                )
+        );
 
-        Label statusLabel = new Label(status);
+        Label purposeLabel =
+                new Label(purpose);
+
+        Label flatLabel =
+                new Label(flat);
+
+        Label timeLabel =
+                new Label(time);
+
+        Label statusLabel =
+                new Label(status);
 
         statusLabel.setStyle(
                 "-fx-background-color: #DFF6E5;" +
@@ -358,16 +912,17 @@ heading.setStyle("-fx-background-color: #4e342e");
                 "-fx-background-radius: 12;"
         );
 
-        HBox row = new HBox(20);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPadding(new Insets(12));
+        HBox row =
+                new HBox(20);
 
+        row.setAlignment(
+                Pos.CENTER_LEFT
+        );
 
+        row.setPadding(
+                new Insets(12)
+        );
 
-
-
-
-        
         row.setStyle(
                 "-fx-background-color: white;" +
                 "-fx-border-color: #E5E7EB;" +
@@ -375,19 +930,40 @@ heading.setStyle("-fx-background-color: #4e342e");
                 "-fx-background-radius: 5;"
         );
 
-        HBox.setHgrow(nameLabel, Priority.ALWAYS);
-
-        row.getChildren().addAll(
+        HBox.setHgrow(
                 nameLabel,
-                purposeLabel,
-                flatLabel,
-                timeLabel,
-                statusLabel
+                Priority.ALWAYS
         );
 
+        row.getChildren()
+                .addAll(
+                        nameLabel,
+                        purposeLabel,
+                        flatLabel,
+                        timeLabel,
+                        statusLabel
+                );
+
         return row;
-    
+    }
 
+    // =====================================================
+    // ALERT
+    // =====================================================
 
+    private void showAlert(
+            Alert.AlertType type,
+            String title,
+            String message
+    ) {
+
+        Alert alert =
+                new Alert(type);
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 }
