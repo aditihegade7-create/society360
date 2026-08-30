@@ -1,18 +1,22 @@
 package com.society.service.resident_service;
 
+
+    
 public class UserSession {
 
-    private static String email;
+    private static String loggedInEmail;
 
-    public static void setEmail(String email) {
-        UserSession.email = email;
+    public static void setLoggedInEmail(String email) {
+        loggedInEmail = email;
     }
 
-    public static String getEmail() {
-        return email;
+    public static String getLoggedInEmail() {
+        return loggedInEmail;
     }
 
     public static void clear() {
-        email = null;
+        loggedInEmail = null;
     }
 }
+
+
