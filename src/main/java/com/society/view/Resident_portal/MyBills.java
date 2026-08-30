@@ -1,69 +1,78 @@
 package com.society.view.Resident_portal;
 
-import com.society.controller.Resident_Controller.MaintenanceController;
-import com.society.model.Resident_model.Maintenance;
-import com.society.service.resident_service.*;
+import com.society.dao.Resident_dao.MaintenanceDAO;
 import com.society.view.ScreenSize;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.util.List;
+import java.util.Map;
 
-public class MyBills {
 
-    private final MaintenanceController maintenanceController;
+public class Mybills {
 
-    private String flatNo;
+    // =========================================================
+    // LOGGED-IN USER EMAIL
+    // =========================================================
 
-    private Label totalBillsLabel;
-    private Label totalDueLabel;
-    private Label maintenanceDueLabel;
-    private Label electricityDueLabel;
+    /*
+     * TEMPORARY:
+     * This is the email from your Firestore screenshot.
+     *
+     * Later, replace this with the email of the
+     * currently logged-in resident.
+     */
+    private String loggedInEmail = "vaishnavi@gmail.com";
 
-    private TableView<Maintenance> billTable;
 
-    public MyBills() {
+    // =========================================================
+    // GET BILL SCENE
+    // =========================================================
 
-        maintenanceController =
-                new MaintenanceController();
-    }
+    public Scene getBillScene(Stage stage) {
 
-    public Scene getMyBillsScene(Stage stage) {
+        // =====================================================
+        // SIDEBAR
+        // =====================================================
 
         panel panelobj = new panel(stage);
 
         BorderPane root = new BorderPane();
 
-        root.setLeft(
-                panelobj.getSidebar()
-        );
+        root.setLeft(panelobj.getSidebar());
 
-        BorderPane mainArea = new BorderPane();
 
         // =====================================================
-        // HEADER
+        // MAIN CONTENT
         // =====================================================
 
-        VBox heading = new VBox(5);
+        VBox mainContent = new VBox(20);
 
-        heading.setPadding(
-                new Insets(20, 18, 18, 18)
+        mainContent.setPadding(
+                new Insets(30, 40, 30, 40)
         );
 
-        heading.setStyle(
-                "-fx-background-color: #4e342e;"
+        mainContent.setStyle(
+                "-fx-background-color: #e8ddd5;"
         );
+
+
+        // =====================================================
+        // TITLE
+        // =====================================================
 
         Label title = new Label("My Bills");
 
@@ -77,6 +86,7 @@ public class MyBills {
 
         title.setTextFill(Color.WHITE);
 
+
         Label subtitle = new Label(
                 "View your society bills and payment status"
         );
@@ -87,646 +97,737 @@ public class MyBills {
 
         subtitle.setTextFill(Color.WHITE);
 
+
+        VBox heading = new VBox(5);
+
+        heading.setPadding(
+                new Insets(15, 20, 15, 20)
+        );
+
         heading.getChildren().addAll(
                 title,
                 subtitle
         );
 
-        mainArea.setTop(heading);
-
-        // =====================================================
-        // CONTENT
-        // =====================================================
-
-        VBox content = new VBox(20);
-
-        content.setPadding(
-                new Insets(22, 32, 25, 32)
+        heading.setStyle(
+                "-fx-background-color: #4e342e;"
         );
 
-        content.setStyle(
-                "-fx-background-color: #e8ddd5;"
+
+        // =====================================================
+        // SUMMARY CARDS
+        // =====================================================
+
+        HBox summaryCards = new HBox(20);
+
+
+        // Initially empty
+        VBox totalDue = createSummaryCard(
+                "Total Due",
+                "₹ 0",
+                "Pending amount"
         );
 
-        // =====================================================
-        // SUMMARY
-        // =====================================================
 
-        HBox summaryCards =
-                createSummaryCards();
-
-        // =====================================================
-        // HISTORY TITLE
-        // =====================================================
-
-        Label historyTitle =
-                new Label("Bill History");
-
-        historyTitle.setFont(
-                Font.font(
-                        "System",
-                        FontWeight.BOLD,
-                        20
-                )
+        VBox maintenanceDue = createSummaryCard(
+                "Maintenance Due",
+                "₹ 0",
+                "Loading..."
         );
 
-        historyTitle.setTextFill(Color.WHITE);
 
-        // =====================================================
-        // TABLE
-        // =====================================================
-
-        billTable = createBillTable();
-
-        // =====================================================
-        // REFRESH
-        // =====================================================
-
-        Button refreshButton =
-                new Button("Refresh Bills");
-
-        refreshButton.setStyle(
-                "-fx-background-color: #4e342e;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-weight: bold;" +
-                "-fx-padding: 10 20;" +
-                "-fx-background-radius: 6;"
+        VBox electricityDue = createSummaryCard(
+                "Electricity Due",
+                "₹ 0",
+                "No data"
         );
 
-        refreshButton.setOnAction(
-                e -> loadMaintenance()
-        );
 
-        HBox refreshBox =
-                new HBox(refreshButton);
-
-        refreshBox.setAlignment(
-                Pos.CENTER_RIGHT
-        );
-
-        // =====================================================
-        // TABLE BOX
-        // =====================================================
-
-        VBox tableBox =
-                new VBox(10);
-
-        tableBox.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-background-radius: 8;"
-        );
-
-        tableBox.getChildren().add(
-                billTable
-        );
-
-        VBox.setVgrow(
-                billTable,
-                Priority.ALWAYS
-        );
-
-        VBox.setVgrow(
-                tableBox,
-                Priority.ALWAYS
-        );
-
-        content.getChildren().addAll(
-                summaryCards,
-                historyTitle,
-                refreshBox,
-                tableBox
-        );
-
-        // =====================================================
-        // SCROLL
-        // =====================================================
-
-        ScrollPane scrollPane =
-                new ScrollPane();
-
-        scrollPane.setContent(content);
-
-        scrollPane.setFitToWidth(true);
-
-        scrollPane.setFitToHeight(true);
-
-        scrollPane.setHbarPolicy(
-                ScrollPane.ScrollBarPolicy.NEVER
-        );
-
-        scrollPane.setStyle(
-                "-fx-background: #e8ddd5;" +
-                "-fx-background-color: #e8ddd5;"
-        );
-
-        mainArea.setCenter(scrollPane);
-
-        root.setCenter(mainArea);
-
-        Scene scene =
-                new Scene(
-                        root,
-                        ScreenSize.getWidth(),
-                        ScreenSize.getHeight()
-                );
-
-        // =====================================================
-        // LOAD FIRESTORE DATA
-        // =====================================================
-
-        loadMaintenance();
-
-        return scene;
-    }
-
-    // =========================================================
-    // SUMMARY CARDS
-    // =========================================================
-
-    private HBox createSummaryCards() {
-
-        totalBillsLabel =
-                new Label("₹ 0");
-
-        totalDueLabel =
-                new Label("₹ 0");
-
-        maintenanceDueLabel =
-                new Label("₹ 0");
-
-        electricityDueLabel =
-                new Label("₹ 0");
-
-        VBox totalBills =
-                createCard(
-                        "Total Bills",
-                        totalBillsLabel,
-                        "Current"
-                );
-
-        VBox totalDue =
-                createCard(
-                        "Total Due",
-                        totalDueLabel,
-                        "Pending"
-                );
-
-        VBox maintenanceDue =
-                createCard(
-                        "Maintenance Due",
-                        maintenanceDueLabel,
-                        "Pending"
-                );
-
-        VBox electricityDue =
-                createCard(
-                        "Electricity Due",
-                        electricityDueLabel,
-                        "Current"
-                );
-
-        HBox cards =
-                new HBox(20);
-
-        cards.getChildren().addAll(
-                totalBills,
+        summaryCards.getChildren().addAll(
                 totalDue,
                 maintenanceDue,
                 electricityDue
         );
 
-        HBox.setHgrow(
-                totalBills,
-                Priority.ALWAYS
-        );
 
-        HBox.setHgrow(
-                totalDue,
-                Priority.ALWAYS
-        );
+        // =====================================================
+        // BILL TITLE
+        // =====================================================
 
-        HBox.setHgrow(
-                maintenanceDue,
-                Priority.ALWAYS
-        );
+        Label billTitle = new Label("Bill History");
 
-        HBox.setHgrow(
-                electricityDue,
-                Priority.ALWAYS
-        );
-
-        return cards;
-    }
-
-    private VBox createCard(
-            String title,
-            Label amountLabel,
-            String subtitle) {
-
-        VBox card =
-                new VBox(10);
-
-        card.setPadding(
-                new Insets(20)
-        );
-
-        card.setPrefHeight(135);
-
-        card.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-background-radius: 10;"
-        );
-
-        Label titleLabel =
-                new Label(title);
-
-        titleLabel.setFont(
+        billTitle.setFont(
                 Font.font(
                         "System",
                         FontWeight.BOLD,
-                        15
+                        19
                 )
         );
 
-        titleLabel.setTextFill(
-                Color.web("#607d8b")
+        billTitle.setTextFill(Color.WHITE);
+
+
+        // =====================================================
+        // TABLE
+        // =====================================================
+
+        TableView<Bill> table = new TableView<>();
+
+        table.setPrefHeight(300);
+
+        table.setStyle(
+                "-fx-background-color: white;"
         );
+
+
+        // =====================================================
+        // BILL TYPE COLUMN
+        // =====================================================
+
+        TableColumn<Bill, String> typeColumn =
+                new TableColumn<>("Bill Type");
+
+        typeColumn.setCellValueFactory(
+                data ->
+                        data.getValue().typeProperty()
+        );
+
+
+        // =====================================================
+        // MONTH COLUMN
+        // =====================================================
+
+        TableColumn<Bill, String> monthColumn =
+                new TableColumn<>("Month");
+
+        monthColumn.setCellValueFactory(
+                data ->
+                        data.getValue().monthProperty()
+        );
+
+
+        // =====================================================
+        // AMOUNT COLUMN
+        // =====================================================
+
+        TableColumn<Bill, String> amountColumn =
+                new TableColumn<>("Amount");
+
+        amountColumn.setCellValueFactory(
+                data ->
+                        data.getValue().amountProperty()
+        );
+
+
+        // =====================================================
+        // DUE DATE COLUMN
+        // =====================================================
+
+        TableColumn<Bill, String> dueDateColumn =
+                new TableColumn<>("Due Date");
+
+        dueDateColumn.setCellValueFactory(
+                data ->
+                        data.getValue().dueDateProperty()
+        );
+
+
+        // =====================================================
+        // STATUS COLUMN
+        // =====================================================
+
+        TableColumn<Bill, String> statusColumn =
+                new TableColumn<>("Status");
+
+        statusColumn.setCellValueFactory(
+                data ->
+                        data.getValue().statusProperty()
+        );
+
+
+        // =====================================================
+        // ADD COLUMNS TO TABLE
+        // =====================================================
+
+        table.getColumns().addAll(
+                typeColumn,
+                monthColumn,
+                amountColumn,
+                dueDateColumn,
+                statusColumn
+        );
+
+
+        // =====================================================
+        // FETCH MAINTENANCE FROM FIRESTORE
+        // =====================================================
+
+        MaintenanceDAO maintenanceDAO =
+                new MaintenanceDAO();
+
+
+        Map<String, Object> maintenanceData =
+                maintenanceDAO.getMaintenanceByEmail(
+                        loggedInEmail
+                );
+
+
+        // =====================================================
+        // CHECK FIRESTORE DATA
+        // =====================================================
+
+        if (maintenanceData != null) {
+
+            // -------------------------------------------------
+            // GET DATA FROM FIRESTORE
+            // -------------------------------------------------
+
+            String amount = getValue(
+                    maintenanceData,
+                    "amount"
+            );
+
+            String date = getValue(
+                    maintenanceData,
+                    "date"
+            );
+
+            String month = getValue(
+                    maintenanceData,
+                    "month"
+            );
+
+            String status = getValue(
+                    maintenanceData,
+                    "status"
+            );
+
+
+            // -------------------------------------------------
+            // ADD ₹ SYMBOL
+            // -------------------------------------------------
+
+            String displayAmount;
+
+            if (amount.startsWith("₹")) {
+
+                displayAmount = amount;
+
+            } else {
+
+                displayAmount = "₹ " + amount;
+            }
+
+
+            // -------------------------------------------------
+            // ADD MAINTENANCE TO TABLE
+            // -------------------------------------------------
+
+            table.getItems().add(
+                    new Bill(
+                            "Maintenance",
+                            month,
+                            displayAmount,
+                            date,
+                            status
+                    )
+            );
+
+
+            // -------------------------------------------------
+            // UPDATE MAINTENANCE CARD
+            // -------------------------------------------------
+
+            Label maintenanceAmountLabel =
+                    (Label) maintenanceDue
+                            .getChildren()
+                            .get(1);
+
+            maintenanceAmountLabel.setText(
+                    displayAmount
+            );
+
+
+            Label maintenanceDescriptionLabel =
+                    (Label) maintenanceDue
+                            .getChildren()
+                            .get(2);
+
+            maintenanceDescriptionLabel.setText(
+                    month
+            );
+
+
+            // -------------------------------------------------
+            // UPDATE TOTAL DUE
+            // -------------------------------------------------
+
+            Label totalAmountLabel =
+                    (Label) totalDue
+                            .getChildren()
+                            .get(1);
+
+            if (status.equalsIgnoreCase("Pending")) {
+
+                totalAmountLabel.setText(
+                        displayAmount
+                );
+
+            } else {
+
+                totalAmountLabel.setText(
+                        "₹ 0"
+                );
+            }
+
+
+            // -------------------------------------------------
+            // UPDATE TOTAL DESCRIPTION
+            // -------------------------------------------------
+
+            Label totalDescriptionLabel =
+                    (Label) totalDue
+                            .getChildren()
+                            .get(2);
+
+            totalDescriptionLabel.setText(
+                    status
+            );
+
+
+        } else {
+
+            // =================================================
+            // NO DATA FOUND
+            // =================================================
+
+            table.setPlaceholder(
+                    new Label(
+                            "No maintenance bills found"
+                    )
+            );
+
+
+            Label maintenanceAmountLabel =
+                    (Label) maintenanceDue
+                            .getChildren()
+                            .get(1);
+
+            maintenanceAmountLabel.setText(
+                    "₹ 0"
+            );
+
+
+            Label maintenanceDescriptionLabel =
+                    (Label) maintenanceDue
+                            .getChildren()
+                            .get(2);
+
+            maintenanceDescriptionLabel.setText(
+                    "No maintenance record"
+            );
+
+
+            Label totalAmountLabel =
+                    (Label) totalDue
+                            .getChildren()
+                            .get(1);
+
+            totalAmountLabel.setText(
+                    "₹ 0"
+            );
+
+
+            Label totalDescriptionLabel =
+                    (Label) totalDue
+                            .getChildren()
+                            .get(2);
+
+            totalDescriptionLabel.setText(
+                    "No pending amount"
+            );
+        }
+
+
+        // =====================================================
+        // PAY BUTTON
+        // =====================================================
+
+        Button payButton =
+                new Button("Pay Selected Bill");
+
+        payButton.setPrefHeight(40);
+
+        payButton.setPrefWidth(160);
+
+        payButton.setStyle(
+                "-fx-background-color: #4e342e;" +
+                "-fx-text-fill: #f3e5e2;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 6;"
+        );
+
+
+        // =====================================================
+        // PAY BUTTON ACTION
+        // =====================================================
+
+        payButton.setOnAction(e -> {
+
+            Bill selectedBill =
+                    table.getSelectionModel()
+                            .getSelectedItem();
+
+
+            if (selectedBill == null) {
+
+                Alert alert =
+                        new Alert(
+                                Alert.AlertType.WARNING
+                        );
+
+                alert.setTitle(
+                        "No Bill Selected"
+                );
+
+                alert.setHeaderText(null);
+
+                alert.setContentText(
+                        "Please select a bill first."
+                );
+
+                alert.showAndWait();
+
+
+            } else {
+
+                Alert alert =
+                        new Alert(
+                                Alert.AlertType.INFORMATION
+                        );
+
+                alert.setTitle(
+                        "Payment"
+                );
+
+                alert.setHeaderText(
+                        "Payment Details"
+                );
+
+                alert.setContentText(
+                        "Bill: "
+                                + selectedBill.getType()
+                                + "\nAmount: "
+                                + selectedBill.getAmount()
+                                + "\nMonth: "
+                                + selectedBill.getMonth()
+                                + "\nStatus: "
+                                + selectedBill.getStatus()
+                );
+
+                alert.showAndWait();
+            }
+        });
+
+
+        // =====================================================
+        // BUTTON BOX
+        // =====================================================
+
+        HBox buttonBox = new HBox();
+
+        buttonBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        buttonBox.getChildren().add(
+                payButton
+        );
+
+
+        // =====================================================
+        // ADD CONTENT
+        // =====================================================
+
+        mainContent.getChildren().addAll(
+                heading,
+                summaryCards,
+                billTitle,
+                table,
+                buttonBox
+        );
+
+
+        // =====================================================
+        // CENTER AREA
+        // =====================================================
+
+        BorderPane mainarea =
+                new BorderPane();
+
+        mainarea.setCenter(
+                mainContent
+        );
+
+
+        root.setCenter(
+                mainarea
+        );
+
+
+        // =====================================================
+        // RETURN SCENE
+        // =====================================================
+
+        return new Scene(
+                root,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+        );
+    }
+
+
+    // =========================================================
+    // SAFE GET VALUE FROM FIRESTORE
+    // =========================================================
+
+    private String getValue(
+            Map<String, Object> data,
+            String field
+    ) {
+
+        Object value = data.get(field);
+
+        if (value == null) {
+            return "";
+        }
+
+        return String.valueOf(value);
+    }
+
+
+    // =========================================================
+    // SUMMARY CARD
+    // =========================================================
+
+    private VBox createSummaryCard(
+            String heading,
+            String amount,
+            String description
+    ) {
+
+        VBox card =
+                new VBox(8);
+
+        card.setPadding(
+                new Insets(15)
+        );
+
+        card.setPrefWidth(220);
+
+        card.setPrefHeight(105);
+
+        card.setStyle(
+                "-fx-background-color: white;" +
+                "-fx-background-radius: 8;" +
+                "-fx-border-radius: 8;"
+        );
+
+
+        Label headingLabel =
+                new Label(heading);
+
+        headingLabel.setTextFill(
+                Color.web("#546E7A")
+        );
+
+        headingLabel.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        13
+                )
+        );
+
+
+        Label amountLabel =
+                new Label(amount);
 
         amountLabel.setFont(
                 Font.font(
                         "System",
                         FontWeight.BOLD,
-                        24
+                        22
                 )
         );
 
         amountLabel.setTextFill(
-                Color.web("#263238")
+                Color.web("#37474F")
         );
 
-        Label subtitleLabel =
-                new Label(subtitle);
 
-        subtitleLabel.setTextFill(
-                Color.web("#78909c")
+        Label descriptionLabel =
+                new Label(description);
+
+        descriptionLabel.setTextFill(
+                Color.GRAY
         );
+
 
         card.getChildren().addAll(
-                titleLabel,
+                headingLabel,
                 amountLabel,
-                subtitleLabel
+                descriptionLabel
         );
+
 
         return card;
     }
 
-    // =========================================================
-    // TABLE
-    // =========================================================
-
-    private TableView<Maintenance> createBillTable() {
-
-        TableView<Maintenance> table =
-                new TableView<>();
-
-        table.setPlaceholder(
-                new Label(
-                        "No maintenance bills found."
-                )
-        );
-
-        TableColumn<Maintenance, String>
-                billTypeColumn =
-                new TableColumn<>("Bill Type");
-
-        billTypeColumn.setCellValueFactory(
-                data ->
-                        new javafx.beans.property.SimpleStringProperty(
-                                "Maintenance"
-                        )
-        );
-
-        TableColumn<Maintenance, String>
-                monthColumn =
-                new TableColumn<>("Month");
-
-        monthColumn.setCellValueFactory(
-                new PropertyValueFactory<>("month")
-        );
-
-        TableColumn<Maintenance, String>
-                amountColumn =
-                new TableColumn<>("Amount");
-
-        amountColumn.setCellValueFactory(
-                new PropertyValueFactory<>("amount")
-        );
-
-        TableColumn<Maintenance, String>
-                dateColumn =
-                new TableColumn<>("Due Date");
-
-        dateColumn.setCellValueFactory(
-                new PropertyValueFactory<>("date")
-        );
-
-        TableColumn<Maintenance, String>
-                statusColumn =
-                new TableColumn<>("Status");
-
-        statusColumn.setCellValueFactory(
-                new PropertyValueFactory<>("status")
-        );
-
-        // =====================================================
-        // PAYMENT BUTTON
-        // =====================================================
-
-        TableColumn<Maintenance, Void>
-                paymentColumn =
-                new TableColumn<>("Payment");
-
-        paymentColumn.setCellFactory(
-                column -> new TableCell<Maintenance, Void>() {
-
-                    private final Button payButton =
-                            new Button("Pay Now");
-
-                    {
-                        payButton.setStyle(
-                                "-fx-background-color: #4e342e;" +
-                                "-fx-text-fill: white;" +
-                                "-fx-font-weight: bold;" +
-                                "-fx-background-radius: 5;"
-                        );
-
-                        payButton.setOnAction(
-                                event -> {
-
-                                    Maintenance bill =
-                                            getTableView()
-                                                    .getItems()
-                                                    .get(getIndex());
-
-                                    payBill(bill);
-                                }
-                        );
-                    }
-
-                    @Override
-                    protected void updateItem(
-                            Void item,
-                            boolean empty) {
-
-                        super.updateItem(item, empty);
-
-                        if (empty) {
-
-                            setGraphic(null);
-
-                        } else {
-
-                            Maintenance bill =
-                                    getTableView()
-                                            .getItems()
-                                            .get(getIndex());
-
-                            if (bill != null &&
-                                    "Pending".equalsIgnoreCase(
-                                            bill.getStatus())) {
-
-                                setGraphic(payButton);
-
-                            } else {
-
-                                setGraphic(null);
-                            }
-                        }
-                    }
-                }
-        );
-
-        billTypeColumn.setPrefWidth(150);
-        monthColumn.setPrefWidth(170);
-        amountColumn.setPrefWidth(150);
-        dateColumn.setPrefWidth(150);
-        statusColumn.setPrefWidth(150);
-        paymentColumn.setPrefWidth(150);
-
-        table.getColumns().addAll(
-                billTypeColumn,
-                monthColumn,
-                amountColumn,
-                dateColumn,
-                statusColumn,
-                paymentColumn
-        );
-
-        table.setColumnResizePolicy(
-                TableView.CONSTRAINED_RESIZE_POLICY
-        );
-
-        return table;
-    }
 
     // =========================================================
-    // LOAD MAINTENANCE
+    // BILL CLASS
     // =========================================================
 
-    private void loadMaintenance() {
+    public static class Bill {
 
-        System.out.println(
-                "Refreshing Maintenance Bills..."
-        );
+        private final javafx.beans.property.SimpleStringProperty type;
 
-        billTable.getItems().clear();
+        private final javafx.beans.property.SimpleStringProperty month;
 
-        String email =
-                UserSession.getEmail();
+        private final javafx.beans.property.SimpleStringProperty amount;
 
-        if (email == null || email.trim().isEmpty()) {
+        private final javafx.beans.property.SimpleStringProperty dueDate;
 
-            System.out.println(
-                    "ERROR: Logged-in email not found!"
-            );
+        private final javafx.beans.property.SimpleStringProperty status;
 
-            return;
-        }
 
         // =====================================================
-        // GET FLAT FROM FIRESTORE
+        // CONSTRUCTOR
         // =====================================================
 
-        flatNo =
-                maintenanceController
-                        .getFlatNoByEmail(email);
+        public Bill(
+                String type,
+                String month,
+                String amount,
+                String dueDate,
+                String status
+        ) {
 
-        if (flatNo == null ||
-                flatNo.trim().isEmpty()) {
-
-            System.out.println(
-                    "ERROR: Logged-in flat number not found!"
-            );
-
-            return;
-        }
-
-        // =====================================================
-        // GET ALL MAINTENANCE
-        // =====================================================
-
-        List<Maintenance> list =
-                maintenanceController
-                        .getMaintenanceByFlatNo(flatNo);
-
-        if (list == null || list.isEmpty()) {
-
-            totalBillsLabel.setText("₹ 0");
-            totalDueLabel.setText("₹ 0");
-            maintenanceDueLabel.setText("₹ 0");
-            electricityDueLabel.setText("₹ 0");
-
-            return;
-        }
-
-        // =====================================================
-        // SHOW ALL BILLS
-        // =====================================================
-
-        billTable.getItems().addAll(list);
-
-        // =====================================================
-        // CALCULATE TOTALS
-        // =====================================================
-
-        double total = 0;
-
-        double pending = 0;
-
-        for (Maintenance bill : list) {
-
-            double amount = parseAmount(
-                    bill.getAmount()
-            );
-
-            total += amount;
-
-            if ("Pending".equalsIgnoreCase(
-                    bill.getStatus())) {
-
-                pending += amount;
-            }
-        }
-
-        totalBillsLabel.setText(
-                "₹ " + total
-        );
-
-        totalDueLabel.setText(
-                "₹ " + pending
-        );
-
-        maintenanceDueLabel.setText(
-                "₹ " + pending
-        );
-
-        electricityDueLabel.setText(
-                "₹ 0"
-        );
-    }
-
-    // =========================================================
-    // PARSE AMOUNT
-    // =========================================================
-
-    private double parseAmount(String amount) {
-
-        if (amount == null) {
-            return 0;
-        }
-
-        try {
-
-            String number =
-                    amount.replaceAll(
-                            "[^0-9.]",
-                            ""
+            this.type =
+                    new javafx.beans.property.SimpleStringProperty(
+                            type
                     );
 
-            if (number.isEmpty()) {
-                return 0;
-            }
+            this.month =
+                    new javafx.beans.property.SimpleStringProperty(
+                            month
+                    );
 
-            return Double.parseDouble(number);
+            this.amount =
+                    new javafx.beans.property.SimpleStringProperty(
+                            amount
+                    );
 
-        } catch (Exception e) {
+            this.dueDate =
+                    new javafx.beans.property.SimpleStringProperty(
+                            dueDate
+                    );
 
-            return 0;
+            this.status =
+                    new javafx.beans.property.SimpleStringProperty(
+                            status
+                    );
         }
-    }
 
-    // =========================================================
-    // PAY BILL
-    // =========================================================
 
-    private void payBill(Maintenance bill) {
+        // =====================================================
+        // TYPE PROPERTY
+        // =====================================================
 
-        Alert confirmation =
-                new Alert(
-                        Alert.AlertType.CONFIRMATION
-                );
+        public javafx.beans.property.StringProperty typeProperty() {
 
-        confirmation.setTitle(
-                "Payment"
-        );
+            return type;
+        }
 
-        confirmation.setHeaderText(
-                "Pay Maintenance Bill"
-        );
 
-        confirmation.setContentText(
-                "Month: " + bill.getMonth()
-                        + "\nAmount: ₹"
-                        + bill.getAmount()
-        );
+        // =====================================================
+        // MONTH PROPERTY
+        // =====================================================
 
-        confirmation.showAndWait()
-                .ifPresent(response -> {
+        public javafx.beans.property.StringProperty monthProperty() {
 
-                    if (response ==
-                            ButtonType.OK) {
+            return month;
+        }
 
-                        boolean success =
-                                maintenanceController
-                                        .markAsPaid(
-                                                bill.getDocumentId()
-                                        );
 
-                        if (success) {
+        // =====================================================
+        // AMOUNT PROPERTY
+        // =====================================================
 
-                            Alert alert =
-                                    new Alert(
-                                            Alert.AlertType.INFORMATION
-                                    );
+        public javafx.beans.property.StringProperty amountProperty() {
 
-                            alert.setTitle(
-                                    "Payment Successful"
-                            );
+            return amount;
+        }
 
-                            alert.setHeaderText(
-                                    "Payment Completed"
-                            );
 
-                            alert.setContentText(
-                                    "Your maintenance bill has been marked as Paid."
-                            );
+        // =====================================================
+        // DUE DATE PROPERTY
+        // =====================================================
 
-                            alert.showAndWait();
+        public javafx.beans.property.StringProperty dueDateProperty() {
 
-                            // Reload Firestore
-                            loadMaintenance();
-                        }
-                    }
-                });
+            return dueDate;
+        }
+
+
+        // =====================================================
+        // STATUS PROPERTY
+        // =====================================================
+
+        public javafx.beans.property.StringProperty statusProperty() {
+
+            return status;
+        }
+
+
+        // =====================================================
+        // GET TYPE
+        // =====================================================
+
+        public String getType() {
+
+            return type.get();
+        }
+
+
+        // =====================================================
+        // GET MONTH
+        // =====================================================
+
+        public String getMonth() {
+
+            return month.get();
+        }
+
+
+        // =====================================================
+        // GET AMOUNT
+        // =====================================================
+
+        public String getAmount() {
+
+            return amount.get();
+        }
+
+
+        // =====================================================
+        // GET STATUS
+        // =====================================================
+
+        public String getStatus() {
+
+            return status.get();
+        }
     }
 }
