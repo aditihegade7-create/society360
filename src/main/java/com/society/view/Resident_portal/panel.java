@@ -62,8 +62,8 @@ public class panel {
         Button ownersBtn = new Button("My Bills");
         ownersBtn.setStyle("-fx-background-color: #4e342e;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         ownersBtn.setOnAction(event ->{
-            Bills bills = new Bills();
-            stage.setScene(bills.getBillScene(stage));
+            MyBills bills = new MyBills();
+            stage.setScene(bills.getMyBillsScene(stage));
         });
 
 
@@ -79,7 +79,7 @@ public class panel {
         Button noticesBtn = new Button("Amenities Booking");
         noticesBtn.setStyle("-fx-background-color: #4e342e;-fx-font-weight:bold;-fx-text-fill: white;-fx-font-size: 14px;-fx-alignment: CENTER-LEFT;-fx-pref-width: 240px;-fx-pref-height: 40px;");
         noticesBtn.setOnAction(event ->{
-            Aminity aminity = new Aminity();
+            AmenitiesBooking aminity = new AmenitiesBooking();
             stage.setScene(aminity.getAminityScene(stage));
         });
 
