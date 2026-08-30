@@ -1,13 +1,21 @@
 package com.society.view.Secretary_portal;
 
+import java.util.List;
+
+import com.society.controller.Secretary_Controller.GuardController;
+import com.society.model.Secretary_model.Guard;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -19,16 +27,51 @@ import javafx.stage.Stage;
 
 public class ManageGuard {
 
+    // =====================================================
+    // SCENE
+    // =====================================================
+
     private Scene guard;
 
-    // Main StackPane
+    // =====================================================
+    // ROOT
+    // =====================================================
+
     private StackPane rootStack;
+
+    // =====================================================
+    // CONTROLLER
+    // =====================================================
+
+    private GuardController guardController;
+
+    // =====================================================
+    // GUARD LIST
+    // =====================================================
+
+    private VBox guardList;
+
+    // =====================================================
+    // SEARCH
+    // =====================================================
+
+    private TextField search;
+
+    // =====================================================
+    // CREATE SCENE
+    // =====================================================
 
     public Scene createScene(Stage stage) {
 
-        // ==========================================
+        // =====================================================
+        // CONTROLLER
+        // =====================================================
+
+        guardController = new GuardController();
+
+        // =====================================================
         // SIDEBAR
-        // ==========================================
+        // =====================================================
 
         SecretarySidebar sidebarObj =
                 new SecretarySidebar();
@@ -36,17 +79,17 @@ public class ManageGuard {
         VBox sidebar =
                 sidebarObj.createSidebar(stage);
 
-
-        // ==========================================
+        // =====================================================
         // MAIN CONTENT
-        // ==========================================
+        // =====================================================
 
         VBox mainvb =
                 new VBox(10);
 
-        mainvb.setPrefWidth(1220);
-
-        mainvb.setPrefHeight(750);
+        mainvb.setMaxSize(
+                Double.MAX_VALUE,
+                Double.MAX_VALUE
+        );
 
         mainvb.setPadding(
                 new Insets(20)
@@ -58,10 +101,9 @@ public class ManageGuard {
                 "-fx-background-color:#b3adad;"
         );
 
-
-        // ==========================================
+        // =====================================================
         // TITLE
-        // ==========================================
+        // =====================================================
 
         Label title =
                 new Label("Manage Guards");
@@ -72,10 +114,13 @@ public class ManageGuard {
                 "-fx-text-fill:black;"
         );
 
+        // =====================================================
+        // SUBTITLE
+        // =====================================================
 
         Label subtitle =
                 new Label(
-                        "View and manage Security guards"
+                        "View and manage all Security guards"
                 );
 
         subtitle.setStyle(
@@ -83,21 +128,24 @@ public class ManageGuard {
                 "-fx-text-fill:#777777;"
         );
 
-
-        // ==========================================
+        // =====================================================
         // SEARCH
-        // ==========================================
+        // =====================================================
 
-        TextField search =
+        search =
                 new TextField();
 
         search.setPromptText(
-                "Search resident, flat no., phone..."
+                "Search guard, mobile, shift..."
         );
 
         search.setPrefHeight(45);
 
-        search.setPrefWidth(750);
+        search.setPrefWidth(600);
+
+        search.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
         search.setStyle(
                 "-fx-background-color:#F8F9FA;" +
@@ -107,15 +155,19 @@ public class ManageGuard {
                 "-fx-font-size:14px;"
         );
 
+        HBox.setHgrow(
+                search,
+                Priority.ALWAYS
+        );
 
-        // ==========================================
+        // =====================================================
         // ADD GUARD BUTTON
-        // ==========================================
+        // =====================================================
 
         Button addGuardBtn =
                 new Button("+ Add New Guard");
 
-        addGuardBtn.setPrefWidth(200);
+        addGuardBtn.setPrefWidth(180);
 
         addGuardBtn.setPrefHeight(45);
 
@@ -127,119 +179,111 @@ public class ManageGuard {
                 "-fx-cursor:hand;"
         );
 
+        // =====================================================
+        // REFRESH BUTTON
+        // ONLY REFRESH SYMBOL
+        // =====================================================
 
-        // IMPORTANT:
-        // No new Stage here.
-        // Popup will open inside same Scene.
+        Button refreshBtn =
+                new Button("⟳");
 
-        addGuardBtn.setOnAction(
-                e -> openAddGuardDialog()
+        refreshBtn.setPrefWidth(45);
+
+        refreshBtn.setPrefHeight(45);
+
+        refreshBtn.setMinWidth(45);
+
+        refreshBtn.setMinHeight(45);
+
+        refreshBtn.setMaxWidth(45);
+
+        refreshBtn.setMaxHeight(45);
+
+        refreshBtn.setStyle(
+                "-fx-background-color:#56342B;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;" +
+                "-fx-padding:0;"
         );
 
+        Tooltip refreshTooltip =
+                new Tooltip("Refresh");
 
-        // ==========================================
+        refreshBtn.setTooltip(
+                refreshTooltip
+        );
+
+        // =====================================================
         // SEARCH BOX
-        // ==========================================
+        // =====================================================
 
         HBox searchBox =
-                new HBox(15);
+                new HBox(12);
 
         searchBox.setAlignment(
                 Pos.CENTER_LEFT
         );
 
+        searchBox.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         searchBox.getChildren().addAll(
                 search,
-                addGuardBtn
+                addGuardBtn,
+                refreshBtn
         );
 
-
-        // ==========================================
-        // GUARD 1
-        // ==========================================
-
-        HBox resident1 =
-                createGuard(
-                        "Rajesh Kumar",
-                        "B-402",
-                        "9876543210",
-                        "Active"
-                );
-
-
-        // ==========================================
-        // GUARD 2
-        // ==========================================
-
-        HBox resident2 =
-                createGuard(
-                        "Sunil Yadav",
-                        "B-402",
-                        "9876543210",
-                        "Active"
-                );
-
-
-        // ==========================================
-        // GUARD 3
-        // ==========================================
-
-        HBox resident3 =
-                createGuard(
-                        "Mahesh Jagtap",
-                        "B-402",
-                        "9876543210",
-                        "Active"
-                );
-
-
-        // ==========================================
-        // GUARD 4
-        // ==========================================
-
-        HBox resident4 =
-                createGuard(
-                        "Ramesh More",
-                        "B-402",
-                        "9876543210",
-                        "Inactive"
-                );
-
-
-        // ==========================================
+        // =====================================================
         // GUARD LIST
-        // ==========================================
+        // =====================================================
 
-        VBox vb =
-                new VBox(
-                        40,
-                        resident1,
-                        resident2,
-                        resident3,
-                        resident4
-                );
+        guardList =
+                new VBox(15);
 
-        VBox.setMargin(
-                resident1,
-                new Insets(20, 0, 0, 0)
+        guardList.setPadding(
+                new Insets(15, 0, 20, 0)
         );
 
+        guardList.setFillWidth(true);
 
-        // ==========================================
-        // MAIN CONTENT ADD
-        // ==========================================
+        // =====================================================
+        // SCROLL PANE
+        // =====================================================
 
-        mainvb.getChildren().addAll(
-                title,
-                subtitle,
-                searchBox,
-                vb
+        ScrollPane scrollPane =
+                new ScrollPane();
+
+        scrollPane.setContent(
+                guardList
         );
 
+        scrollPane.setFitToWidth(true);
 
-        // ==========================================
+        scrollPane.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-border-color:transparent;"
+        );
+
+        scrollPane.setHbarPolicy(
+                ScrollPane.ScrollBarPolicy.NEVER
+        );
+
+        scrollPane.setVbarPolicy(
+                ScrollPane.ScrollBarPolicy.AS_NEEDED
+        );
+
+        VBox.setVgrow(
+                scrollPane,
+                Priority.ALWAYS
+        );
+
+        // =====================================================
         // MAIN ROOT
-        // ==========================================
+        // =====================================================
 
         HBox mainRoot =
                 new HBox();
@@ -263,10 +307,9 @@ public class ManageGuard {
                 Priority.ALWAYS
         );
 
-
-        // ==========================================
-        // STACKPANE
-        // ==========================================
+        // =====================================================
+        // ROOT STACKPANE
+        // =====================================================
 
         rootStack =
                 new StackPane();
@@ -275,10 +318,62 @@ public class ManageGuard {
                 mainRoot
         );
 
+        // =====================================================
+        // ADD GUARD BUTTON
+        // =====================================================
 
-        // ==========================================
+        addGuardBtn.setOnAction(
+                e -> openAddGuardDialog()
+        );
+
+        // =====================================================
+        // REFRESH BUTTON
+        // =====================================================
+
+        refreshBtn.setOnAction(e -> {
+
+            // Clear search
+            search.clear();
+
+            // Load latest Firestore data
+            loadGuards();
+
+            System.out.println(
+                    "Guard data refreshed from Firestore."
+            );
+        });
+
+        // =====================================================
+        // SEARCH
+        // =====================================================
+
+        search.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+
+                    filterGuards(newValue);
+                }
+        );
+
+        // =====================================================
+        // MAIN CONTENT
+        // =====================================================
+
+        mainvb.getChildren().addAll(
+                title,
+                subtitle,
+                searchBox,
+                scrollPane
+        );
+
+        // =====================================================
+        // LOAD DATA
+        // =====================================================
+
+        loadGuards();
+
+        // =====================================================
         // SCENE
-        // ==========================================
+        // =====================================================
 
         Scene scene =
                 new Scene(
@@ -292,48 +387,173 @@ public class ManageGuard {
         return guard;
     }
 
+    // =====================================================
+    // LOAD GUARDS
+    // =====================================================
+
+    private void loadGuards() {
+
+        guardList.getChildren().clear();
+
+        List<Guard> guards =
+                guardController.getAllGuards();
+
+        if (guards == null ||
+                guards.isEmpty()) {
+
+            Label emptyLabel =
+                    new Label(
+                            "No guards found."
+                    );
+
+            emptyLabel.setStyle(
+                    "-fx-font-size:16px;" +
+                    "-fx-text-fill:#555555;"
+            );
+
+            guardList.getChildren().add(
+                    emptyLabel
+            );
+
+            return;
+        }
+
+        for (Guard guard : guards) {
+
+            if (guard == null) {
+                continue;
+            }
+
+            HBox guardRow =
+                    createGuardRow(guard);
+
+            guardList.getChildren().add(
+                    guardRow
+            );
+        }
+    }
 
     // =====================================================
-    // GUARD CARD METHOD
+    // FILTER GUARDS
     // =====================================================
 
-    private HBox createGuard(
-            String guardName,
-            String flatNo,
-            String mobileNo,
-            String statusText) {
+    private void filterGuards(
+            String searchText) {
 
-        HBox resident =
-                new HBox(5);
+        guardList.getChildren().clear();
 
-        resident.setAlignment(
+        String text =
+                searchText == null
+                        ? ""
+                        : searchText
+                                .toLowerCase()
+                                .trim();
+
+        List<Guard> guards =
+                guardController.getAllGuards();
+
+        boolean found = false;
+
+        if (guards != null) {
+
+            for (Guard guard : guards) {
+
+                if (guard == null) {
+                    continue;
+                }
+
+                String name =
+                        safe(guard.getName())
+                                .toLowerCase();
+
+                String mobile =
+                        safe(guard.getMobile())
+                                .toLowerCase();
+
+                String shift =
+                        safe(guard.getShift())
+                                .toLowerCase();
+
+                String status =
+                        safe(guard.getStatus())
+                                .toLowerCase();
+
+                String gate =
+                        safe(guard.getAssignedGate())
+                                .toLowerCase();
+
+                if (name.contains(text)
+                        || mobile.contains(text)
+                        || shift.contains(text)
+                        || status.contains(text)
+                        || gate.contains(text)) {
+
+                    guardList.getChildren().add(
+                            createGuardRow(guard)
+                    );
+
+                    found = true;
+                }
+            }
+        }
+
+        if (!found) {
+
+            Label emptyLabel =
+                    new Label(
+                            "No matching guards found."
+                    );
+
+            emptyLabel.setStyle(
+                    "-fx-font-size:16px;" +
+                    "-fx-text-fill:#555555;"
+            );
+
+            guardList.getChildren().add(
+                    emptyLabel
+            );
+        }
+    }
+
+    // =====================================================
+    // CREATE GUARD ROW
+    // =====================================================
+
+    private HBox createGuardRow(
+            Guard guard) {
+
+        HBox guardRow =
+                new HBox(10);
+
+        guardRow.setPrefHeight(85);
+
+        guardRow.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        guardRow.setAlignment(
                 Pos.CENTER_LEFT
         );
 
-        resident.setPrefWidth(1000);
-
-        resident.setMaxWidth(1000);
-
-        resident.setPrefHeight(70);
-
-        resident.setPadding(
-                new Insets(20)
+        guardRow.setPadding(
+                new Insets(15)
         );
 
-        resident.setStyle(
+        guardRow.setStyle(
                 "-fx-background-color:white;" +
                 "-fx-background-radius:10;"
         );
 
-
+        // =====================================================
         // PROFILE
+        // =====================================================
 
         Label profile =
                 new Label("👤");
 
-        profile.setPrefWidth(50);
+        profile.setPrefWidth(45);
 
-        profile.setPrefHeight(50);
+        profile.setPrefHeight(45);
 
         profile.setAlignment(
                 Pos.CENTER
@@ -342,79 +562,378 @@ public class ManageGuard {
         profile.setStyle(
                 "-fx-background-color:#E5E7EB;" +
                 "-fx-background-radius:50%;" +
-                "-fx-font-size:22px;"
+                "-fx-font-size:21px;"
         );
 
-
+        // =====================================================
         // NAME
+        // =====================================================
 
         Label name =
-                new Label(guardName);
+                new Label(
+                        safe(guard.getName())
+                );
 
-        name.setPrefWidth(220);
+        name.setPrefWidth(150);
 
         name.setStyle(
-                "-fx-font-size:16px;" +
+                "-fx-font-size:15px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#123C36;"
         );
 
-
-        // FLAT
-
-        Label flat =
-                new Label(
-                        "Flat: " + flatNo
-                );
-
-        flat.setPrefWidth(150);
-
-        flat.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#555555;"
-        );
-
-
+        // =====================================================
         // MOBILE
+        // =====================================================
 
         Label mobile =
                 new Label(
-                        "Mobile: " + mobileNo
+                        "Mobile: " +
+                        safe(guard.getMobile())
                 );
 
-        mobile.setPrefWidth(220);
+        mobile.setPrefWidth(155);
 
         mobile.setStyle(
-                "-fx-font-size:14px;" +
+                "-fx-font-size:13px;" +
                 "-fx-text-fill:#555555;"
         );
 
+        // =====================================================
+        // SHIFT LABEL
+        // =====================================================
 
-        // STATUS
+        Label shiftLabel =
+                new Label("Shift");
 
-        Label status =
-                new Label(statusText);
-
-        status.setPrefWidth(100);
-
-        status.setStyle(
-                "-fx-text-fill:#2E9D63;" +
-                "-fx-font-weight:bold;"
+        shiftLabel.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
         );
 
+        // =====================================================
+        // SHIFT COMBOBOX
+        // =====================================================
 
-        resident.getChildren().addAll(
+        ComboBox<String> shiftCombo =
+                new ComboBox<>();
+
+        shiftCombo.getItems().addAll(
+                "Morning",
+                "Evening",
+                "Night"
+        );
+
+        String currentShift =
+                safe(guard.getShift());
+
+        if (currentShift.isEmpty()) {
+
+            currentShift = "Morning";
+        }
+
+        if (!shiftCombo.getItems()
+                .contains(currentShift)) {
+
+            shiftCombo.getItems()
+                    .add(currentShift);
+        }
+
+        shiftCombo.setValue(
+                currentShift
+        );
+
+        shiftCombo.setPrefWidth(125);
+
+        shiftCombo.setPrefHeight(35);
+
+        // =====================================================
+        // SHIFT BOX
+        // =====================================================
+
+        VBox shiftBox =
+                new VBox(2);
+
+        shiftBox.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        shiftBox.getChildren().addAll(
+                shiftLabel,
+                shiftCombo
+        );
+
+        // =====================================================
+        // STATUS LABEL
+        // =====================================================
+
+        Label statusLabel =
+                new Label("Status");
+
+        statusLabel.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+        // =====================================================
+        // STATUS COMBOBOX
+        // =====================================================
+
+        ComboBox<String> statusCombo =
+                new ComboBox<>();
+
+        statusCombo.getItems().addAll(
+                "Active",
+                "Inactive"
+        );
+
+        String currentStatus =
+                safe(guard.getStatus());
+
+        if ("Inactive".equalsIgnoreCase(
+                currentStatus)) {
+
+            statusCombo.setValue(
+                    "Inactive"
+            );
+
+        } else {
+
+            statusCombo.setValue(
+                    "Active"
+            );
+        }
+
+        statusCombo.setPrefWidth(105);
+
+        statusCombo.setPrefHeight(35);
+
+        // =====================================================
+        // STATUS BOX
+        // =====================================================
+
+        VBox statusBox =
+                new VBox(2);
+
+        statusBox.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        statusBox.getChildren().addAll(
+                statusLabel,
+                statusCombo
+        );
+
+        // =====================================================
+        // GATE LABEL
+        // =====================================================
+
+        Label gateLabel =
+                new Label("Assigned Gate");
+
+        gateLabel.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+        // =====================================================
+        // GATE COMBOBOX
+        // =====================================================
+
+        ComboBox<String> gateCombo =
+                new ComboBox<>();
+
+        gateCombo.getItems().addAll(
+                "Main Gate",
+                "Back Gate"
+        );
+
+        String currentGate =
+                safe(
+                        guard.getAssignedGate()
+                );
+
+        if ("Back Gate".equalsIgnoreCase(
+                currentGate)) {
+
+            gateCombo.setValue(
+                    "Back Gate"
+            );
+
+        } else {
+
+            gateCombo.setValue(
+                    "Main Gate"
+            );
+        }
+
+        gateCombo.setPrefWidth(120);
+
+        gateCombo.setPrefHeight(35);
+
+        // =====================================================
+        // GATE BOX
+        // =====================================================
+
+        VBox gateBox =
+                new VBox(2);
+
+        gateBox.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        gateBox.getChildren().addAll(
+                gateLabel,
+                gateCombo
+        );
+
+        // =====================================================
+        // SHIFT CHANGE
+        // =====================================================
+
+        shiftCombo.setOnAction(e -> {
+
+            String newShift =
+                    shiftCombo.getValue();
+
+            if (newShift == null) {
+                return;
+            }
+
+            updateGuard(
+                    guard,
+                    newShift,
+                    statusCombo.getValue(),
+                    gateCombo.getValue()
+            );
+        });
+
+        // =====================================================
+        // STATUS CHANGE
+        // =====================================================
+
+        statusCombo.setOnAction(e -> {
+
+            String newStatus =
+                    statusCombo.getValue();
+
+            if (newStatus == null) {
+                return;
+            }
+
+            updateGuard(
+                    guard,
+                    shiftCombo.getValue(),
+                    newStatus,
+                    gateCombo.getValue()
+            );
+        });
+
+        // =====================================================
+        // GATE CHANGE
+        // =====================================================
+
+        gateCombo.setOnAction(e -> {
+
+            String newGate =
+                    gateCombo.getValue();
+
+            if (newGate == null) {
+                return;
+            }
+
+            updateGuard(
+                    guard,
+                    shiftCombo.getValue(),
+                    statusCombo.getValue(),
+                    newGate
+            );
+        });
+
+        // =====================================================
+        // ADD ALL TO ROW
+        // =====================================================
+
+        guardRow.getChildren().addAll(
+
                 profile,
+
                 name,
-                flat,
+
                 mobile,
-                status
+
+                shiftBox,
+
+                statusBox,
+
+                gateBox
         );
 
-        return resident;
+        return guardRow;
     }
 
+    // =====================================================
+    // UPDATE GUARD
+    // =====================================================
+
+    private void updateGuard(
+            Guard guard,
+            String shift,
+            String status,
+            String gate) {
+
+        try {
+
+            boolean updated =
+                    guardController.updateGuard(
+                            guard.getId(),
+                            shift,
+                            status,
+                            gate
+                    );
+
+            if (updated) {
+
+                guard.setShift(
+                        shift
+                );
+
+                guard.setStatus(
+                        status
+                );
+
+                guard.setAssignedGate(
+                        gate
+                );
+
+                System.out.println(
+                        "Guard updated successfully."
+                );
+
+            } else {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Update Failed",
+                        "Guard details could not be updated."
+                );
+
+                loadGuards();
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            showAlert(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Something went wrong while updating guard."
+            );
+
+            loadGuards();
+        }
+    }
 
     // =====================================================
     // ADD GUARD POPUP
@@ -422,9 +941,9 @@ public class ManageGuard {
 
     private void openAddGuardDialog() {
 
-        // ==========================================
-        // DARK OVERLAY
-        // ==========================================
+        // =====================================================
+        // OVERLAY
+        // =====================================================
 
         StackPane overlay =
                 new StackPane();
@@ -433,39 +952,34 @@ public class ManageGuard {
                 "-fx-background-color:rgba(0,0,0,0.5);"
         );
 
-
-        // ==========================================
-        // SMALL POPUP
-        // ==========================================
+        // =====================================================
+        // FORM BOX
+        // =====================================================
 
         VBox formBox =
-                new VBox(15);
+                new VBox(7);
 
         formBox.setPadding(
-                new Insets(30)
+                new Insets(18)
         );
 
-        formBox.setMaxWidth(500);
+        formBox.setPrefWidth(430);
 
-        formBox.setMaxHeight(450);
+        formBox.setMaxWidth(430);
 
-        formBox.setStyle("""
-            -fx-background-color:#ffffff;
-            -fx-background-radius:20;
-            -fx-effect:dropshadow(
-                three-pass-box,
-                rgba(0,0,0,0.3),
-                20,
-                0,
-                0,
-                5
-            );
-        """);
+        formBox.setMaxHeight(540);
 
+        formBox.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:15;" +
+                "-fx-effect:dropshadow(" +
+                "gaussian, rgba(0,0,0,0.3)," +
+                "20,0.2,0,5);"
+        );
 
-        // ==========================================
+        // =====================================================
         // HEADER
-        // ==========================================
+        // =====================================================
 
         HBox headerRow =
                 new HBox();
@@ -474,22 +988,22 @@ public class ManageGuard {
                 Pos.CENTER_LEFT
         );
 
-
         Label popupTitle =
-                new Label("Add New Guard");
+                new Label(
+                        "Add New Guard"
+                );
 
         popupTitle.setFont(
                 Font.font(
                         "Georgia",
                         FontWeight.BOLD,
-                        22
+                        21
                 )
         );
 
         popupTitle.setStyle(
                 "-fx-text-fill:#123C36;"
         );
-
 
         Region spacer =
                 new Region();
@@ -499,11 +1013,6 @@ public class ManageGuard {
                 Priority.ALWAYS
         );
 
-
-        // ==========================================
-        // CLOSE BUTTON
-        // ==========================================
-
         Button closeBtn =
                 new Button("✕");
 
@@ -511,7 +1020,7 @@ public class ManageGuard {
                 Font.font(
                         "Arial",
                         FontWeight.BOLD,
-                        16
+                        15
                 )
         );
 
@@ -521,25 +1030,20 @@ public class ManageGuard {
                 "-fx-cursor:hand;"
         );
 
-
-        closeBtn.setOnAction(
-                e -> removeOverlay(overlay)
-        );
-
-
         headerRow.getChildren().addAll(
                 popupTitle,
                 spacer,
                 closeBtn
         );
 
-
-        // ==========================================
-        // GUARD NAME
-        // ==========================================
+        // =====================================================
+        // NAME
+        // =====================================================
 
         Label nameLabel =
-                new Label("Guard Name");
+                createFormLabel(
+                        "Guard Name"
+                );
 
         TextField nameField =
                 new TextField();
@@ -548,15 +1052,16 @@ public class ManageGuard {
                 "Enter guard name"
         );
 
-        nameField.setPrefHeight(40);
+        nameField.setPrefHeight(35);
 
-
-        // ==========================================
+        // =====================================================
         // MOBILE
-        // ==========================================
+        // =====================================================
 
         Label mobileLabel =
-                new Label("Mobile Number");
+                createFormLabel(
+                        "Mobile Number"
+                );
 
         TextField mobileField =
                 new TextField();
@@ -565,32 +1070,44 @@ public class ManageGuard {
                 "Enter mobile number"
         );
 
-        mobileField.setPrefHeight(40);
+        mobileField.setPrefHeight(35);
 
-
-        // ==========================================
+        // =====================================================
         // SHIFT
-        // ==========================================
+        // =====================================================
 
         Label shiftLabel =
-                new Label("Shift");
+                createFormLabel(
+                        "Shift"
+                );
 
-        TextField shiftField =
-                new TextField();
+        ComboBox<String> shiftCombo =
+                new ComboBox<>();
 
-        shiftField.setPromptText(
-                "Enter shift"
+        shiftCombo.getItems().addAll(
+                "Morning",
+                "Evening",
+                "Night"
         );
 
-        shiftField.setPrefHeight(40);
+        shiftCombo.setValue(
+                "Morning"
+        );
 
+        shiftCombo.setPrefHeight(35);
 
-        // ==========================================
+        shiftCombo.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        // =====================================================
         // EMAIL
-        // ==========================================
+        // =====================================================
 
         Label emailLabel =
-                new Label("Email");
+                createFormLabel(
+                        "Email"
+                );
 
         TextField emailField =
                 new TextField();
@@ -599,19 +1116,72 @@ public class ManageGuard {
                 "Enter email"
         );
 
-        emailField.setPrefHeight(40);
+        emailField.setPrefHeight(35);
 
+        // =====================================================
+        // STATUS
+        // =====================================================
 
-        // ==========================================
-        // CANCEL BUTTON
-        // ==========================================
+        Label statusLabel =
+                createFormLabel(
+                        "Status"
+                );
+
+        ComboBox<String> statusCombo =
+                new ComboBox<>();
+
+        statusCombo.getItems().addAll(
+                "Active",
+                "Inactive"
+        );
+
+        statusCombo.setValue(
+                "Active"
+        );
+
+        statusCombo.setPrefHeight(35);
+
+        statusCombo.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        // =====================================================
+        // ASSIGNED GATE
+        // =====================================================
+
+        Label gateLabel =
+                createFormLabel(
+                        "Assigned Gate"
+                );
+
+        ComboBox<String> gateCombo =
+                new ComboBox<>();
+
+        gateCombo.getItems().addAll(
+                "Main Gate",
+                "Back Gate"
+        );
+
+        gateCombo.setValue(
+                "Main Gate"
+        );
+
+        gateCombo.setPrefHeight(35);
+
+        gateCombo.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        // =====================================================
+        // CANCEL
+        // =====================================================
 
         Button cancelBtn =
                 new Button("Cancel");
 
         cancelBtn.setPrefWidth(100);
 
-        cancelBtn.setPrefHeight(40);
+        cancelBtn.setPrefHeight(38);
 
         cancelBtn.setStyle(
                 "-fx-background-color:#E5E7EB;" +
@@ -620,17 +1190,16 @@ public class ManageGuard {
                 "-fx-cursor:hand;"
         );
 
-
-        // ==========================================
-        // SAVE BUTTON
-        // ==========================================
+        // =====================================================
+        // SAVE
+        // =====================================================
 
         Button saveBtn =
                 new Button("Save Guard");
 
         saveBtn.setPrefWidth(130);
 
-        saveBtn.setPrefHeight(40);
+        saveBtn.setPrefHeight(38);
 
         saveBtn.setStyle(
                 "-fx-background-color:#2E9D63;" +
@@ -640,10 +1209,9 @@ public class ManageGuard {
                 "-fx-cursor:hand;"
         );
 
-
-        // ==========================================
+        // =====================================================
         // BUTTON BOX
-        // ==========================================
+        // =====================================================
 
         HBox buttonBox =
                 new HBox(10);
@@ -652,37 +1220,18 @@ public class ManageGuard {
                 Pos.CENTER_RIGHT
         );
 
+        buttonBox.setPadding(
+                new Insets(5, 0, 0, 0)
+        );
+
         buttonBox.getChildren().addAll(
                 cancelBtn,
                 saveBtn
         );
 
-
-        // ==========================================
-        // CANCEL ACTION
-        // ==========================================
-
-        cancelBtn.setOnAction(
-                e -> removeOverlay(overlay)
-        );
-
-
-        // ==========================================
-        // SAVE ACTION
-        // ==========================================
-
-        saveBtn.setOnAction(e -> {
-
-            // Future me yaha Firebase save code
-            // add kar sakti ho.
-
-            removeOverlay(overlay);
-        });
-
-
-        // ==========================================
-        // ADD FORM CONTENT
-        // ==========================================
+        // =====================================================
+        // FORM CONTENT
+        // =====================================================
 
         formBox.getChildren().addAll(
 
@@ -695,49 +1244,227 @@ public class ManageGuard {
                 mobileField,
 
                 shiftLabel,
-                shiftField,
+                shiftCombo,
 
                 emailLabel,
                 emailField,
 
+                statusLabel,
+                statusCombo,
+
+                gateLabel,
+                gateCombo,
+
                 buttonBox
         );
 
-
-        // ==========================================
-        // ADD POPUP TO OVERLAY
-        // ==========================================
+        // =====================================================
+        // ADD FORM TO OVERLAY
+        // =====================================================
 
         overlay.getChildren().add(
                 formBox
         );
-
 
         StackPane.setAlignment(
                 formBox,
                 Pos.CENTER
         );
 
-
-        // ==========================================
-        // ADD OVERLAY TO SAME SCENE
-        // ==========================================
-
         rootStack.getChildren().add(
                 overlay
         );
+
+        // =====================================================
+        // CLOSE BUTTON
+        // =====================================================
+
+        closeBtn.setOnAction(
+                e -> removeOverlay(overlay)
+        );
+
+        // =====================================================
+        // CANCEL BUTTON
+        // =====================================================
+
+        cancelBtn.setOnAction(
+                e -> removeOverlay(overlay)
+        );
+
+        // =====================================================
+        // SAVE BUTTON
+        // =====================================================
+
+        saveBtn.setOnAction(e -> {
+
+            String name =
+                    nameField.getText()
+                            .trim();
+
+            String mobile =
+                    mobileField.getText()
+                            .trim();
+
+            String shift =
+                    shiftCombo.getValue();
+
+            String email =
+                    emailField.getText()
+                            .trim();
+
+            String status =
+                    statusCombo.getValue();
+
+            String gate =
+                    gateCombo.getValue();
+
+            // =================================================
+            // VALIDATION
+            // =================================================
+
+            if (name.isEmpty()
+                    || mobile.isEmpty()
+                    || shift == null
+                    || email.isEmpty()
+                    || status == null
+                    || gate == null) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Validation Error",
+                        "Please fill all fields."
+                );
+
+                return;
+            }
+
+            // =================================================
+            // ADD GUARD
+            // =================================================
+
+            boolean success =
+                    guardController.addGuard(
+                            name,
+                            mobile,
+                            shift,
+                            email,
+                            status,
+                            gate
+                    );
+
+            // =================================================
+            // SUCCESS
+            // =================================================
+
+            if (success) {
+
+                showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Success",
+                        "Guard saved successfully!"
+                );
+
+                removeOverlay(
+                        overlay
+                );
+
+                // Clear fields
+                nameField.clear();
+                mobileField.clear();
+                emailField.clear();
+
+                shiftCombo.setValue(
+                        "Morning"
+                );
+
+                statusCombo.setValue(
+                        "Active"
+                );
+
+                gateCombo.setValue(
+                        "Main Gate"
+                );
+
+                // =================================================
+                // REFRESH FIRESTORE DATA
+                // =================================================
+
+                loadGuards();
+
+            } else {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Error",
+                        "Failed to save guard."
+                );
+            }
+        });
     }
 
+    // =====================================================
+    // FORM LABEL
+    // =====================================================
+
+    private Label createFormLabel(
+            String text) {
+
+        Label label =
+                new Label(text);
+
+        label.setStyle(
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;" +
+                "-fx-font-size:13px;"
+        );
+
+        return label;
+    }
 
     // =====================================================
-    // REMOVE POPUP
+    // REMOVE OVERLAY
     // =====================================================
 
     private void removeOverlay(
             StackPane overlay) {
 
-        rootStack.getChildren().remove(
-                overlay
-        );
+        if (rootStack != null) {
+
+            rootStack.getChildren()
+                    .remove(overlay);
+        }
+    }
+
+    // =====================================================
+    // ALERT
+    // =====================================================
+
+    private void showAlert(
+            Alert.AlertType type,
+            String title,
+            String message) {
+
+        Alert alert =
+                new Alert(type);
+
+        alert.setTitle(title);
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
+    // =====================================================
+    // SAFE STRING
+    // =====================================================
+
+    private String safe(
+            String value) {
+
+        return value == null
+                ? ""
+                : value;
     }
 }

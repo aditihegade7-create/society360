@@ -1,12 +1,18 @@
 package com.society.view.Secretary_portal;
 
+import java.util.List;
+
+import com.society.controller.Secretary_Controller.ResidentController;
+import com.society.model.Secretary_model.Resident;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -17,23 +23,45 @@ public class ManageResidents {
 
     private Scene Resident;
 
+    // =====================================================
+    // CREATE SCENE
+    // =====================================================
+
     public Scene createScene(javafx.stage.Stage stage) {
+
+        // =====================================================
+        // CONTROLLER
+        // =====================================================
+
+        ResidentController residentController =
+                new ResidentController();
 
         // =====================================================
         // SIDEBAR
         // =====================================================
 
-        SecretarySidebar sidebarObj = new SecretarySidebar();
-        VBox sidebar = sidebarObj.createSidebar(stage);
+        SecretarySidebar sidebarObj =
+                new SecretarySidebar();
+
+        VBox sidebar =
+                sidebarObj.createSidebar(stage);
 
         // =====================================================
         // MAIN CONTENT
         // =====================================================
 
-        VBox mainvb = new VBox(10);
+        VBox mainvb =
+                new VBox(10);
 
-        mainvb.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        mainvb.setPadding(new Insets(20));
+        mainvb.setMaxSize(
+                Double.MAX_VALUE,
+                Double.MAX_VALUE
+        );
+
+        mainvb.setPadding(
+                new Insets(20)
+        );
+
         mainvb.setSpacing(10);
 
         mainvb.setStyle(
@@ -44,7 +72,8 @@ public class ManageResidents {
         // TITLE
         // =====================================================
 
-        Label title = new Label("Manage Residents");
+        Label title =
+                new Label("Manage Residents");
 
         title.setStyle(
                 "-fx-font-size:28px;" +
@@ -52,9 +81,14 @@ public class ManageResidents {
                 "-fx-text-fill:black;"
         );
 
-        Label subtitle = new Label(
-                "View and manage all residents"
-        );
+        // =====================================================
+        // SUBTITLE
+        // =====================================================
+
+        Label subtitle =
+                new Label(
+                        "View and manage all residents"
+                );
 
         subtitle.setStyle(
                 "-fx-font-size:14px;" +
@@ -62,16 +96,18 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // SEARCH
+        // SEARCH FIELD
         // =====================================================
 
-        TextField search = new TextField();
+        TextField search =
+                new TextField();
 
         search.setPromptText(
                 "Search resident, flat no., phone..."
         );
 
         search.setPrefHeight(45);
+
         search.setPrefWidth(750);
 
         search.setStyle(
@@ -83,28 +119,58 @@ public class ManageResidents {
         );
 
         // =====================================================
+        // REFRESH BUTTON
+        // =====================================================
+
+        Button refreshBtn =
+                new Button("⟳");
+
+        refreshBtn.setPrefWidth(50);
+
+        refreshBtn.setPrefHeight(45);
+
+        refreshBtn.setStyle(
+                "-fx-background-color:#434141;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-size:22px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
+        );
+
+        refreshBtn.setTooltip(
+                new javafx.scene.control.Tooltip(
+                        "Refresh resident data"
+                )
+        );
+
+        // =====================================================
         // ADD RESIDENT BUTTON
         // =====================================================
 
-        Button addResidentBtn = new Button(
-                "+ Add New Resident"
-        );
+        Button addResidentBtn =
+                new Button(
+                        "+ Add New Resident"
+                );
 
         addResidentBtn.setPrefWidth(200);
+
         addResidentBtn.setPrefHeight(45);
 
         addResidentBtn.setStyle(
                 "-fx-background-color:#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
-                "-fx-background-radius:8;"
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
         );
 
         // =====================================================
         // SEARCH BOX
         // =====================================================
 
-        HBox searchBox = new HBox(15);
+        HBox searchBox =
+                new HBox(10);
 
         searchBox.setAlignment(
                 Pos.CENTER_LEFT
@@ -112,98 +178,86 @@ public class ManageResidents {
 
         searchBox.getChildren().addAll(
                 search,
+                refreshBtn,
                 addResidentBtn
-        );
-
-        // =====================================================
-        // RESIDENT 1
-        // =====================================================
-
-        HBox resident1 = createResidentRow(
-                "Shravani",
-                "B-402",
-                "9876543210",
-                "Active"
-        );
-
-        // =====================================================
-        // RESIDENT 2
-        // =====================================================
-
-        HBox resident2 = createResidentRow(
-                "Sudharshana",
-                "B-402",
-                "9876543210",
-                "Active"
-        );
-
-        // =====================================================
-        // RESIDENT 3
-        // =====================================================
-
-        HBox resident3 = createResidentRow(
-                "Jiya",
-                "B-402",
-                "9876543210",
-                "Active"
-        );
-
-        // =====================================================
-        // RESIDENT 4
-        // =====================================================
-
-        HBox resident4 = createResidentRow(
-                "Manasi",
-                "B-402",
-                "9876543210",
-                "Inactive"
-        );
-
-        // =====================================================
-        // RESIDENT 5
-        // =====================================================
-
-        HBox resident5 = createResidentRow(
-                "Dhanashree",
-                "B-402",
-                "9876543210",
-                "Active"
         );
 
         // =====================================================
         // RESIDENT LIST
         // =====================================================
 
-        VBox vb = new VBox(
-                30,
-                resident1,
-                resident2,
-                resident3,
-                resident4,
-                resident5
-        );
+        VBox residentList =
+                new VBox(20);
 
-        VBox.setMargin(
-                resident1,
-                new Insets(20, 0, 0, 0)
+        residentList.setPadding(
+                new Insets(20, 0, 20, 0)
         );
 
         // =====================================================
-        // ADD MAIN CONTENT
+        // SCROLL PANE
+        // =====================================================
+
+        ScrollPane scrollPane =
+                new ScrollPane();
+
+        scrollPane.setContent(
+                residentList
+        );
+
+        scrollPane.setFitToWidth(true);
+
+        scrollPane.setStyle(
+                "-fx-background-color:transparent;"
+        );
+
+        VBox.setVgrow(
+                scrollPane,
+                Priority.ALWAYS
+        );
+
+        // =====================================================
+        // INITIAL LOAD FROM FIRESTORE
+        // =====================================================
+
+        loadResidents(
+                residentController,
+                residentList
+        );
+
+        // =====================================================
+        // REFRESH BUTTON ACTION
+        // =====================================================
+
+        refreshBtn.setOnAction(e -> {
+
+            // Clear search
+            search.clear();
+
+            // Fetch latest data from Firestore
+            loadResidents(
+                    residentController,
+                    residentList
+            );
+
+        });
+
+        // =====================================================
+        // MAIN CONTENT
         // =====================================================
 
         mainvb.getChildren().addAll(
                 title,
                 subtitle,
                 searchBox,
-                vb
+                scrollPane
         );
 
         // =====================================================
         // ROOT
         // =====================================================
 
-        HBox root = new HBox();
+        HBox root =
+                new HBox();
 
         root.setMaxSize(
                 Double.MAX_VALUE,
@@ -225,18 +279,22 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // STACKPANE
+        // STACK PANE
         // =====================================================
 
-        StackPane stackPane = new StackPane();
+        StackPane stackPane =
+                new StackPane();
 
-        stackPane.getChildren().add(root);
+        stackPane.getChildren().add(
+                root
+        );
 
         // =====================================================
-        // ADD RESIDENT SMALL POPUP
+        // POPUP
         // =====================================================
 
-        VBox popup = new VBox(12);
+        VBox popup =
+                new VBox(12);
 
         popup.setPadding(
                 new Insets(25)
@@ -247,23 +305,33 @@ public class ManageResidents {
         );
 
         popup.setPrefWidth(430);
+
         popup.setMaxWidth(430);
-        popup.setPrefHeight(400);
-        popup.setMaxHeight(400);
+
+        popup.setPrefHeight(520);
+
+        popup.setMaxHeight(520);
 
         popup.setStyle(
                 "-fx-background-color:white;" +
                 "-fx-background-radius:15;" +
-                "-fx-effect:dropshadow(gaussian, rgba(0,0,0,0.30), 20, 0.2, 0, 5);"
+                "-fx-effect:dropshadow(" +
+                "gaussian," +
+                "rgba(0,0,0,0.30)," +
+                "20," +
+                "0.2," +
+                "0," +
+                "5);"
         );
 
         // =====================================================
         // POPUP TITLE
         // =====================================================
 
-        Label popupTitle = new Label(
-                "Add New Resident"
-        );
+        Label popupTitle =
+                new Label(
+                        "Add New Resident"
+                );
 
         popupTitle.setStyle(
                 "-fx-font-size:24px;" +
@@ -275,15 +343,17 @@ public class ManageResidents {
         // NAME
         // =====================================================
 
-        Label nameLabel = new Label(
-                "Resident Name"
-        );
+        Label nameLabel =
+                new Label(
+                        "Resident Name"
+                );
 
         nameLabel.setStyle(
                 "-fx-font-weight:bold;"
         );
 
-        TextField nameField = new TextField();
+        TextField nameField =
+                new TextField();
 
         nameField.setPromptText(
                 "Enter resident name"
@@ -295,15 +365,17 @@ public class ManageResidents {
         // FLAT
         // =====================================================
 
-        Label flatLabel = new Label(
-                "Flat Number"
-        );
+        Label flatLabel =
+                new Label(
+                        "Flat Number"
+                );
 
         flatLabel.setStyle(
                 "-fx-font-weight:bold;"
         );
 
-        TextField flatField = new TextField();
+        TextField flatField =
+                new TextField();
 
         flatField.setPromptText(
                 "Enter flat number"
@@ -315,15 +387,17 @@ public class ManageResidents {
         // MOBILE
         // =====================================================
 
-        Label mobileLabel = new Label(
-                "Mobile Number"
-        );
+        Label mobileLabel =
+                new Label(
+                        "Mobile Number"
+                );
 
         mobileLabel.setStyle(
                 "-fx-font-weight:bold;"
         );
 
-        TextField mobileField = new TextField();
+        TextField mobileField =
+                new TextField();
 
         mobileField.setPromptText(
                 "Enter mobile number"
@@ -335,15 +409,17 @@ public class ManageResidents {
         // EMAIL
         // =====================================================
 
-        Label emailLabel = new Label(
-                "Email"
-        );
+        Label emailLabel =
+                new Label(
+                        "Email"
+                );
 
         emailLabel.setStyle(
                 "-fx-font-weight:bold;"
         );
 
-        TextField emailField = new TextField();
+        TextField emailField =
+                new TextField();
 
         emailField.setPromptText(
                 "Enter email"
@@ -352,45 +428,74 @@ public class ManageResidents {
         emailField.setPrefHeight(40);
 
         // =====================================================
+        // STATUS
+        // =====================================================
+
+        Label statusLabel =
+                new Label(
+                        "Status"
+                );
+
+        statusLabel.setStyle(
+                "-fx-font-weight:bold;"
+        );
+
+        TextField statusField =
+                new TextField();
+
+        statusField.setPromptText(
+                "Enter status (Owner / Tenant)"
+        );
+
+        statusField.setPrefHeight(40);
+
+        // =====================================================
         // CANCEL BUTTON
         // =====================================================
 
-        Button cancelBtn = new Button(
-                "Cancel"
-        );
+        Button cancelBtn =
+                new Button(
+                        "Cancel"
+                );
 
         cancelBtn.setPrefWidth(100);
+
         cancelBtn.setPrefHeight(40);
 
         cancelBtn.setStyle(
                 "-fx-background-color:#E5E7EB;" +
                 "-fx-text-fill:#333333;" +
-                "-fx-background-radius:8;"
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
         );
 
         // =====================================================
         // SAVE BUTTON
         // =====================================================
 
-        Button saveBtn = new Button(
-                "Save Resident"
-        );
+        Button saveBtn =
+                new Button(
+                        "Save Resident"
+                );
 
         saveBtn.setPrefWidth(140);
+
         saveBtn.setPrefHeight(40);
 
         saveBtn.setStyle(
                 "-fx-background-color:#2E9D63;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
-                "-fx-background-radius:8;"
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
         );
 
         // =====================================================
         // BUTTON BOX
         // =====================================================
 
-        HBox buttonBox = new HBox(10);
+        HBox buttonBox =
+                new HBox(10);
 
         buttonBox.setAlignment(
                 Pos.CENTER_RIGHT
@@ -425,24 +530,30 @@ public class ManageResidents {
                 emailLabel,
                 emailField,
 
+                statusLabel,
+                statusField,
+
                 buttonBox
         );
 
         // =====================================================
-        // DARK BACKGROUND OVERLAY
+        // DARK OVERLAY
         // =====================================================
 
-        VBox overlay = new VBox();
+        VBox overlay =
+                new VBox();
 
         overlay.setStyle(
-                "-fx-background-color:rgba(0,0,0,0.35);"
+                "-fx-background-color:" +
+                "rgba(0,0,0,0.35);"
         );
 
         // =====================================================
         // POPUP CONTAINER
         // =====================================================
 
-        StackPane popupContainer = new StackPane();
+        StackPane popupContainer =
+                new StackPane();
 
         popupContainer.setAlignment(
                 Pos.CENTER
@@ -453,10 +564,11 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // ADD POPUP TO STACKPANE
+        // POPUP LAYER
         // =====================================================
 
-        StackPane popupLayer = new StackPane();
+        StackPane popupLayer =
+                new StackPane();
 
         popupLayer.setPickOnBounds(true);
 
@@ -465,7 +577,6 @@ public class ManageResidents {
                 popupContainer
         );
 
-        // Initially popup hidden
         popupLayer.setVisible(false);
 
         stackPane.getChildren().add(
@@ -473,7 +584,7 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // ADD BUTTON CLICK
+        // ADD RESIDENT BUTTON ACTION
         // =====================================================
 
         addResidentBtn.setOnAction(e -> {
@@ -483,74 +594,246 @@ public class ManageResidents {
         });
 
         // =====================================================
-        // CANCEL BUTTON
+        // CANCEL BUTTON ACTION
         // =====================================================
 
         cancelBtn.setOnAction(e -> {
 
             popupLayer.setVisible(false);
 
-            nameField.clear();
-            flatField.clear();
-            mobileField.clear();
-            emailField.clear();
+            clearFields(
+                    nameField,
+                    flatField,
+                    mobileField,
+                    emailField,
+                    statusField
+            );
 
         });
 
         // =====================================================
-        // SAVE BUTTON
+        // SAVE BUTTON ACTION
         // =====================================================
 
         saveBtn.setOnAction(e -> {
 
+            // =================================================
+            // GET VALUES
+            // =================================================
+
             String name =
-                    nameField.getText();
+                    nameField.getText().trim();
 
             String flat =
-                    flatField.getText();
+                    flatField.getText().trim();
 
             String mobile =
-                    mobileField.getText();
+                    mobileField.getText().trim();
 
             String email =
-                    emailField.getText();
+                    emailField.getText().trim();
 
-            System.out.println(
-                    "Resident Name: " + name
-            );
+            String status =
+                    statusField.getText().trim();
 
-            System.out.println(
-                    "Flat Number: " + flat
-            );
+            // =================================================
+            // VALIDATION
+            // =================================================
 
-            System.out.println(
-                    "Mobile: " + mobile
-            );
+            if (name.isEmpty()
+                    || flat.isEmpty()
+                    || mobile.isEmpty()
+                    || email.isEmpty()
+                    || status.isEmpty()) {
 
-            System.out.println(
-                    "Email: " + email
-            );
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Validation Error",
+                        "Please fill all fields."
+                );
 
-            // Later Firebase / Firestore save
+                return;
+            }
 
-            popupLayer.setVisible(false);
+            // =================================================
+            // CONTROLLER CALL
+            // =================================================
 
-            nameField.clear();
-            flatField.clear();
-            mobileField.clear();
-            emailField.clear();
+            boolean success =
+                    residentController.addResident(
+                            name,
+                            flat,
+                            mobile,
+                            email,
+                            status
+                    );
+
+            // =================================================
+            // SUCCESS
+            // =================================================
+
+            if (success) {
+
+                showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Success",
+                        "Resident saved successfully!"
+                );
+
+                // Close popup
+                popupLayer.setVisible(false);
+
+                // Clear fields
+                clearFields(
+                        nameField,
+                        flatField,
+                        mobileField,
+                        emailField,
+                        statusField
+                );
+
+                // Refresh Firestore data
+                loadResidents(
+                        residentController,
+                        residentList
+                );
+
+            } else {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Error",
+                        "Failed to save resident."
+                );
+            }
 
         });
+
+        // =====================================================
+        // SEARCH FUNCTION
+        // =====================================================
+
+        search.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+
+                    String searchText =
+                            newValue
+                                    .toLowerCase()
+                                    .trim();
+
+                    residentList
+                            .getChildren()
+                            .clear();
+
+                    List<Resident> residents =
+                            residentController
+                                    .getAllResidents();
+
+                    if (residents == null
+                            || residents.isEmpty()) {
+
+                        Label emptyLabel =
+                                new Label(
+                                        "No residents found."
+                                );
+
+                        emptyLabel.setStyle(
+                                "-fx-font-size:16px;" +
+                                "-fx-text-fill:#555555;"
+                        );
+
+                        residentList
+                                .getChildren()
+                                .add(
+                                        emptyLabel
+                                );
+
+                        return;
+                    }
+
+                    // =================================================
+                    // SEARCH EACH RESIDENT
+                    // =================================================
+
+                    for (Resident resident :
+                            residents) {
+
+                        String name =
+                                resident.getName() == null
+                                        ? ""
+                                        : resident
+                                            .getName()
+                                            .toLowerCase();
+
+                        String flat =
+                                resident.getFlat() == null
+                                        ? ""
+                                        : resident
+                                            .getFlat()
+                                            .toLowerCase();
+
+                        String mobile =
+                                resident.getMobile() == null
+                                        ? ""
+                                        : resident
+                                            .getMobile()
+                                            .toLowerCase();
+
+                        if (name.contains(searchText)
+                                || flat.contains(searchText)
+                                || mobile.contains(searchText)) {
+
+                            HBox row =
+                                    createResidentRow(
+                                            resident.getName(),
+                                            resident.getFlat(),
+                                            resident.getMobile(),
+                                            resident.getStatus()
+                                    );
+
+                            residentList
+                                    .getChildren()
+                                    .add(row);
+                        }
+                    }
+
+                    // =================================================
+                    // NO SEARCH RESULT
+                    // =================================================
+
+                    if (residentList
+                            .getChildren()
+                            .isEmpty()) {
+
+                        Label noResult =
+                                new Label(
+                                        "No matching residents found."
+                                );
+
+                        noResult.setStyle(
+                                "-fx-font-size:16px;" +
+                                "-fx-text-fill:#555555;"
+                        );
+
+                        residentList
+                                .getChildren()
+                                .add(
+                                        noResult
+                                );
+                    }
+                }
+        );
 
         // =====================================================
         // SCENE
         // =====================================================
 
-        Scene scene = new Scene(
-                stackPane,
-                ScreenSize.getWidth(),
-                ScreenSize.getHeight()
-        );
+        Scene scene =
+                new Scene(
+                        stackPane,
+                        ScreenSize.getWidth(),
+                        ScreenSize.getHeight()
+                );
 
         Resident = scene;
 
@@ -558,7 +841,118 @@ public class ManageResidents {
     }
 
     // =========================================================
-    // RESIDENT ROW METHOD
+    // LOAD RESIDENTS FROM FIRESTORE
+    // =========================================================
+
+    private void loadResidents(
+            ResidentController residentController,
+            VBox residentList
+    ) {
+
+        residentList
+                .getChildren()
+                .clear();
+
+        List<Resident> residents =
+                residentController
+                        .getAllResidents();
+
+        // =====================================================
+        // NO DATA
+        // =====================================================
+
+        if (residents == null
+                || residents.isEmpty()) {
+
+            Label emptyLabel =
+                    new Label(
+                            "No residents found."
+                    );
+
+            emptyLabel.setStyle(
+                    "-fx-font-size:16px;" +
+                    "-fx-text-fill:#555555;"
+            );
+
+            residentList
+                    .getChildren()
+                    .add(
+                            emptyLabel
+                    );
+
+            return;
+        }
+
+        // =====================================================
+        // DISPLAY RESIDENTS
+        // =====================================================
+
+        for (Resident resident :
+                residents) {
+
+            HBox residentRow =
+                    createResidentRow(
+                            resident.getName(),
+                            resident.getFlat(),
+                            resident.getMobile(),
+                            resident.getStatus()
+                    );
+
+            residentList
+                    .getChildren()
+                    .add(
+                            residentRow
+                    );
+        }
+    }
+
+    // =========================================================
+    // CLEAR FIELDS
+    // =========================================================
+
+    private void clearFields(
+            TextField nameField,
+            TextField flatField,
+            TextField mobileField,
+            TextField emailField,
+            TextField statusField
+    ) {
+
+        nameField.clear();
+
+        flatField.clear();
+
+        mobileField.clear();
+
+        emailField.clear();
+
+        statusField.clear();
+    }
+
+    // =========================================================
+    // ALERT
+    // =========================================================
+
+    private void showAlert(
+            Alert.AlertType type,
+            String title,
+            String message
+    ) {
+
+        Alert alert =
+                new Alert(type);
+
+        alert.setTitle(title);
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
+    // =========================================================
+    // CREATE RESIDENT ROW
     // =========================================================
 
     private HBox createResidentRow(
@@ -568,10 +962,13 @@ public class ManageResidents {
             String statusText
     ) {
 
-        HBox residentRow = new HBox(5);
+        HBox residentRow =
+                new HBox(5);
 
         residentRow.setPrefWidth(1000);
+
         residentRow.setMaxWidth(1000);
+
         residentRow.setPrefHeight(70);
 
         residentRow.setAlignment(
@@ -591,9 +988,11 @@ public class ManageResidents {
         // PROFILE
         // =====================================================
 
-        Label profile = new Label("👤");
+        Label profile =
+                new Label("👤");
 
         profile.setPrefWidth(50);
+
         profile.setPrefHeight(50);
 
         profile.setAlignment(
@@ -610,9 +1009,12 @@ public class ManageResidents {
         // NAME
         // =====================================================
 
-        Label name = new Label(
-                residentName
-        );
+        Label name =
+                new Label(
+                        residentName == null
+                                ? ""
+                                : residentName
+                );
 
         name.setPrefWidth(200);
 
@@ -626,9 +1028,15 @@ public class ManageResidents {
         // FLAT
         // =====================================================
 
-        Label flat = new Label(
-                "Flat: " + flatNumber
-        );
+        Label flat =
+                new Label(
+                        "Flat: "
+                                + (
+                                    flatNumber == null
+                                            ? ""
+                                            : flatNumber
+                                  )
+                );
 
         flat.setPrefWidth(150);
 
@@ -642,9 +1050,15 @@ public class ManageResidents {
         // MOBILE
         // =====================================================
 
-        Label mobileLabel = new Label(
-                "Mobile: " + mobile
-        );
+        Label mobileLabel =
+                new Label(
+                        "Mobile: "
+                                + (
+                                    mobile == null
+                                            ? ""
+                                            : mobile
+                                  )
+                );
 
         mobileLabel.setPrefWidth(220);
 
@@ -657,9 +1071,12 @@ public class ManageResidents {
         // STATUS
         // =====================================================
 
-        Label status = new Label(
-                statusText
-        );
+        Label status =
+                new Label(
+                        statusText == null
+                                ? ""
+                                : statusText
+                );
 
         status.setPrefWidth(100);
 

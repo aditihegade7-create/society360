@@ -1,14 +1,21 @@
 package com.society.view.Secretary_portal;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import com.society.controller.Secretary_Controller.EventController;
+import com.society.model.Secretary_model.Event;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -22,27 +29,56 @@ public class ManageEvents {
 
     private Scene manageEventsScene;
 
-    // IMPORTANT:
-    // StackPane will keep popup inside same scene
+    // =====================================================
+    // ROOT STACK
+    // =====================================================
+
     private StackPane rootStack;
+
+    // =====================================================
+    // CONTROLLER
+    // =====================================================
+
+    private EventController eventController;
+
+    // =====================================================
+    // EVENT LIST
+    // =====================================================
+
+    private VBox eventList;
+
+    // =====================================================
+    // CREATE SCENE
+    // =====================================================
 
     public Scene createScene(Stage stage) {
 
-        // =========================
+        // =================================================
+        // CONTROLLER
+        // =================================================
+
+        eventController = new EventController();
+
+        // =================================================
         // SIDEBAR
-        // =========================
+        // =================================================
 
-        SecretarySidebar sidebarObj = new SecretarySidebar();
-        VBox sidebar = sidebarObj.createSidebar(stage);
+        SecretarySidebar sidebarObj =
+                new SecretarySidebar();
 
+        VBox sidebar =
+                sidebarObj.createSidebar(stage);
 
-        // =========================
+        // =================================================
         // MAIN CONTENT
-        // =========================
+        // =================================================
 
-        VBox mainvb = new VBox(20);
+        VBox mainvb =
+                new VBox(20);
 
-        mainvb.setPadding(new Insets(25));
+        mainvb.setPadding(
+                new Insets(25)
+        );
 
         mainvb.setPrefWidth(1220);
 
@@ -50,10 +86,9 @@ public class ManageEvents {
                 "-fx-background-color:#b3adad;"
         );
 
-
-        // =========================
+        // =================================================
         // HEADING
-        // =========================
+        // =================================================
 
         Label heading =
                 new Label("MANAGE EVENTS");
@@ -64,10 +99,9 @@ public class ManageEvents {
                 "-fx-text-fill:#434141;"
         );
 
-
-        // =========================
+        // =================================================
         // TITLE
-        // =========================
+        // =================================================
 
         Label title =
                 new Label("Manage Events");
@@ -77,7 +111,6 @@ public class ManageEvents {
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:black;"
         );
-
 
         Label subtitle =
                 new Label(
@@ -89,7 +122,6 @@ public class ManageEvents {
                 "-fx-text-fill:#777777;"
         );
 
-
         VBox titleBox =
                 new VBox(5);
 
@@ -98,10 +130,9 @@ public class ManageEvents {
                 subtitle
         );
 
-
-        // =========================
+        // =================================================
         // ADD EVENT BUTTON
-        // =========================
+        // =================================================
 
         Button addEventBtn =
                 new Button("+ Add Event");
@@ -117,16 +148,13 @@ public class ManageEvents {
                 "-fx-cursor:hand;"
         );
 
-
-        // CLICK ADD EVENT
         addEventBtn.setOnAction(
                 e -> openAddEventDialog()
         );
 
-
-        // =========================
+        // =================================================
         // HEADER
-        // =========================
+        // =================================================
 
         HBox header =
                 new HBox();
@@ -145,104 +173,26 @@ public class ManageEvents {
                 addEventBtn
         );
 
-
-        // =========================
+        // =================================================
         // EVENT LIST
-        // =========================
+        // =================================================
 
-        VBox eventList =
+        eventList =
                 new VBox(15);
 
         eventList.setPadding(
                 new Insets(5, 0, 5, 0)
         );
 
+        // =================================================
+        // LOAD EVENTS
+        // =================================================
 
-        // EVENT 1
+        loadEvents();
 
-        VBox event1 =
-                createEvent(
-                        "Society Annual Meeting",
-                        "18 May 2025",
-                        "10:00 AM",
-                        "Community Hall",
-                        "Upcoming"
-                );
-
-
-        // EVENT 2
-
-        VBox event2 =
-                createEvent(
-                        "Children's Drawing Competition",
-                        "25 May 2025",
-                        "04:00 PM",
-                        "Garden Area",
-                        "Upcoming"
-                );
-
-
-        // EVENT 3
-
-        VBox event3 =
-                createEvent(
-                        "Yoga Session",
-                        "28 May 2025",
-                        "07:00 AM",
-                        "Community Hall",
-                        "Upcoming"
-                );
-
-
-        // EVENT 4
-
-        VBox event4 =
-                createEvent(
-                        "Society Cleanliness Drive",
-                        "05 May 2025",
-                        "08:00 AM",
-                        "Society Entrance",
-                        "Completed"
-                );
-
-
-        // EVENT 5
-
-        VBox event5 =
-                createEvent(
-                        "Cultural Evening",
-                        "02 May 2025",
-                        "06:00 PM",
-                        "Community Hall",
-                        "Completed"
-                );
-
-
-        // EVENT 6
-
-        VBox event6 =
-                createEvent(
-                        "Tree Plantation Drive",
-                        "28 April 2025",
-                        "08:00 AM",
-                        "Society Garden",
-                        "Completed"
-                );
-
-
-        eventList.getChildren().addAll(
-                event1,
-                event2,
-                event3,
-                event4,
-                event5,
-                event6
-        );
-
-
-        // =========================
+        // =================================================
         // SCROLL PANE
-        // =========================
+        // =================================================
 
         ScrollPane scrollPane =
                 new ScrollPane();
@@ -260,15 +210,15 @@ public class ManageEvents {
                 "-fx-border-color:transparent;"
         );
 
-
-        // =========================
+        // =================================================
         // VIEW ALL EVENTS
-        // =========================
+        // =================================================
 
         Button viewAllBtn =
                 new Button("View All Events");
 
         viewAllBtn.setPrefWidth(1180);
+
         viewAllBtn.setPrefHeight(40);
 
         viewAllBtn.setStyle(
@@ -281,16 +231,13 @@ public class ManageEvents {
                 "-fx-cursor:hand;"
         );
 
-
-        // CLICK VIEW ALL
         viewAllBtn.setOnAction(
                 e -> openViewAllEventsDialog()
         );
 
-
-        // =========================
+        // =================================================
         // MAIN CONTENT
-        // =========================
+        // =================================================
 
         mainvb.getChildren().addAll(
                 heading,
@@ -299,10 +246,9 @@ public class ManageEvents {
                 viewAllBtn
         );
 
-
-        // =========================
-        // MAIN HBOX
-        // =========================
+        // =================================================
+        // MAIN ROOT
+        // =================================================
 
         HBox mainRoot =
                 new HBox();
@@ -322,10 +268,9 @@ public class ManageEvents {
                 Priority.ALWAYS
         );
 
-
-        // =========================
-        // STACKPANE ROOT
-        // =========================
+        // =================================================
+        // STACK PANE
+        // =================================================
 
         rootStack =
                 new StackPane();
@@ -334,10 +279,9 @@ public class ManageEvents {
                 mainRoot
         );
 
-
-        // =========================
+        // =================================================
         // SCENE
-        // =========================
+        // =================================================
 
         Scene scene =
                 new Scene(
@@ -351,6 +295,111 @@ public class ManageEvents {
         return manageEventsScene;
     }
 
+    // =====================================================
+    // LOAD EVENTS FROM FIRESTORE
+    // =====================================================
+
+    private void loadEvents() {
+
+        eventList.getChildren().clear();
+
+        try {
+
+            List<Event> events =
+                    eventController.getAllEvents();
+
+            if (events == null || events.isEmpty()) {
+
+                Label emptyLabel =
+                        new Label(
+                                "No events found."
+                        );
+
+                emptyLabel.setStyle(
+                        "-fx-font-size:14px;" +
+                        "-fx-text-fill:#666666;"
+                );
+
+                eventList.getChildren().add(
+                        emptyLabel
+                );
+
+                return;
+            }
+
+            for (Event event : events) {
+
+                // =========================================
+                // AUTOMATIC STATUS
+                // =========================================
+
+                String status =
+                        getEventStatus(
+                                event.getDate()
+                        );
+
+                VBox eventCard =
+                        createEvent(
+                                event.getEventName(),
+                                event.getDate(),
+                                event.getTime(),
+                                event.getVenue(),
+                                status
+                        );
+
+                eventList.getChildren().add(
+                        eventCard
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            Label errorLabel =
+                    new Label(
+                            "Unable to load events."
+                    );
+
+            errorLabel.setStyle(
+                    "-fx-font-size:14px;" +
+                    "-fx-text-fill:red;"
+            );
+
+            eventList.getChildren().add(
+                    errorLabel
+            );
+        }
+    }
+
+    // =====================================================
+    // AUTOMATIC EVENT STATUS
+    // =====================================================
+
+    private String getEventStatus(String date) {
+
+        try {
+
+            LocalDate eventDate =
+                    LocalDate.parse(date);
+
+            LocalDate today =
+                    LocalDate.now();
+
+            if (eventDate.isBefore(today)) {
+
+                return "Completed";
+
+            } else {
+
+                return "Upcoming";
+            }
+
+        } catch (Exception e) {
+
+            return "Upcoming";
+        }
+    }
 
     // =====================================================
     // ADD EVENT POPUP
@@ -358,7 +407,9 @@ public class ManageEvents {
 
     private void openAddEventDialog() {
 
-        // DARK OVERLAY
+        // =================================================
+        // OVERLAY
+        // =================================================
 
         StackPane overlay =
                 new StackPane();
@@ -367,8 +418,9 @@ public class ManageEvents {
                 "-fx-background-color:rgba(0,0,0,0.5);"
         );
 
-
-        // POPUP BOX
+        // =================================================
+        // FORM BOX
+        // =================================================
 
         VBox formBox =
                 new VBox(12);
@@ -378,7 +430,8 @@ public class ManageEvents {
         );
 
         formBox.setMaxWidth(500);
-        formBox.setMaxHeight(500);
+
+        formBox.setMaxHeight(600);
 
         formBox.setStyle("""
             -fx-background-color:#ffffff;
@@ -393,10 +446,9 @@ public class ManageEvents {
             );
         """);
 
-
-        // =========================
+        // =================================================
         // HEADER
-        // =========================
+        // =================================================
 
         HBox headerRow =
                 new HBox();
@@ -404,7 +456,6 @@ public class ManageEvents {
         headerRow.setAlignment(
                 Pos.CENTER_LEFT
         );
-
 
         Label title =
                 new Label("Add New Event");
@@ -421,7 +472,6 @@ public class ManageEvents {
                 "-fx-text-fill:#123C36;"
         );
 
-
         Region spacer =
                 new Region();
 
@@ -429,7 +479,6 @@ public class ManageEvents {
                 spacer,
                 Priority.ALWAYS
         );
-
 
         Button closeBtn =
                 new Button("✕");
@@ -452,112 +501,215 @@ public class ManageEvents {
                 e -> removeOverlay(overlay)
         );
 
-
         headerRow.getChildren().addAll(
                 title,
                 spacer,
                 closeBtn
         );
 
-
-        // =========================
+        // =================================================
         // EVENT NAME
-        // =========================
+        // =================================================
 
         Label nameLabel =
                 new Label("Event Name");
 
-        TextField nameField =
-                new TextField();
+        ComboBox<String> nameField =
+                new ComboBox<>();
 
         nameField.setPromptText(
-                "Enter event name"
+                "Select event"
+        );
+
+        nameField.getItems().addAll(
+
+                "Society Annual Meeting",
+
+                "Children's Drawing Competition",
+
+                "Yoga Session",
+
+                "Cleanliness Drive",
+
+                "Cultural Evening",
+
+                "Tree Plantation Drive",
+
+                "Festival Celebration",
+
+                "Sports Day",
+
+                "Health Check-up Camp",
+
+                "Blood Donation Camp",
+
+                "Society Picnic",
+
+                "Senior Citizen Meet",
+
+                "Children's Sports Competition",
+
+                "Independence Day Celebration",
+
+                "Republic Day Celebration",
+
+                "Diwali Celebration",
+
+                "Holi Celebration",
+
+                "Ganesh Festival",
+
+                "Navratri Celebration",
+
+                "Christmas Celebration"
         );
 
         nameField.setPrefHeight(40);
 
+        nameField.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
-        // =========================
+        // =================================================
         // DATE
-        // =========================
+        // =================================================
 
         Label dateLabel =
                 new Label("Date");
 
-        TextField dateField =
-                new TextField();
+        DatePicker dateField =
+                new DatePicker();
 
         dateField.setPromptText(
-                "Enter event date"
+                "Select event date"
         );
 
         dateField.setPrefHeight(40);
 
+        dateField.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
-        // =========================
+        // =================================================
         // TIME
-        // =========================
+        // =================================================
 
         Label timeLabel =
                 new Label("Time");
 
-        TextField timeField =
-                new TextField();
+        ComboBox<String> timeField =
+                new ComboBox<>();
 
         timeField.setPromptText(
-                "Enter event time"
+                "Select event time"
+        );
+
+        timeField.getItems().addAll(
+
+                "07:00 AM",
+                "08:00 AM",
+                "09:00 AM",
+                "10:00 AM",
+                "11:00 AM",
+                "12:00 PM",
+                "01:00 PM",
+                "02:00 PM",
+                "03:00 PM",
+                "04:00 PM",
+                "05:00 PM",
+                "06:00 PM",
+                "07:00 PM",
+                "08:00 PM",
+                "09:00 PM"
         );
 
         timeField.setPrefHeight(40);
 
+        timeField.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
-        // =========================
+        // =================================================
         // VENUE
-        // =========================
+        // =================================================
 
         Label venueLabel =
                 new Label("Venue");
 
-        TextField venueField =
-                new TextField();
+        ComboBox<String> venueField =
+                new ComboBox<>();
 
         venueField.setPromptText(
-                "Enter event venue"
+                "Select venue"
+        );
+
+        venueField.getItems().addAll(
+
+                "Community Hall",
+
+                "Society Garden",
+
+                "Garden Area",
+
+                "Society Entrance",
+
+                "Terrace",
+
+                "Club House",
+
+                "Children's Play Area",
+
+                "Parking Area",
+
+                "Society Ground"
         );
 
         venueField.setPrefHeight(40);
 
+        venueField.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
-        // =========================
-        // BUTTONS
-        // =========================
+        // =================================================
+        // CANCEL BUTTON
+        // =================================================
 
         Button cancelBtn =
                 new Button("Cancel");
 
         cancelBtn.setPrefWidth(100);
+
         cancelBtn.setPrefHeight(40);
 
         cancelBtn.setStyle(
                 "-fx-background-color:#E5E7EB;" +
                 "-fx-text-fill:#333333;" +
-                "-fx-background-radius:8;"
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
         );
 
+        // =================================================
+        // SAVE BUTTON
+        // =================================================
 
         Button saveBtn =
                 new Button("Save Event");
 
         saveBtn.setPrefWidth(120);
+
         saveBtn.setPrefHeight(40);
 
         saveBtn.setStyle(
                 "-fx-background-color:#2E9D63;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
-                "-fx-background-radius:8;"
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
         );
 
+        // =================================================
+        // BUTTON BOX
+        // =================================================
 
         HBox buttonBox =
                 new HBox(10);
@@ -571,22 +723,131 @@ public class ManageEvents {
                 saveBtn
         );
 
+        // =================================================
+        // CANCEL ACTION
+        // =================================================
 
         cancelBtn.setOnAction(
                 e -> removeOverlay(overlay)
         );
 
+        // =================================================
+        // SAVE EVENT
+        // =================================================
 
-        saveBtn.setOnAction(
-                e -> removeOverlay(overlay)
-        );
+        saveBtn.setOnAction(e -> {
 
+            // =============================================
+            // GET EVENT NAME
+            // =============================================
 
-        // =========================
-        // ADD TO FORM
-        // =========================
+            String eventName =
+                    nameField.getValue();
+
+            // =============================================
+            // GET DATE
+            // =============================================
+
+            String date = "";
+
+            if (dateField.getValue() != null) {
+
+                date =
+                        dateField
+                                .getValue()
+                                .toString();
+            }
+
+            // =============================================
+            // GET TIME
+            // =============================================
+
+            String time =
+                    timeField.getValue();
+
+            // =============================================
+            // GET VENUE
+            // =============================================
+
+            String venue =
+                    venueField.getValue();
+
+            // =============================================
+            // VALIDATION
+            // =============================================
+
+            if (eventName == null
+                    || eventName.isEmpty()
+                    || date.isEmpty()
+                    || time == null
+                    || time.isEmpty()
+                    || venue == null
+                    || venue.isEmpty()) {
+
+                showAlert(
+                        "Validation Error",
+                        "Please select all event details."
+                );
+
+                return;
+            }
+
+            // =============================================
+            // CALCULATE STATUS
+            // =============================================
+
+            String status =
+                    getEventStatus(date);
+
+            // =============================================
+            // SAVE USING CONTROLLER
+            // =============================================
+
+            boolean success =
+                    eventController.addEvent(
+                            eventName,
+                            date,
+                            time,
+                            venue,
+                            status
+                    );
+
+            // =============================================
+            // SUCCESS
+            // =============================================
+
+            if (success) {
+
+                showAlert(
+                        "Success",
+                        "Event added successfully."
+                );
+
+                removeOverlay(
+                        overlay
+                );
+
+                // =========================================
+                // REFRESH EVENT LIST
+                // =========================================
+
+                loadEvents();
+
+            } else {
+
+                showAlert(
+                        "Error",
+                        "Failed to add event to Firestore."
+                );
+            }
+        });
+
+        // =================================================
+        // FORM CONTENT
+        // =================================================
 
         formBox.getChildren().addAll(
+
                 headerRow,
 
                 nameLabel,
@@ -604,10 +865,9 @@ public class ManageEvents {
                 buttonBox
         );
 
-
-        // =========================
-        // ADD POPUP TO OVERLAY
-        // =========================
+        // =================================================
+        // ADD FORM TO OVERLAY
+        // =================================================
 
         overlay.getChildren().add(
                 formBox
@@ -618,18 +878,13 @@ public class ManageEvents {
                 Pos.CENTER
         );
 
-
-        // IMPORTANT:
-        // Same scene, no Stage
-
         rootStack.getChildren().add(
                 overlay
         );
     }
 
-
     // =====================================================
-    // VIEW ALL EVENTS POPUP
+    // VIEW ALL EVENTS
     // =====================================================
 
     private void openViewAllEventsDialog() {
@@ -641,7 +896,6 @@ public class ManageEvents {
                 "-fx-background-color:rgba(0,0,0,0.5);"
         );
 
-
         VBox formBox =
                 new VBox(15);
 
@@ -650,6 +904,7 @@ public class ManageEvents {
         );
 
         formBox.setMaxWidth(650);
+
         formBox.setMaxHeight(600);
 
         formBox.setStyle("""
@@ -665,10 +920,9 @@ public class ManageEvents {
             );
         """);
 
-
-        // =========================
+        // =================================================
         // HEADER
-        // =========================
+        // =================================================
 
         HBox headerRow =
                 new HBox();
@@ -676,7 +930,6 @@ public class ManageEvents {
         headerRow.setAlignment(
                 Pos.CENTER_LEFT
         );
-
 
         Label title =
                 new Label("All Events");
@@ -693,7 +946,6 @@ public class ManageEvents {
                 "-fx-text-fill:#123C36;"
         );
 
-
         Region spacer =
                 new Region();
 
@@ -701,7 +953,6 @@ public class ManageEvents {
                 spacer,
                 Priority.ALWAYS
         );
-
 
         Button closeBtn =
                 new Button("✕");
@@ -720,11 +971,9 @@ public class ManageEvents {
                 "-fx-cursor:hand;"
         );
 
-
         closeBtn.setOnAction(
                 e -> removeOverlay(overlay)
         );
-
 
         headerRow.getChildren().addAll(
                 title,
@@ -732,69 +981,63 @@ public class ManageEvents {
                 closeBtn
         );
 
-
-        // =========================
-        // ALL EVENTS
-        // =========================
+        // =================================================
+        // GET EVENTS FROM FIRESTORE
+        // =================================================
 
         VBox allEvents =
                 new VBox(12);
 
-        allEvents.getChildren().addAll(
+        List<Event> events =
+                eventController.getAllEvents();
 
-                createEvent(
-                        "Society Annual Meeting",
-                        "18 May 2025",
-                        "10:00 AM",
-                        "Community Hall",
-                        "Upcoming"
-                ),
+        if (events == null || events.isEmpty()) {
 
-                createEvent(
-                        "Children's Drawing Competition",
-                        "25 May 2025",
-                        "04:00 PM",
-                        "Garden Area",
-                        "Upcoming"
-                ),
+            Label emptyLabel =
+                    new Label(
+                            "No events found."
+                    );
 
-                createEvent(
-                        "Yoga Session",
-                        "28 May 2025",
-                        "07:00 AM",
-                        "Community Hall",
-                        "Upcoming"
-                ),
+            emptyLabel.setStyle(
+                    "-fx-font-size:14px;" +
+                    "-fx-text-fill:#666666;"
+            );
 
-                createEvent(
-                        "Society Cleanliness Drive",
-                        "05 May 2025",
-                        "08:00 AM",
-                        "Society Entrance",
-                        "Completed"
-                ),
+            allEvents.getChildren().add(
+                    emptyLabel
+            );
 
-                createEvent(
-                        "Cultural Evening",
-                        "02 May 2025",
-                        "06:00 PM",
-                        "Community Hall",
-                        "Completed"
-                ),
+        } else {
 
-                createEvent(
-                        "Tree Plantation Drive",
-                        "28 April 2025",
-                        "08:00 AM",
-                        "Society Garden",
-                        "Completed"
-                )
-        );
+            for (Event event : events) {
 
+                // =========================================
+                // AUTOMATIC STATUS
+                // =========================================
 
-        // =========================
+                String status =
+                        getEventStatus(
+                                event.getDate()
+                        );
+
+                VBox eventCard =
+                        createEvent(
+                                event.getEventName(),
+                                event.getDate(),
+                                event.getTime(),
+                                event.getVenue(),
+                                status
+                        );
+
+                allEvents.getChildren().add(
+                        eventCard
+                );
+            }
+        }
+
+        // =================================================
         // SCROLL
-        // =========================
+        // =================================================
 
         ScrollPane popupScroll =
                 new ScrollPane();
@@ -812,29 +1055,28 @@ public class ManageEvents {
                 "-fx-border-color:transparent;"
         );
 
-
-        // =========================
+        // =================================================
         // CLOSE BUTTON
-        // =========================
+        // =================================================
 
         Button closeBottomBtn =
                 new Button("Close");
 
         closeBottomBtn.setPrefWidth(100);
+
         closeBottomBtn.setPrefHeight(40);
 
         closeBottomBtn.setStyle(
                 "-fx-background-color:#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
-                "-fx-background-radius:8;"
+                "-fx-background-radius:8;" +
+                "-fx-cursor:hand;"
         );
-
 
         closeBottomBtn.setOnAction(
                 e -> removeOverlay(overlay)
         );
-
 
         HBox buttonBox =
                 new HBox(
@@ -845,10 +1087,9 @@ public class ManageEvents {
                 Pos.CENTER_RIGHT
         );
 
-
-        // =========================
+        // =================================================
         // FORM CONTENT
-        // =========================
+        // =================================================
 
         formBox.getChildren().addAll(
                 headerRow,
@@ -856,10 +1097,9 @@ public class ManageEvents {
                 buttonBox
         );
 
-
-        // =========================
-        // ADD TO OVERLAY
-        // =========================
+        // =================================================
+        // ADD FORM TO OVERLAY
+        // =================================================
 
         overlay.getChildren().add(
                 formBox
@@ -870,16 +1110,13 @@ public class ManageEvents {
                 Pos.CENTER
         );
 
-
-        // SAME SCENE
         rootStack.getChildren().add(
                 overlay
         );
     }
 
-
     // =====================================================
-    // REMOVE POPUP
+    // REMOVE OVERLAY
     // =====================================================
 
     private void removeOverlay(
@@ -890,9 +1127,30 @@ public class ManageEvents {
         );
     }
 
+    // =====================================================
+    // ALERT
+    // =====================================================
+
+    private void showAlert(
+            String title,
+            String message) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.INFORMATION
+                );
+
+        alert.setTitle(title);
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
 
     // =====================================================
-    // EVENT CARD
+    // CREATE EVENT CARD
     // =====================================================
 
     private VBox createEvent(
@@ -901,7 +1159,6 @@ public class ManageEvents {
             String time,
             String venue,
             String statusText) {
-
 
         VBox event =
                 new VBox(10);
@@ -921,8 +1178,9 @@ public class ManageEvents {
                 "-fx-border-radius:10;"
         );
 
-
+        // =================================================
         // EVENT NAME
+        // =================================================
 
         Label name =
                 new Label(eventName);
@@ -933,8 +1191,9 @@ public class ManageEvents {
                 "-fx-text-fill:#123C36;"
         );
 
-
+        // =================================================
         // DETAILS
+        // =================================================
 
         Label details =
                 new Label(
@@ -950,14 +1209,15 @@ public class ManageEvents {
                 "-fx-text-fill:#777777;"
         );
 
-
+        // =================================================
         // STATUS
+        // =================================================
 
         Label status =
                 new Label(statusText);
 
-
-        if (statusText.equals("Upcoming")) {
+        if ("Upcoming".equalsIgnoreCase(
+                statusText)) {
 
             status.setStyle(
                     "-fx-background-color:#E5F7EC;" +
@@ -980,8 +1240,9 @@ public class ManageEvents {
             );
         }
 
-
+        // =================================================
         // BOTTOM ROW
+        // =================================================
 
         HBox bottom =
                 new HBox();
@@ -1000,12 +1261,14 @@ public class ManageEvents {
                 status
         );
 
+        // =================================================
+        // ADD TO EVENT CARD
+        // =================================================
 
         event.getChildren().addAll(
                 name,
                 bottom
         );
-
 
         return event;
     }

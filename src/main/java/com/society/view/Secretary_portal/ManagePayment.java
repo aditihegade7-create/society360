@@ -1,14 +1,27 @@
 package com.society.view.Secretary_portal;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import com.society.controller.Secretary_Controller.PaymentController;
+import com.society.model.Secretary_model.Payment;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -17,451 +30,388 @@ import javafx.stage.Stage;
 
 public class ManagePayment {
 
+    // =========================================================
+    // SCENE
+    // =========================================================
+
     private Scene managePaymentScene;
 
+    // =========================================================
+    // CONTROLLER
+    // =========================================================
+
+    private PaymentController paymentController;
+
+    // =========================================================
+    // BOOKING LIST
+    // =========================================================
+
+    private VBox bookingList;
+
+    // =========================================================
+    // AMENITY GRID
+    // =========================================================
+
+    private GridPane amenityGrid;
+
+    // =========================================================
+    // DATE FORMAT
+    // =========================================================
+
+    private final DateTimeFormatter dateFormatter =
+            DateTimeFormatter.ofPattern("dd MMM yyyy");
+
+    // =========================================================
+    // TIME FORMAT
+    // =========================================================
+
+    private final DateTimeFormatter timeFormatter =
+            DateTimeFormatter.ofPattern("hh:mm a");
+
+    // =========================================================
+    // CREATE SCENE
+    // =========================================================
+
     public Scene createScene(Stage stage) {
+
+        // =====================================================
+        // CONTROLLER
+        // =====================================================
+
+        paymentController =
+                new PaymentController();
 
         // =====================================================
         // SIDEBAR
         // =====================================================
 
-        SecretarySidebar sidebarObj = new SecretarySidebar();
-        VBox sidebar = sidebarObj.createSidebar(stage);
+        SecretarySidebar sidebarObj =
+                new SecretarySidebar();
+
+        VBox sidebar =
+                sidebarObj.createSidebar(stage);
 
         // =====================================================
         // MAIN CONTENT
         // =====================================================
 
-        VBox mainvb = new VBox(20);
+        VBox mainvb =
+                new VBox(14);
 
-        mainvb.setPadding(new Insets(25));
+        mainvb.setPadding(
+                new Insets(22, 25, 20, 25)
+        );
 
-        mainvb.setPrefWidth(1220);
+        mainvb.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
-        mainvb.setMaxWidth(Double.MAX_VALUE);
-        mainvb.setMaxHeight(Double.MAX_VALUE);
+        mainvb.setMaxHeight(
+                Double.MAX_VALUE
+        );
 
         mainvb.setStyle(
-                "-fx-background-color:#b3adad;"
+                "-fx-background-color:#E8DDD3;"
         );
 
         // =====================================================
         // HEADING
         // =====================================================
 
-        Label heading = new Label("MANAGE PAYMENTS");
+        Label heading =
+                new Label("Manage Payment");
 
         heading.setStyle(
-                "-fx-font-size:18px;" +
+                "-fx-font-size:26px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#434141;"
+                "-fx-text-fill:#24456D;"
         );
 
-        // =====================================================
-        // TITLE
-        // =====================================================
-
-        Label title = new Label("Manage Payments");
-
-        title.setStyle(
-                "-fx-font-size:20px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:black;"
-        );
-
-        Label subtitle = new Label(
-                "View and manage society payment records"
-        );
+        Label subtitle =
+                new Label(
+                        "Manage society amenities bookings and payments"
+                );
 
         subtitle.setStyle(
-                "-fx-font-size:13px;" +
-                "-fx-text-fill:#777777;"
+                "-fx-font-size:15px;" +
+                "-fx-text-fill:#666666;"
         );
 
-        VBox titleBox = new VBox(5);
+        VBox headingBox =
+                new VBox(4);
 
-        titleBox.getChildren().addAll(
-                title,
+        headingBox.getChildren().addAll(
+                heading,
                 subtitle
         );
 
         // =====================================================
-        // ADD PAYMENT BUTTON
+        // HEADING AREA
         // =====================================================
 
-        Button addPaymentBtn = new Button("+ Add Payment");
+        VBox headingArea =
+                new VBox();
 
-        addPaymentBtn.setPrefWidth(140);
-        addPaymentBtn.setPrefHeight(40);
+        headingArea.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
-        addPaymentBtn.setStyle(
-                "-fx-background-color:#434141;" +
+        headingArea.getChildren().add(
+                headingBox
+        );
+
+        // =====================================================
+        // ADD AMENITY BUTTON
+        // =====================================================
+
+        Button addAmenityButton =
+                new Button("+ Add Amenity");
+
+        addAmenityButton.setPrefWidth(150);
+
+        addAmenityButton.setPrefHeight(40);
+
+        addAmenityButton.setStyle(
+                "-fx-background-color:#56342B;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
-                "-fx-font-size:12px;" +
+                "-fx-font-size:14px;" +
                 "-fx-background-radius:7;"
         );
 
+        addAmenityButton.setOnAction(
+                e -> openAddAmenityPopup()
+        );
+
         // =====================================================
-        // HEADER
+        // ADD AMENITY BUTTON BOX
+        // BUTTON IS BELOW HEADING AND ON RIGHT
         // =====================================================
 
-        HBox header = new HBox();
+        HBox addAmenityBox =
+                new HBox();
 
-        header.setAlignment(Pos.CENTER_LEFT);
+        addAmenityBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        addAmenityBox.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        addAmenityBox.getChildren().add(
+                addAmenityButton
+        );
+
+        // =====================================================
+        // AMENITIES TITLE
+        // =====================================================
+
+        Label amenitiesTitle =
+                new Label("Amenities");
+
+        amenitiesTitle.setStyle(
+                "-fx-font-size:20px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
+        );
+
+        // =====================================================
+        // AMENITY GRID
+        // =====================================================
+
+        amenityGrid =
+                new GridPane();
+
+        amenityGrid.setHgap(12);
+
+        amenityGrid.setVgap(12);
+
+        amenityGrid.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        // =====================================================
+        // COLUMN WIDTH
+        // =====================================================
+
+        for (int i = 0; i < 6; i++) {
+
+            ColumnConstraints column =
+                    new ColumnConstraints();
+
+            column.setPercentWidth(
+                    16.66
+            );
+
+            amenityGrid
+                    .getColumnConstraints()
+                    .add(column);
+        }
+
+        // =====================================================
+        // LOAD AMENITIES
+        // =====================================================
+
+        loadAmenities();
+
+        // =====================================================
+        // SEPARATOR
+        // =====================================================
+
+        Separator separator =
+                new Separator();
+
+        separator.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        // =====================================================
+        // UPCOMING TITLE
+        // =====================================================
+
+        Label upcomingTitle =
+                new Label(
+                        "Upcoming Bookings"
+                );
+
+        upcomingTitle.setStyle(
+                "-fx-font-size:20px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
+        );
+
+        // =====================================================
+        // REFRESH BUTTON
+        // =====================================================
+
+        Button refreshButton =
+                new Button("⟳ Refresh");
+
+        refreshButton.setPrefHeight(38);
+
+        refreshButton.setPrefWidth(110);
+
+        refreshButton.setStyle(
+                "-fx-background-color:#56342B;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;"
+        );
+
+        refreshButton.setOnAction(
+                e -> {
+
+                    loadBookings();
+
+                    loadAmenities();
+                }
+        );
+
+        // =====================================================
+        // BOOKING HEADER
+        // REFRESH BUTTON RIGHT SIDE
+        // =====================================================
+
+        HBox bookingHeader =
+                new HBox();
+
+        bookingHeader.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        bookingHeader.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
         HBox.setHgrow(
-                titleBox,
+                upcomingTitle,
                 Priority.ALWAYS
         );
 
-        header.getChildren().addAll(
-                titleBox,
-                addPaymentBtn
+        bookingHeader.getChildren().addAll(
+                upcomingTitle,
+                refreshButton
         );
 
         // =====================================================
-        // STATUS BUTTONS
+        // BOOKING LIST
         // =====================================================
 
-        Button pendingBtn = new Button("Pending (8)");
-        Button paidBtn = new Button("Paid (32)");
-        Button overdueBtn = new Button("Overdue (5)");
+        bookingList =
+                new VBox(8);
 
-        pendingBtn.setPrefWidth(150);
-        pendingBtn.setPrefHeight(40);
+        bookingList.setPadding(
+                new Insets(5)
+        );
 
-        paidBtn.setPrefWidth(150);
-        paidBtn.setPrefHeight(40);
+        bookingList.setFillWidth(true);
 
-        overdueBtn.setPrefWidth(150);
-        overdueBtn.setPrefHeight(40);
-
-        String normalStyle =
-                "-fx-background-color:transparent;" +
-                "-fx-text-fill:#777777;" +
-                "-fx-font-weight:bold;" +
-                "-fx-font-size:12px;";
-
-        String activeStyle =
-                "-fx-background-color:transparent;" +
-                "-fx-text-fill:#123C36;" +
-                "-fx-font-weight:bold;" +
-                "-fx-font-size:12px;" +
-                "-fx-border-color:#0B4F4A;" +
-                "-fx-border-width:0 0 2 0;";
-
-        pendingBtn.setStyle(activeStyle);
-        paidBtn.setStyle(normalStyle);
-        overdueBtn.setStyle(normalStyle);
-
-        // =====================================================
-        // TABS
-        // =====================================================
-
-        HBox tabs = new HBox(25);
-
-        tabs.setAlignment(Pos.CENTER_LEFT);
-
-        tabs.getChildren().addAll(
-                pendingBtn,
-                paidBtn,
-                overdueBtn
+        bookingList.setMaxWidth(
+                Double.MAX_VALUE
         );
 
         // =====================================================
-        // PAYMENT LIST
+        // LOAD BOOKINGS
         // =====================================================
 
-        VBox paymentList = new VBox(15);
-
-        paymentList.setPadding(
-                new Insets(5, 0, 5, 0)
-        );
-
-        // =====================================================
-        // PENDING PAYMENTS
-        // =====================================================
-
-        VBox pending1 = createPayment(
-                "Diya Wadhwa",
-                "B-402",
-                "₹2500",
-                "May 2025",
-                "Pending",
-                "#FFF0D9",
-                "#C47A20"
-        );
-
-        VBox pending2 = createPayment(
-                "Rahul Sharma",
-                "A-101",
-                "₹2500",
-                "May 2025",
-                "Pending",
-                "#FFF0D9",
-                "#C47A20"
-        );
-
-        VBox pending3 = createPayment(
-                "Neha Patil",
-                "C-203",
-                "₹2500",
-                "May 2025",
-                "Pending",
-                "#FFF0D9",
-                "#C47A20"
-        );
-
-        VBox pending4 = createPayment(
-                "Amit Kulkarni",
-                "B-305",
-                "₹2500",
-                "May 2025",
-                "Pending",
-                "#FFF0D9",
-                "#C47A20"
-        );
-
-        VBox pending5 = createPayment(
-                "Pooja Singh",
-                "A-503",
-                "₹2500",
-                "May 2025",
-                "Pending",
-                "#FFF0D9",
-                "#C47A20"
-        );
-
-        // =====================================================
-        // PAID PAYMENTS
-        // =====================================================
-
-        VBox paid1 = createPayment(
-                "Aarav Mehta",
-                "A-201",
-                "₹2500",
-                "May 2025",
-                "Paid",
-                "#E5F7EC",
-                "#2E9D63"
-        );
-
-        VBox paid2 = createPayment(
-                "Priya Sharma",
-                "B-102",
-                "₹2500",
-                "May 2025",
-                "Paid",
-                "#E5F7EC",
-                "#2E9D63"
-        );
-
-        VBox paid3 = createPayment(
-                "Vivek Patil",
-                "C-301",
-                "₹2500",
-                "May 2025",
-                "Paid",
-                "#E5F7EC",
-                "#2E9D63"
-        );
-
-        VBox paid4 = createPayment(
-                "Anjali Joshi",
-                "A-402",
-                "₹2500",
-                "May 2025",
-                "Paid",
-                "#E5F7EC",
-                "#2E9D63"
-        );
-
-        VBox paid5 = createPayment(
-                "Riya Singh",
-                "B-203",
-                "₹2500",
-                "May 2025",
-                "Paid",
-                "#E5F7EC",
-                "#2E9D63"
-        );
-
-        VBox paid6 = createPayment(
-                "Sahil More",
-                "C-104",
-                "₹2500",
-                "May 2025",
-                "Paid",
-                "#E5F7EC",
-                "#2E9D63"
-        );
-
-        // =====================================================
-        // OVERDUE PAYMENTS
-        // =====================================================
-
-        VBox overdue1 = createPayment(
-                "Vikram Deshmukh",
-                "A-305",
-                "₹5000",
-                "April 2025",
-                "Overdue",
-                "#FDE8E8",
-                "#D9534F"
-        );
-
-        VBox overdue2 = createPayment(
-                "Meena Shah",
-                "B-404",
-                "₹5000",
-                "April 2025",
-                "Overdue",
-                "#FDE8E8",
-                "#D9534F"
-        );
-
-        VBox overdue3 = createPayment(
-                "Akash Patil",
-                "C-202",
-                "₹5000",
-                "April 2025",
-                "Overdue",
-                "#FDE8E8",
-                "#D9534F"
-        );
-
-        VBox overdue4 = createPayment(
-                "Nisha Kulkarni",
-                "A-103",
-                "₹5000",
-                "April 2025",
-                "Overdue",
-                "#FDE8E8",
-                "#D9534F"
-        );
-
-        VBox overdue5 = createPayment(
-                "Rohit Sharma",
-                "B-302",
-                "₹5000",
-                "April 2025",
-                "Overdue",
-                "#FDE8E8",
-                "#D9534F"
-        );
+        loadBookings();
 
         // =====================================================
         // SCROLL PANE
         // =====================================================
 
-        ScrollPane scrollPane = new ScrollPane();
+        ScrollPane bookingScroll =
+                new ScrollPane();
 
-        scrollPane.setContent(paymentList);
+        bookingScroll.setContent(
+                bookingList
+        );
 
-        scrollPane.setFitToWidth(true);
+        bookingScroll.setFitToWidth(true);
 
-        scrollPane.setPrefHeight(450);
+        bookingScroll.setFitToHeight(false);
 
-        scrollPane.setStyle(
+        bookingScroll.setPrefHeight(300);
+
+        bookingScroll.setMaxHeight(300);
+
+        bookingScroll.setVbarPolicy(
+                ScrollPane.ScrollBarPolicy.AS_NEEDED
+        );
+
+        bookingScroll.setHbarPolicy(
+                ScrollPane.ScrollBarPolicy.NEVER
+        );
+
+        bookingScroll.setStyle(
                 "-fx-background-color:transparent;" +
                 "-fx-border-color:transparent;"
         );
 
         // =====================================================
-        // DEFAULT PENDING
+        // FOOTER
         // =====================================================
 
-        paymentList.getChildren().addAll(
-                pending1,
-                pending2,
-                pending3,
-                pending4,
-                pending5
+        Label footer =
+                new Label(
+                        "All booking details are synced with society records."
+                );
+
+        footer.setStyle(
+                "-fx-font-size:13px;" +
+                "-fx-text-fill:#777777;"
         );
 
-        // =====================================================
-        // PENDING BUTTON
-        // =====================================================
+        HBox footerBox =
+                new HBox();
 
-        pendingBtn.setOnAction(e -> {
-
-            paymentList.getChildren().clear();
-
-            paymentList.getChildren().addAll(
-                    pending1,
-                    pending2,
-                    pending3,
-                    pending4,
-                    pending5
-            );
-
-            pendingBtn.setStyle(activeStyle);
-            paidBtn.setStyle(normalStyle);
-            overdueBtn.setStyle(normalStyle);
-        });
-
-        // =====================================================
-        // PAID BUTTON
-        // =====================================================
-
-        paidBtn.setOnAction(e -> {
-
-            paymentList.getChildren().clear();
-
-            paymentList.getChildren().addAll(
-                    paid1,
-                    paid2,
-                    paid3,
-                    paid4,
-                    paid5,
-                    paid6
-            );
-
-            pendingBtn.setStyle(normalStyle);
-            paidBtn.setStyle(activeStyle);
-            overdueBtn.setStyle(normalStyle);
-        });
-
-        // =====================================================
-        // OVERDUE BUTTON
-        // =====================================================
-
-        overdueBtn.setOnAction(e -> {
-
-            paymentList.getChildren().clear();
-
-            paymentList.getChildren().addAll(
-                    overdue1,
-                    overdue2,
-                    overdue3,
-                    overdue4,
-                    overdue5
-            );
-
-            pendingBtn.setStyle(normalStyle);
-            paidBtn.setStyle(normalStyle);
-            overdueBtn.setStyle(activeStyle);
-        });
-
-        // =====================================================
-        // VIEW ALL BUTTON
-        // =====================================================
-
-        Button viewAllBtn = new Button(
-                "View All Payments"
+        footerBox.setAlignment(
+                Pos.CENTER
         );
 
-        viewAllBtn.setPrefWidth(1180);
-        viewAllBtn.setPrefHeight(40);
-
-        viewAllBtn.setStyle(
-                "-fx-background-color:#434141;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-weight:bold;" +
-                "-fx-background-radius:7;" +
-                "-fx-border-color:#EEEEEE;" +
-                "-fx-border-radius:7;"
+        footerBox.getChildren().add(
+                footer
         );
 
         // =====================================================
@@ -469,18 +419,34 @@ public class ManagePayment {
         // =====================================================
 
         mainvb.getChildren().addAll(
-                heading,
-                header,
-                tabs,
-                scrollPane,
-                viewAllBtn
+
+                // Heading
+                headingArea,
+
+                // Add Amenity below heading - right side
+                addAmenityBox,
+
+                // Amenities
+                amenitiesTitle,
+
+                amenityGrid,
+
+                separator,
+
+                // Upcoming + Refresh
+                bookingHeader,
+
+                bookingScroll,
+
+                footerBox
         );
 
         // =====================================================
-        // MAIN ROOT
+        // ROOT
         // =====================================================
 
-        HBox mainRoot = new HBox();
+        HBox mainRoot =
+                new HBox();
 
         mainRoot.setMaxSize(
                 Double.MAX_VALUE,
@@ -492,844 +458,1331 @@ public class ManagePayment {
                 mainvb
         );
 
-        mainRoot.setStyle(
-                "-fx-background-color:#434141;"
-        );
-
         HBox.setHgrow(
                 mainvb,
                 Priority.ALWAYS
         );
 
         // =====================================================
-        // ROOT STACKPANE
+        // STACK ROOT
         // =====================================================
 
-        StackPane root = new StackPane();
+        StackPane root =
+                new StackPane();
 
         root.getChildren().add(
                 mainRoot
         );
 
         // =====================================================
-        // ADD PAYMENT POPUP
+        // SCENE
         // =====================================================
 
-        addPaymentBtn.setOnAction(e -> {
-
-            StackPane popupLayer = createOverlay();
-
-            VBox paymentForm = new VBox(12);
-
-            paymentForm.setPadding(
-                    new Insets(25)
-            );
-
-            paymentForm.setPrefWidth(430);
-            paymentForm.setMaxWidth(430);
-            paymentForm.setMaxHeight(600);
-
-            paymentForm.setStyle(
-                    "-fx-background-color:white;" +
-                    "-fx-background-radius:15;" +
-                    "-fx-border-radius:15;" +
-                    "-fx-border-color:#DDDDDD;"
-            );
-
-            // =================================================
-            // TITLE
-            // =================================================
-
-            Label formTitle = new Label(
-                    "Add New Payment"
-            );
-
-            formTitle.setStyle(
-                    "-fx-font-size:22px;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-text-fill:#123C36;"
-            );
-
-            // =================================================
-            // RESIDENT
-            // =================================================
-
-            Label residentLabel = new Label(
-                    "Resident Name"
-            );
-
-            residentLabel.setStyle(
-                    "-fx-font-weight:bold;" +
-                    "-fx-text-fill:#333333;"
-            );
-
-            TextField residentField = new TextField();
-
-            residentField.setPromptText(
-                    "Enter resident name"
-            );
-
-            residentField.setPrefHeight(38);
-
-            // =================================================
-            // FLAT
-            // =================================================
-
-            Label flatLabel = new Label(
-                    "Flat Number"
-            );
-
-            flatLabel.setStyle(
-                    "-fx-font-weight:bold;" +
-                    "-fx-text-fill:#333333;"
-            );
-
-            TextField flatField = new TextField();
-
-            flatField.setPromptText(
-                    "Enter flat number"
-            );
-
-            flatField.setPrefHeight(38);
-
-            // =================================================
-            // AMOUNT
-            // =================================================
-
-            Label amountLabel = new Label(
-                    "Payment Amount"
-            );
-
-            amountLabel.setStyle(
-                    "-fx-font-weight:bold;" +
-                    "-fx-text-fill:#333333;"
-            );
-
-            TextField amountField = new TextField();
-
-            amountField.setPromptText(
-                    "Enter amount"
-            );
-
-            amountField.setPrefHeight(38);
-
-            // =================================================
-            // MONTH
-            // =================================================
-
-            Label monthLabel = new Label(
-                    "Payment Month"
-            );
-
-            monthLabel.setStyle(
-                    "-fx-font-weight:bold;" +
-                    "-fx-text-fill:#333333;"
-            );
-
-            TextField monthField = new TextField();
-
-            monthField.setPromptText(
-                    "Example: May 2025"
-            );
-
-            monthField.setPrefHeight(38);
-
-            // =================================================
-            // BUTTONS
-            // =================================================
-
-            Button cancelBtn = new Button(
-                    "Cancel"
-            );
-
-            cancelBtn.setPrefWidth(100);
-            cancelBtn.setPrefHeight(38);
-
-            cancelBtn.setStyle(
-                    "-fx-background-color:#E5E7EB;" +
-                    "-fx-text-fill:#333333;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-background-radius:8;"
-            );
-
-            Button saveBtn = new Button(
-                    "Save Payment"
-            );
-
-            saveBtn.setPrefWidth(125);
-            saveBtn.setPrefHeight(38);
-
-            saveBtn.setStyle(
-                    "-fx-background-color:#2E9D63;" +
-                    "-fx-text-fill:white;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-background-radius:8;"
-            );
-
-            HBox buttonBox = new HBox(10);
-
-            buttonBox.setAlignment(
-                    Pos.CENTER_RIGHT
-            );
-
-            buttonBox.setPadding(
-                    new Insets(8, 0, 0, 0)
-            );
-
-            buttonBox.getChildren().addAll(
-                    cancelBtn,
-                    saveBtn
-            );
-
-            // =================================================
-            // ADD CONTROLS
-            // =================================================
-
-            paymentForm.getChildren().addAll(
-
-                    formTitle,
-
-                    residentLabel,
-                    residentField,
-
-                    flatLabel,
-                    flatField,
-
-                    amountLabel,
-                    amountField,
-
-                    monthLabel,
-                    monthField,
-
-                    buttonBox
-            );
-
-            // =================================================
-            // ADD FORM TO OVERLAY
-            // =================================================
-
-            popupLayer.getChildren().add(
-                    paymentForm
-            );
-
-            StackPane.setAlignment(
-                    paymentForm,
-                    Pos.CENTER
-            );
-
-            // =================================================
-            // CANCEL
-            // =================================================
-
-            cancelBtn.setOnAction(event -> {
-
-                root.getChildren().remove(
-                        popupLayer
+        managePaymentScene =
+                new Scene(
+                        root,
+                        ScreenSize.getWidth(),
+                        ScreenSize.getHeight()
                 );
-
-            });
-
-            // =================================================
-            // SAVE
-            // =================================================
-
-            saveBtn.setOnAction(event -> {
-
-                String residentName =
-                        residentField.getText();
-
-                String flatNo =
-                        flatField.getText();
-
-                String amount =
-                        amountField.getText();
-
-                String month =
-                        monthField.getText();
-
-                System.out.println(
-                        "================================"
-                );
-
-                System.out.println(
-                        "NEW PAYMENT"
-                );
-
-                System.out.println(
-                        "Resident: " + residentName
-                );
-
-                System.out.println(
-                        "Flat: " + flatNo
-                );
-
-                System.out.println(
-                        "Amount: " + amount
-                );
-
-                System.out.println(
-                        "Month: " + month
-                );
-
-                System.out.println(
-                        "================================"
-                );
-
-                // Firebase / Firestore code
-                // can be added here later.
-
-                root.getChildren().remove(
-                        popupLayer
-                );
-            });
-
-            // =================================================
-            // SHOW POPUP
-            // =================================================
-
-            root.getChildren().add(
-                    popupLayer
-            );
-        });
-
-        // =====================================================
-        // VIEW ALL PAYMENTS POPUP
-        // =====================================================
-
-        viewAllBtn.setOnAction(e -> {
-
-            StackPane popupLayer = createOverlay();
-
-            // =================================================
-            // POPUP BOX
-            // =================================================
-
-            VBox allPaymentBox = new VBox(15);
-
-            allPaymentBox.setPadding(
-                    new Insets(25)
-            );
-
-            allPaymentBox.setPrefWidth(650);
-
-            allPaymentBox.setMaxWidth(650);
-
-            allPaymentBox.setMaxHeight(650);
-
-            allPaymentBox.setStyle(
-                    "-fx-background-color:white;" +
-                    "-fx-background-radius:15;" +
-                    "-fx-border-radius:15;" +
-                    "-fx-border-color:#DDDDDD;"
-            );
-
-            // =================================================
-            // TITLE
-            // =================================================
-
-            Label allTitle = new Label(
-                    "All Payments"
-            );
-
-            allTitle.setStyle(
-                    "-fx-font-size:22px;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-text-fill:#123C36;"
-            );
-
-            Label allSubtitle = new Label(
-                    "Complete society payment records"
-            );
-
-            allSubtitle.setStyle(
-                    "-fx-font-size:12px;" +
-                    "-fx-text-fill:#777777;"
-            );
-
-            // =================================================
-            // PAYMENT SCROLL
-            // =================================================
-
-            VBox allList = new VBox(10);
-
-            allList.setPadding(
-                    new Insets(5)
-            );
-
-            // =================================================
-            // ALL PAYMENT 1
-            // =================================================
-
-            VBox allPayment1 = createAllPayment(
-                    "Diya Wadhwa",
-                    "B-402",
-                    "₹2500",
-                    "May 2025",
-                    "Pending",
-                    "#FFF0D9",
-                    "#C47A20"
-            );
-
-            // =================================================
-            // ALL PAYMENT 2
-            // =================================================
-
-            VBox allPayment2 = createAllPayment(
-                    "Rahul Sharma",
-                    "A-101",
-                    "₹2500",
-                    "May 2025",
-                    "Pending",
-                    "#FFF0D9",
-                    "#C47A20"
-            );
-
-            // =================================================
-            // ALL PAYMENT 3
-            // =================================================
-
-            VBox allPayment3 = createAllPayment(
-                    "Aarav Mehta",
-                    "A-201",
-                    "₹2500",
-                    "May 2025",
-                    "Paid",
-                    "#E5F7EC",
-                    "#2E9D63"
-            );
-
-            // =================================================
-            // ALL PAYMENT 4
-            // =================================================
-
-            VBox allPayment4 = createAllPayment(
-                    "Priya Sharma",
-                    "B-102",
-                    "₹2500",
-                    "May 2025",
-                    "Paid",
-                    "#E5F7EC",
-                    "#2E9D63"
-            );
-
-            // =================================================
-            // ALL PAYMENT 5
-            // =================================================
-
-            VBox allPayment5 = createAllPayment(
-                    "Vivek Patil",
-                    "C-301",
-                    "₹2500",
-                    "May 2025",
-                    "Paid",
-                    "#E5F7EC",
-                    "#2E9D63"
-            );
-
-            // =================================================
-            // ALL PAYMENT 6
-            // =================================================
-
-            VBox allPayment6 = createAllPayment(
-                    "Vikram Deshmukh",
-                    "A-305",
-                    "₹5000",
-                    "April 2025",
-                    "Overdue",
-                    "#FDE8E8",
-                    "#D9534F"
-            );
-
-            // =================================================
-            // ALL PAYMENT 7
-            // =================================================
-
-            VBox allPayment7 = createAllPayment(
-                    "Meena Shah",
-                    "B-404",
-                    "₹5000",
-                    "April 2025",
-                    "Overdue",
-                    "#FDE8E8",
-                    "#D9534F"
-            );
-
-            // =================================================
-            // ALL PAYMENT 8
-            // =================================================
-
-            VBox allPayment8 = createAllPayment(
-                    "Akash Patil",
-                    "C-202",
-                    "₹5000",
-                    "April 2025",
-                    "Overdue",
-                    "#FDE8E8",
-                    "#D9534F"
-            );
-
-            allList.getChildren().addAll(
-                    allPayment1,
-                    allPayment2,
-                    allPayment3,
-                    allPayment4,
-                    allPayment5,
-                    allPayment6,
-                    allPayment7,
-                    allPayment8
-            );
-
-            // =================================================
-            // SCROLL
-            // =================================================
-
-            ScrollPane allScrollPane =
-                    new ScrollPane(allList);
-
-            allScrollPane.setFitToWidth(true);
-
-            allScrollPane.setPrefHeight(450);
-
-            allScrollPane.setStyle(
-                    "-fx-background-color:transparent;" +
-                    "-fx-border-color:transparent;"
-            );
-
-            // =================================================
-            // CLOSE BUTTON
-            // =================================================
-
-            Button closeBtn = new Button(
-                    "Close"
-            );
-
-            closeBtn.setPrefWidth(100);
-
-            closeBtn.setPrefHeight(38);
-
-            closeBtn.setStyle(
-                    "-fx-background-color:#434141;" +
-                    "-fx-text-fill:white;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-background-radius:8;"
-            );
-
-            HBox closeBox = new HBox();
-
-            closeBox.setAlignment(
-                    Pos.CENTER_RIGHT
-            );
-
-            closeBox.getChildren().add(
-                    closeBtn
-            );
-
-            // =================================================
-            // ADD EVERYTHING
-            // =================================================
-
-            allPaymentBox.getChildren().addAll(
-
-                    allTitle,
-                    allSubtitle,
-                    allScrollPane,
-                    closeBox
-            );
-
-            // =================================================
-            // CENTER POPUP
-            // =================================================
-
-            popupLayer.getChildren().add(
-                    allPaymentBox
-            );
-
-            StackPane.setAlignment(
-                    allPaymentBox,
-                    Pos.CENTER
-            );
-
-            // =================================================
-            // CLOSE
-            // =================================================
-
-            closeBtn.setOnAction(event -> {
-
-                root.getChildren().remove(
-                        popupLayer
-                );
-
-            });
-
-            // =================================================
-            // SHOW SAME SCENE POPUP
-            // =================================================
-
-            root.getChildren().add(
-                    popupLayer
-            );
-        });
-
-        // =====================================================
-        // MAIN SCENE
-        // =====================================================
-
-        Scene scene = new Scene(
-                root,
-                ScreenSize.getWidth(),
-                ScreenSize.getHeight()
-        );
-
-        managePaymentScene = scene;
 
         return managePaymentScene;
     }
 
     // =========================================================
-    // CREATE OVERLAY
+    // LOAD AMENITIES
     // =========================================================
 
-    private StackPane createOverlay() {
+    private void loadAmenities() {
 
-        StackPane popupLayer = new StackPane();
+        if (amenityGrid == null) {
+            return;
+        }
 
-        popupLayer.setPickOnBounds(true);
+        amenityGrid.getChildren().clear();
 
-        popupLayer.setStyle(
-                "-fx-background-color:rgba(0,0,0,0.35);"
-        );
+        List<Payment> amenities =
+                paymentController.getAllAmenities();
 
-        return popupLayer;
+        if (amenities == null
+                || amenities.isEmpty()) {
+
+            addDefaultAmenityCards();
+
+            return;
+        }
+
+        int column = 0;
+
+        int row = 0;
+
+        int validCount = 0;
+
+        for (Payment amenity : amenities) {
+
+            if (amenity == null) {
+                continue;
+            }
+
+            VBox card =
+                    createAmenityCard(
+                            safe(
+                                    amenity.getAmenityName()
+                            ),
+                            safe(
+                                    amenity.getPrice()
+                            ),
+                            safe(
+                                    amenity.getDescription()
+                            ),
+                            safe(
+                                    amenity.getAvailability()
+                            )
+                    );
+
+            amenityGrid.add(
+                    card,
+                    column,
+                    row
+            );
+
+            column++;
+
+            validCount++;
+
+            if (column == 6) {
+
+                column = 0;
+
+                row++;
+            }
+        }
+
+        if (validCount == 0) {
+
+            addDefaultAmenityCards();
+        }
     }
 
     // =========================================================
-    // PAYMENT CARD
+    // DEFAULT AMENITY CARDS
     // =========================================================
 
-    private VBox createPayment(
-            String residentName,
-            String flatNo,
-            String amount,
-            String month,
-            String statusText,
-            String statusBackground,
-            String statusColor) {
+    private void addDefaultAmenityCards() {
 
-        VBox payment = new VBox(10);
-
-        payment.setPadding(
-                new Insets(18)
+        addAmenityCardToGrid(
+                "",
+                "",
+                "",
+                ""
         );
 
-        payment.setPrefHeight(90);
-
-        payment.setMaxWidth(1180);
-
-        payment.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:10;" +
-                "-fx-border-color:#EEEEEE;" +
-                "-fx-border-radius:10;"
+        addAmenityCardToGrid(
+                "",
+                "",
+                "",
+                ""
         );
 
-        // =====================================================
-        // NAME
-        // =====================================================
-
-        Label name = new Label(
-                residentName
+        addAmenityCardToGrid(
+                "",
+                "",
+                "",
+                ""
         );
 
-        name.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#123C36;"
+        addAmenityCardToGrid(
+                "",
+                "",
+                "",
+                ""
         );
 
-        // =====================================================
-        // DETAILS
-        // =====================================================
-
-        Label details = new Label(
-
-                "Flat: " + flatNo +
-                "    |    " +
-                "Amount: " + amount +
-                "    |    " +
-                month
+        addAmenityCardToGrid(
+                "",
+                "",
+                "",
+                ""
         );
 
-        details.setStyle(
-                "-fx-font-size:11px;" +
-                "-fx-text-fill:#777777;"
+        addAmenityCardToGrid(
+                "",
+                "",
+                "",
+                ""
         );
-
-        // =====================================================
-        // STATUS
-        // =====================================================
-
-        Label status = new Label(
-                statusText
-        );
-
-        status.setStyle(
-
-                "-fx-background-color:" +
-                statusBackground + ";" +
-
-                "-fx-text-fill:" +
-                statusColor + ";" +
-
-                "-fx-font-size:10px;" +
-
-                "-fx-font-weight:bold;" +
-
-                "-fx-padding:5px 10px;" +
-
-                "-fx-background-radius:12;"
-        );
-
-        // =====================================================
-        // BOTTOM
-        // =====================================================
-
-        HBox bottom = new HBox();
-
-        bottom.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        HBox.setHgrow(
-                details,
-                Priority.ALWAYS
-        );
-
-        bottom.getChildren().addAll(
-                details,
-                status
-        );
-
-        // =====================================================
-        // CARD
-        // =====================================================
-
-        payment.getChildren().addAll(
-                name,
-                bottom
-        );
-
-        return payment;
     }
 
     // =========================================================
-    // ALL PAYMENT CARD
+    // ADD CARD TO GRID
     // =========================================================
 
-    private VBox createAllPayment(
+    private void addAmenityCardToGrid(
+            String name,
+            String price,
+            String description,
+            String availability) {
 
-            String residentName,
-            String flatNo,
-            String amount,
-            String month,
-            String statusText,
-            String statusBackground,
-            String statusColor) {
+        int index =
+                amenityGrid.getChildren().size();
 
-        VBox card = new VBox(8);
+        int column =
+                index % 6;
+
+        int row =
+                index / 6;
+
+        amenityGrid.add(
+                createAmenityCard(
+                        name,
+                        price,
+                        description,
+                        availability
+                ),
+                column,
+                row
+        );
+    }
+
+    // =========================================================
+    // AMENITY CARD
+    // =========================================================
+
+    private VBox createAmenityCard(
+            String amenityName,
+            String price,
+            String description,
+            String availability) {
+
+        VBox card =
+                new VBox(7);
 
         card.setPadding(
-                new Insets(15)
+                new Insets(13)
         );
+
+        card.setPrefHeight(145);
 
         card.setMaxWidth(
                 Double.MAX_VALUE
         );
 
         card.setStyle(
-                "-fx-background-color:#F9F9F9;" +
-                "-fx-background-radius:10;" +
-                "-fx-border-color:#E5E5E5;" +
-                "-fx-border-radius:10;"
+                "-fx-background-color:white;" +
+                "-fx-background-radius:8;" +
+                "-fx-border-color:#EEEEEE;" +
+                "-fx-border-radius:8;"
         );
 
         // =====================================================
-        // TOP ROW
+        // NAME
         // =====================================================
 
-        HBox topRow = new HBox();
-
-        topRow.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        Label name = new Label(
-                residentName
-        );
+        Label name =
+                new Label(amenityName);
 
         name.setStyle(
-                "-fx-font-size:14px;" +
+                "-fx-font-size:16px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-text-fill:#123C36;"
+                "-fx-text-fill:#18385E;"
         );
 
-        HBox.setHgrow(
-                name,
-                Priority.ALWAYS
-        );
+        // =====================================================
+        // PRICE
+        // =====================================================
 
-        Label status = new Label(
-                statusText
-        );
+        Label priceLabel =
+                new Label(price);
 
-        status.setStyle(
-
-                "-fx-background-color:" +
-                statusBackground + ";" +
-
-                "-fx-text-fill:" +
-                statusColor + ";" +
-
-                "-fx-font-size:10px;" +
-
+        priceLabel.setStyle(
+                "-fx-font-size:13px;" +
                 "-fx-font-weight:bold;" +
-
-                "-fx-padding:5px 10px;" +
-
-                "-fx-background-radius:12;"
-        );
-
-        topRow.getChildren().addAll(
-                name,
-                status
+                "-fx-text-fill:#333333;"
         );
 
         // =====================================================
-        // DETAILS
+        // DESCRIPTION
         // =====================================================
 
-        Label details = new Label(
+        Label descriptionLabel =
+                new Label(description);
 
-                "Flat: " + flatNo +
-                "     |     " +
-                "Amount: " + amount +
-                "     |     " +
-                "Month: " + month
-        );
-
-        details.setStyle(
-                "-fx-font-size:11px;" +
-                "-fx-text-fill:#777777;"
+        descriptionLabel.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#888888;"
         );
 
         // =====================================================
-        // ADD TO CARD
+        // AVAILABILITY
         // =====================================================
+
+        ComboBox<String> availabilityCombo =
+                new ComboBox<>();
+
+        availabilityCombo.getItems().addAll(
+                "Available",
+                "Not Available"
+        );
+
+        if (availability.equalsIgnoreCase(
+                "Available"
+        )
+        ||
+        availability.equalsIgnoreCase(
+                "Not Available"
+        )) {
+
+            availabilityCombo.setValue(
+                    availability
+            );
+
+        } else {
+
+            availabilityCombo.setValue(
+                    "Available"
+            );
+        }
+
+        availabilityCombo.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        availabilityCombo.setPrefHeight(
+                32
+        );
 
         card.getChildren().addAll(
-                topRow,
-                details
+                name,
+                priceLabel,
+                descriptionLabel,
+                availabilityCombo
         );
 
         return card;
+    }
+
+    // =========================================================
+    // ADD AMENITY POPUP
+    // =========================================================
+
+    private void openAddAmenityPopup() {
+
+        StackPane popupLayer =
+                createOverlay();
+
+        // =====================================================
+        // FORM
+        // =====================================================
+
+        VBox form =
+                new VBox(9);
+
+        form.setPadding(
+                new Insets(20)
+        );
+
+        // SMALL COMPACT HEIGHT
+        form.setPrefWidth(400);
+
+        form.setMaxWidth(400);
+
+        form.setPrefHeight(430);
+
+        form.setMaxHeight(430);
+
+        form.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:15;" +
+                "-fx-border-color:#DDDDDD;" +
+                "-fx-border-radius:15;"
+        );
+
+        // =====================================================
+        // TITLE
+        // =====================================================
+
+        Label title =
+                new Label("Add Amenity");
+
+        title.setStyle(
+                "-fx-font-size:21px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#24456D;"
+        );
+
+        // =====================================================
+        // NAME
+        // =====================================================
+
+        Label nameLabel =
+                createFormLabel(
+                        "Amenity Name"
+                );
+
+        TextField nameField =
+                new TextField();
+
+        nameField.setPromptText(
+                "Enter amenity name"
+        );
+
+        nameField.setPrefHeight(36);
+
+        // =====================================================
+        // PRICE
+        // =====================================================
+
+        Label priceLabel =
+                createFormLabel(
+                        "Price"
+                );
+
+        TextField priceField =
+                new TextField();
+
+        priceField.setPromptText(
+                "Example: ₹ 500 / Hour"
+        );
+
+        priceField.setPrefHeight(36);
+
+        // =====================================================
+        // DESCRIPTION
+        // =====================================================
+
+        Label descriptionLabel =
+                createFormLabel(
+                        "Description"
+                );
+
+        TextField descriptionField =
+                new TextField();
+
+        descriptionField.setPromptText(
+                "Enter description"
+        );
+
+        descriptionField.setPrefHeight(36);
+
+        // =====================================================
+        // AVAILABILITY
+        // =====================================================
+
+        Label availabilityLabel =
+                createFormLabel(
+                        "Availability"
+                );
+
+        ComboBox<String> availabilityCombo =
+                new ComboBox<>();
+
+        availabilityCombo.getItems().addAll(
+                "Available",
+                "Not Available"
+        );
+
+        availabilityCombo.setValue(
+                "Available"
+        );
+
+        availabilityCombo.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        availabilityCombo.setPrefHeight(36);
+
+        // =====================================================
+        // CANCEL BUTTON
+        // =====================================================
+
+        Button cancelButton =
+                new Button("Cancel");
+
+        cancelButton.setPrefWidth(95);
+
+        cancelButton.setPrefHeight(36);
+
+        cancelButton.setStyle(
+                "-fx-background-color:#E5E7EB;" +
+                "-fx-text-fill:#333333;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;"
+        );
+
+        // =====================================================
+        // SAVE BUTTON
+        // =====================================================
+
+        Button saveButton =
+                new Button("Save Amenity");
+
+        saveButton.setPrefWidth(125);
+
+        saveButton.setPrefHeight(36);
+
+        saveButton.setStyle(
+                "-fx-background-color:#56342B;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:8;"
+        );
+
+        // =====================================================
+        // BUTTON BOX
+        // =====================================================
+
+        HBox buttonBox =
+                new HBox(10);
+
+        buttonBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        buttonBox.getChildren().addAll(
+                cancelButton,
+                saveButton
+        );
+
+        // =====================================================
+        // FORM CHILDREN
+        // =====================================================
+
+        form.getChildren().addAll(
+
+                title,
+
+                nameLabel,
+                nameField,
+
+                priceLabel,
+                priceField,
+
+                descriptionLabel,
+                descriptionField,
+
+                availabilityLabel,
+                availabilityCombo,
+
+                buttonBox
+        );
+
+        // =====================================================
+        // ADD FORM TO POPUP
+        // =====================================================
+
+        popupLayer.getChildren().add(
+                form
+        );
+
+        StackPane.setAlignment(
+                form,
+                Pos.CENTER
+        );
+
+        // =====================================================
+        // ROOT
+        // =====================================================
+
+        StackPane root =
+                (StackPane) managePaymentScene
+                        .getRoot();
+
+        root.getChildren().add(
+                popupLayer
+        );
+
+        // =====================================================
+        // CANCEL
+        // =====================================================
+
+        cancelButton.setOnAction(
+                e -> removePopup(
+                        popupLayer
+                )
+        );
+
+        // =====================================================
+        // SAVE AMENITY
+        // =====================================================
+
+        saveButton.setOnAction(e -> {
+
+            String name =
+                    nameField
+                            .getText()
+                            .trim();
+
+            String price =
+                    priceField
+                            .getText()
+                            .trim();
+
+            String description =
+                    descriptionField
+                            .getText()
+                            .trim();
+
+            String availability =
+                    availabilityCombo
+                            .getValue();
+
+            // =================================================
+            // VALIDATION
+            // =================================================
+
+            if (name.isEmpty()
+                    || price.isEmpty()
+                    || description.isEmpty()
+                    || availability == null) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Missing Information",
+                        "Please fill all amenity details."
+                );
+
+                return;
+            }
+
+            // =================================================
+            // SAVE THROUGH CONTROLLER
+            // =================================================
+
+            boolean saved =
+                    paymentController.addAmenity(
+                            name,
+                            price,
+                            description,
+                            availability
+                    );
+
+            // =================================================
+            // SUCCESS
+            // =================================================
+
+            if (saved) {
+
+                showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Success",
+                        "Amenity added successfully."
+                );
+
+                removePopup(
+                        popupLayer
+                );
+
+                loadAmenities();
+
+            } else {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Save Failed",
+                        "Unable to save amenity to Firestore."
+                );
+            }
+        });
+    }
+
+    // =========================================================
+    // LOAD BOOKINGS
+    // =========================================================
+
+    private void loadBookings() {
+
+        if (bookingList == null) {
+            return;
+        }
+
+        bookingList.getChildren().clear();
+
+        Label loading =
+                new Label(
+                        "Loading bookings..."
+                );
+
+        loading.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+        bookingList.getChildren().add(
+                loading
+        );
+
+        List<Payment> bookings =
+                paymentController
+                        .getAllBookings();
+
+        bookingList.getChildren().clear();
+
+        if (bookings == null) {
+
+            showNoBookings(
+                    "Unable to fetch bookings."
+            );
+
+            return;
+        }
+
+        if (bookings.isEmpty()) {
+
+            showNoBookings(
+                    "No bookings found in Firestore."
+            );
+
+            return;
+        }
+
+        int count = 0;
+
+        for (Payment payment : bookings) {
+
+            if (payment == null) {
+                continue;
+            }
+
+            if (isBookingExpired(payment)) {
+                continue;
+            }
+
+            HBox row =
+                    createBookingRow(
+                            payment
+                    );
+
+            bookingList.getChildren().add(
+                    row
+            );
+
+            count++;
+        }
+
+        if (count == 0) {
+
+            showNoBookings(
+                    "No upcoming bookings available."
+            );
+        }
+    }
+
+    // =========================================================
+    // CREATE BOOKING ROW
+    // =========================================================
+
+    private HBox createBookingRow(
+            Payment payment) {
+
+        HBox row =
+                new HBox(12);
+
+        row.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        row.setPadding(
+                new Insets(12)
+        );
+
+        row.setMinHeight(72);
+
+        row.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        row.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:8;" +
+                "-fx-border-color:#DDDDDD;" +
+                "-fx-border-radius:8;"
+        );
+
+        // =====================================================
+        // RESIDENT
+        // =====================================================
+
+        VBox residentBox =
+                createDetailBox(
+                        "Resident Name",
+                        safe(
+                                payment.getResidentName()
+                        )
+                );
+
+        // =====================================================
+        // FLAT
+        // =====================================================
+
+        VBox flatBox =
+                createDetailBox(
+                        "Flat No",
+                        safe(
+                                payment.getFlatNo()
+                        )
+                );
+
+        // =====================================================
+        // AMENITY
+        // =====================================================
+
+        VBox amenityBox =
+                createDetailBox(
+                        "Amenity",
+                        safe(
+                                payment.getAmenityName()
+                        )
+                );
+
+        // =====================================================
+        // DATE
+        // =====================================================
+
+        VBox dateBox =
+                createDetailBox(
+                        "Date",
+                        formatDate(
+                                payment.getBookingDate()
+                        )
+                );
+
+        // =====================================================
+        // TIME
+        // =====================================================
+
+        String time =
+                safe(
+                        payment.getStartTime()
+                )
+                + " - "
+                + safe(
+                        payment.getEndTime()
+                );
+
+        VBox timeBox =
+                createDetailBox(
+                        "Time",
+                        time
+                );
+
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        VBox statusBox =
+                new VBox(5);
+
+        Label statusTitle =
+                new Label("Status");
+
+        statusTitle.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#888888;"
+        );
+
+        Label statusLabel =
+                new Label();
+
+        String status =
+                safe(
+                        payment.getStatus()
+                );
+
+        if (status.equalsIgnoreCase(
+                "Accepted"
+        )) {
+
+            statusLabel.setText(
+                    "Accepted"
+            );
+
+            statusLabel.setStyle(
+                    "-fx-background-color:#DDF4E5;" +
+                    "-fx-text-fill:#218838;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:6px 10px;" +
+                    "-fx-background-radius:15;"
+            );
+
+        } else if (status.equalsIgnoreCase(
+                "Rejected"
+        )) {
+
+            statusLabel.setText(
+                    "Rejected"
+            );
+
+            statusLabel.setStyle(
+                    "-fx-background-color:#F8D7DA;" +
+                    "-fx-text-fill:#B02A37;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:6px 10px;" +
+                    "-fx-background-radius:15;"
+            );
+
+        } else {
+
+            statusLabel.setText(
+                    "Pending"
+            );
+
+            statusLabel.setStyle(
+                    "-fx-background-color:#FFF3CD;" +
+                    "-fx-text-fill:#856404;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:6px 10px;" +
+                    "-fx-background-radius:15;"
+            );
+        }
+
+        statusBox.getChildren().addAll(
+                statusTitle,
+                statusLabel
+        );
+
+        // =====================================================
+        // ACTION
+        // =====================================================
+
+        VBox actionBox =
+                new VBox(5);
+
+        Label actionTitle =
+                new Label("Action");
+
+        actionTitle.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#888888;"
+        );
+
+        HBox actionButtons =
+                new HBox(8);
+
+        // =====================================================
+        // ACCEPT
+        // =====================================================
+
+        Button acceptButton =
+                new Button("Accept");
+
+        acceptButton.setPrefWidth(75);
+
+        acceptButton.setPrefHeight(32);
+
+        acceptButton.setStyle(
+                "-fx-background-color:#198754;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:5;"
+        );
+
+        // =====================================================
+        // REJECT
+        // =====================================================
+
+        Button rejectButton =
+                new Button("Reject");
+
+        rejectButton.setPrefWidth(75);
+
+        rejectButton.setPrefHeight(32);
+
+        rejectButton.setStyle(
+                "-fx-background-color:#DC3545;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:5;"
+        );
+
+        // =====================================================
+        // DISABLE AFTER DECISION
+        // =====================================================
+
+        if (status.equalsIgnoreCase(
+                "Accepted"
+        )
+        ||
+        status.equalsIgnoreCase(
+                "Rejected"
+        )) {
+
+            acceptButton.setDisable(true);
+
+            rejectButton.setDisable(true);
+        }
+
+        // =====================================================
+        // ACCEPT ACTION
+        // =====================================================
+
+        acceptButton.setOnAction(
+                e -> updateBookingStatus(
+                        payment,
+                        "Accepted"
+                )
+        );
+
+        // =====================================================
+        // REJECT ACTION
+        // =====================================================
+
+        rejectButton.setOnAction(
+                e -> updateBookingStatus(
+                        payment,
+                        "Rejected"
+                )
+        );
+
+        actionButtons.getChildren().addAll(
+                acceptButton,
+                rejectButton
+        );
+
+        actionBox.getChildren().addAll(
+                actionTitle,
+                actionButtons
+        );
+
+        // =====================================================
+        // WIDTH
+        // =====================================================
+
+        residentBox.setPrefWidth(150);
+
+        flatBox.setPrefWidth(80);
+
+        amenityBox.setPrefWidth(145);
+
+        dateBox.setPrefWidth(110);
+
+        timeBox.setPrefWidth(145);
+
+        statusBox.setPrefWidth(100);
+
+        actionBox.setPrefWidth(165);
+
+        // =====================================================
+        // ADD TO ROW
+        // =====================================================
+
+        row.getChildren().addAll(
+
+                residentBox,
+
+                flatBox,
+
+                amenityBox,
+
+                dateBox,
+
+                timeBox,
+
+                statusBox,
+
+                actionBox
+        );
+
+        return row;
+    }
+
+    // =========================================================
+    // UPDATE BOOKING STATUS
+    // =========================================================
+
+    private void updateBookingStatus(
+            Payment payment,
+            String newStatus) {
+
+        try {
+
+            String bookingId =
+                    payment.getBookingId();
+
+            if (bookingId == null
+                    || bookingId.trim().isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Update Failed",
+                        "Booking ID not found."
+                );
+
+                return;
+            }
+
+            boolean updated =
+                    paymentController
+                            .updateBookingStatus(
+                                    bookingId,
+                                    newStatus
+                            );
+
+            if (updated) {
+
+                showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Booking Updated",
+                        "Booking has been "
+                                + newStatus
+                                + " successfully."
+                );
+
+                loadBookings();
+
+            } else {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Update Failed",
+                        "Unable to update booking status."
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            showAlert(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Something went wrong while updating booking."
+            );
+        }
+    }
+
+    // =========================================================
+    // DETAIL BOX
+    // =========================================================
+
+    private VBox createDetailBox(
+            String title,
+            String value) {
+
+        VBox box =
+                new VBox(4);
+
+        Label titleLabel =
+                new Label(title);
+
+        titleLabel.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#888888;"
+        );
+
+        Label valueLabel =
+                new Label(value);
+
+        valueLabel.setWrapText(true);
+
+        valueLabel.setStyle(
+                "-fx-font-size:13px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
+        );
+
+        box.getChildren().addAll(
+                titleLabel,
+                valueLabel
+        );
+
+        return box;
+    }
+
+    // =========================================================
+    // CHECK EXPIRED
+    // =========================================================
+
+    private boolean isBookingExpired(
+            Payment payment) {
+
+        try {
+
+            String bookingDate =
+                    payment.getBookingDate();
+
+            String endTime =
+                    payment.getEndTime();
+
+            if (bookingDate == null
+                    || endTime == null
+                    || bookingDate.isEmpty()
+                    || endTime.isEmpty()) {
+
+                return false;
+            }
+
+            LocalDate date =
+                    LocalDate.parse(
+                            bookingDate
+                    );
+
+            LocalTime end =
+                    parseTime(
+                            endTime
+                    );
+
+            LocalDateTime endDateTime =
+                    LocalDateTime.of(
+                            date,
+                            end
+                    );
+
+            return !LocalDateTime.now()
+                    .isBefore(
+                            endDateTime
+                    );
+
+        } catch (Exception e) {
+
+            return false;
+        }
+    }
+
+    // =========================================================
+    // FORMAT DATE
+    // =========================================================
+
+    private String formatDate(
+            String date) {
+
+        try {
+
+            if (date == null
+                    || date.isEmpty()) {
+
+                return "";
+            }
+
+            return LocalDate
+                    .parse(date)
+                    .format(
+                            dateFormatter
+                    );
+
+        } catch (Exception e) {
+
+            return safe(date);
+        }
+    }
+
+    // =========================================================
+    // PARSE TIME
+    // =========================================================
+
+    private LocalTime parseTime(
+            String time) {
+
+        return LocalTime.parse(
+                time,
+                timeFormatter
+        );
+    }
+
+    // =========================================================
+    // FORM LABEL
+    // =========================================================
+
+    private Label createFormLabel(
+            String text) {
+
+        Label label =
+                new Label(text);
+
+        label.setStyle(
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
+        );
+
+        return label;
+    }
+
+    // =========================================================
+    // NO BOOKINGS
+    // =========================================================
+
+    private void showNoBookings(
+            String message) {
+
+        Label label =
+                new Label(message);
+
+        label.setStyle(
+                "-fx-font-size:15px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#777777;" +
+                "-fx-padding:20;"
+        );
+
+        bookingList.getChildren().add(
+                label
+        );
+    }
+
+    // =========================================================
+    // OVERLAY
+    // =========================================================
+
+    private StackPane createOverlay() {
+
+        StackPane overlay =
+                new StackPane();
+
+        overlay.setPickOnBounds(
+                true
+        );
+
+        overlay.setStyle(
+                "-fx-background-color:rgba(0,0,0,0.35);"
+        );
+
+        return overlay;
+    }
+
+    // =========================================================
+    // REMOVE POPUP
+    // =========================================================
+
+    private void removePopup(
+            StackPane popupLayer) {
+
+        StackPane root =
+                (StackPane) managePaymentScene
+                        .getRoot();
+
+        root.getChildren().remove(
+                popupLayer
+        );
+    }
+
+    // =========================================================
+    // ALERT
+    // =========================================================
+
+    private void showAlert(
+            Alert.AlertType type,
+            String title,
+            String message) {
+
+        Alert alert =
+                new Alert(type);
+
+        alert.setTitle(title);
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
+    // =========================================================
+    // SAFE STRING
+    // =========================================================
+
+    private String safe(
+            String value) {
+
+        return value == null
+                ? ""
+                : value;
     }
 }
