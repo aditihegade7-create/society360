@@ -1,79 +1,135 @@
-
 package com.society.model.Secretary_model;
 
 public class Maintenance {
-    private String email;
-    private String residentName;
-    private String flatNo;
+
+    // =========================================================
+    // MAINTENANCE ID
+    // =========================================================
+
+    // Firestore record/document ID
+    private String maintenanceId;
+
+    // =========================================================
+    // MAINTENANCE INFORMATION
+    // =========================================================
+
+    // Maintenance amount
     private String amount;
+
+    // Maintenance month
     private String month;
+
+    // Maintenance date
     private String date;
+
+    // Maintenance status
+    // Example: Pending, Paid, Overdue
     private String status;
 
-    // =====================================================
-    // REQUIRED BY FIRESTORE
-    // =====================================================
+    // =========================================================
+    // SECRETARY INFORMATION
+    // =========================================================
 
-    public Maintenance() {
+    // Maintenance add करणाऱ्या Secretary चा login email
+    private String addedBySecretaryEmail;
+
+    // Maintenance add करणाऱ्या Secretary ची society
+    private String society;
+
+    // =========================================================
+    // DEFAULT CONSTRUCTOR
+    // =========================================================
+
+    public Maintenance(String string, String string2, String string3, String string4, String string5, String string6, String string7, String secretaryEmail, String society2) {
     }
 
-    // =====================================================
-    // PARAMETERIZED CONSTRUCTOR
-    // =====================================================
+    // =========================================================
+    // BASIC CONSTRUCTOR
+    // =========================================================
+    //
+    // Existing code मध्ये amount, month, date, status
+    // directly create करण्यासाठी.
+    //
+    // =========================================================
 
     public Maintenance(
-            String email,
-            String residentName,
-            String flatNo,
             String amount,
             String month,
             String date,
             String status) {
 
-        this.email = email;
-
-        this.residentName = residentName;
-        this.flatNo = flatNo;
         this.amount = amount;
         this.month = month;
         this.date = date;
         this.status = status;
     }
 
-    // =====================================================
-    // RESIDENT NAME
-    // =====================================================
-    public String getEmail() {
-        return email;
+    // =========================================================
+    // COMPLETE CONSTRUCTOR
+    // =========================================================
+    //
+    // Secretary email + society सहित पूर्ण maintenance.
+    //
+    // =========================================================
+
+    public Maintenance(
+            String amount,
+            String month,
+            String date,
+            String status,
+            String addedBySecretaryEmail,
+            String society) {
+
+        this.amount = amount;
+        this.month = month;
+        this.date = date;
+        this.status = status;
+        this.addedBySecretaryEmail = addedBySecretaryEmail;
+        this.society = society;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    // =========================================================
+    // FULL CONSTRUCTOR WITH ID
+    // =========================================================
+    //
+    // Firestore मधून existing record fetch केल्यावर
+    // maintenanceId सहित object तयार करण्यासाठी.
+    //
+    // =========================================================
+
+    public Maintenance(
+            String maintenanceId,
+            String amount,
+            String month,
+            String date,
+            String status,
+            String addedBySecretaryEmail,
+            String society) {
+
+        this.maintenanceId = maintenanceId;
+        this.amount = amount;
+        this.month = month;
+        this.date = date;
+        this.status = status;
+        this.addedBySecretaryEmail = addedBySecretaryEmail;
+        this.society = society;
     }
 
-    public String getResidentName() {
-        return residentName;
+    // =========================================================
+    // MAINTENANCE ID
+    // =========================================================
+
+    public String getMaintenanceId() {
+        return maintenanceId;
     }
 
-    public void setResidentName(String residentName) {
-        this.residentName = residentName;
+    public void setMaintenanceId(String maintenanceId) {
+        this.maintenanceId = maintenanceId;
     }
 
-    // =====================================================
-    // FLAT NUMBER
-    // =====================================================
-
-    public String getFlatNo() {
-        return flatNo;
-    }
-
-    public void setFlatNo(String flatNo) {
-        this.flatNo = flatNo;
-    }
-
-    // =====================================================
+    // =========================================================
     // AMOUNT
-    // =====================================================
+    // =========================================================
 
     public String getAmount() {
         return amount;
@@ -83,9 +139,9 @@ public class Maintenance {
         this.amount = amount;
     }
 
-    // =====================================================
+    // =========================================================
     // MONTH
-    // =====================================================
+    // =========================================================
 
     public String getMonth() {
         return month;
@@ -95,9 +151,9 @@ public class Maintenance {
         this.month = month;
     }
 
-    // =====================================================
+    // =========================================================
     // DATE
-    // =====================================================
+    // =========================================================
 
     public String getDate() {
         return date;
@@ -107,9 +163,9 @@ public class Maintenance {
         this.date = date;
     }
 
-    // =====================================================
+    // =========================================================
     // STATUS
-    // =====================================================
+    // =========================================================
 
     public String getStatus() {
         return status;
@@ -117,5 +173,51 @@ public class Maintenance {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    // =========================================================
+    // ADDED BY SECRETARY EMAIL
+    // =========================================================
+
+    public String getAddedBySecretaryEmail() {
+        return addedBySecretaryEmail;
+    }
+
+    public void setAddedBySecretaryEmail(
+            String addedBySecretaryEmail) {
+
+        this.addedBySecretaryEmail =
+                addedBySecretaryEmail;
+    }
+
+    // =========================================================
+    // SOCIETY
+    // =========================================================
+
+    public String getSociety() {
+        return society;
+    }
+
+    public void setSociety(String society) {
+        this.society = society;
+    }
+
+    // =========================================================
+    // TO STRING
+    // =========================================================
+
+    @Override
+    public String toString() {
+
+        return "Maintenance{" +
+                "maintenanceId='" + maintenanceId + '\'' +
+                ", amount='" + amount + '\'' +
+                ", month='" + month + '\'' +
+                ", date='" + date + '\'' +
+                ", status='" + status + '\'' +
+                ", addedBySecretaryEmail='" +
+                addedBySecretaryEmail + '\'' +
+                ", society='" + society + '\'' +
+                '}';
     }
 }

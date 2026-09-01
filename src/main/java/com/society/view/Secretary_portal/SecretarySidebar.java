@@ -1,7 +1,14 @@
+
 package com.society.view.Secretary_portal;
+
+import com.society.controller.welcome.UserController;
+import com.society.dao.Welcome.UserDao;
+import com.society.model.Welcome.User;
+import com.society.view.Resident_portal.ProfilePage;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -9,363 +16,589 @@ import javafx.stage.Stage;
 
 public class SecretarySidebar {
 
-        public VBox createSidebar(Stage stage) {
+    // ============================================================
+    // LOGGED-IN USER
+    // ============================================================
 
-                // SIDEBAR
-        
-                VBox sidebar = new VBox();
+    private User loggedInUser;
 
-                sidebar.setPrefWidth(280);
-                sidebar.setPrefHeight(750);
-                sidebar.setStyle("-fx-background-color: #4e4b4b");
-                sidebar.setSpacing(14);
-                sidebar.setPadding(new Insets(20));
+    // ============================================================
+    // CONSTRUCTOR 1
+    // ============================================================
 
-                // LOGO
+    public SecretarySidebar(User loggedInUser) {
 
-                Label logo = new Label("Society360");
+        this.loggedInUser = loggedInUser;
 
-                logo.setLineSpacing(10);
-                logo.setAlignment(Pos.CENTER_LEFT);
+        printUserInfo();
+    }
 
-                logo.setStyle(
-                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:24px;" +
-                                                "-fx-font-weight:bold;");
+    // ============================================================
+    // CONSTRUCTOR 2
+    // ============================================================
 
-                // =====================================================
-                // PANEL NAME
-                // =====================================================
+    public SecretarySidebar() {
 
-                Label panel = new Label("Secretary Panel");
+        try {
 
-                panel.setStyle(
-                                "-fx-text-fill:lightgray;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-padding:5px;");
+            String email =
+                    UserDao.getLoggedInEmail();
 
-                // =====================================================
-                // DASHBOARD
-                // =====================================================
+            if (email != null
+                    && !email.trim().isEmpty()) {
 
-                Button dashboardBtn = new Button("Dashboard");
+                UserController controller =
+                        new UserController();
 
-                dashboardBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
+                loggedInUser =
+                        controller.getUserByEmail(
+                                email.trim().toLowerCase());
+            }
 
-                dashboardBtn.setOnAction(e -> {
+        } catch (Exception e) {
 
-                        SecretaryDashboard dashboard = new SecretaryDashboard();
+            System.out.println(
+                    "Error loading logged-in user:");
 
-                        stage.setScene(
-                                        dashboard.createScene(stage));
-                });
+            e.printStackTrace();
 
-                // =====================================================
-                // MANAGE RESIDENTS
-                // =====================================================
-
-                Button residentsBtn = new Button("Manage Residents");
-
-                residentsBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                residentsBtn.setOnAction(e -> {
-
-                        ManageResidents residents = new ManageResidents();
-
-                        stage.setScene(
-                                        residents.createScene(stage));
-                });
-
-                // =====================================================
-                // MANAGE OWNERS
-                // =====================================================
-
-                Button ownersBtn = new Button("Manage Owners");
-
-                ownersBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                ownersBtn.setOnAction(e -> {
-
-                        ManageOwner owners = new ManageOwner();
-
-                        stage.setScene(
-                                        owners.createScene(stage));
-                });
-
-                // =====================================================
-                // MANAGE GUARDS
-                // =====================================================
-
-                Button guardsBtn = new Button("Manage Guards");
-
-                guardsBtn.setStyle(
-                                "-fx-background-color: #434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                guardsBtn.setOnAction(e -> {
-
-                        ManageGuard guards = new ManageGuard();
-
-                        stage.setScene(
-                                        guards.createScene(stage));
-                });
-
-                // =====================================================
-                // MANAGE NOTICES
-                // =====================================================
-
-                Button noticesBtn = new Button("Manage Notices");
-
-                noticesBtn.setStyle(
-                                "-fx-background-color: #434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                noticesBtn.setOnAction(e -> {
-
-                        ManageNotices notices = new ManageNotices();
-
-                        stage.setScene(
-                                        notices.createScene(stage));
-                });
-
-                // =====================================================
-                // MANAGE COMPLAINTS
-                // =====================================================
-
-                Button complaintsBtn = new Button("Manage Complaints");
-
-                complaintsBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                complaintsBtn.setOnAction(e -> {
-
-                        ManageComplaints complaints = new ManageComplaints();
-
-                        stage.setScene(
-                                        complaints.createScene(stage));
-                });
-
-                // =====================================================
-                // MANAGE MAINTENANCE
-                // =====================================================
-
-                Button maintenanceBtn = new Button("Manage Maintenance");
-
-                maintenanceBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                maintenanceBtn.setOnAction(e -> {
-
-                        ManageMaintenance maintenance = new ManageMaintenance();
-
-                        stage.setScene(
-                                        maintenance.createScene(stage));
-                });
-
-                // =====================================================
-                // MANAGE PAYMENTS
-                // =====================================================
-
-                Button paymentsBtn = new Button("Manage Payments");
-
-                paymentsBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                paymentsBtn.setOnAction(e -> {
-
-                        ManagePayment payment = new ManagePayment();
-
-                        stage.setScene(
-                                        payment.createScene(stage));
-                });
-
-                // =====================================================
-                // SOS ALERTS
-                // =====================================================
-
-                Button sosBtn = new Button("View SOS Alerts");
-
-                sosBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                sosBtn.setOnAction(e -> {
-
-                        ViewSos sos = new ViewSos();
-
-                        stage.setScene(
-                                        sos.createScene(stage));
-                });
-
-                // =====================================================
-                // MANAGE EVENTS
-                // =====================================================
-
-                Button eventsBtn = new Button("Manage Events");
-
-                eventsBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                eventsBtn.setOnAction(e -> {
-
-                        ManageEvents events = new ManageEvents();
-
-                        stage.setScene(
-                                        events.createScene(stage));
-                });
-
-                // =====================================================
-                // GENERATE REPORTS
-                // =====================================================
-
-                Button reportsBtn = new Button("Generate Reports");
-
-                reportsBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                reportsBtn.setOnAction(e -> {
-
-                        GenerateReports report = new GenerateReports();
-
-                        stage.setScene(
-                                        report.createScene(stage));
-                });
-
-                // =====================================================
-                // PROFILE
-                // =====================================================
-
-                Button profileBtn = new Button("Profile");
-
-                profileBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                profileBtn.setOnAction(e -> {
-
-                        Profile profile = new Profile();
-
-                        stage.setScene(
-                                        profile.createScene(stage));
-                });
-
-                // =====================================================
-                // LOGOUT
-                // =====================================================
-
-                Button logoutBtn = new Button("Logout");
-
-                logoutBtn.setStyle(
-                                "-fx-background-color:#434141;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-alignment:CENTER-LEFT;" +
-                                                "-fx-pref-width:240px;" +
-                                                "-fx-pref-height:40px;");
-
-                logoutBtn.setOnAction(e -> {
-
-                        Logout logout = new Logout();
-
-                        stage.setScene(
-                                        logout.createScene(stage));
-                });
-
-                // =====================================================
-                // ADD ALL COMPONENTS TO SIDEBAR
-                // =====================================================
-
-                sidebar.getChildren().addAll(
-
-                                logo,
-                                panel,
-
-                                dashboardBtn,
-                                residentsBtn,
-                                ownersBtn,
-                                guardsBtn,
-                                noticesBtn,
-                                complaintsBtn,
-                                maintenanceBtn,
-                                paymentsBtn,
-                                sosBtn,
-                                eventsBtn,
-                                reportsBtn,
-                                profileBtn,
-                                logoutBtn);
-
-                return sidebar;
+            loggedInUser = null;
         }
+
+        printUserInfo();
+    }
+
+    // ============================================================
+    // PRINT USER INFO
+    // ============================================================
+
+    private void printUserInfo() {
+
+        System.out.println(
+                "================================================");
+
+        System.out.println(
+                "SecretarySidebar created");
+
+        System.out.println(
+                "Logged-in Email: "
+                        + getUserEmail());
+
+        System.out.println(
+                "Logged-in Role: "
+                        + getUserRole());
+
+        System.out.println(
+                "================================================");
+    }
+
+    // ============================================================
+    // GET USER EMAIL
+    // ============================================================
+
+    private String getUserEmail() {
+
+        if (loggedInUser == null) {
+            return "NULL";
+        }
+
+        if (loggedInUser.getEmail() == null) {
+            return "NULL";
+        }
+
+        return loggedInUser.getEmail();
+    }
+
+    // ============================================================
+    // GET USER ROLE
+    // ============================================================
+
+    private String getUserRole() {
+
+        if (loggedInUser == null) {
+            return "NULL";
+        }
+
+        if (loggedInUser.getRole() == null) {
+            return "NULL";
+        }
+
+        return loggedInUser.getRole();
+    }
+
+    // ============================================================
+    // GET LOGGED-IN USER
+    // ============================================================
+
+    public User getLoggedInUser() {
+
+        return loggedInUser;
+    }
+
+    // ============================================================
+    // CREATE SIDEBAR
+    // ============================================================
+
+    public VBox createSidebar(Stage stage) {
+
+        VBox sidebar =
+                new VBox();
+
+        sidebar.setPrefWidth(280);
+        sidebar.setMinWidth(280);
+        sidebar.setPrefHeight(750);
+
+        sidebar.setSpacing(10);
+
+        sidebar.setPadding(
+                new Insets(20));
+
+        sidebar.setStyle(
+                "-fx-background-color:#4e4b4b;");
+
+        // ========================================================
+        // LOGO
+        // ========================================================
+
+        Label logo =
+                new Label("Society360");
+
+        logo.setAlignment(
+                Pos.CENTER_LEFT);
+
+        logo.setStyle(
+                "-fx-text-fill:white;"
+                        + "-fx-font-size:24px;"
+                        + "-fx-font-weight:bold;");
+
+        // ========================================================
+        // PANEL
+        // ========================================================
+
+        Label panel =
+                new Label("Secretary Panel");
+
+        panel.setStyle(
+                "-fx-text-fill:lightgray;"
+                        + "-fx-font-size:14px;"
+                        + "-fx-padding:5px;");
+
+        // ========================================================
+        // DASHBOARD
+        // ========================================================
+
+        Button dashboardBtn =
+                createMenuButton("Dashboard");
+
+        dashboardBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Dashboard clicked. Email: "
+                            + getUserEmail());
+
+            SecretaryDashboard dashboard =
+                    new SecretaryDashboard(
+                            loggedInUser);
+
+            stage.setScene(
+                    dashboard.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE RESIDENTS
+        // ========================================================
+
+        Button residentsBtn =
+                createMenuButton(
+                        "Manage Residents");
+
+        residentsBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Residents clicked. Email: "
+                            + getUserEmail());
+
+            ManageResidents residents =
+                    new ManageResidents();
+
+            stage.setScene(
+                    residents.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE OWNERS
+        // ========================================================
+
+        Button ownersBtn =
+                createMenuButton(
+                        "Manage Owners");
+
+        ownersBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Owners clicked. Email: "
+                            + getUserEmail());
+
+            ManageOwner owners =
+                    new ManageOwner();
+
+            stage.setScene(
+                    owners.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE GUARDS
+        // ========================================================
+
+        Button guardsBtn =
+                createMenuButton(
+                        "Manage Guards");
+
+        guardsBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Guards clicked. Email: "
+                            + getUserEmail());
+
+            ManageGuard guards =
+                    new ManageGuard();
+
+            stage.setScene(
+                    guards.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE NOTICES
+        // ========================================================
+
+        Button noticesBtn =
+                createMenuButton(
+                        "Manage Notices");
+
+        noticesBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Notices clicked. Email: "
+                            + getUserEmail());
+
+            if (loggedInUser == null) {
+
+                System.out.println(
+                        "ERROR: Logged-in user is NULL.");
+
+                return;
+            }
+
+            ManageNotices notices =
+                    new ManageNotices(
+                            loggedInUser);
+
+            stage.setScene(
+                    notices.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE COMPLAINTS
+        // ========================================================
+
+        Button complaintsBtn =
+                createMenuButton(
+                        "Manage Complaints");
+
+        complaintsBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Complaints clicked. Email: "
+                            + getUserEmail());
+
+            ManageComplaints complaints =
+                    new ManageComplaints();
+
+            stage.setScene(
+                    complaints.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE MAINTENANCE
+        // ========================================================
+
+        Button maintenanceBtn =
+                createMenuButton(
+                        "Manage Maintenance");
+
+        maintenanceBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Maintenance clicked. Email: "
+                            + getUserEmail());
+
+            ManageMaintenance maintenance =
+                    new ManageMaintenance();
+
+            stage.setScene(
+                    maintenance.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE PAYMENTS
+        // ========================================================
+
+        Button paymentsBtn =
+                createMenuButton(
+                        "Manage Payments");
+
+        paymentsBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Payments clicked. Email: "
+                            + getUserEmail());
+
+            ManagePayment payment =
+                    new ManagePayment();
+
+            stage.setScene(
+                    payment.createScene(stage));
+        });
+
+        // ========================================================
+        // VIEW SOS
+        // ========================================================
+
+        Button sosBtn =
+                createMenuButton(
+                        "View SOS Alerts");
+
+        sosBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "View SOS clicked. Email: "
+                            + getUserEmail());
+
+            ViewSos sos =
+                    new ViewSos();
+
+            stage.setScene(
+                    sos.createScene(stage));
+        });
+
+        // ========================================================
+        // MANAGE EVENTS
+        // ========================================================
+
+        Button eventsBtn =
+                createMenuButton(
+                        "Manage Events");
+
+        eventsBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Manage Events clicked. Email: "
+                            + getUserEmail());
+
+            ManageEvents events =
+                    new ManageEvents();
+
+            stage.setScene(
+                    events.createScene(stage));
+        });
+
+        // ========================================================
+        // GENERATE REPORTS
+        // ========================================================
+
+        Button reportsBtn =
+                createMenuButton(
+                        "Generate Reports");
+
+        reportsBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Generate Reports clicked. Email: "
+                            + getUserEmail());
+
+            GenerateReports report =
+                    new GenerateReports();
+
+            stage.setScene(
+                    report.createScene(stage));
+        });
+
+        // ========================================================
+        // PROFILE
+        // ========================================================
+
+        Button profileBtn =
+                createMenuButton(
+                        "Profile");
+
+        profileBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "================================================");
+
+            System.out.println(
+                    "Profile clicked");
+
+            System.out.println(
+                    "Profile Email: "
+                            + getUserEmail());
+
+            System.out.println(
+                    "================================================");
+
+            if (loggedInUser == null) {
+
+                System.out.println(
+                        "ERROR: Cannot open Profile.");
+
+                return;
+            }
+
+            Profile profile =
+                    new Profile();
+
+            stage.setScene(
+                    profile.createScene(stage));
+        });
+
+        // ========================================================
+        // POLLS AND SURVEYS
+        // ========================================================
+
+        Button pollsBtn =
+                createMenuButton(
+                        "Polls and Surveys");
+
+        pollsBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "================================================");
+
+            System.out.println(
+                    "Polls and Surveys clicked");
+
+            System.out.println(
+                    "Logged-in Email: "
+                            + getUserEmail());
+
+            System.out.println(
+                    "================================================");
+
+            PollsandSurveys pollsAndSurveys =
+                    new PollsandSurveys();
+
+            stage.setScene(
+                    pollsAndSurveys.createScene(stage));
+        });
+
+        // ========================================================
+        // ADD ALL COMPONENTS
+        // ========================================================
+
+        sidebar.getChildren().addAll(
+
+                logo,
+
+                panel,
+
+                dashboardBtn,
+
+                residentsBtn,
+
+                ownersBtn,
+
+                guardsBtn,
+
+                noticesBtn,
+
+                complaintsBtn,
+
+                maintenanceBtn,
+
+                paymentsBtn,
+
+                sosBtn,
+
+                eventsBtn,
+
+                reportsBtn,
+
+                profileBtn,
+
+                pollsBtn
+        );
+
+        return sidebar;
+    }
+
+    // ============================================================
+    // CREATE MENU BUTTON
+    // ============================================================
+
+    private Button createMenuButton(
+            String text) {
+
+        Button button =
+                new Button(text);
+
+        button.setMaxWidth(
+                Double.MAX_VALUE);
+
+        button.setPrefHeight(40);
+
+        button.setAlignment(
+                Pos.CENTER_LEFT);
+
+        // ========================================================
+        // NORMAL STYLE
+        // ========================================================
+
+        button.setStyle(
+                "-fx-background-color:#434141;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:white;"
+                        + "-fx-font-size:14px;"
+                        + "-fx-alignment:CENTER-LEFT;"
+                        + "-fx-padding:0 15 0 15;"
+                        + "-fx-cursor:hand;");
+
+        // ========================================================
+        // MOUSE ENTER
+        // ========================================================
+
+        button.setOnMouseEntered(e -> {
+
+            button.setStyle(
+                    "-fx-background-color:#5a5757;"
+                            + "-fx-font-weight:bold;"
+                            + "-fx-text-fill:white;"
+                            + "-fx-font-size:14px;"
+                            + "-fx-alignment:CENTER-LEFT;"
+                            + "-fx-padding:0 15 0 15;"
+                            + "-fx-cursor:hand;");
+        });
+
+        // ========================================================
+        // MOUSE EXIT
+        // ========================================================
+
+        button.setOnMouseExited(e -> {
+
+            button.setStyle(
+                    "-fx-background-color:#434141;"
+                            + "-fx-font-weight:bold;"
+                            + "-fx-text-fill:white;"
+                            + "-fx-font-size:14px;"
+                            + "-fx-alignment:CENTER-LEFT;"
+                            + "-fx-padding:0 15 0 15;"
+                            + "-fx-cursor:hand;");
+        });
+
+        return button;
+    }
+
+    public Node getSidebar() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'getSidebar'");
+    }
 }

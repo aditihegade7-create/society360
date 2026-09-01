@@ -1,8 +1,6 @@
 package com.society.view.Secretary_portal;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -62,21 +60,10 @@ public class ManagePayment {
             DateTimeFormatter.ofPattern("dd MMM yyyy");
 
     // =========================================================
-    // TIME FORMAT
-    // =========================================================
-
-    private final DateTimeFormatter timeFormatter =
-            DateTimeFormatter.ofPattern("hh:mm a");
-
-    // =========================================================
     // CREATE SCENE
     // =========================================================
 
     public Scene createScene(Stage stage) {
-
-        // =====================================================
-        // CONTROLLER
-        // =====================================================
 
         paymentController =
                 new PaymentController();
@@ -92,14 +79,19 @@ public class ManagePayment {
                 sidebarObj.createSidebar(stage);
 
         // =====================================================
-        // MAIN CONTENT
+        // MAIN
         // =====================================================
 
         VBox mainvb =
                 new VBox(14);
 
         mainvb.setPadding(
-                new Insets(22, 25, 20, 25)
+                new Insets(
+                        22,
+                        25,
+                        20,
+                        25
+                )
         );
 
         mainvb.setMaxWidth(
@@ -119,7 +111,9 @@ public class ManagePayment {
         // =====================================================
 
         Label heading =
-                new Label("Manage Payment");
+                new Label(
+                        "Manage Payment"
+                );
 
         heading.setStyle(
                 "-fx-font-size:26px;" +
@@ -146,29 +140,15 @@ public class ManagePayment {
         );
 
         // =====================================================
-        // HEADING AREA
-        // =====================================================
-
-        VBox headingArea =
-                new VBox();
-
-        headingArea.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        headingArea.getChildren().add(
-                headingBox
-        );
-
-        // =====================================================
-        // ADD AMENITY BUTTON
+        // ADD AMENITY
         // =====================================================
 
         Button addAmenityButton =
-                new Button("+ Add Amenity");
+                new Button(
+                        "+ Add Amenity"
+                );
 
         addAmenityButton.setPrefWidth(150);
-
         addAmenityButton.setPrefHeight(40);
 
         addAmenityButton.setStyle(
@@ -182,11 +162,6 @@ public class ManagePayment {
         addAmenityButton.setOnAction(
                 e -> openAddAmenityPopup()
         );
-
-        // =====================================================
-        // ADD AMENITY BUTTON BOX
-        // BUTTON IS BELOW HEADING AND ON RIGHT
-        // =====================================================
 
         HBox addAmenityBox =
                 new HBox();
@@ -208,7 +183,9 @@ public class ManagePayment {
         // =====================================================
 
         Label amenitiesTitle =
-                new Label("Amenities");
+                new Label(
+                        "Amenities"
+                );
 
         amenitiesTitle.setStyle(
                 "-fx-font-size:20px;" +
@@ -224,16 +201,11 @@ public class ManagePayment {
                 new GridPane();
 
         amenityGrid.setHgap(12);
-
         amenityGrid.setVgap(12);
 
         amenityGrid.setMaxWidth(
                 Double.MAX_VALUE
         );
-
-        // =====================================================
-        // COLUMN WIDTH
-        // =====================================================
 
         for (int i = 0; i < 6; i++) {
 
@@ -267,7 +239,7 @@ public class ManagePayment {
         );
 
         // =====================================================
-        // UPCOMING TITLE
+        // BOOKINGS TITLE
         // =====================================================
 
         Label upcomingTitle =
@@ -282,15 +254,16 @@ public class ManagePayment {
         );
 
         // =====================================================
-        // REFRESH BUTTON
+        // REFRESH
         // =====================================================
 
         Button refreshButton =
-                new Button("⟳ Refresh");
-
-        refreshButton.setPrefHeight(38);
+                new Button(
+                        "⟳ Refresh"
+                );
 
         refreshButton.setPrefWidth(110);
+        refreshButton.setPrefHeight(38);
 
         refreshButton.setStyle(
                 "-fx-background-color:#56342B;" +
@@ -302,15 +275,13 @@ public class ManagePayment {
         refreshButton.setOnAction(
                 e -> {
 
-                    loadBookings();
-
                     loadAmenities();
+                    loadBookings();
                 }
         );
 
         // =====================================================
         // BOOKING HEADER
-        // REFRESH BUTTON RIGHT SIDE
         // =====================================================
 
         HBox bookingHeader =
@@ -345,7 +316,9 @@ public class ManagePayment {
                 new Insets(5)
         );
 
-        bookingList.setFillWidth(true);
+        bookingList.setFillWidth(
+                true
+        );
 
         bookingList.setMaxWidth(
                 Double.MAX_VALUE
@@ -358,7 +331,7 @@ public class ManagePayment {
         loadBookings();
 
         // =====================================================
-        // SCROLL PANE
+        // SCROLL
         // =====================================================
 
         ScrollPane bookingScroll =
@@ -368,12 +341,15 @@ public class ManagePayment {
                 bookingList
         );
 
-        bookingScroll.setFitToWidth(true);
+        bookingScroll.setFitToWidth(
+                true
+        );
 
-        bookingScroll.setFitToHeight(false);
+        bookingScroll.setFitToHeight(
+                false
+        );
 
         bookingScroll.setPrefHeight(300);
-
         bookingScroll.setMaxHeight(300);
 
         bookingScroll.setVbarPolicy(
@@ -420,20 +396,16 @@ public class ManagePayment {
 
         mainvb.getChildren().addAll(
 
-                // Heading
-                headingArea,
+                headingBox,
 
-                // Add Amenity below heading - right side
                 addAmenityBox,
 
-                // Amenities
                 amenitiesTitle,
 
                 amenityGrid,
 
                 separator,
 
-                // Upcoming + Refresh
                 bookingHeader,
 
                 bookingScroll,
@@ -500,146 +472,94 @@ public class ManagePayment {
 
         amenityGrid.getChildren().clear();
 
-        List<Payment> amenities =
-                paymentController.getAllAmenities();
+        try {
 
-        if (amenities == null
-                || amenities.isEmpty()) {
+            List<Payment> amenities =
+                    paymentController
+                            .getAllAmenities();
 
-            addDefaultAmenityCards();
+            if (amenities == null
+                    || amenities.isEmpty()) {
 
-            return;
-        }
+                showNoAmenities();
 
-        int column = 0;
-
-        int row = 0;
-
-        int validCount = 0;
-
-        for (Payment amenity : amenities) {
-
-            if (amenity == null) {
-                continue;
+                return;
             }
 
-            VBox card =
-                    createAmenityCard(
-                            safe(
-                                    amenity.getAmenityName()
-                            ),
-                            safe(
-                                    amenity.getPrice()
-                            ),
-                            safe(
-                                    amenity.getDescription()
-                            ),
-                            safe(
-                                    amenity.getAvailability()
-                            )
-                    );
+            int column = 0;
+            int row = 0;
 
-            amenityGrid.add(
-                    card,
-                    column,
-                    row
-            );
+            for (Payment amenity
+                    : amenities) {
 
-            column++;
+                if (amenity == null) {
+                    continue;
+                }
 
-            validCount++;
+                VBox card =
+                        createAmenityCard(
+                                safe(
+                                        amenity
+                                                .getAmenityName()
+                                ),
+                                safe(
+                                        amenity
+                                                .getPrice()
+                                ),
+                                safe(
+                                        amenity
+                                                .getDescription()
+                                ),
+                                safe(
+                                        amenity
+                                                .getAvailability()
+                                )
+                        );
 
-            if (column == 6) {
+                amenityGrid.add(
+                        card,
+                        column,
+                        row
+                );
 
-                column = 0;
+                column++;
 
-                row++;
+                if (column == 6) {
+
+                    column = 0;
+                    row++;
+                }
             }
-        }
 
-        if (validCount == 0) {
+        } catch (Exception e) {
 
-            addDefaultAmenityCards();
+            e.printStackTrace();
+
+            showNoAmenities();
         }
     }
 
     // =========================================================
-    // DEFAULT AMENITY CARDS
+    // NO AMENITIES
     // =========================================================
 
-    private void addDefaultAmenityCards() {
+    private void showNoAmenities() {
 
-        addAmenityCardToGrid(
-                "",
-                "",
-                "",
-                ""
+        Label label =
+                new Label(
+                        "No amenities found in Firestore."
+                );
+
+        label.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-text-fill:#777777;" +
+                "-fx-padding:15;"
         );
-
-        addAmenityCardToGrid(
-                "",
-                "",
-                "",
-                ""
-        );
-
-        addAmenityCardToGrid(
-                "",
-                "",
-                "",
-                ""
-        );
-
-        addAmenityCardToGrid(
-                "",
-                "",
-                "",
-                ""
-        );
-
-        addAmenityCardToGrid(
-                "",
-                "",
-                "",
-                ""
-        );
-
-        addAmenityCardToGrid(
-                "",
-                "",
-                "",
-                ""
-        );
-    }
-
-    // =========================================================
-    // ADD CARD TO GRID
-    // =========================================================
-
-    private void addAmenityCardToGrid(
-            String name,
-            String price,
-            String description,
-            String availability) {
-
-        int index =
-                amenityGrid.getChildren().size();
-
-        int column =
-                index % 6;
-
-        int row =
-                index / 6;
 
         amenityGrid.add(
-                createAmenityCard(
-                        name,
-                        price,
-                        description,
-                        availability
-                ),
-                column,
-                row
+                label,
+                0,
+                0
         );
     }
 
@@ -673,12 +593,10 @@ public class ManagePayment {
                 "-fx-border-radius:8;"
         );
 
-        // =====================================================
-        // NAME
-        // =====================================================
-
         Label name =
-                new Label(amenityName);
+                new Label(
+                        amenityName
+                );
 
         name.setStyle(
                 "-fx-font-size:16px;" +
@@ -686,12 +604,10 @@ public class ManagePayment {
                 "-fx-text-fill:#18385E;"
         );
 
-        // =====================================================
-        // PRICE
-        // =====================================================
-
         Label priceLabel =
-                new Label(price);
+                new Label(
+                        price
+                );
 
         priceLabel.setStyle(
                 "-fx-font-size:13px;" +
@@ -699,21 +615,19 @@ public class ManagePayment {
                 "-fx-text-fill:#333333;"
         );
 
-        // =====================================================
-        // DESCRIPTION
-        // =====================================================
-
         Label descriptionLabel =
-                new Label(description);
+                new Label(
+                        description
+                );
+
+        descriptionLabel.setWrapText(
+                true
+        );
 
         descriptionLabel.setStyle(
                 "-fx-font-size:12px;" +
                 "-fx-text-fill:#888888;"
         );
-
-        // =====================================================
-        // AVAILABILITY
-        // =====================================================
 
         ComboBox<String> availabilityCombo =
                 new ComboBox<>();
@@ -724,12 +638,9 @@ public class ManagePayment {
         );
 
         if (availability.equalsIgnoreCase(
-                "Available"
-        )
-        ||
-        availability.equalsIgnoreCase(
-                "Not Available"
-        )) {
+                "Available")
+                || availability.equalsIgnoreCase(
+                        "Not Available")) {
 
             availabilityCombo.setValue(
                     availability
@@ -746,9 +657,7 @@ public class ManagePayment {
                 Double.MAX_VALUE
         );
 
-        availabilityCombo.setPrefHeight(
-                32
-        );
+        availabilityCombo.setPrefHeight(32);
 
         card.getChildren().addAll(
                 name,
@@ -761,6 +670,740 @@ public class ManagePayment {
     }
 
     // =========================================================
+    // LOAD BOOKINGS
+    // =========================================================
+
+    private void loadBookings() {
+
+        if (bookingList == null) {
+            return;
+        }
+
+        bookingList.getChildren().clear();
+
+        Label loading =
+                new Label(
+                        "Loading bookings..."
+                );
+
+        loading.setStyle(
+                "-fx-font-size:14px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+        bookingList.getChildren().add(
+                loading
+        );
+
+        try {
+
+            List<Payment> bookings =
+                    paymentController
+                            .getAllBookings();
+
+            bookingList.getChildren().clear();
+
+            if (bookings == null
+                    || bookings.isEmpty()) {
+
+                showNoBookings(
+                        "No bookings found in Firestore."
+                );
+
+                return;
+            }
+
+            int count = 0;
+
+            for (Payment payment
+                    : bookings) {
+
+                if (payment == null) {
+                    continue;
+                }
+
+                System.out.println(
+                        "Displaying booking: "
+                                + payment
+                                        .getBookingId()
+                                + " | "
+                                + payment
+                                        .getEmail()
+                                + " | "
+                                + payment
+                                        .getAmenityName()
+                                + " | "
+                                + payment
+                                        .getBookingDate()
+                                + " | "
+                                + payment
+                                        .getStatus()
+                );
+
+                HBox row =
+                        createBookingRow(
+                                payment
+                        );
+
+                bookingList.getChildren().add(
+                        row
+                );
+
+                count++;
+            }
+
+            if (count == 0) {
+
+                showNoBookings(
+                        "No bookings available."
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            bookingList.getChildren().clear();
+
+            showNoBookings(
+                    "Error while fetching bookings."
+            );
+        }
+    }
+
+    // =========================================================
+    // CREATE BOOKING ROW
+    // =========================================================
+
+    private HBox createBookingRow(
+            Payment payment) {
+
+        HBox row =
+                new HBox(12);
+
+        row.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        row.setPadding(
+                new Insets(12)
+        );
+
+        row.setMinHeight(85);
+
+        row.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
+        row.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:8;" +
+                "-fx-border-color:#DDDDDD;" +
+                "-fx-border-radius:8;"
+        );
+
+        // =====================================================
+        // DETAILS
+        // =====================================================
+
+        VBox residentBox =
+                createDetailBox(
+                        "Resident Name",
+                        safe(
+                                payment
+                                        .getResidentName()
+                        )
+                );
+
+        VBox flatBox =
+                createDetailBox(
+                        "Flat No",
+                        safe(
+                                payment
+                                        .getFlatNo()
+                        )
+                );
+
+        VBox amenityBox =
+                createDetailBox(
+                        "Amenity",
+                        safe(
+                                payment
+                                        .getAmenityName()
+                        )
+                );
+
+        VBox dateBox =
+                createDetailBox(
+                        "Date",
+                        formatDate(
+                                payment
+                                        .getBookingDate()
+                        )
+                );
+
+        String time =
+                safe(
+                        payment
+                                .getStartTime()
+                )
+                + " - "
+                + safe(
+                        payment
+                                .getEndTime()
+                );
+
+        VBox timeBox =
+                createDetailBox(
+                        "Time",
+                        time
+                );
+
+        VBox amountBox =
+                createDetailBox(
+                        "Amount",
+                        safe(
+                                payment
+                                        .getPaymentAmount()
+                        )
+                );
+
+        VBox paymentBox =
+                createDetailBox(
+                        "Payment",
+                        safe(
+                                payment
+                                        .getPaymentStatus()
+                        )
+                );
+
+        // =====================================================
+        // BOOKING STATUS
+        // =====================================================
+
+        VBox statusBox =
+                new VBox(5);
+
+        Label statusTitle =
+                new Label(
+                        "Booking Status"
+                );
+
+        statusTitle.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#888888;"
+        );
+
+        Label statusLabel =
+                new Label();
+
+        String status =
+                safe(
+                        payment
+                                .getStatus()
+                ).toUpperCase();
+
+        // =====================================================
+        // ACCEPTED
+        // =====================================================
+
+        if (status.equals("ACCEPTED")) {
+
+            statusLabel.setText(
+                    "Accepted"
+            );
+
+            statusLabel.setStyle(
+                    "-fx-background-color:#DDF4E5;" +
+                    "-fx-text-fill:#218838;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:6px 10px;" +
+                    "-fx-background-radius:15;"
+            );
+        }
+
+        // =====================================================
+        // REJECTED
+        // =====================================================
+
+        else if (status.equals("REJECTED")) {
+
+            statusLabel.setText(
+                    "Rejected"
+            );
+
+            statusLabel.setStyle(
+                    "-fx-background-color:#F8D7DA;" +
+                    "-fx-text-fill:#B02A37;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:6px 10px;" +
+                    "-fx-background-radius:15;"
+            );
+        }
+
+        // =====================================================
+        // PENDING
+        // =====================================================
+
+        else {
+
+            statusLabel.setText(
+                    "Pending"
+            );
+
+            statusLabel.setStyle(
+                    "-fx-background-color:#FFF3CD;" +
+                    "-fx-text-fill:#856404;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-padding:6px 10px;" +
+                    "-fx-background-radius:15;"
+            );
+        }
+
+        statusBox.getChildren().addAll(
+                statusTitle,
+                statusLabel
+        );
+
+        // =====================================================
+        // ACTION
+        // =====================================================
+
+        VBox actionBox =
+                new VBox(5);
+
+        Label actionTitle =
+                new Label(
+                        "Action"
+                );
+
+        actionTitle.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#888888;"
+        );
+
+        HBox actionButtons =
+                new HBox(8);
+
+        // =====================================================
+        // ACCEPT
+        // =====================================================
+
+        Button acceptButton =
+                new Button(
+                        "Accept"
+                );
+
+        acceptButton.setPrefWidth(75);
+        acceptButton.setPrefHeight(32);
+
+        acceptButton.setStyle(
+                "-fx-background-color:#198754;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:5;"
+        );
+
+        // =====================================================
+        // REJECT
+        // =====================================================
+
+        Button rejectButton =
+                new Button(
+                        "Reject"
+                );
+
+        rejectButton.setPrefWidth(75);
+        rejectButton.setPrefHeight(32);
+
+        rejectButton.setStyle(
+                "-fx-background-color:#DC3545;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:5;"
+        );
+
+        // =====================================================
+        // DISABLE AFTER DECISION
+        // =====================================================
+
+        if (status.equals("ACCEPTED")
+                || status.equals("REJECTED")) {
+
+            acceptButton.setDisable(
+                    true
+            );
+
+            rejectButton.setDisable(
+                    true
+            );
+        }
+
+        // =====================================================
+        // ACCEPT
+        // =====================================================
+
+        acceptButton.setOnAction(
+                e -> updateBookingStatus(
+                        payment,
+                        "ACCEPTED"
+                )
+        );
+
+        // =====================================================
+        // REJECT
+        // =====================================================
+
+        rejectButton.setOnAction(
+                e -> updateBookingStatus(
+                        payment,
+                        "REJECTED"
+                )
+        );
+
+        actionButtons.getChildren().addAll(
+                acceptButton,
+                rejectButton
+        );
+
+        actionBox.getChildren().addAll(
+                actionTitle,
+                actionButtons
+        );
+
+        // =====================================================
+        // WIDTH
+        // =====================================================
+
+        residentBox.setPrefWidth(120);
+        flatBox.setPrefWidth(70);
+        amenityBox.setPrefWidth(125);
+        dateBox.setPrefWidth(100);
+        timeBox.setPrefWidth(130);
+        amountBox.setPrefWidth(80);
+        paymentBox.setPrefWidth(85);
+        statusBox.setPrefWidth(95);
+        actionBox.setPrefWidth(165);
+
+        // =====================================================
+        // ADD
+        // =====================================================
+
+        row.getChildren().addAll(
+
+                residentBox,
+
+                flatBox,
+
+                amenityBox,
+
+                dateBox,
+
+                timeBox,
+
+                amountBox,
+
+                paymentBox,
+
+                statusBox,
+
+                actionBox
+        );
+
+        return row;
+    }
+
+    // =========================================================
+    // UPDATE BOOKING STATUS
+    // =========================================================
+
+    private void updateBookingStatus(
+            Payment payment,
+            String newStatus) {
+
+        try {
+
+            if (payment == null) {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Update Failed",
+                        "Booking data is missing."
+                );
+
+                return;
+            }
+
+            // =====================================================
+            // RESIDENT EMAIL
+            // =====================================================
+
+            String email =
+                    safe(
+                            payment
+                                    .getEmail()
+                    ).trim()
+                            .toLowerCase();
+
+            if (email.isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Update Failed",
+                        "Resident email not found."
+                );
+
+                return;
+            }
+
+            // =====================================================
+            // BOOKING ID
+            // =====================================================
+
+            String bookingId =
+                    safe(
+                            payment
+                                    .getBookingId()
+                    ).trim();
+
+            if (bookingId.isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Update Failed",
+                        "Booking ID not found."
+                );
+
+                return;
+            }
+
+            // =====================================================
+            // STATUS
+            // =====================================================
+
+            newStatus =
+                    newStatus
+                            .trim()
+                            .toUpperCase();
+
+            System.out.println(
+                    "======================================"
+            );
+
+            System.out.println(
+                    "SECRETARY BOOKING ACTION"
+            );
+
+            System.out.println(
+                    "Resident Email = "
+                            + email
+            );
+
+            System.out.println(
+                    "Booking ID = "
+                            + bookingId
+            );
+
+            System.out.println(
+                    "New Status = "
+                            + newStatus
+            );
+
+            System.out.println(
+                    "======================================"
+            );
+
+            // =====================================================
+            // DAO UPDATE THROUGH CONTROLLER
+            // =====================================================
+
+            boolean updated =
+                    paymentController
+                            .updateBookingStatus(
+                                    email,
+                                    bookingId,
+                                    newStatus
+                            );
+
+            // =====================================================
+            // SUCCESS
+            // =====================================================
+
+            if (updated) {
+
+                // Update local model also.
+                // This ensures UI has the new value
+                // immediately.
+
+                payment.setStatus(
+                        newStatus
+                );
+
+                showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Booking Updated",
+                        "Booking has been "
+                                + displayStatus(
+                                        newStatus
+                                )
+                                + " successfully."
+                );
+
+                // =================================================
+                // RELOAD FROM FIRESTORE
+                // =================================================
+
+                loadBookings();
+
+            }
+
+            // =====================================================
+            // FAILURE
+            // =====================================================
+
+            else {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Update Failed",
+                        "Unable to update booking status."
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            showAlert(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Something went wrong while updating booking."
+            );
+        }
+    }
+
+    // =========================================================
+    // DISPLAY STATUS
+    // =========================================================
+
+    private String displayStatus(
+            String status) {
+
+        if (status == null) {
+            return "";
+        }
+
+        if (status.equalsIgnoreCase(
+                "ACCEPTED")) {
+
+            return "Accepted";
+        }
+
+        if (status.equalsIgnoreCase(
+                "REJECTED")) {
+
+            return "Rejected";
+        }
+
+        return "Pending";
+    }
+
+    // =========================================================
+    // DETAIL BOX
+    // =========================================================
+
+    private VBox createDetailBox(
+            String title,
+            String value) {
+
+        VBox box =
+                new VBox(4);
+
+        Label titleLabel =
+                new Label(
+                        title
+                );
+
+        titleLabel.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#888888;"
+        );
+
+        Label valueLabel =
+                new Label(
+                        value
+                );
+
+        valueLabel.setWrapText(
+                true
+        );
+
+        valueLabel.setStyle(
+                "-fx-font-size:13px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
+        );
+
+        box.getChildren().addAll(
+                titleLabel,
+                valueLabel
+        );
+
+        return box;
+    }
+
+    // =========================================================
+    // FORMAT DATE
+    // =========================================================
+
+    private String formatDate(
+            String date) {
+
+        try {
+
+            if (date == null
+                    || date.trim().isEmpty()) {
+
+                return "";
+            }
+
+            return LocalDate
+                    .parse(date)
+                    .format(
+                            dateFormatter
+                    );
+
+        } catch (Exception e) {
+
+            return safe(date);
+        }
+    }
+
+    // =========================================================
+    // NO BOOKINGS
+    // =========================================================
+
+    private void showNoBookings(
+            String message) {
+
+        Label label =
+                new Label(
+                        message
+                );
+
+        label.setStyle(
+                "-fx-font-size:15px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#777777;" +
+                "-fx-padding:20;"
+        );
+
+        bookingList.getChildren().add(
+                label
+        );
+    }
+
+    // =========================================================
     // ADD AMENITY POPUP
     // =========================================================
 
@@ -769,10 +1412,6 @@ public class ManagePayment {
         StackPane popupLayer =
                 createOverlay();
 
-        // =====================================================
-        // FORM
-        // =====================================================
-
         VBox form =
                 new VBox(9);
 
@@ -780,13 +1419,10 @@ public class ManagePayment {
                 new Insets(20)
         );
 
-        // SMALL COMPACT HEIGHT
         form.setPrefWidth(400);
-
         form.setMaxWidth(400);
 
         form.setPrefHeight(430);
-
         form.setMaxHeight(430);
 
         form.setStyle(
@@ -796,12 +1432,10 @@ public class ManagePayment {
                 "-fx-border-radius:15;"
         );
 
-        // =====================================================
-        // TITLE
-        // =====================================================
-
         Label title =
-                new Label("Add Amenity");
+                new Label(
+                        "Add Amenity"
+                );
 
         title.setStyle(
                 "-fx-font-size:21px;" +
@@ -891,14 +1525,15 @@ public class ManagePayment {
         availabilityCombo.setPrefHeight(36);
 
         // =====================================================
-        // CANCEL BUTTON
+        // BUTTONS
         // =====================================================
 
         Button cancelButton =
-                new Button("Cancel");
+                new Button(
+                        "Cancel"
+                );
 
         cancelButton.setPrefWidth(95);
-
         cancelButton.setPrefHeight(36);
 
         cancelButton.setStyle(
@@ -908,15 +1543,12 @@ public class ManagePayment {
                 "-fx-background-radius:8;"
         );
 
-        // =====================================================
-        // SAVE BUTTON
-        // =====================================================
-
         Button saveButton =
-                new Button("Save Amenity");
+                new Button(
+                        "Save Amenity"
+                );
 
         saveButton.setPrefWidth(125);
-
         saveButton.setPrefHeight(36);
 
         saveButton.setStyle(
@@ -925,10 +1557,6 @@ public class ManagePayment {
                 "-fx-font-weight:bold;" +
                 "-fx-background-radius:8;"
         );
-
-        // =====================================================
-        // BUTTON BOX
-        // =====================================================
 
         HBox buttonBox =
                 new HBox(10);
@@ -943,7 +1571,7 @@ public class ManagePayment {
         );
 
         // =====================================================
-        // FORM CHILDREN
+        // FORM
         // =====================================================
 
         form.getChildren().addAll(
@@ -965,10 +1593,6 @@ public class ManagePayment {
                 buttonBox
         );
 
-        // =====================================================
-        // ADD FORM TO POPUP
-        // =====================================================
-
         popupLayer.getChildren().add(
                 form
         );
@@ -978,13 +1602,10 @@ public class ManagePayment {
                 Pos.CENTER
         );
 
-        // =====================================================
-        // ROOT
-        // =====================================================
-
         StackPane root =
-                (StackPane) managePaymentScene
-                        .getRoot();
+                (StackPane)
+                        managePaymentScene
+                                .getRoot();
 
         root.getChildren().add(
                 popupLayer
@@ -1001,679 +1622,86 @@ public class ManagePayment {
         );
 
         // =====================================================
-        // SAVE AMENITY
+        // SAVE
         // =====================================================
 
-        saveButton.setOnAction(e -> {
-
-            String name =
-                    nameField
-                            .getText()
-                            .trim();
-
-            String price =
-                    priceField
-                            .getText()
-                            .trim();
-
-            String description =
-                    descriptionField
-                            .getText()
-                            .trim();
-
-            String availability =
-                    availabilityCombo
-                            .getValue();
-
-            // =================================================
-            // VALIDATION
-            // =================================================
-
-            if (name.isEmpty()
-                    || price.isEmpty()
-                    || description.isEmpty()
-                    || availability == null) {
-
-                showAlert(
-                        Alert.AlertType.WARNING,
-                        "Missing Information",
-                        "Please fill all amenity details."
-                );
-
-                return;
-            }
-
-            // =================================================
-            // SAVE THROUGH CONTROLLER
-            // =================================================
-
-            boolean saved =
-                    paymentController.addAmenity(
-                            name,
-                            price,
-                            description,
-                            availability
-                    );
-
-            // =================================================
-            // SUCCESS
-            // =================================================
-
-            if (saved) {
-
-                showAlert(
-                        Alert.AlertType.INFORMATION,
-                        "Success",
-                        "Amenity added successfully."
-                );
-
-                removePopup(
-                        popupLayer
-                );
-
-                loadAmenities();
-
-            } else {
-
-                showAlert(
-                        Alert.AlertType.ERROR,
-                        "Save Failed",
-                        "Unable to save amenity to Firestore."
-                );
-            }
-        });
-    }
-
-    // =========================================================
-    // LOAD BOOKINGS
-    // =========================================================
-
-    private void loadBookings() {
-
-        if (bookingList == null) {
-            return;
-        }
-
-        bookingList.getChildren().clear();
-
-        Label loading =
-                new Label(
-                        "Loading bookings..."
-                );
-
-        loading.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-text-fill:#777777;"
-        );
-
-        bookingList.getChildren().add(
-                loading
-        );
-
-        List<Payment> bookings =
-                paymentController
-                        .getAllBookings();
-
-        bookingList.getChildren().clear();
-
-        if (bookings == null) {
-
-            showNoBookings(
-                    "Unable to fetch bookings."
-            );
-
-            return;
-        }
-
-        if (bookings.isEmpty()) {
-
-            showNoBookings(
-                    "No bookings found in Firestore."
-            );
-
-            return;
-        }
-
-        int count = 0;
-
-        for (Payment payment : bookings) {
-
-            if (payment == null) {
-                continue;
-            }
-
-            if (isBookingExpired(payment)) {
-                continue;
-            }
-
-            HBox row =
-                    createBookingRow(
-                            payment
-                    );
-
-            bookingList.getChildren().add(
-                    row
-            );
-
-            count++;
-        }
-
-        if (count == 0) {
-
-            showNoBookings(
-                    "No upcoming bookings available."
-            );
-        }
-    }
-
-    // =========================================================
-    // CREATE BOOKING ROW
-    // =========================================================
-
-    private HBox createBookingRow(
-            Payment payment) {
-
-        HBox row =
-                new HBox(12);
-
-        row.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        row.setPadding(
-                new Insets(12)
-        );
-
-        row.setMinHeight(72);
-
-        row.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-        row.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:8;" +
-                "-fx-border-color:#DDDDDD;" +
-                "-fx-border-radius:8;"
-        );
-
-        // =====================================================
-        // RESIDENT
-        // =====================================================
-
-        VBox residentBox =
-                createDetailBox(
-                        "Resident Name",
-                        safe(
-                                payment.getResidentName()
-                        )
-                );
-
-        // =====================================================
-        // FLAT
-        // =====================================================
-
-        VBox flatBox =
-                createDetailBox(
-                        "Flat No",
-                        safe(
-                                payment.getFlatNo()
-                        )
-                );
-
-        // =====================================================
-        // AMENITY
-        // =====================================================
-
-        VBox amenityBox =
-                createDetailBox(
-                        "Amenity",
-                        safe(
-                                payment.getAmenityName()
-                        )
-                );
-
-        // =====================================================
-        // DATE
-        // =====================================================
-
-        VBox dateBox =
-                createDetailBox(
-                        "Date",
-                        formatDate(
-                                payment.getBookingDate()
-                        )
-                );
-
-        // =====================================================
-        // TIME
-        // =====================================================
-
-        String time =
-                safe(
-                        payment.getStartTime()
-                )
-                + " - "
-                + safe(
-                        payment.getEndTime()
-                );
-
-        VBox timeBox =
-                createDetailBox(
-                        "Time",
-                        time
-                );
-
-        // =====================================================
-        // STATUS
-        // =====================================================
-
-        VBox statusBox =
-                new VBox(5);
-
-        Label statusTitle =
-                new Label("Status");
-
-        statusTitle.setStyle(
-                "-fx-font-size:12px;" +
-                "-fx-text-fill:#888888;"
-        );
-
-        Label statusLabel =
-                new Label();
-
-        String status =
-                safe(
-                        payment.getStatus()
-                );
-
-        if (status.equalsIgnoreCase(
-                "Accepted"
-        )) {
-
-            statusLabel.setText(
-                    "Accepted"
-            );
-
-            statusLabel.setStyle(
-                    "-fx-background-color:#DDF4E5;" +
-                    "-fx-text-fill:#218838;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-padding:6px 10px;" +
-                    "-fx-background-radius:15;"
-            );
-
-        } else if (status.equalsIgnoreCase(
-                "Rejected"
-        )) {
-
-            statusLabel.setText(
-                    "Rejected"
-            );
-
-            statusLabel.setStyle(
-                    "-fx-background-color:#F8D7DA;" +
-                    "-fx-text-fill:#B02A37;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-padding:6px 10px;" +
-                    "-fx-background-radius:15;"
-            );
-
-        } else {
-
-            statusLabel.setText(
-                    "Pending"
-            );
-
-            statusLabel.setStyle(
-                    "-fx-background-color:#FFF3CD;" +
-                    "-fx-text-fill:#856404;" +
-                    "-fx-font-weight:bold;" +
-                    "-fx-padding:6px 10px;" +
-                    "-fx-background-radius:15;"
-            );
-        }
-
-        statusBox.getChildren().addAll(
-                statusTitle,
-                statusLabel
-        );
-
-        // =====================================================
-        // ACTION
-        // =====================================================
-
-        VBox actionBox =
-                new VBox(5);
-
-        Label actionTitle =
-                new Label("Action");
-
-        actionTitle.setStyle(
-                "-fx-font-size:12px;" +
-                "-fx-text-fill:#888888;"
-        );
-
-        HBox actionButtons =
-                new HBox(8);
-
-        // =====================================================
-        // ACCEPT
-        // =====================================================
-
-        Button acceptButton =
-                new Button("Accept");
-
-        acceptButton.setPrefWidth(75);
-
-        acceptButton.setPrefHeight(32);
-
-        acceptButton.setStyle(
-                "-fx-background-color:#198754;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-weight:bold;" +
-                "-fx-background-radius:5;"
-        );
-
-        // =====================================================
-        // REJECT
-        // =====================================================
-
-        Button rejectButton =
-                new Button("Reject");
-
-        rejectButton.setPrefWidth(75);
-
-        rejectButton.setPrefHeight(32);
-
-        rejectButton.setStyle(
-                "-fx-background-color:#DC3545;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-weight:bold;" +
-                "-fx-background-radius:5;"
-        );
-
-        // =====================================================
-        // DISABLE AFTER DECISION
-        // =====================================================
-
-        if (status.equalsIgnoreCase(
-                "Accepted"
-        )
-        ||
-        status.equalsIgnoreCase(
-                "Rejected"
-        )) {
-
-            acceptButton.setDisable(true);
-
-            rejectButton.setDisable(true);
-        }
-
-        // =====================================================
-        // ACCEPT ACTION
-        // =====================================================
-
-        acceptButton.setOnAction(
-                e -> updateBookingStatus(
-                        payment,
-                        "Accepted"
-                )
-        );
-
-        // =====================================================
-        // REJECT ACTION
-        // =====================================================
-
-        rejectButton.setOnAction(
-                e -> updateBookingStatus(
-                        payment,
-                        "Rejected"
-                )
-        );
-
-        actionButtons.getChildren().addAll(
-                acceptButton,
-                rejectButton
-        );
-
-        actionBox.getChildren().addAll(
-                actionTitle,
-                actionButtons
-        );
-
-        // =====================================================
-        // WIDTH
-        // =====================================================
-
-        residentBox.setPrefWidth(150);
-
-        flatBox.setPrefWidth(80);
-
-        amenityBox.setPrefWidth(145);
-
-        dateBox.setPrefWidth(110);
-
-        timeBox.setPrefWidth(145);
-
-        statusBox.setPrefWidth(100);
-
-        actionBox.setPrefWidth(165);
-
-        // =====================================================
-        // ADD TO ROW
-        // =====================================================
-
-        row.getChildren().addAll(
-
-                residentBox,
-
-                flatBox,
-
-                amenityBox,
-
-                dateBox,
-
-                timeBox,
-
-                statusBox,
-
-                actionBox
-        );
-
-        return row;
-    }
-
-    // =========================================================
-    // UPDATE BOOKING STATUS
-    // =========================================================
-
-    private void updateBookingStatus(
-            Payment payment,
-            String newStatus) {
-
-        try {
-
-            String bookingId =
-                    payment.getBookingId();
-
-            if (bookingId == null
-                    || bookingId.trim().isEmpty()) {
-
-                showAlert(
-                        Alert.AlertType.ERROR,
-                        "Update Failed",
-                        "Booking ID not found."
-                );
-
-                return;
-            }
-
-            boolean updated =
-                    paymentController
-                            .updateBookingStatus(
-                                    bookingId,
-                                    newStatus
-                            );
-
-            if (updated) {
-
-                showAlert(
-                        Alert.AlertType.INFORMATION,
-                        "Booking Updated",
-                        "Booking has been "
-                                + newStatus
-                                + " successfully."
-                );
-
-                loadBookings();
-
-            } else {
-
-                showAlert(
-                        Alert.AlertType.ERROR,
-                        "Update Failed",
-                        "Unable to update booking status."
-                );
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            showAlert(
-                    Alert.AlertType.ERROR,
-                    "Error",
-                    "Something went wrong while updating booking."
-            );
-        }
-    }
-
-    // =========================================================
-    // DETAIL BOX
-    // =========================================================
-
-    private VBox createDetailBox(
-            String title,
-            String value) {
-
-        VBox box =
-                new VBox(4);
-
-        Label titleLabel =
-                new Label(title);
-
-        titleLabel.setStyle(
-                "-fx-font-size:11px;" +
-                "-fx-text-fill:#888888;"
-        );
-
-        Label valueLabel =
-                new Label(value);
-
-        valueLabel.setWrapText(true);
-
-        valueLabel.setStyle(
-                "-fx-font-size:13px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#333333;"
-        );
-
-        box.getChildren().addAll(
-                titleLabel,
-                valueLabel
-        );
-
-        return box;
-    }
-
-    // =========================================================
-    // CHECK EXPIRED
-    // =========================================================
-
-    private boolean isBookingExpired(
-            Payment payment) {
-
-        try {
-
-            String bookingDate =
-                    payment.getBookingDate();
-
-            String endTime =
-                    payment.getEndTime();
-
-            if (bookingDate == null
-                    || endTime == null
-                    || bookingDate.isEmpty()
-                    || endTime.isEmpty()) {
-
-                return false;
-            }
-
-            LocalDate date =
-                    LocalDate.parse(
-                            bookingDate
-                    );
-
-            LocalTime end =
-                    parseTime(
-                            endTime
-                    );
-
-            LocalDateTime endDateTime =
-                    LocalDateTime.of(
-                            date,
-                            end
-                    );
-
-            return !LocalDateTime.now()
-                    .isBefore(
-                            endDateTime
-                    );
-
-        } catch (Exception e) {
-
-            return false;
-        }
-    }
-
-    // =========================================================
-    // FORMAT DATE
-    // =========================================================
-
-    private String formatDate(
-            String date) {
-
-        try {
-
-            if (date == null
-                    || date.isEmpty()) {
-
-                return "";
-            }
-
-            return LocalDate
-                    .parse(date)
-                    .format(
-                            dateFormatter
-                    );
-
-        } catch (Exception e) {
-
-            return safe(date);
-        }
-    }
-
-    // =========================================================
-    // PARSE TIME
-    // =========================================================
-
-    private LocalTime parseTime(
-            String time) {
-
-        return LocalTime.parse(
-                time,
-                timeFormatter
+        saveButton.setOnAction(
+                e -> {
+
+                    String name =
+                            nameField
+                                    .getText()
+                                    .trim();
+
+                    String price =
+                            priceField
+                                    .getText()
+                                    .trim();
+
+                    String description =
+                            descriptionField
+                                    .getText()
+                                    .trim();
+
+                    String availability =
+                            availabilityCombo
+                                    .getValue();
+
+                    // =========================================
+                    // VALIDATION
+                    // =========================================
+
+                    if (name.isEmpty()
+                            || price.isEmpty()
+                            || description.isEmpty()
+                            || availability == null) {
+
+                        showAlert(
+                                Alert.AlertType.WARNING,
+                                "Missing Information",
+                                "Please fill all amenity details."
+                        );
+
+                        return;
+                    }
+
+                    // =========================================
+                    // SAVE
+                    // =========================================
+
+                    boolean saved =
+                            paymentController
+                                    .addAmenity(
+                                            name,
+                                            price,
+                                            description,
+                                            availability
+                                    );
+
+                    if (saved) {
+
+                        showAlert(
+                                Alert.AlertType.INFORMATION,
+                                "Success",
+                                "Amenity added successfully."
+                        );
+
+                        removePopup(
+                                popupLayer
+                        );
+
+                        // Refresh amenity cards
+                        loadAmenities();
+
+                    } else {
+
+                        showAlert(
+                                Alert.AlertType.ERROR,
+                                "Save Failed",
+                                "Unable to save amenity to Firestore."
+                        );
+                    }
+                }
         );
     }
 
@@ -1685,7 +1713,9 @@ public class ManagePayment {
             String text) {
 
         Label label =
-                new Label(text);
+                new Label(
+                        text
+                );
 
         label.setStyle(
                 "-fx-font-weight:bold;" +
@@ -1693,28 +1723,6 @@ public class ManagePayment {
         );
 
         return label;
-    }
-
-    // =========================================================
-    // NO BOOKINGS
-    // =========================================================
-
-    private void showNoBookings(
-            String message) {
-
-        Label label =
-                new Label(message);
-
-        label.setStyle(
-                "-fx-font-size:15px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#777777;" +
-                "-fx-padding:20;"
-        );
-
-        bookingList.getChildren().add(
-                label
-        );
     }
 
     // =========================================================
@@ -1745,8 +1753,9 @@ public class ManagePayment {
             StackPane popupLayer) {
 
         StackPane root =
-                (StackPane) managePaymentScene
-                        .getRoot();
+                (StackPane)
+                        managePaymentScene
+                                .getRoot();
 
         root.getChildren().remove(
                 popupLayer
@@ -1765,11 +1774,17 @@ public class ManagePayment {
         Alert alert =
                 new Alert(type);
 
-        alert.setTitle(title);
+        alert.setTitle(
+                title
+        );
 
-        alert.setHeaderText(null);
+        alert.setHeaderText(
+                null
+        );
 
-        alert.setContentText(message);
+        alert.setContentText(
+                message
+        );
 
         alert.showAndWait();
     }

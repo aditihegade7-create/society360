@@ -2,6 +2,10 @@ package com.society.model.Secretary_model;
 
 public class Guard {
 
+    // =====================================================
+    // FIELDS
+    // =====================================================
+
     private String id;
     private String name;
     private String mobile;
@@ -9,6 +13,7 @@ public class Guard {
     private String email;
     private String status;
     private String assignedGate;
+    private String society;
 
     // =====================================================
     // DEFAULT CONSTRUCTOR
@@ -19,7 +24,8 @@ public class Guard {
     }
 
     // =====================================================
-    // PARAMETERIZED CONSTRUCTOR
+    // CONSTRUCTOR WITHOUT SOCIETY
+    // Backward compatibility
     // =====================================================
 
     public Guard(
@@ -32,11 +38,33 @@ public class Guard {
 
         this.name = name;
         this.mobile = mobile;
+        this.shift = shift;
+        this.email = email;
+        this.status = status;
+        this.assignedGate = assignedGate;
+        this.society = "";
+    }
+
+    // =====================================================
+    // CONSTRUCTOR WITH SOCIETY
+    // =====================================================
+
+    public Guard(
+            String name,
+            String mobile,
+            String shift,
+            String email,
+            String status,
+            String assignedGate,
+            String society) {
+
+        this.name = name;
         this.mobile = mobile;
         this.shift = shift;
         this.email = email;
         this.status = status;
         this.assignedGate = assignedGate;
+        this.society = society;
     }
 
     // =====================================================
@@ -121,5 +149,36 @@ public class Guard {
 
     public void setAssignedGate(String assignedGate) {
         this.assignedGate = assignedGate;
+    }
+
+    // =====================================================
+    // SOCIETY
+    // =====================================================
+
+    public String getSociety() {
+        return society;
+    }
+
+    public void setSociety(String society) {
+        this.society = society;
+    }
+
+    // =====================================================
+    // TO STRING
+    // =====================================================
+
+    @Override
+    public String toString() {
+
+        return "Guard{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", shift='" + shift + '\'' +
+                ", email='" + email + '\'' +
+                ", status='" + status + '\'' +
+                ", assignedGate='" + assignedGate + '\'' +
+                ", society='" + society + '\'' +
+                '}';
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.society.controller.Secretary_Controller.NoticeController;
 import com.society.model.Secretary_model.Notice;
+import com.society.model.Welcome.User;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
@@ -16,58 +17,153 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ManageNotices {
 
+    // ============================================================
+    // SCENE
+    // ============================================================
+
     private Scene manageNoticesScene;
 
-    // =====================================================
+    // ============================================================
+    // LOGGED-IN USER
+    // ============================================================
+
+    private User loggedInUser;
+
+    // ============================================================
     // CONTROLLER
-    // =====================================================
+    // ============================================================
 
     private NoticeController noticeController;
 
-    // =====================================================
-    // MAIN STACKPANE
-    // =====================================================
+    // ============================================================
+    // ROOT STACK
+    // ============================================================
 
     private StackPane rootStack;
 
-    // =====================================================
+    // ============================================================
     // NOTICE LIST
-    // =====================================================
+    // ============================================================
 
     private VBox noticeList;
 
-    // =====================================================
+    // ============================================================
+    // CONSTRUCTOR
+    // ============================================================
+
+    public ManageNotices(User loggedInUser) {
+
+        this.loggedInUser = loggedInUser;
+
+        System.out.println("======================================");
+        System.out.println("ManageNotices opened");
+
+        if (loggedInUser != null) {
+            System.out.println(
+                    "Logged-in Email: "
+                            + loggedInUser.getEmail()
+            );
+        }
+
+        System.out.println("======================================");
+    }
+
+    // ============================================================
+    // GET EMAIL
+    // ============================================================
+
+    private String getUserEmail() {
+
+        if (loggedInUser == null) {
+            return null;
+        }
+
+        if (loggedInUser.getEmail() == null) {
+            return null;
+        }
+
+        String email =
+                loggedInUser.getEmail().trim().toLowerCase();
+
+        if (email.isEmpty()) {
+            return null;
+        }
+
+        return email;
+    }
+
+    // ============================================================
     // CREATE SCENE
-    // =====================================================
+    // ============================================================
 
     public Scene createScene(Stage stage) {
 
-        // =====================================================
+        // ========================================================
+        // CHECK USER
+        // ========================================================
+
+        if (loggedInUser == null) {
+
+            showAlert(
+                    Alert.AlertType.ERROR,
+                    "User Error",
+                    "Logged-in user information is missing."
+            );
+
+            return null;
+        }
+
+        if (getUserEmail() == null) {
+
+            showAlert(
+                    Alert.AlertType.ERROR,
+                    "Email Error",
+                    "Logged-in user's email is not available."
+            );
+
+            return null;
+        }
+
+        System.out.println(
+                "ManageNotices Email: "
+                        + getUserEmail()
+        );
+
+        // ========================================================
         // CONTROLLER
-        // =====================================================
+        // ========================================================
 
-        noticeController = new NoticeController();
+        noticeController =
+                new NoticeController();
 
-        // =====================================================
+        // ========================================================
+        // ROOT STACK
+        // ========================================================
+
+        rootStack =
+                new StackPane();
+
+        // ========================================================
         // SIDEBAR
-        // =====================================================
+        // ========================================================
+        // DO NOT CHANGE SIDEBAR
+        // ========================================================
 
         SecretarySidebar sidebarObj =
-                new SecretarySidebar();
+                new SecretarySidebar(loggedInUser);
 
         VBox sidebar =
                 sidebarObj.createSidebar(stage);
 
-        // =====================================================
+        // ========================================================
         // MAIN CONTENT
-        // =====================================================
+        // ========================================================
 
         VBox mainvb =
                 new VBox(20);
@@ -90,9 +186,9 @@ public class ManageNotices {
                 "-fx-background-color:#b3adad;"
         );
 
-        // =====================================================
-        // HEADING
-        // =====================================================
+        // ========================================================
+        // PAGE HEADING
+        // ========================================================
 
         Label heading =
                 new Label(
@@ -105,9 +201,9 @@ public class ManageNotices {
                 "-fx-text-fill:#434141;"
         );
 
-        // =====================================================
+        // ========================================================
         // TITLE
-        // =====================================================
+        // ========================================================
 
         Label title =
                 new Label(
@@ -120,9 +216,9 @@ public class ManageNotices {
                 "-fx-text-fill:black;"
         );
 
-        // =====================================================
+        // ========================================================
         // SUBTITLE
-        // =====================================================
+        // ========================================================
 
         Label subtitle =
                 new Label(
@@ -134,9 +230,9 @@ public class ManageNotices {
                 "-fx-text-fill:#777777;"
         );
 
-        // =====================================================
+        // ========================================================
         // ADD NOTICE BUTTON
-        // =====================================================
+        // ========================================================
 
         Button addNoticeBtn =
                 new Button(
@@ -153,9 +249,28 @@ public class ManageNotices {
                 "-fx-background-radius:7;"
         );
 
-        // =====================================================
-        // HEADER BOX
-        // =====================================================
+        // ========================================================
+        // REFRESH BUTTON
+        // ========================================================
+
+        Button refreshBtn =
+                new Button(
+                        "↻ Refresh"
+                );
+
+        refreshBtn.setPrefWidth(100);
+        refreshBtn.setPrefHeight(38);
+
+        refreshBtn.setStyle(
+                "-fx-background-color:#2E9D63;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;"
+        );
+
+        // ========================================================
+        // HEADER
+        // ========================================================
 
         VBox headingBox =
                 new VBox(5);
@@ -166,7 +281,7 @@ public class ManageNotices {
         );
 
         HBox header =
-                new HBox();
+                new HBox(10);
 
         header.setAlignment(
                 Pos.CENTER_LEFT
@@ -179,36 +294,81 @@ public class ManageNotices {
 
         header.getChildren().addAll(
                 headingBox,
+                refreshBtn,
                 addNoticeBtn
         );
 
-        // =====================================================
+        // ========================================================
         // NOTICE LIST
-        // =====================================================
+        // ========================================================
 
         noticeList =
                 new VBox(15);
 
         noticeList.setPadding(
-                new Insets(5, 0, 5, 0)
+                new Insets(5, 5, 5, 0)
         );
 
-        // =====================================================
-        // LOAD NOTICES
-        // =====================================================
+        noticeList.setFillWidth(true);
 
-        loadNotices();
+        // ========================================================
+        // NOTICE SCROLL PANE
+        //
+        // ONLY THE FETCHED NOTICE LABELS/CARDS
+        // ARE INSIDE THIS SCROLL PANE.
+        //
+        // SIDEBAR IS NOT INSIDE IT.
+        // MAIN SCREEN IS NOT INSIDE IT.
+        // ========================================================
 
-        // =====================================================
+        ScrollPane noticeScrollPane =
+                new ScrollPane();
+
+        noticeScrollPane.setContent(
+                noticeList
+        );
+
+        noticeScrollPane.setFitToWidth(true);
+
+        noticeScrollPane.setFitToHeight(false);
+
+        noticeScrollPane.setHbarPolicy(
+                ScrollPane.ScrollBarPolicy.NEVER
+        );
+
+        noticeScrollPane.setVbarPolicy(
+                ScrollPane.ScrollBarPolicy.AS_NEEDED
+        );
+
+        noticeScrollPane.setStyle(
+                "-fx-background-color:transparent;" +
+                "-fx-background:transparent;" +
+                "-fx-border-color:transparent;"
+        );
+
+        // This is VERY important.
+        // It gives the notice area a fixed available height.
+        // Therefore the whole screen will NOT move when
+        // more notices are added.
+
+        VBox.setVgrow(
+                noticeScrollPane,
+                Priority.ALWAYS
+        );
+
+        // ========================================================
         // VIEW ALL BUTTON
-        // =====================================================
+        // ========================================================
 
         Button viewAllBtn =
                 new Button(
                         "View All Notices"
                 );
 
-        viewAllBtn.setPrefWidth(1180);
+        viewAllBtn.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         viewAllBtn.setPrefHeight(40);
 
         viewAllBtn.setStyle(
@@ -220,36 +380,38 @@ public class ManageNotices {
                 "-fx-border-radius:7;"
         );
 
-        // =====================================================
+        // ========================================================
         // MAIN CONTENT
-        // =====================================================
+        // ========================================================
 
         mainvb.getChildren().addAll(
                 heading,
                 header,
-                noticeList,
+                noticeScrollPane,
                 viewAllBtn
         );
 
-        // =====================================================
-        // ROOT
-        // =====================================================
+        // ========================================================
+        // PAGE ROOT
+        //
+        // SIDEBAR AND MAIN CONTENT STAY FIXED.
+        // ========================================================
 
-        HBox root =
+        HBox pageRoot =
                 new HBox();
 
-        root.setMaxSize(
+        pageRoot.setMaxSize(
                 Double.MAX_VALUE,
                 Double.MAX_VALUE
         );
 
-        root.getChildren().addAll(
-                sidebar,
-                mainvb
+        pageRoot.setStyle(
+                "-fx-background-color:#434141;"
         );
 
-        root.setStyle(
-                "-fx-background-color:#434141;"
+        pageRoot.getChildren().addAll(
+                sidebar,
+                mainvb
         );
 
         HBox.setHgrow(
@@ -257,104 +419,209 @@ public class ManageNotices {
                 Priority.ALWAYS
         );
 
-        // =====================================================
-        // STACKPANE
-        // =====================================================
-
-        rootStack =
-                new StackPane();
+        // ========================================================
+        // ROOT STACK
+        // ========================================================
 
         rootStack.getChildren().add(
-                root
+                pageRoot
         );
 
-        // =====================================================
-        // ADD NOTICE BUTTON
-        // =====================================================
+        // ========================================================
+        // LOAD NOTICES
+        // ========================================================
+
+        loadNotices();
+
+        // ========================================================
+        // ADD NOTICE ACTION
+        // ========================================================
 
         addNoticeBtn.setOnAction(
                 e -> openAddNoticePopup()
         );
 
-        // =====================================================
-        // VIEW ALL BUTTON
-        // =====================================================
+        // ========================================================
+        // REFRESH ACTION
+        // ========================================================
+
+        refreshBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "Refreshing notices..."
+            );
+
+            loadNotices();
+        });
+
+        // ========================================================
+        // VIEW ALL ACTION
+        // ========================================================
 
         viewAllBtn.setOnAction(
                 e -> openAllNoticesPopup()
         );
 
-        // =====================================================
+        // ========================================================
         // SCENE
-        // =====================================================
+        // ========================================================
 
-        Scene scene =
+        manageNoticesScene =
                 new Scene(
                         rootStack,
                         ScreenSize.getWidth(),
                         ScreenSize.getHeight()
                 );
 
-        manageNoticesScene = scene;
-
         return manageNoticesScene;
     }
 
-    // =====================================================
-    // LOAD NOTICES FROM FIRESTORE
-    // =====================================================
+    // ============================================================
+    // LOAD NOTICES
+    // EMAIL BASED FETCH
+    // ============================================================
 
     private void loadNotices() {
 
+        if (noticeList == null) {
+            return;
+        }
+
         noticeList.getChildren().clear();
 
-        List<Notice> notices =
-                noticeController.getAllNotices();
+        String email = getUserEmail();
 
-        if (notices == null ||
-                notices.isEmpty()) {
+        if (email == null) {
 
-            Label emptyLabel =
+            Label errorLabel =
                     new Label(
-                            "No notices found."
+                            "User email is not available."
                     );
 
-            emptyLabel.setStyle(
-                    "-fx-font-size:16px;" +
-                    "-fx-text-fill:#555555;"
+            errorLabel.setStyle(
+                    "-fx-font-size:15px;" +
+                    "-fx-text-fill:#D9534F;"
             );
 
             noticeList.getChildren().add(
-                    emptyLabel
+                    errorLabel
             );
 
             return;
         }
 
-        // Show notices individually
-        for (Notice notice : notices) {
+        try {
 
-            VBox noticeBox =
-                    createNotice(
-                            notice.getTitle(),
-                            notice.getDescription(),
-                            notice.getDate(),
-                            notice.getStatus()
+            System.out.println(
+                    "======================================"
+            );
+
+            System.out.println(
+                    "Fetching notices using email:"
+            );
+
+            System.out.println(
+                    email
+            );
+
+            // ====================================================
+            // FETCH USING EMAIL
+            // ====================================================
+
+            List<Notice> notices =
+                    noticeController
+                            .getNoticesBySenderEmail(
+                                    email
+                            );
+
+            // ====================================================
+            // NO DATA
+            // ====================================================
+
+            if (notices == null
+                    || notices.isEmpty()) {
+
+                Label emptyLabel =
+                        new Label(
+                                "No notices found."
+                        );
+
+                emptyLabel.setStyle(
+                        "-fx-font-size:16px;" +
+                        "-fx-text-fill:#555555;"
+                );
+
+                noticeList.getChildren().add(
+                        emptyLabel
+                );
+
+                System.out.println(
+                        "No notices found for: "
+                                + email
+                );
+
+                return;
+            }
+
+            // ====================================================
+            // DISPLAY DATA
+            // ====================================================
+
+            System.out.println(
+                    "Notices fetched: "
+                            + notices.size()
+            );
+
+            for (Notice notice : notices) {
+
+                VBox noticeBox =
+                        createNotice(
+                                notice.getTitle(),
+                                notice.getDescription(),
+                                notice.getDate(),
+                                notice.getStatus()
+                        );
+
+                noticeList.getChildren().add(
+                        noticeBox
+                );
+            }
+
+            System.out.println(
+                    "Notices displayed successfully."
+            );
+
+            System.out.println(
+                    "======================================"
+            );
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            Label errorLabel =
+                    new Label(
+                            "Unable to load notices."
                     );
 
+            errorLabel.setStyle(
+                    "-fx-font-size:15px;" +
+                    "-fx-text-fill:#D9534F;"
+            );
+
             noticeList.getChildren().add(
-                    noticeBox
+                    errorLabel
             );
         }
     }
 
-    // =====================================================
-    // CREATE INDIVIDUAL NOTICE
-    // =====================================================
+    // ============================================================
+    // CREATE NOTICE CARD
+    // ============================================================
 
     private VBox createNotice(
             String noticeTitleText,
-            String noticeDescription,
+            String noticeDescriptionText,
             String noticeDateText,
             String statusText
     ) {
@@ -366,7 +633,9 @@ public class ManageNotices {
                 new Insets(20)
         );
 
-        notice.setPrefHeight(95);
+        notice.setMaxWidth(
+                Double.MAX_VALUE
+        );
 
         notice.setStyle(
                 "-fx-background-color:white;" +
@@ -375,14 +644,17 @@ public class ManageNotices {
                 "-fx-border-radius:8;"
         );
 
-        // =================================================
-        // NOTICE TITLE LABEL
-        // =================================================
+        // ========================================================
+        // TITLE
+        // ========================================================
 
         Label noticeTitle =
                 new Label(
-                        "▣  " + noticeTitleText
+                        "▣  " +
+                        safeText(noticeTitleText)
                 );
+
+        noticeTitle.setWrapText(true);
 
         noticeTitle.setStyle(
                 "-fx-font-size:14px;" +
@@ -390,13 +662,15 @@ public class ManageNotices {
                 "-fx-text-fill:#123C36;"
         );
 
-        // =================================================
-        // NOTICE DESCRIPTION LABEL
-        // =================================================
+        // ========================================================
+        // DESCRIPTION
+        // ========================================================
 
         Label noticeText =
                 new Label(
-                        noticeDescription
+                        safeText(
+                                noticeDescriptionText
+                        )
                 );
 
         noticeText.setWrapText(true);
@@ -406,13 +680,15 @@ public class ManageNotices {
                 "-fx-text-fill:#777777;"
         );
 
-        // =================================================
-        // DATE LABEL
-        // =================================================
+        // ========================================================
+        // DATE
+        // ========================================================
 
         Label noticeDate =
                 new Label(
-                        noticeDateText
+                        safeText(
+                                noticeDateText
+                        )
                 );
 
         noticeDate.setStyle(
@@ -420,13 +696,13 @@ public class ManageNotices {
                 "-fx-text-fill:#777777;"
         );
 
-        // =================================================
-        // STATUS LABEL
-        // =================================================
+        // ========================================================
+        // STATUS
+        // ========================================================
 
         Label status =
                 new Label(
-                        statusText
+                        safeText(statusText)
                 );
 
         status.setStyle(
@@ -438,9 +714,9 @@ public class ManageNotices {
                 "-fx-background-radius:12;"
         );
 
-        // =================================================
-        // BOTTOM BOX
-        // =================================================
+        // ========================================================
+        // BOTTOM
+        // ========================================================
 
         HBox bottom =
                 new HBox(10);
@@ -459,9 +735,9 @@ public class ManageNotices {
                 status
         );
 
-        // =================================================
-        // ADD ALL
-        // =================================================
+        // ========================================================
+        // ADD
+        // ========================================================
 
         notice.getChildren().addAll(
                 noticeTitle,
@@ -472,15 +748,34 @@ public class ManageNotices {
         return notice;
     }
 
-    // =====================================================
+    // ============================================================
     // ADD NOTICE POPUP
-    // =====================================================
+    //
+    // NO SCROLLPANE HERE
+    // ============================================================
 
     private void openAddNoticePopup() {
 
-        // =================================================
-        // DARK OVERLAY
-        // =================================================
+        // ========================================================
+        // EMAIL CHECK
+        // ========================================================
+
+        String email = getUserEmail();
+
+        if (email == null) {
+
+            showAlert(
+                    Alert.AlertType.ERROR,
+                    "Email Error",
+                    "Logged-in user's email is not available."
+            );
+
+            return;
+        }
+
+        // ========================================================
+        // OVERLAY
+        // ========================================================
 
         StackPane overlay =
                 new StackPane();
@@ -489,36 +784,37 @@ public class ManageNotices {
                 "-fx-background-color:rgba(0,0,0,0.35);"
         );
 
-        // =================================================
+        // ========================================================
         // SMALL POPUP
-        // =================================================
+        // ========================================================
 
         VBox popup =
-                new VBox(12);
+                new VBox(10);
 
         popup.setPadding(
-                new Insets(25)
+                new Insets(20)
         );
 
-        // Same small popup size
         popup.setPrefWidth(450);
-        popup.setPrefHeight(400);
+
+        popup.setPrefHeight(430);
 
         popup.setMaxWidth(450);
-        popup.setMaxHeight(400);
 
-        popup.setAlignment(
-                Pos.TOP_LEFT
-        );
+        popup.setMaxHeight(430);
+
+        popup.setMinWidth(450);
+
+        popup.setMinHeight(430);
 
         popup.setStyle(
                 "-fx-background-color:white;" +
                 "-fx-background-radius:15;"
         );
 
-        // =================================================
+        // ========================================================
         // POPUP TITLE
-        // =================================================
+        // ========================================================
 
         Label popupTitle =
                 new Label(
@@ -526,14 +822,14 @@ public class ManageNotices {
                 );
 
         popupTitle.setStyle(
-                "-fx-font-size:24px;" +
+                "-fx-font-size:22px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#123C36;"
         );
 
-        // =================================================
-        // NOTICE TITLE
-        // =================================================
+        // ========================================================
+        // TITLE
+        // ========================================================
 
         Label titleLabel =
                 new Label(
@@ -552,11 +848,11 @@ public class ManageNotices {
                 "Enter notice title"
         );
 
-        titleField.setPrefHeight(40);
+        titleField.setPrefHeight(38);
 
-        // =================================================
+        // ========================================================
         // DESCRIPTION
-        // =================================================
+        // ========================================================
 
         Label descriptionLabel =
                 new Label(
@@ -575,11 +871,11 @@ public class ManageNotices {
                 "Enter notice description"
         );
 
-        descriptionField.setPrefHeight(40);
+        descriptionField.setPrefHeight(38);
 
-        // =================================================
+        // ========================================================
         // DATE
-        // =================================================
+        // ========================================================
 
         Label dateLabel =
                 new Label(
@@ -595,14 +891,14 @@ public class ManageNotices {
                 new TextField();
 
         dateField.setPromptText(
-                "Enter date"
+                "Enter date (YYYY-MM-DD)"
         );
 
-        dateField.setPrefHeight(40);
+        dateField.setPrefHeight(38);
 
-        // =================================================
+        // ========================================================
         // STATUS
-        // =================================================
+        // ========================================================
 
         Label statusLabel =
                 new Label(
@@ -621,11 +917,11 @@ public class ManageNotices {
                 "Enter status"
         );
 
-        statusField.setPrefHeight(40);
+        statusField.setPrefHeight(38);
 
-        // =================================================
-        // CANCEL BUTTON
-        // =================================================
+        // ========================================================
+        // CANCEL
+        // ========================================================
 
         Button cancelBtn =
                 new Button(
@@ -633,7 +929,8 @@ public class ManageNotices {
                 );
 
         cancelBtn.setPrefWidth(100);
-        cancelBtn.setPrefHeight(40);
+
+        cancelBtn.setPrefHeight(38);
 
         cancelBtn.setStyle(
                 "-fx-background-color:#E5E7EB;" +
@@ -641,9 +938,9 @@ public class ManageNotices {
                 "-fx-background-radius:8;"
         );
 
-        // =================================================
-        // SAVE BUTTON
-        // =================================================
+        // ========================================================
+        // SAVE
+        // ========================================================
 
         Button saveBtn =
                 new Button(
@@ -651,7 +948,8 @@ public class ManageNotices {
                 );
 
         saveBtn.setPrefWidth(130);
-        saveBtn.setPrefHeight(40);
+
+        saveBtn.setPrefHeight(38);
 
         saveBtn.setStyle(
                 "-fx-background-color:#2E9D63;" +
@@ -660,9 +958,9 @@ public class ManageNotices {
                 "-fx-background-radius:8;"
         );
 
-        // =================================================
+        // ========================================================
         // BUTTON BOX
-        // =================================================
+        // ========================================================
 
         HBox buttonBox =
                 new HBox(10);
@@ -671,18 +969,16 @@ public class ManageNotices {
                 Pos.CENTER_RIGHT
         );
 
-        buttonBox.setPadding(
-                new Insets(8, 0, 0, 0)
-        );
-
         buttonBox.getChildren().addAll(
                 cancelBtn,
                 saveBtn
         );
 
-        // =================================================
-        // ADD CONTROLS
-        // =================================================
+        // ========================================================
+        // ADD ALL CONTROLS DIRECTLY
+        //
+        // NO SCROLLPANE
+        // ========================================================
 
         popup.getChildren().addAll(
 
@@ -703,9 +999,9 @@ public class ManageNotices {
                 buttonBox
         );
 
-        // =================================================
-        // ADD POPUP TO OVERLAY
-        // =================================================
+        // ========================================================
+        // ADD POPUP
+        // ========================================================
 
         overlay.getChildren().add(
                 popup
@@ -720,37 +1016,46 @@ public class ManageNotices {
                 overlay
         );
 
-        // =================================================
+        // ========================================================
         // CANCEL
-        // =================================================
+        // ========================================================
 
         cancelBtn.setOnAction(
-                e -> rootStack.getChildren().remove(
-                        overlay
-                )
+                e ->
+                        rootStack
+                                .getChildren()
+                                .remove(overlay)
         );
 
-        // =================================================
+        // ========================================================
         // SAVE
-        // =================================================
+        // ========================================================
 
         saveBtn.setOnAction(e -> {
 
             String noticeTitle =
-                    titleField.getText().trim();
+                    titleField
+                            .getText()
+                            .trim();
 
             String description =
-                    descriptionField.getText().trim();
+                    descriptionField
+                            .getText()
+                            .trim();
 
             String date =
-                    dateField.getText().trim();
+                    dateField
+                            .getText()
+                            .trim();
 
             String status =
-                    statusField.getText().trim();
+                    statusField
+                            .getText()
+                            .trim();
 
-            // =================================================
+            // ====================================================
             // VALIDATION
-            // =================================================
+            // ====================================================
 
             if (noticeTitle.isEmpty()
                     || description.isEmpty()
@@ -766,63 +1071,126 @@ public class ManageNotices {
                 return;
             }
 
-            // =================================================
-            // SAVE TO FIRESTORE
-            // =================================================
+            // ====================================================
+            // EMAIL
+            // ====================================================
 
-            boolean success =
-                    noticeController.addNotice(
-                            noticeTitle,
-                            description,
-                            date,
-                            status
-                    );
+            String senderEmail =
+                    getUserEmail();
 
-            // =================================================
-            // SUCCESS
-            // =================================================
-
-            if (success) {
-
-                showAlert(
-                        Alert.AlertType.INFORMATION,
-                        "Success",
-                        "Notice saved successfully!"
-                );
-
-                rootStack.getChildren().remove(
-                        overlay
-                );
-
-                // Refresh individual notices
-                loadNotices();
-
-            } else {
+            if (senderEmail == null) {
 
                 showAlert(
                         Alert.AlertType.ERROR,
-                        "Error",
-                        "Failed to save notice."
+                        "Email Error",
+                        "User email is not available."
+                );
+
+                return;
+            }
+
+            // ====================================================
+            // SAVE
+            // ====================================================
+
+            try {
+
+                System.out.println(
+                        "======================================"
+                );
+
+                System.out.println(
+                        "Saving Notice"
+                );
+
+                System.out.println(
+                        "Email: "
+                                + senderEmail
+                );
+
+                System.out.println(
+                        "Title: "
+                                + noticeTitle
+                );
+
+                System.out.println(
+                        "Description: "
+                                + description
+                );
+
+                System.out.println(
+                        "Date: "
+                                + date
+                );
+
+                System.out.println(
+                        "Status: "
+                                + status
+                );
+
+                System.out.println(
+                        "======================================"
+                );
+
+                // =================================================
+                // IMPORTANT:
+                // EMAIL IS PASSED TO CONTROLLER
+                // =================================================
+
+                boolean success =
+                        noticeController.addNotice(
+                                noticeTitle,
+                                description,
+                                date,
+                                status,
+                                senderEmail
+                        );
+
+                if (success) {
+
+                    rootStack
+                            .getChildren()
+                            .remove(overlay);
+
+                    // Fetch again using email
+                    loadNotices();
+
+                    showAlert(
+                            Alert.AlertType.INFORMATION,
+                            "Success",
+                            "Notice saved successfully!"
+                    );
+
+                } else {
+
+                    showAlert(
+                            Alert.AlertType.ERROR,
+                            "Error",
+                            "Failed to save notice to Firestore."
+                    );
+                }
+
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Firestore Error",
+                        "Unable to save notice.\n\n"
+                                + ex.getMessage()
                 );
             }
         });
 
-        // =================================================
-        // FOCUS
-        // =================================================
-
         titleField.requestFocus();
     }
 
-    // =====================================================
-    // VIEW ALL NOTICES POPUP
-    // =====================================================
+    // ============================================================
+    // VIEW ALL NOTICES
+    // ============================================================
 
     private void openAllNoticesPopup() {
-
-        // =================================================
-        // DARK OVERLAY
-        // =================================================
 
         StackPane overlay =
                 new StackPane();
@@ -831,9 +1199,9 @@ public class ManageNotices {
                 "-fx-background-color:rgba(0,0,0,0.35);"
         );
 
-        // =================================================
+        // ========================================================
         // POPUP
-        // =================================================
+        // ========================================================
 
         VBox popup =
                 new VBox(15);
@@ -843,9 +1211,11 @@ public class ManageNotices {
         );
 
         popup.setPrefWidth(600);
+
         popup.setPrefHeight(500);
 
         popup.setMaxWidth(600);
+
         popup.setMaxHeight(500);
 
         popup.setStyle(
@@ -853,9 +1223,9 @@ public class ManageNotices {
                 "-fx-background-radius:15;"
         );
 
-        // =================================================
+        // ========================================================
         // TITLE
-        // =================================================
+        // ========================================================
 
         Label popupTitle =
                 new Label(
@@ -868,22 +1238,24 @@ public class ManageNotices {
                 "-fx-text-fill:#123C36;"
         );
 
-        // =================================================
+        // ========================================================
         // NOTICE LIST
-        // =================================================
+        // ========================================================
 
         VBox allNoticeList =
                 new VBox(12);
 
-        // =================================================
-        // FETCH FROM FIRESTORE
-        // =================================================
+        String email =
+                getUserEmail();
 
         List<Notice> notices =
-                noticeController.getAllNotices();
+                noticeController
+                        .getNoticesBySenderEmail(
+                                email
+                        );
 
-        if (notices == null ||
-                notices.isEmpty()) {
+        if (notices == null
+                || notices.isEmpty()) {
 
             Label noNotice =
                     new Label(
@@ -917,9 +1289,9 @@ public class ManageNotices {
             }
         }
 
-        // =================================================
-        // SCROLL PANE
-        // =================================================
+        // ========================================================
+        // SCROLL ONLY FOR ALL NOTICES POPUP
+        // ========================================================
 
         ScrollPane scrollPane =
                 new ScrollPane();
@@ -930,10 +1302,19 @@ public class ManageNotices {
 
         scrollPane.setFitToWidth(true);
 
+        scrollPane.setHbarPolicy(
+                ScrollPane.ScrollBarPolicy.NEVER
+        );
+
+        scrollPane.setVbarPolicy(
+                ScrollPane.ScrollBarPolicy.AS_NEEDED
+        );
+
         scrollPane.setPrefHeight(370);
 
         scrollPane.setStyle(
-                "-fx-background-color:transparent;"
+                "-fx-background-color:transparent;" +
+                "-fx-background:transparent;"
         );
 
         VBox.setVgrow(
@@ -941,9 +1322,9 @@ public class ManageNotices {
                 Priority.ALWAYS
         );
 
-        // =================================================
+        // ========================================================
         // CLOSE BUTTON
-        // =================================================
+        // ========================================================
 
         Button closeBtn =
                 new Button(
@@ -951,6 +1332,7 @@ public class ManageNotices {
                 );
 
         closeBtn.setPrefWidth(100);
+
         closeBtn.setPrefHeight(40);
 
         closeBtn.setStyle(
@@ -969,9 +1351,9 @@ public class ManageNotices {
                 Pos.CENTER_RIGHT
         );
 
-        // =================================================
-        // ADD EVERYTHING
-        // =================================================
+        // ========================================================
+        // POPUP CONTENT
+        // ========================================================
 
         popup.getChildren().addAll(
                 popupTitle,
@@ -979,9 +1361,9 @@ public class ManageNotices {
                 buttonBox
         );
 
-        // =================================================
-        // ADD POPUP TO OVERLAY
-        // =================================================
+        // ========================================================
+        // ADD POPUP
+        // ========================================================
 
         overlay.getChildren().add(
                 popup
@@ -996,20 +1378,21 @@ public class ManageNotices {
                 overlay
         );
 
-        // =================================================
+        // ========================================================
         // CLOSE
-        // =================================================
+        // ========================================================
 
         closeBtn.setOnAction(
-                e -> rootStack.getChildren().remove(
-                        overlay
-                )
+                e ->
+                        rootStack
+                                .getChildren()
+                                .remove(overlay)
         );
     }
 
-    // =====================================================
-    // CREATE NOTICE FOR VIEW ALL POPUP
-    // =====================================================
+    // ============================================================
+    // POPUP NOTICE
+    // ============================================================
 
     private VBox createPopupNotice(
             String titleText,
@@ -1025,19 +1408,26 @@ public class ManageNotices {
                 new Insets(15)
         );
 
+        box.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         box.setStyle(
                 "-fx-background-color:#F4F7F6;" +
                 "-fx-background-radius:10;"
         );
 
-        // =================================================
-        // TITLE LABEL
-        // =================================================
+        // ========================================================
+        // TITLE
+        // ========================================================
 
         Label title =
                 new Label(
-                        "▣  " + titleText
+                        "▣  "
+                                + safeText(titleText)
                 );
+
+        title.setWrapText(true);
 
         title.setStyle(
                 "-fx-font-size:14px;" +
@@ -1045,31 +1435,29 @@ public class ManageNotices {
                 "-fx-text-fill:#123C36;"
         );
 
-        // =================================================
-        // DESCRIPTION LABEL
-        // =================================================
+        // ========================================================
+        // DESCRIPTION
+        // ========================================================
 
         Label description =
                 new Label(
-                        descriptionText
+                        safeText(descriptionText)
                 );
 
-        description.setWrapText(
-                true
-        );
+        description.setWrapText(true);
 
         description.setStyle(
                 "-fx-font-size:12px;" +
                 "-fx-text-fill:#555555;"
         );
 
-        // =================================================
-        // DATE + STATUS
-        // =================================================
+        // ========================================================
+        // DATE
+        // ========================================================
 
         Label date =
                 new Label(
-                        dateText
+                        safeText(dateText)
                 );
 
         date.setStyle(
@@ -1077,9 +1465,13 @@ public class ManageNotices {
                 "-fx-text-fill:#777777;"
         );
 
+        // ========================================================
+        // STATUS
+        // ========================================================
+
         Label status =
                 new Label(
-                        statusText
+                        safeText(statusText)
                 );
 
         status.setStyle(
@@ -1090,6 +1482,10 @@ public class ManageNotices {
                 "-fx-padding:5px 9px;" +
                 "-fx-background-radius:12;"
         );
+
+        // ========================================================
+        // BOTTOM
+        // ========================================================
 
         HBox bottom =
                 new HBox(10);
@@ -1117,29 +1513,37 @@ public class ManageNotices {
         return box;
     }
 
-    // =====================================================
+    // ============================================================
+    // SAFE TEXT
+    // ============================================================
+
+    private String safeText(String text) {
+
+        if (text == null) {
+            return "";
+        }
+
+        return text;
+    }
+
+    // ============================================================
     // ALERT
-    // =====================================================
+    // ============================================================
 
     private void showAlert(
             Alert.AlertType type,
             String title,
-            String message) {
+            String message
+    ) {
 
         Alert alert =
                 new Alert(type);
 
-        alert.setTitle(
-                title
-        );
+        alert.setTitle(title);
 
-        alert.setHeaderText(
-                null
-        );
+        alert.setHeaderText(null);
 
-        alert.setContentText(
-                message
-        );
+        alert.setContentText(message);
 
         alert.showAndWait();
     }

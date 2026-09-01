@@ -1,14 +1,20 @@
 package com.society.view.Secretary_portal;
 
+import java.util.List;
+
+import com.society.controller.Secretary_Controller.ComplaintController;
+import com.society.model.Secretary_model.Complaint;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -16,47 +22,94 @@ import javafx.stage.Stage;
 
 public class ManageComplaints {
 
-    // Private Scene variable
     private Scene manageComplaintsScene;
+
+    private ComplaintController complaintController;
+
+    // Current selected filter
+    private String currentFilter = "ALL";
+
+    // =====================================================
+    // CONSTRUCTOR
+    // =====================================================
+
+    public ManageComplaints() {
+
+        complaintController = new ComplaintController();
+
+        System.out.println("======================================");
+        System.out.println("MANAGE COMPLAINTS");
+        System.out.println("ComplaintController initialized");
+        System.out.println("Society-wise complaint filtering enabled");
+        System.out.println("======================================");
+    }
+
+    // =====================================================
+    // CREATE SCENE
+    // =====================================================
 
     public Scene createScene(Stage stage) {
 
+        // =================================================
         // SIDEBAR
+        // =================================================
 
-        SecretarySidebar sidebarObj = new SecretarySidebar();
-        VBox sidebar = sidebarObj.createSidebar(stage);
+        SecretarySidebar sidebarObj =
+                new SecretarySidebar();
 
-        // MAIN CONTENT
+        VBox sidebar =
+                sidebarObj.createSidebar(stage);
 
-        VBox mainvb = new VBox(20);
-        mainvb.setPadding(new Insets(25));
+        // =================================================
+        // MAIN CONTAINER
+        // =================================================
+
+        VBox mainvb =
+                new VBox(20);
+
+        mainvb.setPadding(
+                new Insets(25)
+        );
+
         mainvb.setPrefWidth(1220);
-        mainvb.setStyle("-fx-background-color:#b3adad;");
 
+        mainvb.setStyle(
+                "-fx-background-color:#b3adad;"
+        );
+
+        // =================================================
         // HEADING
+        // =================================================
 
-        Label heading =   new Label("MANAGE COMPLAINTS");
+        Label heading =
+                new Label(
+                        "MANAGE COMPLAINTS"
+                );
+
         heading.setStyle(
                 "-fx-font-size:18px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#434141;"
         );
 
-
+        // =================================================
         // TITLE
+        // =================================================
 
-        Label title = new Label("Manage Complaints");
-               
+        Label title =
+                new Label(
+                        "Manage Complaints"
+                );
+
         title.setStyle(
                 "-fx-font-size:20px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:black;"
         );
 
-
         Label subtitle =
                 new Label(
-                        "Track and resolve resident complaints"
+                        "View and manage complaints submitted by residents of your society"
                 );
 
         subtitle.setStyle(
@@ -64,182 +117,120 @@ public class ManageComplaints {
                 "-fx-text-fill:#777777;"
         );
 
+        VBox titleBox =
+                new VBox(5);
 
-        VBox titleBox = new VBox(5);
         titleBox.getChildren().addAll(
                 title,
                 subtitle
         );
 
+        // =================================================
+        // REFRESH BUTTON
+        // =================================================
 
-        Button addComplaintBtn = new Button("+ Add Complaint");
+        Button refreshBtn =
+                new Button("↻");
 
-                addComplaintBtn.setPrefWidth(150);
-                addComplaintBtn.setPrefHeight(40);
+        refreshBtn.setPrefWidth(45);
+        refreshBtn.setPrefHeight(40);
 
-                addComplaintBtn.setStyle(
-                        "-fx-background-color:#434141;" +
-                        "-fx-text-fill:white;" +
-                        "-fx-font-weight:bold;" +
-                        "-fx-background-radius:7;"
-                );
-
-                addComplaintBtn.setOnAction(e -> {
-
-        Stage popupStage = new Stage();
-
-        VBox popup = new VBox(15);
-
-        popup.setPadding(new Insets(25));
-        popup.setAlignment(Pos.CENTER_LEFT);
-
-        popup.setPrefWidth(450);
-        popup.setPrefHeight(470);
-
-        popup.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:15;"
+        refreshBtn.setTooltip(
+                new Tooltip(
+                        "Refresh complaints"
+                )
         );
 
-        Label popupTitle = new Label("Add New Complaint");
+        refreshBtn.setStyle(
+                "-fx-background-color:#434141;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-size:22px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;"
+        );
 
-        popupTitle.setStyle(
-                "-fx-font-size:24px;" +
+        // =================================================
+        // HEADER
+        // =================================================
+
+        HBox rightButtons =
+                new HBox(10);
+
+        rightButtons.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        rightButtons.getChildren().add(
+                refreshBtn
+        );
+
+        HBox complaintHeader =
+                new HBox();
+
+        complaintHeader.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        HBox.setHgrow(
+                titleBox,
+                Priority.ALWAYS
+        );
+
+        complaintHeader.getChildren().addAll(
+                titleBox,
+                rightButtons
+        );
+
+        // =================================================
+        // SOCIETY INFO
+        // =================================================
+
+        Label societyInfo =
+                new Label(
+                        "Complaints from: Your Society Residents"
+                );
+
+        societyInfo.setStyle(
+                "-fx-font-size:12px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#123C36;"
         );
 
-        Label complaintLabel = new Label("Complaint");
-
-        TextField complaintField = new TextField();
-        complaintField.setPromptText("Enter complaint");
-        complaintField.setPrefHeight(40);
-
-        Label flatLabel = new Label("Flat Number");
-
-        TextField flatField = new TextField();
-        flatField.setPromptText("Enter flat number");
-        flatField.setPrefHeight(40);
-
-        Label dateLabel = new Label("Date");
-
-        TextField dateField = new TextField();
-        dateField.setPromptText("Enter date");
-        dateField.setPrefHeight(40);
-
-        Label descriptionLabel = new Label("Description");
-
-        TextField descriptionField = new TextField();
-        descriptionField.setPromptText("Enter complaint description");
-        descriptionField.setPrefHeight(70);
-
-        Button cancelBtn = new Button("Cancel");
-
-        cancelBtn.setPrefWidth(100);
-        cancelBtn.setPrefHeight(40);
-
-        cancelBtn.setStyle(
-                "-fx-background-color:#E5E7EB;" +
-                "-fx-text-fill:#333333;" +
-                "-fx-background-radius:8;"
-        );
-
-    Button saveBtn = new Button("Save Complaint");
-
-    saveBtn.setPrefWidth(140);
-    saveBtn.setPrefHeight(40);
-
-    saveBtn.setStyle(
-            "-fx-background-color:#2E9D63;" +
-            "-fx-text-fill:white;" +
-            "-fx-font-weight:bold;" +
-            "-fx-background-radius:8;"
-    );
-
-    HBox buttonBox = new HBox(10);
-
-    buttonBox.setAlignment(Pos.CENTER_RIGHT);
-
-    buttonBox.getChildren().addAll(
-            cancelBtn,
-            saveBtn
-    );
-
-    popup.getChildren().addAll(
-            popupTitle,
-
-            complaintLabel,
-            complaintField,
-
-            flatLabel,
-            flatField,
-
-            dateLabel,
-            dateField,
-
-            descriptionLabel,
-            descriptionField,
-
-            buttonBox
-    );
-
-    Scene popupScene = new Scene(popup);
-
-    popupStage.setTitle("Add Complaint");
-    popupStage.setScene(popupScene);
-    popupStage.setResizable(false);
-
-    cancelBtn.setOnAction(event -> {
-        popupStage.close();
-    });
-
-    saveBtn.setOnAction(event -> {
-        popupStage.close();
-    });
-
-    popupStage.show();
-});
-
-                HBox complaintHeader = new HBox();
-
-                complaintHeader.setAlignment(Pos.CENTER_LEFT);
-
-                HBox.setHgrow(titleBox, Priority.ALWAYS);
-
-                complaintHeader.getChildren().addAll(
-                        titleBox,
-                        addComplaintBtn
-                );
-
+        // =================================================
         // STATUS BUTTONS
+        // =================================================
 
-        Button openBtn =
-                new Button("Open (6)");
+        Button allBtn =
+                new Button("All");
 
         Button progressBtn =
-                new Button("In Progress (4)");
+                new Button("In Progress");
 
         Button resolvedBtn =
-                new Button("Resolved (13)");
+                new Button("Resolved");
 
+        Button closedBtn =
+                new Button("Closed");
 
-        openBtn.setPrefWidth(150);
-        openBtn.setPrefHeight(40);
-
+        allBtn.setPrefWidth(130);
         progressBtn.setPrefWidth(150);
+        resolvedBtn.setPrefWidth(130);
+        closedBtn.setPrefWidth(130);
+
+        allBtn.setPrefHeight(40);
         progressBtn.setPrefHeight(40);
-
-        resolvedBtn.setPrefWidth(150);
         resolvedBtn.setPrefHeight(40);
+        closedBtn.setPrefHeight(40);
 
-        // BUTTON STYLES
+        // =================================================
+        // TAB STYLES
+        // =================================================
 
         String normalStyle =
                 "-fx-background-color:transparent;" +
                 "-fx-text-fill:#777777;" +
                 "-fx-font-weight:bold;" +
                 "-fx-font-size:12px;";
-
 
         String activeStyle =
                 "-fx-background-color:transparent;" +
@@ -249,25 +240,28 @@ public class ManageComplaints {
                 "-fx-border-color:#0B4F4A;" +
                 "-fx-border-width:0 0 2 0;";
 
-
-        openBtn.setStyle(activeStyle);
+        allBtn.setStyle(activeStyle);
         progressBtn.setStyle(normalStyle);
         resolvedBtn.setStyle(normalStyle);
+        closedBtn.setStyle(normalStyle);
 
-        // TABS
+        HBox tabs =
+                new HBox(20);
 
-        HBox tabs = new HBox(25);
         tabs.setAlignment(
                 Pos.CENTER_LEFT
         );
 
         tabs.getChildren().addAll(
-                openBtn,
+                allBtn,
                 progressBtn,
-                resolvedBtn
+                resolvedBtn,
+                closedBtn
         );
 
+        // =================================================
         // COMPLAINT LIST
+        // =================================================
 
         VBox complaintList =
                 new VBox(15);
@@ -276,273 +270,27 @@ public class ManageComplaints {
                 new Insets(5, 0, 5, 0)
         );
 
-        // OPEN - 6 COMPLAINTS
+        // =================================================
+        // INITIAL FETCH
+        // =================================================
 
-        VBox openComplaint1 =
-                createComplaint(
-                        "Water Leakage in Bathroom",
-                        "B-402",
-                        "10 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                );
+        loadComplaintsFromFirestore(
+                complaintList
+        );
 
-
-        VBox openComplaint2 =
-                createComplaint(
-                        "Parking Issue",
-                        "C-203",
-                        "09 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                );
-
-
-        VBox openComplaint3 =
-                createComplaint(
-                        "Lift Noise Problem",
-                        "A-204",
-                        "09 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                );
-
-
-        VBox openComplaint4 =
-                createComplaint(
-                        "Cleaning Issue",
-                        "B-105",
-                        "08 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                );
-
-
-        VBox openComplaint5 =
-                createComplaint(
-                        "Water Tap Leakage",
-                        "C-301",
-                        "07 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                );
-
-
-        VBox openComplaint6 =
-                createComplaint(
-                        "Security Gate Issue",
-                        "A-402",
-                        "06 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                );
-
-
-        // IN PROGRESS - 4 COMPLAINTS
-
-        VBox progressComplaint1 =
-                createComplaint(
-                        "Lift Not Working",
-                        "A-101",
-                        "10 May 2025",
-                        "In Progress",
-                        "#E7F0FF",
-                        "#3478C9"
-                );
-
-
-        VBox progressComplaint2 =
-                createComplaint(
-                        "Water Tank Cleaning",
-                        "B-305",
-                        "08 May 2025",
-                        "In Progress",
-                        "#E7F0FF",
-                        "#3478C9"
-                );
-
-
-        VBox progressComplaint3 =
-                createComplaint(
-                        "Garden Maintenance",
-                        "C-102",
-                        "07 May 2025",
-                        "In Progress",
-                        "#E7F0FF",
-                        "#3478C9"
-                );
-
-
-        VBox progressComplaint4 =
-                createComplaint(
-                        "Common Area Light",
-                        "A-302",
-                        "06 May 2025",
-                        "In Progress",
-                        "#E7F0FF",
-                        "#3478C9"
-                );
-
-
-        // RESOLVED - 20 COMPLAINTS
-
-        VBox resolvedComplaint1 =
-                createComplaint(
-                        "Garbage Not Collected",
-                        "B-305",
-                        "09 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-        VBox resolvedComplaint2 =
-                createComplaint(
-                        "Water Pressure Issue",
-                        "C-201",
-                        "06 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint3 =
-                createComplaint(
-                        "Parking Light Issue",
-                        "B-201",
-                        "05 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-        VBox resolvedComplaint4 =
-                createComplaint(
-                        "Lift Button Issue",
-                        "C-302",
-                        "03 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint5 =
-                createComplaint(
-                        "Corridor Cleaning",
-                        "B-104",
-                        "02 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint6 =
-                createComplaint(
-                        "Water Pipe Issue",
-                        "A-202",
-                        "01 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint7 =
-                createComplaint(
-                        "Parking Space Issue",
-                        "C-103",
-                        "30 Apr 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint8 =
-                createComplaint(
-                        "Staircase Light",
-                        "B-203",
-                        "29 Apr 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint9 =
-                createComplaint(
-                        "Society Gate Issue",
-                        "A-301",
-                        "28 Apr 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint10 =
-                createComplaint(
-                        "Basement Cleaning",
-                        "B-301",
-                        "23 Apr 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint11 =
-                createComplaint(
-                        "Security Camera Issue",
-                        "A-102",
-                        "22 Apr 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint12 =
-                createComplaint(
-                        "Terrace Cleaning",
-                        "C-302",
-                        "21 Apr 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
-        VBox resolvedComplaint13 =
-                createComplaint(
-                        "Electricity Issue",
-                        "A-204",
-                        "19 Apr 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                );
-
-
+        // =================================================
         // SCROLL PANE
+        // =================================================
 
-        ScrollPane scrollPane =  new ScrollPane();
+        ScrollPane scrollPane =
+                new ScrollPane();
 
-              
         scrollPane.setContent(
                 complaintList
         );
 
         scrollPane.setFitToWidth(true);
+
         scrollPane.setPrefHeight(480);
 
         scrollPane.setStyle(
@@ -550,300 +298,619 @@ public class ManageComplaints {
                 "-fx-border-color:transparent;"
         );
 
-        // SHOW OPEN COMPLAINTS BY DEFAULT
+        // =================================================
+        // ALL BUTTON
+        // =================================================
 
-        complaintList.getChildren().addAll(
-                openComplaint1,
-                openComplaint2,
-                openComplaint3,
-                openComplaint4,
-                openComplaint5,
-                openComplaint6
-        );
+        allBtn.setOnAction(e -> {
 
-        // OPEN BUTTON
+            currentFilter = "ALL";
 
-        openBtn.setOnAction(e -> {
-
-            complaintList.getChildren().clear();
-            complaintList.getChildren().addAll(
-                    openComplaint1,
-                    openComplaint2,
-                    openComplaint3,
-                    openComplaint4,
-                    openComplaint5,
-                    openComplaint6
+            System.out.println(
+                    "Selected filter = ALL"
             );
 
-            openBtn.setStyle(activeStyle);
-            progressBtn.setStyle(normalStyle);
-            resolvedBtn.setStyle(normalStyle);
+            loadComplaintsFromFirestore(
+                    complaintList
+            );
+
+            setActiveTab(
+                    allBtn,
+                    progressBtn,
+                    resolvedBtn,
+                    closedBtn,
+                    activeStyle,
+                    normalStyle
+            );
         });
 
+        // =================================================
         // IN PROGRESS BUTTON
+        // =================================================
 
         progressBtn.setOnAction(e -> {
 
-            complaintList.getChildren().clear();
-            complaintList.getChildren().addAll(
-                    progressComplaint1,
-                    progressComplaint2,
-                    progressComplaint3,
-                    progressComplaint4
+            currentFilter =
+                    "IN PROGRESS";
+
+            System.out.println(
+                    "Selected filter = IN PROGRESS"
             );
 
-            openBtn.setStyle(normalStyle);
-            progressBtn.setStyle(activeStyle);
-            resolvedBtn.setStyle(normalStyle);
+            loadComplaintsFromFirestore(
+                    complaintList
+            );
+
+            setActiveTab(
+                    progressBtn,
+                    allBtn,
+                    resolvedBtn,
+                    closedBtn,
+                    activeStyle,
+                    normalStyle
+            );
         });
 
+        // =================================================
         // RESOLVED BUTTON
+        // =================================================
 
         resolvedBtn.setOnAction(e -> {
 
-            complaintList.getChildren().clear();
-            complaintList.getChildren().addAll(
-                    resolvedComplaint1,
-                    resolvedComplaint2,
-                    resolvedComplaint3,
-                    resolvedComplaint4,
-                    resolvedComplaint5,
-                    resolvedComplaint6,
-                    resolvedComplaint7,
-                    resolvedComplaint8,
-                    resolvedComplaint9,
-                    resolvedComplaint10,
-                    resolvedComplaint11,
-                    resolvedComplaint12,
-                    resolvedComplaint13
+            currentFilter =
+                    "RESOLVED";
+
+            System.out.println(
+                    "Selected filter = RESOLVED"
             );
 
-            openBtn.setStyle(normalStyle);
-            progressBtn.setStyle(normalStyle);
-            resolvedBtn.setStyle(activeStyle);
+            loadComplaintsFromFirestore(
+                    complaintList
+            );
+
+            setActiveTab(
+                    resolvedBtn,
+                    allBtn,
+                    progressBtn,
+                    closedBtn,
+                    activeStyle,
+                    normalStyle
+            );
         });
 
-        // VIEW ALL BUTTON
+        // =================================================
+        // CLOSED BUTTON
+        // =================================================
 
-        Button viewAllBtn =   new Button("View All Complaints");
-        viewAllBtn.setPrefWidth(1180);
+        closedBtn.setOnAction(e -> {
+
+            currentFilter =
+                    "CLOSED";
+
+            System.out.println(
+                    "Selected filter = CLOSED"
+            );
+
+            loadComplaintsFromFirestore(
+                    complaintList
+            );
+
+            setActiveTab(
+                    closedBtn,
+                    allBtn,
+                    progressBtn,
+                    resolvedBtn,
+                    activeStyle,
+                    normalStyle
+            );
+        });
+
+        // =================================================
+        // REFRESH BUTTON
+        // =================================================
+
+        refreshBtn.setOnAction(e -> {
+
+            System.out.println(
+                    "======================================"
+            );
+
+            System.out.println(
+                    "REFRESHING COMPLAINTS"
+            );
+
+            System.out.println(
+                    "Current Filter = "
+                            + currentFilter
+            );
+
+            System.out.println(
+                    "Society-wise filtering = ENABLED"
+            );
+
+            System.out.println(
+                    "======================================"
+            );
+
+            loadComplaintsFromFirestore(
+                    complaintList
+            );
+
+            // ---------------------------------------------
+            // Restore active tab
+            // ---------------------------------------------
+
+            if (currentFilter.equals("ALL")) {
+
+                setActiveTab(
+                        allBtn,
+                        progressBtn,
+                        resolvedBtn,
+                        closedBtn,
+                        activeStyle,
+                        normalStyle
+                );
+
+            } else if (
+                    currentFilter.equals(
+                            "IN PROGRESS"
+                    )) {
+
+                setActiveTab(
+                        progressBtn,
+                        allBtn,
+                        resolvedBtn,
+                        closedBtn,
+                        activeStyle,
+                        normalStyle
+                );
+
+            } else if (
+                    currentFilter.equals(
+                            "RESOLVED"
+                    )) {
+
+                setActiveTab(
+                        resolvedBtn,
+                        allBtn,
+                        progressBtn,
+                        closedBtn,
+                        activeStyle,
+                        normalStyle
+                );
+
+            } else if (
+                    currentFilter.equals(
+                            "CLOSED"
+                    )) {
+
+                setActiveTab(
+                        closedBtn,
+                        allBtn,
+                        progressBtn,
+                        resolvedBtn,
+                        activeStyle,
+                        normalStyle
+                );
+            }
+
+            System.out.println(
+                    "Complaints refreshed."
+            );
+        });
+
+        // =================================================
+        // VIEW ALL BUTTON
+        // =================================================
+
+        Button viewAllBtn =
+                new Button(
+                        "View All Complaints"
+                );
+
+        viewAllBtn.setMaxWidth(
+                Double.MAX_VALUE
+        );
+
         viewAllBtn.setPrefHeight(40);
+
         viewAllBtn.setStyle(
                 "-fx-background-color:#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
-                "-fx-background-radius:7;" +
-                "-fx-border-color:#EEEEEE;" +
-                "-fx-border-radius:7;"
+                "-fx-background-radius:7;"
         );
 
-        viewAllBtn.setOnAction(e -> {
-
-        Stage popupStage = new Stage();
-
-        VBox popup = new VBox(15);
-
-        popup.setPadding(new Insets(25));
-        popup.setAlignment(Pos.TOP_LEFT);
-
-        popup.setPrefWidth(600);
-        popup.setPrefHeight(550);
-
-        popup.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:15;"
+        viewAllBtn.setOnAction(
+                e -> showAllComplaintsPopup()
         );
 
-        Label popupTitle = new Label("All Complaints");
-
-        popupTitle.setStyle(
-                "-fx-font-size:24px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#123C36;"
-        );
-
-        VBox allComplaints = new VBox(12);
-
-        allComplaints.getChildren().addAll(
-
-                createComplaint(
-                        "Water Leakage in Bathroom",
-                        "B-402",
-                        "10 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                ),
-
-                createComplaint(
-                        "Parking Issue",
-                        "C-203",
-                        "09 May 2025",
-                        "Open",
-                        "#FFF0D9",
-                        "#C47A20"
-                ),
-
-                createComplaint(
-                        "Lift Not Working",
-                        "A-101",
-                        "10 May 2025",
-                        "In Progress",
-                        "#E7F0FF",
-                        "#3478C9"
-                ),
-
-                createComplaint(
-                        "Water Tank Cleaning",
-                        "B-305",
-                        "08 May 2025",
-                        "In Progress",
-                        "#E7F0FF",
-                        "#3478C9"
-                ),
-
-                createComplaint(
-                        "Garbage Not Collected",
-                        "B-305",
-                        "09 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                ),
-
-                createComplaint(
-                        "Water Pressure Issue",
-                        "C-201",
-                        "06 May 2025",
-                        "Resolved",
-                        "#E5F7EC",
-                        "#2E9D63"
-                )
-        );
-
-        ScrollPane popupScroll = new ScrollPane();
-
-        popupScroll.setContent(allComplaints);
-
-        popupScroll.setFitToWidth(true);
-
-        popupScroll.setPrefHeight(420);
-
-        popupScroll.setStyle(
-                "-fx-background-color:transparent;" +
-                "-fx-border-color:transparent;"
-        );
-
-        Button closeBtn = new Button("Close");
-
-        closeBtn.setPrefWidth(100);
-        closeBtn.setPrefHeight(40);
-
-        closeBtn.setStyle(
-                "-fx-background-color:#434141;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-weight:bold;" +
-                "-fx-background-radius:8;"
-        );
-
-        HBox buttonBox = new HBox(closeBtn);
-
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-
-        popup.getChildren().addAll(
-                popupTitle,
-                popupScroll,
-                buttonBox
-        );
-
-        Scene popupScene = new Scene(popup);
-
-        popupStage.setTitle("All Complaints");
-        popupStage.setScene(popupScene);
-        popupStage.setResizable(false);
-
-        closeBtn.setOnAction(event -> {
-                popupStage.close();
-        });
-
-        popupStage.show();
-        });
-
+        // =================================================
         // MAIN CONTENT
+        // =================================================
 
         mainvb.getChildren().addAll(
                 heading,
                 complaintHeader,
+                societyInfo,
                 tabs,
                 scrollPane,
                 viewAllBtn
         );
 
+        // =================================================
         // ROOT
+        // =================================================
 
-        HBox root = new HBox();
-        root.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-        root.getChildren().addAll(sidebar,mainvb);
-        root.setStyle("-fx-background-color::#434141;");
-        HBox.setHgrow(mainvb,Priority.ALWAYS);
+        HBox root =
+                new HBox();
 
+        root.getChildren().addAll(
+                sidebar,
+                mainvb
+        );
 
+        root.setStyle(
+                "-fx-background-color:#434141;"
+        );
+
+        HBox.setHgrow(
+                mainvb,
+                Priority.ALWAYS
+        );
+
+        // =================================================
         // SCENE
+        // =================================================
 
-        // manageComplaintsScene = new Scene(root, 1500, 750);
-         Scene scene = new Scene(
-                root,
-                ScreenSize.getWidth(),
-                ScreenSize.getHeight());
-        manageComplaintsScene = scene;
+        Scene scene =
+                new Scene(
+                        root,
+                        ScreenSize.getWidth(),
+                        ScreenSize.getHeight()
+                );
+
+        manageComplaintsScene =
+                scene;
 
         return manageComplaintsScene;
     }
 
-    // COMPLAINT CARD METHOD
+    // =====================================================
+    // LOAD COMPLAINTS FROM FIRESTORE
+    // =====================================================
+
+    private void loadComplaintsFromFirestore(
+            VBox complaintList) {
+
+        try {
+
+            List<Complaint> complaints;
+
+            // -------------------------------------------------
+            // ALL
+            // -------------------------------------------------
+
+            if (currentFilter.equals("ALL")) {
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * ComplaintController.getAllComplaints()
+                 * now automatically fetches only complaints
+                 * belonging to the currently logged-in
+                 * Secretary's society.
+                 *
+                 * Firestore query:
+                 *
+                 * collectionGroup("complaints")
+                 *      .whereEqualTo("society", secretarySociety)
+                 */
+
+                complaints =
+                        complaintController
+                                .getAllComplaints();
+
+            }
+
+            // -------------------------------------------------
+            // FILTERED BY STATUS
+            // -------------------------------------------------
+
+            else {
+
+                /*
+                 * getAllComplaintsByStatus()
+                 * first gets only current Secretary's
+                 * society complaints and then filters
+                 * them by status.
+                 */
+
+                complaints =
+                        complaintController
+                                .getAllComplaintsByStatus(
+                                        currentFilter
+                                );
+            }
+
+            System.out.println(
+                    "--------------------------------------"
+            );
+
+            System.out.println(
+                    "COMPLAINT FETCH RESULT"
+            );
+
+            System.out.println(
+                    "Filter = "
+                            + currentFilter
+            );
+
+            System.out.println(
+                    "Complaints received by UI = "
+                            +
+                            (
+                            complaints == null
+                                    ? "NULL"
+                                    : complaints.size()
+                    )
+            );
+
+            System.out.println(
+                    "--------------------------------------"
+            );
+
+            loadComplaints(
+                    complaintList,
+                    complaints
+            );
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "ERROR LOADING COMPLAINTS IN UI"
+            );
+
+            e.printStackTrace();
+
+            complaintList.getChildren().clear();
+
+            Label error =
+                    new Label(
+                            "Error loading complaints. Check console."
+                    );
+
+            error.setStyle(
+                    "-fx-font-size:14px;" +
+                    "-fx-text-fill:#B00020;" +
+                    "-fx-font-weight:bold;"
+            );
+
+            complaintList.getChildren().add(
+                    error
+            );
+        }
+    }
+
+    // =====================================================
+    // LOAD COMPLAINTS
+    // =====================================================
+
+    private void loadComplaints(
+            VBox complaintList,
+            List<Complaint> complaints) {
+
+        complaintList.getChildren().clear();
+
+        // -------------------------------------------------
+        // NULL
+        // -------------------------------------------------
+
+        if (complaints == null) {
+
+            Label error =
+                    new Label(
+                            "Unable to fetch complaints from Firestore."
+                    );
+
+            error.setStyle(
+                    "-fx-font-size:14px;" +
+                    "-fx-text-fill:#B00020;" +
+                    "-fx-font-weight:bold;"
+            );
+
+            complaintList.getChildren().add(
+                    error
+            );
+
+            return;
+        }
+
+        // -------------------------------------------------
+        // EMPTY
+        // -------------------------------------------------
+
+        if (complaints.isEmpty()) {
+
+            Label noData =
+                    new Label(
+                            "No complaints found for your society."
+                    );
+
+            noData.setStyle(
+                    "-fx-font-size:14px;" +
+                    "-fx-text-fill:#777777;"
+            );
+
+            complaintList.getChildren().add(
+                    noData
+            );
+
+            return;
+        }
+
+        // -------------------------------------------------
+        // ADD CARDS
+        // -------------------------------------------------
+
+        int count = 0;
+
+        for (Complaint complaint :
+                complaints) {
+
+            if (complaint == null) {
+                continue;
+            }
+
+            complaintList.getChildren().add(
+                    createComplaint(
+                            complaint
+                    )
+            );
+
+            count++;
+        }
+
+        System.out.println(
+                "Complaint cards displayed = "
+                        + count
+        );
+    }
+
+    // =====================================================
+    // CREATE COMPLAINT CARD
+    // =====================================================
 
     private VBox createComplaint(
-            String complaintTitle,
-            String flatNo,
-            String date,
-            String statusText,
-            String statusBackground,
-            String statusColor) {
+            Complaint complaint) {
 
+        VBox card =
+                new VBox(8);
 
-        VBox complaint =
-                new VBox(10);
-
-        complaint.setPadding(
+        card.setPadding(
                 new Insets(18)
         );
 
-        complaint.setPrefHeight(85);
-        complaint.setMaxWidth(1180);
-        complaint.setStyle(
+        card.setMaxWidth(1180);
+
+        card.setStyle(
                 "-fx-background-color:white;" +
                 "-fx-background-radius:10;" +
                 "-fx-border-color:#EEEEEE;" +
                 "-fx-border-radius:10;"
         );
 
-        // COMPLAINT TITLE
+        // =================================================
+        // TITLE
+        // =================================================
 
         Label title =
-                new Label(complaintTitle);
+                new Label(
+                        safeValue(
+                                complaint.getTitle()
+                        )
+                );
+
         title.setStyle(
-                "-fx-font-size:14px;" +
+                "-fx-font-size:15px;" +
                 "-fx-font-weight:bold;" +
                 "-fx-text-fill:#123C36;"
         );
 
+        // =================================================
+        // EMAIL
+        // =================================================
+
+        Label email =
+                new Label(
+                        "Email: "
+                                +
+                                safeValue(
+                                        complaint.getEmail()
+                                )
+                );
+
+        email.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#555555;"
+        );
+
+        // =================================================
+        // SOCIETY
+        // =================================================
+
+        Label society =
+                new Label(
+                        "Society: "
+                                +
+                                safeValue(
+                                        complaint.getSociety()
+                                )
+                );
+
+        society.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#123C36;"
+        );
+
+        // =================================================
+        // CATEGORY
+        // =================================================
+
+        Label category =
+                new Label(
+                        "Category: "
+                                +
+                                safeValue(
+                                        complaint.getCategory()
+                                )
+                );
+
+        category.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#555555;"
+        );
+
+        // =================================================
+        // DESCRIPTION
+        // =================================================
+
+        Label description =
+                new Label(
+                        "Description: "
+                                +
+                                safeValue(
+                                        complaint.getDescription()
+                                )
+                );
+
+        description.setWrapText(true);
+
+        description.setMaxWidth(1050);
+
+        description.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+        // =================================================
         // DETAILS
+        // =================================================
 
         Label details =
                 new Label(
-                        "Flat: " + flatNo +
-                        "    |    " +
-                        date
+                        "Flat: "
+                                +
+                                safeValue(
+                                        complaint.getFlatNumber()
+                                )
+                                +
+                                "    |    Preferred Date: "
+                                +
+                                safeValue(
+                                        complaint.getPreferredDate()
+                                )
                 );
 
         details.setStyle(
@@ -851,42 +918,603 @@ public class ManageComplaints {
                 "-fx-text-fill:#777777;"
         );
 
-        // STATUS
+        // =================================================
+        // STATUS LABEL
+        // =================================================
 
-        Label status =  new Label(statusText);
-        status.setStyle(
-                "-fx-background-color:" +
-                statusBackground + ";" +
-                "-fx-text-fill:" +
-                statusColor + ";" +
-                "-fx-font-size:10px;" +
+        Label statusLabel =
+                new Label(
+                        "Status:"
+                );
+
+        statusLabel.setStyle(
+                "-fx-font-size:11px;" +
                 "-fx-font-weight:bold;" +
-                "-fx-padding:5px 10px;" +
-                "-fx-background-radius:12;"
+                "-fx-text-fill:#555555;"
         );
 
-        // BOTTOM ROW
+        // =================================================
+        // STATUS COMBO
+        // =================================================
 
-        HBox bottom =  new HBox();              
+        ComboBox<String> statusCombo =
+                new ComboBox<>();
+
+        statusCombo.getItems().addAll(
+                "IN PROGRESS",
+                "RESOLVED",
+                "CLOSED"
+        );
+
+        String initialStatus =
+                normalizeStatus(
+                        complaint.getStatus()
+                );
+
+        statusCombo.setValue(
+                initialStatus
+        );
+
+        statusCombo.setPrefWidth(150);
+
+        statusCombo.setPrefHeight(32);
+
+        statusCombo.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-font-weight:bold;"
+        );
+
+        // =================================================
+        // STATUS CHANGE
+        // =================================================
+
+        statusCombo.setOnAction(e -> {
+
+            String selectedStatus =
+                    statusCombo.getValue();
+
+            if (selectedStatus == null) {
+                return;
+            }
+
+            String complaintEmail =
+                    complaint.getEmail();
+
+            String complaintId =
+                    complaint.getId();
+
+            // -------------------------------------------------
+            // VALIDATE EMAIL
+            // -------------------------------------------------
+
+            if (complaintEmail == null ||
+                    complaintEmail.trim().isEmpty()) {
+
+                showErrorAlert(
+                        "Complaint email is missing."
+                );
+
+                statusCombo.setValue(
+                        normalizeStatus(
+                                complaint.getStatus()
+                        )
+                );
+
+                return;
+            }
+
+            // -------------------------------------------------
+            // VALIDATE ID
+            // -------------------------------------------------
+
+            if (complaintId == null ||
+                    complaintId.trim().isEmpty()) {
+
+                showErrorAlert(
+                        "Complaint ID is missing."
+                );
+
+                statusCombo.setValue(
+                        normalizeStatus(
+                                complaint.getStatus()
+                        )
+                );
+
+                return;
+            }
+
+            String oldStatus =
+                    normalizeStatus(
+                            complaint.getStatus()
+                    );
+
+            // -------------------------------------------------
+            // SAME STATUS
+            // -------------------------------------------------
+
+            if (oldStatus.equalsIgnoreCase(
+                    selectedStatus
+            )) {
+
+                return;
+            }
+
+            System.out.println(
+                    "======================================"
+            );
+
+            System.out.println(
+                    "COMPLAINT STATUS CHANGE"
+            );
+
+            System.out.println(
+                    "Resident Email = "
+                            + complaintEmail
+            );
+
+            System.out.println(
+                    "Complaint ID = "
+                            + complaintId
+            );
+
+            System.out.println(
+                    "Complaint Society = "
+                            + safeValue(
+                                    complaint.getSociety()
+                            )
+            );
+
+            System.out.println(
+                    "Old Status = "
+                            + oldStatus
+            );
+
+            System.out.println(
+                    "New Status = "
+                            + selectedStatus
+            );
+
+            System.out.println(
+                    "======================================"
+            );
+
+            // -------------------------------------------------
+            // UPDATE FIRESTORE
+            // -------------------------------------------------
+
+            boolean success =
+                    complaintController
+                            .updateComplaintStatus(
+                                    complaintEmail,
+                                    complaintId,
+                                    selectedStatus
+                            );
+
+            // -------------------------------------------------
+            // SUCCESS
+            // -------------------------------------------------
+
+            if (success) {
+
+                complaint.setStatus(
+                        selectedStatus
+                );
+
+                statusCombo.setValue(
+                        selectedStatus
+                );
+
+                showSuccessAlert(
+                        "Complaint status changed to "
+                                + selectedStatus
+                );
+
+            }
+
+            // -------------------------------------------------
+            // FAILURE
+            // -------------------------------------------------
+
+            else {
+
+                statusCombo.setValue(
+                        oldStatus
+                );
+
+                complaint.setStatus(
+                        oldStatus
+                );
+
+                showErrorAlert(
+                        "Failed to update complaint status in Firestore."
+                );
+            }
+        });
+
+        // =================================================
+        // STATUS BOX
+        // =================================================
+
+        HBox statusBox =
+                new HBox(8);
+
+        statusBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        statusBox.getChildren().addAll(
+                statusLabel,
+                statusCombo
+        );
+
+        // =================================================
+        // BOTTOM
+        // =================================================
+
+        HBox bottom =
+                new HBox();
+
         bottom.setAlignment(
                 Pos.CENTER_LEFT
         );
+
         HBox.setHgrow(
                 details,
                 Priority.ALWAYS
         );
+
         bottom.getChildren().addAll(
                 details,
-                status
+                statusBox
         );
 
+        // =================================================
+        // CARD CONTENT
+        // =================================================
 
-        complaint.getChildren().addAll(
+        card.getChildren().addAll(
                 title,
+                email,
+                society,
+                category,
+                description,
                 bottom
         );
 
+        return card;
+    }
 
-        return complaint;
+    // =====================================================
+    // SET ACTIVE TAB
+    // =====================================================
+
+    private void setActiveTab(
+            Button active,
+            Button b1,
+            Button b2,
+            Button b3,
+            String activeStyle,
+            String normalStyle) {
+
+        active.setStyle(
+                activeStyle
+        );
+
+        b1.setStyle(
+                normalStyle
+        );
+
+        b2.setStyle(
+                normalStyle
+        );
+
+        b3.setStyle(
+                normalStyle
+        );
+    }
+
+    // =====================================================
+    // NORMALIZE STATUS
+    // =====================================================
+
+    private String normalizeStatus(
+            String status) {
+
+        if (status == null ||
+                status.trim().isEmpty()) {
+
+            return "IN PROGRESS";
+        }
+
+        String value =
+                status.trim()
+                        .toUpperCase();
+
+        switch (value) {
+
+            case "OPEN":
+                return "IN PROGRESS";
+
+            case "IN PROGRESS":
+                return "IN PROGRESS";
+
+            case "RESOLVED":
+                return "RESOLVED";
+
+            case "CLOSED":
+                return "CLOSED";
+
+            default:
+                return "IN PROGRESS";
+        }
+    }
+
+    // =====================================================
+    // SUCCESS ALERT
+    // =====================================================
+
+    private void showSuccessAlert(
+            String message) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.INFORMATION
+                );
+
+        alert.setTitle(
+                "Complaint Updated"
+        );
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(
+                message
+        );
+
+        alert.show();
+    }
+
+    // =====================================================
+    // ERROR ALERT
+    // =====================================================
+
+    private void showErrorAlert(
+            String message) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.ERROR
+                );
+
+        alert.setTitle(
+                "Complaint Error"
+        );
+
+        alert.setHeaderText(null);
+
+        alert.setContentText(
+                message
+        );
+
+        alert.show();
+    }
+
+    // =====================================================
+    // VIEW ALL COMPLAINTS POPUP
+    // =====================================================
+
+    private void showAllComplaintsPopup() {
+
+        try {
+
+            /*
+             * IMPORTANT:
+             *
+             * getAllComplaints() already performs
+             * society-wise filtering.
+             *
+             * Therefore this popup will also show
+             * ONLY complaints from the logged-in
+             * Secretary's society.
+             */
+
+            List<Complaint> complaints =
+                    complaintController
+                            .getAllComplaints();
+
+            Stage popupStage =
+                    new Stage();
+
+            VBox popup =
+                    new VBox(15);
+
+            popup.setPadding(
+                    new Insets(25)
+            );
+
+            popup.setPrefWidth(800);
+
+            popup.setPrefHeight(650);
+
+            popup.setStyle(
+                    "-fx-background-color:white;"
+            );
+
+            // =================================================
+            // TITLE
+            // =================================================
+
+            Label popupTitle =
+                    new Label(
+                            "All Resident Complaints"
+                    );
+
+            popupTitle.setStyle(
+                    "-fx-font-size:24px;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-text-fill:#123C36;"
+            );
+
+            // =================================================
+            // SOCIETY INFO
+            // =================================================
+
+            Label popupSociety =
+                    new Label(
+                            "Complaints from: Your Society Residents"
+                    );
+
+            popupSociety.setStyle(
+                    "-fx-font-size:12px;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-text-fill:#777777;"
+            );
+
+            // =================================================
+            // LIST
+            // =================================================
+
+            VBox allComplaints =
+                    new VBox(12);
+
+            if (complaints == null ||
+                    complaints.isEmpty()) {
+
+                Label noData =
+                        new Label(
+                                "No complaints found for your society."
+                        );
+
+                noData.setStyle(
+                        "-fx-font-size:14px;" +
+                        "-fx-text-fill:#777777;"
+                );
+
+                allComplaints.getChildren().add(
+                        noData
+                );
+
+            } else {
+
+                for (Complaint complaint :
+                        complaints) {
+
+                    if (complaint != null) {
+
+                        allComplaints.getChildren().add(
+                                createComplaint(
+                                        complaint
+                                )
+                        );
+                    }
+                }
+            }
+
+            // =================================================
+            // SCROLL
+            // =================================================
+
+            ScrollPane scroll =
+                    new ScrollPane();
+
+            scroll.setContent(
+                    allComplaints
+            );
+
+            scroll.setFitToWidth(true);
+
+            scroll.setPrefHeight(500);
+
+            // =================================================
+            // CLOSE
+            // =================================================
+
+            Button closeBtn =
+                    new Button(
+                            "Close"
+                    );
+
+            closeBtn.setPrefWidth(100);
+
+            closeBtn.setPrefHeight(40);
+
+            closeBtn.setStyle(
+                    "-fx-background-color:#434141;" +
+                    "-fx-text-fill:white;" +
+                    "-fx-font-weight:bold;" +
+                    "-fx-background-radius:8;"
+            );
+
+            closeBtn.setOnAction(
+                    e -> popupStage.close()
+            );
+
+            HBox buttonBox =
+                    new HBox(
+                            closeBtn
+                    );
+
+            buttonBox.setAlignment(
+                    Pos.CENTER_RIGHT
+            );
+
+            // =================================================
+            // POPUP CONTENT
+            // =================================================
+
+            popup.getChildren().addAll(
+                    popupTitle,
+                    popupSociety,
+                    scroll,
+                    buttonBox
+            );
+
+            Scene popupScene =
+                    new Scene(
+                            popup
+                    );
+
+            popupStage.setTitle(
+                    "All Resident Complaints"
+            );
+
+            popupStage.setScene(
+                    popupScene
+            );
+
+            popupStage.setResizable(
+                    false
+            );
+
+            popupStage.show();
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "ERROR OPENING COMPLAINT POPUP"
+            );
+
+            e.printStackTrace();
+
+            showErrorAlert(
+                    "Unable to load complaints."
+            );
+        }
+    }
+
+    // =====================================================
+    // SAFE VALUE
+    // =====================================================
+
+    private String safeValue(
+            String value) {
+
+        if (value == null ||
+                value.trim().isEmpty()) {
+
+            return "-";
+        }
+
+        return value;
     }
 }

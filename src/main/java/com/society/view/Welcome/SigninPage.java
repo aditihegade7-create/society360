@@ -1,13 +1,22 @@
 package com.society.view.Welcome;
 
 import com.society.controller.welcome.UserController;
-import com.society.dao.Welcome.UserDao;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -15,745 +24,1121 @@ import javafx.stage.Stage;
 
 public class SigninPage {
 
-        private Scene signinScene;
+    private Scene signinScene;
 
-        private final UserController controller = new UserController();
+    private final UserController controller =
+            new UserController();
+
+    // =========================================================
+    // RESIDENT FIELDS
+    // =========================================================
+
+    private TextField residentFlatNo;
+    private TextField residentAadhar;
+    private TextField residentSociety;
+    private TextField residentOwnerName;
+
+    // =========================================================
+    // OWNER FIELDS
+    // =========================================================
+
+    private TextField ownerFlatNo;
+    private TextField ownerAadhar;
+    private TextField ownerAddress;
+    private TextField ownerSociety;
+
+    // =========================================================
+    // GUARD FIELDS
+    // =========================================================
+
+    private DatePicker joiningDate;
+    private TextField guardAadhar;
+    private TextField guardSociety;
+
+    // =========================================================
+    // SECRETARY FIELDS
+    // =========================================================
+
+    private TextField secretaryAadhar;
+    private TextField secretarySociety;
+
+    // =========================================================
+    // CREATE SCENE
+    // =========================================================
+
+    public Scene createScene(Stage stage) {
+
+        VBox leftPanel = createLeftPanel();
+
+        StackPane.setAlignment(
+                leftPanel,
+                Pos.CENTER_LEFT);
+
+        StackPane.setMargin(
+                leftPanel,
+                new Insets(
+                        20,
+                        20,
+                        20,
+                        50));
 
         // =====================================================
-        // CREATE SCENE
+        // SIGNUP CARD
         // =====================================================
 
-        public Scene createScene(Stage stage) {
+        VBox signupCard =
+                new VBox(15);
 
-                // =================================================
-                // LEFT PANEL
-                // =================================================
+        signupCard.setPrefWidth(400);
+        signupCard.setMinWidth(400);
+        signupCard.setMaxWidth(400);
 
-                VBox leftPanel = createLeftPanel();
+        signupCard.setPrefHeight(650);
+        signupCard.setMaxHeight(650);
 
-                StackPane.setAlignment(
-                                leftPanel,
-                                Pos.CENTER_LEFT);
+        signupCard.setPadding(
+                new Insets(25));
 
-                StackPane.setMargin(
-                                leftPanel,
-                                new Insets(20, 20, 20, 50));
+        signupCard.setAlignment(
+                Pos.TOP_CENTER);
 
-                // =================================================
-                // SIGNUP CARD
-                // =================================================
-
-                VBox signupCard = new VBox(15);
-
-                signupCard.setPrefWidth(400);
-                signupCard.setMinWidth(400);
-                signupCard.setMaxWidth(400);
-
-                signupCard.setPrefHeight(650);
-                signupCard.setMaxHeight(650);
-
-                signupCard.setPadding(new Insets(25));
-
-                signupCard.setAlignment(Pos.TOP_CENTER);
         signupCard.setStyle(
-                "-fx-background-color: #F8F3EE;"
-                +"-fx-border-color: #c7c3bd;"
-                + "-fx-border-radius: 15;"
-                + "-fx-border-width: 1.5;"+
-                "-fx-background-radius:15;"
-        );
+                "-fx-background-color:#F8F3EE;"
+                        + "-fx-border-color:#c7c3bd;"
+                        + "-fx-border-radius:15;"
+                        + "-fx-border-width:1.5;"
+                        + "-fx-background-radius:15;"
+                        + "-fx-effect:dropshadow("
+                        + "gaussian,"
+                        + "rgba(78,52,46,0.18),"
+                        + "20,0,0,8);");
 
-                signupCard.setStyle(
-                                "-fx-background-color: #F8F3EE;" +
-                                                "-fx-border-color: #c7c3bd;" +
-                                                "-fx-border-radius: 15;" +
-                                                "-fx-border-width: 1.5;" +
-                                                "-fx-background-radius:15;");
+        // =====================================================
+        // TITLE
+        // =====================================================
 
-                // =================================================
-                // TITLE
-                // =================================================
+        Label createTitle =
+                new Label(
+                        "Create Account");
 
-                Label createTitle = new Label("Create Account");
         createTitle.setStyle(
-                "-fx-font-size:26px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill: #333333;"
-        );
+                "-fx-font-size:26px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:#333333;");
 
-                createTitle.setStyle(
-                                "-fx-font-size:26px;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:#333333;");
+        Label createSubtitle =
+                new Label(
+                        "Join Society360 and simplify your life");
 
-                Label createSubtitle = new Label(
-                                "Join Society360 and simplify your life");
         createSubtitle.setStyle(
-                "-fx-font-size:13px;" +
-                "-fx-text-fill: #535050;"
-        );
+                "-fx-font-size:13px;"
+                        + "-fx-text-fill:#535050;");
 
-                createSubtitle.setStyle(
-                                "-fx-font-size:13px;" +
-                                                "-fx-text-fill:#535050;");
+        // =====================================================
+        // ROLE LABEL
+        // =====================================================
 
-                // =================================================
-                // ROLE SELECTION
-                // =================================================
+        Label roleLabel =
+                new Label("I am a");
 
-                Label roleLabel = new Label("I am a");
+        roleLabel.setStyle(
+                "-fx-font-size:13px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:#555555;");
 
-                roleLabel.setStyle(
-                                "-fx-font-size:13px;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:#555555;");
+        // =====================================================
+        // ROLE RADIO BUTTONS
+        // =====================================================
 
-                RadioButton owner = new RadioButton("Owner");
+        RadioButton owner =
+                new RadioButton("Owner");
 
-                RadioButton resident = new RadioButton("Resident");
+        RadioButton resident =
+                new RadioButton("Resident");
 
-                RadioButton secretary = new RadioButton("Secretary");
+        RadioButton secretary =
+                new RadioButton("Secretary");
 
-                RadioButton guard = new RadioButton("Guard");
+        RadioButton guard =
+                new RadioButton("Guard");
 
-                String roleStyle = "-fx-font-size:16px;" +
-                                "-fx-font-weight:bold;" +
-                                "-fx-text-fill:#4e342e;";
+        String roleStyle =
+                "-fx-font-size:16px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:#4e342e;";
 
-                owner.setStyle(roleStyle);
-                resident.setStyle(roleStyle);
-                secretary.setStyle(roleStyle);
-                guard.setStyle(roleStyle);
+        owner.setStyle(roleStyle);
+        resident.setStyle(roleStyle);
+        secretary.setStyle(roleStyle);
+        guard.setStyle(roleStyle);
 
-                ToggleGroup roleGroup = new ToggleGroup();
+        ToggleGroup roleGroup =
+                new ToggleGroup();
 
-                owner.setToggleGroup(roleGroup);
-                resident.setToggleGroup(roleGroup);
-                secretary.setToggleGroup(roleGroup);
-                guard.setToggleGroup(roleGroup);
+        owner.setToggleGroup(roleGroup);
+        resident.setToggleGroup(roleGroup);
+        secretary.setToggleGroup(roleGroup);
+        guard.setToggleGroup(roleGroup);
 
-                VBox roles = new VBox(25);
+        VBox roles =
+                new VBox(20);
 
-                roles.setAlignment(Pos.CENTER_LEFT);
+        roles.setAlignment(
+                Pos.CENTER_LEFT);
 
-                roles.getChildren().addAll(
-                                owner,
-                                resident,
-                                secretary,
-                                guard);
+        roles.getChildren().addAll(
+                owner,
+                resident,
+                secretary,
+                guard);
 
-                // =================================================
-                // BACK BUTTON
-                // =================================================
+        // =====================================================
+        // BACK BUTTON
+        // =====================================================
 
-                Button backToLoginBtn = new Button("← Back");
+        Button backToLoginBtn =
+                new Button("← Back");
 
-                backToLoginBtn.setPrefWidth(100);
-                backToLoginBtn.setPrefHeight(40);
+        backToLoginBtn.setPrefWidth(100);
+        backToLoginBtn.setPrefHeight(40);
 
-                backToLoginBtn.setStyle(
-                                "-fx-background-color:transparent;" +
-                                                "-fx-text-fill:#4e342e;" +
-                                                "-fx-font-size:14px;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-cursor:hand;");
+        backToLoginBtn.setStyle(
+                "-fx-background-color:transparent;"
+                        + "-fx-text-fill:#4e342e;"
+                        + "-fx-font-size:14px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-cursor:hand;");
 
-                backToLoginBtn.setOnAction(event -> {
+        backToLoginBtn.setOnAction(event -> {
 
-                        LogInPage loginPage = new LogInPage();
+            LogInPage loginPage =
+                    new LogInPage();
 
-                        stage.setScene(
-                                        loginPage.createScene(stage));
+            stage.setScene(
+                    loginPage.createScene(stage));
 
-                        stage.show();
-                });
+            stage.show();
+        });
 
-                // =================================================
-                // CONTINUE BUTTON
-                // =================================================
+        // =====================================================
+        // CONTINUE BUTTON
+        // =====================================================
 
-                Button continueBtn = new Button("Continue");
+        Button continueBtn =
+                new Button("Continue");
 
-                continueBtn.setPrefWidth(330);
-                continueBtn.setPrefHeight(45);
+        continueBtn.setPrefWidth(330);
+        continueBtn.setPrefHeight(45);
 
-                continueBtn.setStyle(
-                                "-fx-background-color:#4e342e;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:15px;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-background-radius:8;");
+        continueBtn.setStyle(
+                "-fx-background-color:#4e342e;"
+                        + "-fx-text-fill:white;"
+                        + "-fx-font-size:15px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-background-radius:8;");
 
-                // =================================================
-                // DETAILS BOX
-                // =================================================
+        // =====================================================
+        // DETAILS BOX
+        // =====================================================
 
-                VBox detailsBox = new VBox(12);
+        VBox detailsBox =
+                new VBox(10);
 
-                detailsBox.setAlignment(Pos.TOP_CENTER);
+        detailsBox.setAlignment(
+                Pos.TOP_CENTER);
 
-                detailsBox.setVisible(false);
-                detailsBox.setManaged(false);
+        detailsBox.setVisible(false);
+        detailsBox.setManaged(false);
 
-                // =================================================
-                // CONTINUE ACTION
-                // =================================================
+        // =====================================================
+        // CONTINUE ACTION
+        // =====================================================
 
-                continueBtn.setOnAction(event -> {
+        continueBtn.setOnAction(event -> {
 
-                        Toggle selected = roleGroup.getSelectedToggle();
+            Toggle selected =
+                    roleGroup.getSelectedToggle();
 
-                        if (selected == null) {
+            if (selected == null) {
 
-                                showAlert(
-                                                "Role Required",
-                                                "Please select your role first.");
+                showAlert(
+                        "Role Required",
+                        "Please select your role first.");
 
-                                return;
-                        }
+                return;
+            }
 
-                        String role = ((RadioButton) selected).getText();
+            String role =
+                    ((RadioButton) selected).getText();
 
-                        createRoleForm(
-                                        role,
-                                        detailsBox,
-                                        stage);
+            createRoleForm(
+                    role,
+                    detailsBox,
+                    stage);
 
-                        detailsBox.setVisible(true);
-                        detailsBox.setManaged(true);
+            detailsBox.setVisible(true);
+            detailsBox.setManaged(true);
 
-                        roleLabel.setVisible(false);
-                        roleLabel.setManaged(false);
+            roleLabel.setVisible(false);
+            roleLabel.setManaged(false);
 
-                        roles.setVisible(false);
-                        roles.setManaged(false);
+            roles.setVisible(false);
+            roles.setManaged(false);
 
-                        continueBtn.setVisible(false);
-                        continueBtn.setManaged(false);
-                });
+            continueBtn.setVisible(false);
+            continueBtn.setManaged(false);
 
-                // =================================================
-                // ADD CONTENT
-                // =================================================
+            signupCard.setPrefHeight(
+                    ScreenSize.getHeight() - 40);
 
-                signupCard.getChildren().addAll(
-                                backToLoginBtn,
-                                createTitle,
-                                createSubtitle,
-                                roleLabel,
-                                roles,
-                                continueBtn,
-                                detailsBox);
+            signupCard.setMaxHeight(
+                    ScreenSize.getHeight() - 40);
+        });
 
-                // =================================================
-                // ROOT
-                // =================================================
+        // =====================================================
+        // ADD CONTENT
+        // =====================================================
 
-                StackPane root = new StackPane();
+        signupCard.getChildren().addAll(
+                backToLoginBtn,
+                createTitle,
+                createSubtitle,
+                roleLabel,
+                roles,
+                continueBtn,
+                detailsBox);
 
-                root.setStyle(
-                                "-fx-background-color:" +
-                                                "linear-gradient(to right,#D7CCC8,#bfb1a7);");
+        // =====================================================
+        // ROOT
+        // =====================================================
 
-                StackPane.setAlignment(
-                                signupCard,
-                                Pos.CENTER_RIGHT);
+        StackPane root =
+                new StackPane();
 
-                StackPane.setMargin(
-                                signupCard,
-                                new Insets(
-                                                20,
-                                                100,
-                                                20,
-                                                20));
+        root.setStyle(
+                "-fx-background-color:"
+                        + "linear-gradient("
+                        + "to right,"
+                        + "#D7CCC8,"
+                        + "#bfb1a7);");
 
-                root.getChildren().addAll(
-                                leftPanel,
-                                signupCard);
+        StackPane.setAlignment(
+                signupCard,
+                Pos.CENTER_RIGHT);
 
-                // =================================================
-                // SCENE
-                // =================================================
+        StackPane.setMargin(
+                signupCard,
+                new Insets(
+                        20,
+                        100,
+                        20,
+                        20));
 
-                signinScene = new Scene(
-                                root,
-                                ScreenSize.getWidth(),
-                                ScreenSize.getHeight());
+        root.getChildren().addAll(
+                leftPanel,
+                signupCard);
 
-                return signinScene;
+        signinScene =
+                new Scene(
+                        root,
+                        ScreenSize.getWidth(),
+                        ScreenSize.getHeight());
+
+        stage.setTitle(
+                "Society360 - Create Account");
+
+        return signinScene;
+    }
+
+    // =========================================================
+    // CREATE ROLE FORM
+    // =========================================================
+
+    private void createRoleForm(
+            String role,
+            VBox detailsBox,
+            Stage stage) {
+
+        detailsBox.getChildren().clear();
+
+        // Reset fields
+        residentFlatNo = null;
+        residentAadhar = null;
+        residentSociety = null;
+        residentOwnerName = null;
+
+        ownerFlatNo = null;
+        ownerAadhar = null;
+        ownerAddress = null;
+        ownerSociety = null;
+
+        joiningDate = null;
+        guardAadhar = null;
+        guardSociety = null;
+
+        secretaryAadhar = null;
+        secretarySociety = null;
+
+        // =====================================================
+        // TITLE
+        // =====================================================
+
+        Label roleTitle =
+                new Label(
+                        role + " Details");
+
+        roleTitle.setStyle(
+                "-fx-font-size:20px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:#4e342e;");
+
+        // =====================================================
+        // COMMON FIELDS
+        // =====================================================
+
+        TextField nameField =
+                createTextField("Full Name");
+
+        TextField phoneField =
+                createTextField("Phone Number");
+
+        DatePicker dob =
+                new DatePicker();
+
+        dob.setPromptText(
+                "Date of Birth");
+
+        dob.setPrefHeight(40);
+        dob.setMaxWidth(350);
+
+        TextField emailField =
+                createTextField(
+                        "Email Address");
+
+        ComboBox<String> gender =
+                new ComboBox<>();
+
+        gender.getItems().addAll(
+                "Male",
+                "Female",
+                "Other");
+
+        gender.setPromptText(
+                "Gender");
+
+        gender.setPrefHeight(40);
+        gender.setMaxWidth(350);
+
+        PasswordField password =
+                new PasswordField();
+
+        password.setPromptText(
+                "Create Password");
+
+        password.setPrefHeight(40);
+        password.setMaxWidth(350);
+
+        PasswordField confirmPassword =
+                new PasswordField();
+
+        confirmPassword.setPromptText(
+                "Confirm Password");
+
+        confirmPassword.setPrefHeight(40);
+        confirmPassword.setMaxWidth(350);
+
+        detailsBox.getChildren().addAll(
+                roleTitle,
+                nameField,
+                phoneField,
+                dob,
+                emailField,
+                gender);
+
+        // =====================================================
+        // RESIDENT
+        // =====================================================
+
+        if (role.equalsIgnoreCase("Resident")) {
+
+            residentFlatNo =
+                    createTextField(
+                            "Flat Number");
+
+            residentAadhar =
+                    createTextField(
+                            "Aadhar Number");
+
+            residentSociety =
+                    createTextField(
+                            "Society Name");
+
+            residentOwnerName =
+                    createTextField(
+                            "Owner Name");
+
+            Label residentTypeLabel =
+                    new Label(
+                            "Resident Type");
+
+            residentTypeLabel.setStyle(
+                    "-fx-font-size:13px;"
+                            + "-fx-font-weight:bold;"
+                            + "-fx-text-fill:#3d3d3d;");
+
+            RadioButton ownerOption =
+                    new RadioButton("Owner");
+
+            RadioButton residentOption =
+                    new RadioButton("Resident");
+
+            ToggleGroup residentTypeGroup =
+                    new ToggleGroup();
+
+            ownerOption.setToggleGroup(
+                    residentTypeGroup);
+
+            residentOption.setToggleGroup(
+                    residentTypeGroup);
+
+            HBox residentTypeBox =
+                    new HBox(20);
+
+            residentTypeBox.setAlignment(
+                    Pos.CENTER_LEFT);
+
+            residentTypeBox.getChildren().addAll(
+                    ownerOption,
+                    residentOption);
+
+            residentOwnerName.setVisible(false);
+            residentOwnerName.setManaged(false);
+
+            residentOption.setOnAction(e -> {
+
+                residentOwnerName.setVisible(true);
+                residentOwnerName.setManaged(true);
+            });
+
+            ownerOption.setOnAction(e -> {
+
+                residentOwnerName.setVisible(false);
+                residentOwnerName.setManaged(false);
+                residentOwnerName.clear();
+            });
+
+            detailsBox.getChildren().addAll(
+                    residentFlatNo,
+                    password,
+                    confirmPassword,
+                    residentAadhar,
+                    residentSociety,
+                    residentTypeLabel,
+                    residentTypeBox,
+                    residentOwnerName);
         }
 
         // =====================================================
-        // ROLE FORM
+        // OWNER
         // =====================================================
 
-        private void createRoleForm(
-                        String role,
-                        VBox detailsBox,
-                        Stage stage) {
+        else if (role.equalsIgnoreCase("Owner")) {
 
-                detailsBox.getChildren().clear();
+            ownerFlatNo =
+                    createTextField(
+                            "Flat Number");
 
-                // =================================================
-                // ROLE TITLE
-                // =================================================
+            ownerAadhar =
+                    createTextField(
+                            "Aadhar Number");
 
-                Label roleTitle = new Label(role + " Details");
+            ownerAddress =
+                    createTextField(
+                            "Permanent Address");
 
-                roleTitle.setStyle(
-                                "-fx-font-size:20px;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:#4e342e;");
+            ownerSociety =
+                    createTextField(
+                            "Society Name");
 
-                // =================================================
-                // COMMON FIELDS
-                // =================================================
+            detailsBox.getChildren().addAll(
+                    ownerFlatNo,
+                    password,
+                    confirmPassword,
+                    ownerAadhar,
+                    ownerAddress,
+                    ownerSociety);
+        }
 
-                TextField nameField = createTextField("Full Name");
+        // =====================================================
+        // GUARD
+        // =====================================================
 
-                TextField phoneField = createTextField("Phone Number");
+        else if (role.equalsIgnoreCase("Guard")) {
 
-                DatePicker dob = new DatePicker();
+            joiningDate =
+                    new DatePicker();
 
-                dob.setPromptText("Date of Birth");
-                dob.setPrefHeight(40);
-                dob.setMaxWidth(350);
+            joiningDate.setPromptText(
+                    "Joining Date");
 
-                TextField emailField = createTextField("Email Address");
+            joiningDate.setPrefHeight(40);
+            joiningDate.setMaxWidth(350);
 
-                ComboBox<String> gender = new ComboBox<>();
+            guardAadhar =
+                    createTextField(
+                            "Aadhar Number");
 
-                gender.getItems().addAll(
-                                "Male",
-                                "Female",
-                                "Other");
+            guardSociety =
+                    createTextField(
+                            "Society Name");
 
-                gender.setPromptText("Gender");
-                gender.setPrefHeight(40);
-                gender.setMaxWidth(350);
+            detailsBox.getChildren().addAll(
+                    password,
+                    confirmPassword,
+                    joiningDate,
+                    guardAadhar,
+                    guardSociety);
+        }
 
-                PasswordField password = new PasswordField();
+        // =====================================================
+        // SECRETARY
+        // =====================================================
 
-                password.setPromptText("Create Password");
-                password.setPrefHeight(40);
-                password.setMaxWidth(350);
+        else if (role.equalsIgnoreCase("Secretary")) {
 
-                PasswordField confirmPassword = new PasswordField();
+            secretaryAadhar =
+                    createTextField(
+                            "Aadhar Number");
 
-                confirmPassword.setPromptText(
-                                "Confirm Password");
+            secretarySociety =
+                    createTextField(
+                            "Society Name");
 
-                confirmPassword.setPrefHeight(40);
-                confirmPassword.setMaxWidth(350);
+            detailsBox.getChildren().addAll(
+                    password,
+                    confirmPassword,
+                    secretaryAadhar,
+                    secretarySociety);
+        }
 
-                detailsBox.getChildren().addAll(
-                                roleTitle,
-                                nameField,
-                                phoneField,
-                                dob,
-                                emailField,
-                                gender);
+        // =====================================================
+        // TERMS
+        // =====================================================
 
-                // =================================================
-                // RESIDENT
-                // =================================================
+        CheckBox terms =
+                new CheckBox(
+                        "I agree to the Terms & Conditions and Privacy Policy");
 
-                if (role.equalsIgnoreCase("Resident")) {
+        terms.setStyle(
+                "-fx-font-size:11px;"
+                        + "-fx-text-fill:#777777;");
 
-                        TextField flatNo = createTextField("Flat Number");
+        // =====================================================
+        // SIGNUP BUTTON
+        // =====================================================
 
-                        TextField aadhar = createTextField("Aadhar Number");
+        Button signupBtn =
+                new Button("Sign Up");
 
-                        TextField society = createTextField("Society Name");
+        signupBtn.setPrefWidth(350);
+        signupBtn.setPrefHeight(45);
 
-                        Label residentTypeLabel = new Label("Resident Type");
+        signupBtn.setStyle(
+                "-fx-background-color:#4e342e;"
+                        + "-fx-text-fill:white;"
+                        + "-fx-font-size:15px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-background-radius:8;");
 
-                        residentTypeLabel.setStyle(
-                                        "-fx-font-size:13px;" +
-                                                        "-fx-font-weight:bold;" +
-                                                        "-fx-text-fill:#3d3d3d;");
+        // =====================================================
+        // SIGNUP ACTION
+        // =====================================================
 
-                        RadioButton ownerOption = new RadioButton("Owner");
+        signupBtn.setOnAction(event -> {
 
-                        RadioButton residentOption = new RadioButton("Resident");
+            // =================================================
+            // TERMS
+            // =================================================
 
-                        ToggleGroup residentTypeGroup = new ToggleGroup();
+            if (!terms.isSelected()) {
 
-                        ownerOption.setToggleGroup(
-                                        residentTypeGroup);
+                showAlert(
+                        "Terms Required",
+                        "Please accept the Terms & Conditions.");
 
-                        residentOption.setToggleGroup(
-                                        residentTypeGroup);
+                return;
+            }
 
-                        HBox residentTypeBox = new HBox(20);
+            // =================================================
+            // COMMON DATA
+            // =================================================
 
-                        residentTypeBox.setAlignment(
-                                        Pos.CENTER_LEFT);
+            String name =
+                    nameField.getText().trim();
 
-                        residentTypeBox.getChildren().addAll(
-                                        ownerOption,
-                                        residentOption);
+            String phone =
+                    phoneField.getText().trim();
 
-                        TextField ownerName = createTextField("Owner Name");
+            String email =
+                    emailField.getText()
+                            .trim()
+                            .toLowerCase();
 
-                        ownerName.setVisible(false);
-                        ownerName.setManaged(false);
+            String pass =
+                    password.getText();
 
-                        residentOption.setOnAction(e -> {
+            String confirmPass =
+                    confirmPassword.getText();
 
-                                ownerName.setVisible(true);
-                                ownerName.setManaged(true);
-                        });
+            String dobValue = "";
 
-                        ownerOption.setOnAction(e -> {
+            if (dob.getValue() != null) {
 
-                                ownerName.setVisible(false);
-                                ownerName.setManaged(false);
-                        });
+                dobValue =
+                        dob.getValue().toString();
+            }
 
-                        detailsBox.getChildren().addAll(
-                                        flatNo,
-                                        password,
-                                        confirmPassword,
-                                        aadhar,
-                                        society,
-                                        residentTypeLabel,
-                                        residentTypeBox,
-                                        ownerName);
+            String genderValue = "";
+
+            if (gender.getValue() != null) {
+
+                genderValue =
+                        gender.getValue();
+            }
+
+            // =================================================
+            // COMMON VALIDATION
+            // =================================================
+
+            if (name.isEmpty()
+                    || phone.isEmpty()
+                    || email.isEmpty()
+                    || pass.isEmpty()
+                    || confirmPass.isEmpty()) {
+
+                showAlert(
+                        "Missing Details",
+                        "Please fill all required fields.");
+
+                return;
+            }
+
+            // =================================================
+            // EMAIL VALIDATION
+            // =================================================
+
+            if (!email.matches(
+                    "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+
+                showAlert(
+                        "Invalid Email",
+                        "Please enter a valid email address.");
+
+                return;
+            }
+
+            // =================================================
+            // PHONE VALIDATION
+            // =================================================
+
+            if (!phone.matches("\\d{10}")) {
+
+                showAlert(
+                        "Invalid Phone",
+                        "Phone number must contain exactly 10 digits.");
+
+                return;
+            }
+
+            // =================================================
+            // PASSWORD
+            // =================================================
+
+            if (!pass.equals(confirmPass)) {
+
+                showAlert(
+                        "Password Error",
+                        "Password and Confirm Password do not match.");
+
+                return;
+            }
+
+            if (pass.length() < 6) {
+
+                showAlert(
+                        "Password Error",
+                        "Password must contain at least 6 characters.");
+
+                return;
+            }
+
+            // =================================================
+            // VARIABLES
+            // =================================================
+
+            String flatNo = "";
+            String aadhar = "";
+            String society = "";
+            String ownerName = "";
+            String address = "";
+            String joiningDateValue = "";
+
+            // =================================================
+            // RESIDENT DATA
+            // =================================================
+
+            if (role.equalsIgnoreCase("Resident")) {
+
+                flatNo =
+                        residentFlatNo
+                                .getText()
+                                .trim();
+
+                aadhar =
+                        residentAadhar
+                                .getText()
+                                .trim();
+
+                society =
+                        residentSociety
+                                .getText()
+                                .trim();
+
+                ownerName =
+                        residentOwnerName
+                                .getText()
+                                .trim();
+
+                if (flatNo.isEmpty()
+                        || aadhar.isEmpty()
+                        || society.isEmpty()) {
+
+                    showAlert(
+                            "Missing Details",
+                            "Please fill Flat Number, Aadhar Number and Society Name.");
+
+                    return;
                 }
 
-                // =================================================
-                // OWNER
-                // =================================================
+                if (!aadhar.matches("\\d{12}")) {
 
-                else if (role.equalsIgnoreCase("Owner")) {
+                    showAlert(
+                            "Invalid Aadhar",
+                            "Aadhar number must contain exactly 12 digits.");
 
-                        TextField flatNo = createTextField("Flat Number");
+                    return;
+                }
+            }
 
-                        TextField aadhar = createTextField("Aadhar Number");
+            // =================================================
+            // OWNER DATA
+            // =================================================
 
-                        TextField address = createTextField(
-                                        "Permanent Address");
+            else if (role.equalsIgnoreCase("Owner")) {
 
-                        TextField society = createTextField("Society Name");
+                flatNo =
+                        ownerFlatNo
+                                .getText()
+                                .trim();
 
-                        detailsBox.getChildren().addAll(
-                                        flatNo,
-                                        password,
-                                        confirmPassword,
-                                        aadhar,
-                                        address,
-                                        society);
+                aadhar =
+                        ownerAadhar
+                                .getText()
+                                .trim();
+
+                address =
+                        ownerAddress
+                                .getText()
+                                .trim();
+
+                society =
+                        ownerSociety
+                                .getText()
+                                .trim();
+
+                if (flatNo.isEmpty()
+                        || aadhar.isEmpty()
+                        || address.isEmpty()
+                        || society.isEmpty()) {
+
+                    showAlert(
+                            "Missing Details",
+                            "Please fill all Owner details.");
+
+                    return;
                 }
 
-                // =================================================
-                // GUARD
-                // =================================================
+                if (!aadhar.matches("\\d{12}")) {
 
-                else if (role.equalsIgnoreCase("Guard")) {
+                    showAlert(
+                            "Invalid Aadhar",
+                            "Aadhar number must contain exactly 12 digits.");
 
-                        DatePicker joiningDate = new DatePicker();
+                    return;
+                }
+            }
 
-                        joiningDate.setPromptText(
-                                        "Joining Date");
+            // =================================================
+            // GUARD DATA
+            // =================================================
 
-                        joiningDate.setPrefHeight(40);
-                        joiningDate.setMaxWidth(350);
+            else if (role.equalsIgnoreCase("Guard")) {
 
-                        TextField aadhar = createTextField("Aadhar Number");
+                aadhar =
+                        guardAadhar
+                                .getText()
+                                .trim();
 
-                        TextField society = createTextField("Society Name");
+                society =
+                        guardSociety
+                                .getText()
+                                .trim();
 
-                        detailsBox.getChildren().addAll(
-                                        password,
-                                        confirmPassword,
-                                        joiningDate,
-                                        aadhar,
-                                        society);
+                if (joiningDate.getValue() != null) {
+
+                    joiningDateValue =
+                            joiningDate
+                                    .getValue()
+                                    .toString();
                 }
 
-                // =================================================
-                // SECRETARY
-                // =================================================
+                if (aadhar.isEmpty()
+                        || society.isEmpty()
+                        || joiningDateValue.isEmpty()) {
 
-                else if (role.equalsIgnoreCase("Secretary")) {
+                    showAlert(
+                            "Missing Details",
+                            "Please fill all Guard details.");
 
-                        TextField aadhar = createTextField("Aadhar Number");
-
-                        TextField society = createTextField("Society Name");
-
-                        detailsBox.getChildren().addAll(
-                                        password,
-                                        confirmPassword,
-                                        aadhar,
-                                        society);
+                    return;
                 }
 
-                // =================================================
-                // TERMS
-                // =================================================
+                if (!aadhar.matches("\\d{12}")) {
 
-                CheckBox terms = new CheckBox(
-                                "I agree to the Terms & Conditions and Privacy Policy");
+                    showAlert(
+                            "Invalid Aadhar",
+                            "Aadhar number must contain exactly 12 digits.");
 
-                terms.setStyle(
-                                "-fx-font-size:11px;" +
-                                                "-fx-text-fill:#777777;");
+                    return;
+                }
+            }
 
-                // =================================================
-                // SIGN UP BUTTON
-                // =================================================
+            // =================================================
+            // SECRETARY DATA
+            // =================================================
 
-                Button signupBtn = new Button("Sign Up");
+            else if (role.equalsIgnoreCase("Secretary")) {
 
-                signupBtn.setPrefWidth(350);
-                signupBtn.setPrefHeight(45);
+                aadhar =
+                        secretaryAadhar
+                                .getText()
+                                .trim();
 
-                signupBtn.setStyle(
-                                "-fx-background-color:#4e342e;" +
-                                                "-fx-text-fill:white;" +
-                                                "-fx-font-size:15px;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-background-radius:8;");
+                society =
+                        secretarySociety
+                                .getText()
+                                .trim();
 
-                signupBtn.setOnAction(event -> {
+                if (aadhar.isEmpty()
+                        || society.isEmpty()) {
 
-                        // =============================================
-                        // TERMS VALIDATION
-                        // =============================================
+                    showAlert(
+                            "Missing Details",
+                            "Please fill all Secretary details.");
 
-                        if (!terms.isSelected()) {
+                    return;
+                }
 
-                                showAlert(
-                                                "Terms Required",
-                                                "Please accept the Terms & Conditions.");
+                if (!aadhar.matches("\\d{12}")) {
 
-                                return;
-                        }
+                    showAlert(
+                            "Invalid Aadhar",
+                            "Aadhar number must contain exactly 12 digits.");
 
-                        // =============================================
-                        // ROLE
-                        // =============================================
+                    return;
+                }
+            }
 
-                        String selectedRole = role;
+            // =================================================
+            // SAVE USER
+            // =================================================
 
-                        // =============================================
-                        // GET FORM DATA
-                        // =============================================
+            boolean saved =
+                    controller.addUser(
+                            name,
+                            email,
+                            pass,
+                            role,
+                            phone,
+                            dobValue,
+                            genderValue,
+                            flatNo,
+                            aadhar,
+                            society,
+                            ownerName,
+                            address,
+                            joiningDateValue);
 
-                        String name = nameField.getText().trim();
+            // =================================================
+            // FAILED
+            // =================================================
 
-                        String email = emailField.getText().trim();
+            if (!saved) {
 
-                        String pass = password.getText();
+                showAlert(
+                        "Registration Failed",
+                        "Unable to create account or save user information.");
 
-                        String confirmPass = confirmPassword.getText();
+                return;
+            }
 
-                        // =============================================
-                        // BASIC VALIDATION
-                        // =============================================
+            // =================================================
+            // SUCCESS
+            // =================================================
 
-                        if (name.isEmpty()
-                                        || email.isEmpty()
-                                        || pass.isEmpty()
-                                        || confirmPass.isEmpty()) {
+            showAlert(
+                    "Sign Up Successful",
+                    "Your account has been created successfully!");
 
-                                showAlert(
-                                                "Missing Details",
-                                                "Please fill all required fields.");
+            // =================================================
+            // GO TO LOGIN
+            // =================================================
 
-                                return;
-                        }
+            LogInPage loginPage =
+                    new LogInPage();
 
-                        // =============================================
-                        // PASSWORD VALIDATION
-                        // =============================================
+            stage.setScene(
+                    loginPage.createScene(stage));
 
-                        if (!pass.equals(confirmPass)) {
-
-                                showAlert(
-                                                "Password Error",
-                                                "Password and Confirm Password do not match.");
-
-                                return;
-                        }
-
-                        if (pass.length() < 6) {
-
-                                showAlert(
-                                                "Password Error",
-                                                "Password must contain at least 6 characters.");
-
-                                return;
-                        }
-
-                        // =============================================
-                        // FIREBASE SIGN UP
-                        // =============================================
-
-                        // =============================================
-                        // SIGN UP + FIRESTORE SAVE
-                        // =============================================
-
-                        boolean saved = controller.addUser(
-                                        name,
-                                        email,
-                                        pass,
-                                        selectedRole);
-
-                        if (!saved) {
-
-                                showAlert(
-                                                "Registration Failed",
-                                                "Unable to create account or save user information.");
-
-                                return;
-                        }
-
-                        // =============================================
-                        // FIRESTORE FAILED
-                        // =============================================
-
-                        // =============================================
-                        // SUCCESS
-                        // =============================================
-
-                        showAlert(
-                                        "Sign Up Successful",
-                                        "Your account has been created successfully!");
-
-                        // =============================================
-                        // CLEAR FIELDS
-                        // =============================================
-
-                        nameField.clear();
-                        emailField.clear();
-                        password.clear();
-                        confirmPassword.clear();
-                        terms.setSelected(false);
-
-                        // =============================================
-                        // GO TO LOGIN
-                        // =============================================
-
-                        LogInPage loginPage = new LogInPage();
-
-                        stage.setScene(
-                                        loginPage.createScene(stage));
-
-                        stage.show();
-                });
-                // =================================================
-                // LOGIN
-                // =================================================
-
-                Label accountText = new Label(
-                                "Already have an account?");
-
-                accountText.setStyle(
-                                "-fx-text-fill:#666666;" +
-                                                "-fx-font-size:12px;");
-
-                Button loginBtn = new Button("Login");
-
-                loginBtn.setStyle(
-                                "-fx-background-color:transparent;" +
-                                                "-fx-text-fill:#5f331e;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-font-size:12px;");
-
-                loginBtn.setOnAction(event -> {
-
-                        LogInPage loginPage = new LogInPage();
-
-                        stage.setScene(
-                                        loginPage.createScene(stage));
-
-                        stage.show();
-                });
-
-                HBox loginBox = new HBox(5);
-
-                loginBox.setAlignment(Pos.CENTER);
-
-                loginBox.getChildren().addAll(
-                                accountText,
-                                loginBtn);
-
-                // =================================================
-                // ADD FINAL CONTROLS
-                // =================================================
-
-                detailsBox.getChildren().addAll(
-                                terms,
-                                signupBtn,
-                                loginBox);
-        }
+            stage.show();
+        });
 
         // =====================================================
-        // TEXT FIELD
+        // LOGIN TEXT
         // =====================================================
 
-        private TextField createTextField(
-                        String prompt) {
+        Label accountText =
+                new Label(
+                        "Already have an account?");
 
-                TextField field = new TextField();
+        accountText.setStyle(
+                "-fx-text-fill:#666666;"
+                        + "-fx-font-size:12px;");
 
-                field.setPromptText(prompt);
+        Button loginBtn =
+                new Button("Login");
 
-                field.setPrefHeight(40);
-                field.setMaxWidth(350);
+        loginBtn.setStyle(
+                "-fx-background-color:transparent;"
+                        + "-fx-text-fill:#5f331e;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-font-size:12px;");
 
-                return field;
-        }
+        loginBtn.setOnAction(event -> {
 
-        // =====================================================
-        // ALERT
-        // =====================================================
+            LogInPage loginPage =
+                    new LogInPage();
 
-        private void showAlert(
-                        String title,
-                        String message) {
+            stage.setScene(
+                    loginPage.createScene(stage));
 
-                Alert alert = new Alert(
-                                Alert.AlertType.INFORMATION);
+            stage.show();
+        });
 
-                alert.setTitle(title);
-                alert.setHeaderText(null);
-                alert.setContentText(message);
+        HBox loginBox =
+                new HBox(5);
 
-                alert.showAndWait();
-        }
+        loginBox.setAlignment(
+                Pos.CENTER);
 
-        // =====================================================
-        // LEFT PANEL
-        // =====================================================
+        loginBox.getChildren().addAll(
+                accountText,
+                loginBtn);
 
-        private VBox createLeftPanel() {
+        detailsBox.getChildren().addAll(
+                terms,
+                signupBtn,
+                loginBox);
+    }
 
-                VBox leftPanel = new VBox(15);
+    // =========================================================
+    // CREATE TEXT FIELD
+    // =========================================================
 
-                leftPanel.setAlignment(
-                                Pos.CENTER);
+    private TextField createTextField(
+            String prompt) {
 
-                Label title = new Label("Society360");
+        TextField field =
+                new TextField();
 
-                title.setStyle(
-                                "-fx-font-size:42px;" +
-                                                "-fx-font-weight:bold;" +
-                                                "-fx-text-fill:#4e342e;");
+        field.setPromptText(prompt);
 
-                Label subtitle = new Label(
-                                "Smart Society Management System");
+        field.setPrefHeight(40);
+        field.setMaxWidth(350);
 
-                subtitle.setStyle(
-                                "-fx-font-size:16px;" +
-                                                "-fx-text-fill:#5d4037;");
+        field.setStyle(
+                "-fx-background-color:white;"
+                        + "-fx-background-radius:8;"
+                        + "-fx-border-color:#D7CCC8;"
+                        + "-fx-border-radius:8;"
+                        + "-fx-padding:0 12;"
+                        + "-fx-font-size:13px;");
 
-                leftPanel.getChildren().addAll(
-                                title,
-                                subtitle);
+        return field;
+    }
 
-                return leftPanel;
-        }
+    // =========================================================
+    // ALERT
+    // =========================================================
+
+    private void showAlert(
+            String title,
+            String message) {
+
+        Alert alert =
+                new Alert(
+                        Alert.AlertType.INFORMATION);
+
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
+    // =========================================================
+    // LEFT PANEL
+    // =========================================================
+
+    private VBox createLeftPanel() {
+
+        VBox leftPanel =
+                new VBox(15);
+
+        leftPanel.setAlignment(
+                Pos.CENTER);
+
+        Label title =
+                new Label(
+                        "Society360");
+
+        title.setStyle(
+                "-fx-font-size:42px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:#4e342e;");
+
+        Label subtitle =
+                new Label(
+                        "Smart Society Management System");
+
+        subtitle.setStyle(
+                "-fx-font-size:16px;"
+                        + "-fx-text-fill:#5d4037;");
+
+        leftPanel.getChildren().addAll(
+                title,
+                subtitle);
+
+        return leftPanel;
+    }
 }

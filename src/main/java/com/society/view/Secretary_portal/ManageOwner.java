@@ -20,6 +20,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class ManageOwner {
@@ -28,13 +30,13 @@ public class ManageOwner {
     // SCENE
     // =====================================================
 
-    private Scene Owners;
+    private Scene ownerScene;
 
     // =====================================================
     // ROOT
     // =====================================================
 
-    private StackPane rootPane;
+    private StackPane rootStack;
 
     // =====================================================
     // CONTROLLER
@@ -64,8 +66,7 @@ public class ManageOwner {
         // CONTROLLER
         // =====================================================
 
-        ownerController =
-                new OwnerController();
+        ownerController = new OwnerController();
 
         // =====================================================
         // SIDEBAR
@@ -134,7 +135,7 @@ public class ManageOwner {
                 new TextField();
 
         search.setPromptText(
-                "Search owner, flat no., phone..."
+                "Search owner, flat, mobile, email, society..."
         );
 
         search.setPrefHeight(45);
@@ -179,22 +180,18 @@ public class ManageOwner {
 
         // =====================================================
         // REFRESH BUTTON
-        // ONLY REFRESH SYMBOL
         // =====================================================
 
         Button refreshBtn =
                 new Button("⟳");
 
         refreshBtn.setPrefWidth(45);
-
         refreshBtn.setPrefHeight(45);
 
         refreshBtn.setMinWidth(45);
-
         refreshBtn.setMinHeight(45);
 
         refreshBtn.setMaxWidth(45);
-
         refreshBtn.setMaxHeight(45);
 
         refreshBtn.setStyle(
@@ -207,11 +204,8 @@ public class ManageOwner {
                 "-fx-padding:0;"
         );
 
-        Tooltip refreshTooltip =
-                new Tooltip("Refresh");
-
         refreshBtn.setTooltip(
-                refreshTooltip
+                new Tooltip("Refresh")
         );
 
         // =====================================================
@@ -283,20 +277,20 @@ public class ManageOwner {
         // MAIN ROOT
         // =====================================================
 
-        HBox root =
+        HBox mainRoot =
                 new HBox();
 
-        root.setMaxSize(
+        mainRoot.setMaxSize(
                 Double.MAX_VALUE,
                 Double.MAX_VALUE
         );
 
-        root.getChildren().addAll(
+        mainRoot.getChildren().addAll(
                 sidebar,
                 mainvb
         );
 
-        root.setStyle(
+        mainRoot.setStyle(
                 "-fx-background-color:#434141;"
         );
 
@@ -309,15 +303,15 @@ public class ManageOwner {
         // ROOT STACKPANE
         // =====================================================
 
-        rootPane =
+        rootStack =
                 new StackPane();
 
-        rootPane.getChildren().add(
-                root
+        rootStack.getChildren().add(
+                mainRoot
         );
 
         // =====================================================
-        // ADD OWNER BUTTON
+        // ADD OWNER
         // =====================================================
 
         addOwnerBtn.setOnAction(
@@ -325,15 +319,13 @@ public class ManageOwner {
         );
 
         // =====================================================
-        // REFRESH BUTTON
+        // REFRESH
         // =====================================================
 
         refreshBtn.setOnAction(e -> {
 
-            // Clear search
             search.clear();
 
-            // Reload latest data from Firestore
             loadOwners();
 
             System.out.println(
@@ -375,14 +367,14 @@ public class ManageOwner {
 
         Scene scene =
                 new Scene(
-                        rootPane,
+                        rootStack,
                         ScreenSize.getWidth(),
                         ScreenSize.getHeight()
                 );
 
-        Owners = scene;
+        ownerScene = scene;
 
-        return Owners;
+        return ownerScene;
     }
 
     // =====================================================
@@ -422,11 +414,8 @@ public class ManageOwner {
                 continue;
             }
 
-            HBox ownerRow =
-                    createOwnerRow(owner);
-
             ownerList.getChildren().add(
-                    ownerRow
+                    createOwnerRow(owner)
             );
         }
     }
@@ -480,11 +469,19 @@ public class ManageOwner {
                         safe(owner.getStatus())
                                 .toLowerCase();
 
+                // IMPORTANT:
+                // Society name should come from
+                // Owner's society field.
+                String society =
+                        safe(owner.getSociety())
+                                .toLowerCase();
+
                 if (name.contains(text)
                         || flat.contains(text)
                         || mobile.contains(text)
                         || email.contains(text)
-                        || status.contains(text)) {
+                        || status.contains(text)
+                        || society.contains(text)) {
 
                     ownerList.getChildren().add(
                             createOwnerRow(owner)
@@ -523,7 +520,7 @@ public class ManageOwner {
         HBox ownerRow =
                 new HBox(10);
 
-        ownerRow.setPrefHeight(80);
+        ownerRow.setPrefHeight(90);
 
         ownerRow.setMaxWidth(
                 Double.MAX_VALUE
@@ -550,7 +547,6 @@ public class ManageOwner {
                 new Label("👤");
 
         profile.setPrefWidth(45);
-
         profile.setPrefHeight(45);
 
         profile.setAlignment(
@@ -564,15 +560,18 @@ public class ManageOwner {
         );
 
         // =====================================================
-        // NAME
+        // OWNER DETAILS
         // =====================================================
+
+        VBox ownerDetails =
+                new VBox(3);
+
+        ownerDetails.setPrefWidth(220);
 
         Label name =
                 new Label(
                         safe(owner.getName())
                 );
-
-        name.setPrefWidth(200);
 
         name.setStyle(
                 "-fx-font-size:15px;" +
@@ -580,17 +579,40 @@ public class ManageOwner {
                 "-fx-text-fill:#123C36;"
         );
 
+        Label email =
+                new Label(
+                        safe(owner.getEmail())
+                );
+
+        email.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#666666;"
+        );
+
+        ownerDetails.getChildren().addAll(
+                name,
+                email
+        );
+
         // =====================================================
         // FLAT
         // =====================================================
 
+        VBox flatBox =
+                new VBox(2);
+
+        Label flatTitle =
+                new Label("Flat");
+
+        flatTitle.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
         Label flat =
                 new Label(
-                        "Flat: " +
                         safe(owner.getFlat())
                 );
-
-        flat.setPrefWidth(150);
 
         flat.setStyle(
                 "-fx-font-size:14px;" +
@@ -598,38 +620,110 @@ public class ManageOwner {
                 "-fx-text-fill:#555555;"
         );
 
+        flatBox.getChildren().addAll(
+                flatTitle,
+                flat
+        );
+
+        flatBox.setPrefWidth(100);
+
         // =====================================================
         // MOBILE
         // =====================================================
 
+        VBox mobileBox =
+                new VBox(2);
+
+        Label mobileTitle =
+                new Label("Mobile");
+
+        mobileTitle.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
         Label mobile =
                 new Label(
-                        "Mobile: " +
                         safe(owner.getMobile())
                 );
-
-        mobile.setPrefWidth(200);
 
         mobile.setStyle(
                 "-fx-font-size:13px;" +
                 "-fx-text-fill:#555555;"
         );
 
+        mobileBox.getChildren().addAll(
+                mobileTitle,
+                mobile
+        );
+
+        mobileBox.setPrefWidth(150);
+
+        // =====================================================
+        // SOCIETY
+        // =====================================================
+
+        VBox societyBox =
+                new VBox(2);
+
+        Label societyTitle =
+                new Label("Society");
+
+        societyTitle.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
+
+        Label society =
+                new Label(
+                        safe(owner.getSociety())
+                );
+
+        society.setStyle(
+                "-fx-font-size:13px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#56342B;"
+        );
+
+        societyBox.getChildren().addAll(
+                societyTitle,
+                society
+        );
+
+        societyBox.setPrefWidth(180);
+
         // =====================================================
         // STATUS
         // =====================================================
+
+        VBox statusBox =
+                new VBox(2);
+
+        Label statusTitle =
+                new Label("Status");
+
+        statusTitle.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#777777;"
+        );
 
         Label status =
                 new Label(
                         safe(owner.getStatus())
                 );
 
-        status.setPrefWidth(100);
-
         status.setStyle(
-                "-fx-text-fill:#2E9D63;" +
-                "-fx-font-weight:bold;"
+                "-fx-font-size:13px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#2E9D63;"
         );
+
+        statusBox.getChildren().addAll(
+                statusTitle,
+                status
+        );
+
+        statusBox.setPrefWidth(100);
 
         // =====================================================
         // ADD TO ROW
@@ -637,10 +731,11 @@ public class ManageOwner {
 
         ownerRow.getChildren().addAll(
                 profile,
-                name,
-                flat,
-                mobile,
-                status
+                ownerDetails,
+                flatBox,
+                mobileBox,
+                societyBox,
+                statusBox
         );
 
         return ownerRow;
@@ -668,23 +763,28 @@ public class ManageOwner {
         // =====================================================
 
         VBox formBox =
-                new VBox(8);
+                new VBox(7);
 
         formBox.setPadding(
-                new Insets(20)
+                new Insets(18)
         );
 
-        formBox.setPrefWidth(450);
+        formBox.setPrefWidth(430);
 
-        formBox.setMaxWidth(450);
+        formBox.setMaxWidth(430);
 
-        formBox.setMaxHeight(540);
+        formBox.setMaxHeight(
+                Math.min(
+                        ScreenSize.getHeight() - 40,
+                        600
+                )
+        );
 
         formBox.setStyle(
                 "-fx-background-color:white;" +
                 "-fx-background-radius:15;" +
                 "-fx-effect:dropshadow(" +
-                "gaussian, rgba(0,0,0,0.30)," +
+                "gaussian, rgba(0,0,0,0.3)," +
                 "20,0.2,0,5);"
         );
 
@@ -704,9 +804,15 @@ public class ManageOwner {
                         "Add New Owner"
                 );
 
+        popupTitle.setFont(
+                Font.font(
+                        "Georgia",
+                        FontWeight.BOLD,
+                        21
+                )
+        );
+
         popupTitle.setStyle(
-                "-fx-font-size:22px;" +
-                "-fx-font-weight:bold;" +
                 "-fx-text-fill:#123C36;"
         );
 
@@ -721,11 +827,17 @@ public class ManageOwner {
         Button closeBtn =
                 new Button("✕");
 
+        closeBtn.setFont(
+                Font.font(
+                        "Arial",
+                        FontWeight.BOLD,
+                        15
+                )
+        );
+
         closeBtn.setStyle(
                 "-fx-background-color:transparent;" +
                 "-fx-text-fill:#555555;" +
-                "-fx-font-size:16px;" +
-                "-fx-font-weight:bold;" +
                 "-fx-cursor:hand;"
         );
 
@@ -736,7 +848,25 @@ public class ManageOwner {
         );
 
         // =====================================================
-        // NAME
+        // SOCIETY NAME
+        // =====================================================
+
+        Label societyLabel =
+                createFormLabel(
+                        "Society Name"
+                );
+
+        TextField societyField =
+                new TextField();
+
+        societyField.setPromptText(
+                "Enter society name"
+        );
+
+        societyField.setPrefHeight(35);
+
+        // =====================================================
+        // OWNER NAME
         // =====================================================
 
         Label nameLabel =
@@ -820,13 +950,13 @@ public class ManageOwner {
                 new TextField();
 
         statusField.setPromptText(
-                "Enter status (Active / Inactive)"
+                "Active / Inactive"
         );
 
         statusField.setPrefHeight(35);
 
         // =====================================================
-        // CANCEL BUTTON
+        // BUTTONS
         // =====================================================
 
         Button cancelBtn =
@@ -843,10 +973,6 @@ public class ManageOwner {
                 "-fx-cursor:hand;"
         );
 
-        // =====================================================
-        // SAVE BUTTON
-        // =====================================================
-
         Button saveBtn =
                 new Button("Save Owner");
 
@@ -862,19 +988,11 @@ public class ManageOwner {
                 "-fx-cursor:hand;"
         );
 
-        // =====================================================
-        // BUTTON BOX
-        // =====================================================
-
         HBox buttonBox =
                 new HBox(10);
 
         buttonBox.setAlignment(
                 Pos.CENTER_RIGHT
-        );
-
-        buttonBox.setPadding(
-                new Insets(5, 0, 0, 0)
         );
 
         buttonBox.getChildren().addAll(
@@ -883,12 +1001,15 @@ public class ManageOwner {
         );
 
         // =====================================================
-        // FORM CONTENT
+        // FORM
         // =====================================================
 
         formBox.getChildren().addAll(
 
                 headerRow,
+
+                societyLabel,
+                societyField,
 
                 nameLabel,
                 nameField,
@@ -909,7 +1030,7 @@ public class ManageOwner {
         );
 
         // =====================================================
-        // ADD FORM TO OVERLAY
+        // OVERLAY
         // =====================================================
 
         overlay.getChildren().add(
@@ -921,7 +1042,7 @@ public class ManageOwner {
                 Pos.CENTER
         );
 
-        rootPane.getChildren().add(
+        rootStack.getChildren().add(
                 overlay
         );
 
@@ -942,36 +1063,48 @@ public class ManageOwner {
         );
 
         // =====================================================
-        // SAVE
+        // SAVE OWNER
         // =====================================================
 
         saveBtn.setOnAction(e -> {
 
+            String society =
+                    societyField
+                            .getText()
+                            .trim();
+
             String name =
-                    nameField.getText()
+                    nameField
+                            .getText()
                             .trim();
 
             String flat =
-                    flatField.getText()
+                    flatField
+                            .getText()
                             .trim();
 
             String mobile =
-                    mobileField.getText()
+                    mobileField
+                            .getText()
                             .trim();
 
             String email =
-                    emailField.getText()
-                            .trim();
+                    emailField
+                            .getText()
+                            .trim()
+                            .toLowerCase();
 
             String status =
-                    statusField.getText()
+                    statusField
+                            .getText()
                             .trim();
 
             // =================================================
             // VALIDATION
             // =================================================
 
-            if (name.isEmpty()
+            if (society.isEmpty()
+                    || name.isEmpty()
                     || flat.isEmpty()
                     || mobile.isEmpty()
                     || email.isEmpty()
@@ -987,6 +1120,22 @@ public class ManageOwner {
             }
 
             // =================================================
+            // EMAIL VALIDATION
+            // =================================================
+
+            if (!email.contains("@")
+                    || !email.contains(".")) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Invalid Email",
+                        "Please enter a valid email address."
+                );
+
+                return;
+            }
+
+            // =================================================
             // ADD OWNER
             // =================================================
 
@@ -996,7 +1145,8 @@ public class ManageOwner {
                             flat,
                             mobile,
                             email,
-                            status
+                            status,
+                            society
                     );
 
             // =================================================
@@ -1016,15 +1166,15 @@ public class ManageOwner {
                 );
 
                 // Clear fields
+
+                societyField.clear();
                 nameField.clear();
                 flatField.clear();
                 mobileField.clear();
                 emailField.clear();
                 statusField.clear();
 
-                // =================================================
-                // REFRESH FIRESTORE DATA
-                // =================================================
+                // Reload
 
                 loadOwners();
 
@@ -1033,7 +1183,8 @@ public class ManageOwner {
                 showAlert(
                         Alert.AlertType.ERROR,
                         "Error",
-                        "Failed to save owner."
+                        "Failed to save owner.\n" +
+                        "This email may already exist."
                 );
             }
         });
@@ -1065,9 +1216,9 @@ public class ManageOwner {
     private void removeOverlay(
             StackPane overlay) {
 
-        if (rootPane != null) {
+        if (rootStack != null) {
 
-            rootPane.getChildren()
+            rootStack.getChildren()
                     .remove(overlay);
         }
     }

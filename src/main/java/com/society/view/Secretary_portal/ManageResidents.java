@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -23,15 +24,11 @@ public class ManageResidents {
 
     private Scene Resident;
 
-    // =====================================================
+    // =========================================================
     // CREATE SCENE
-    // =====================================================
+    // =========================================================
 
     public Scene createScene(javafx.stage.Stage stage) {
-
-        // =====================================================
-        // CONTROLLER
-        // =====================================================
 
         ResidentController residentController =
                 new ResidentController();
@@ -118,6 +115,11 @@ public class ManageResidents {
                 "-fx-font-size:14px;"
         );
 
+        HBox.setHgrow(
+                search,
+                Priority.ALWAYS
+        );
+
         // =====================================================
         // REFRESH BUTTON
         // =====================================================
@@ -139,7 +141,7 @@ public class ManageResidents {
         );
 
         refreshBtn.setTooltip(
-                new javafx.scene.control.Tooltip(
+                new Tooltip(
                         "Refresh resident data"
                 )
         );
@@ -216,7 +218,7 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // INITIAL LOAD FROM FIRESTORE
+        // INITIAL LOAD
         // =====================================================
 
         loadResidents(
@@ -225,20 +227,17 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // REFRESH BUTTON ACTION
+        // REFRESH
         // =====================================================
 
         refreshBtn.setOnAction(e -> {
 
-            // Clear search
             search.clear();
 
-            // Fetch latest data from Firestore
             loadResidents(
                     residentController,
                     residentList
             );
-
         });
 
         // =====================================================
@@ -537,7 +536,7 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // DARK OVERLAY
+        // OVERLAY
         // =====================================================
 
         VBox overlay =
@@ -584,17 +583,18 @@ public class ManageResidents {
         );
 
         // =====================================================
-        // ADD RESIDENT BUTTON ACTION
+        // ADD RESIDENT
         // =====================================================
 
         addResidentBtn.setOnAction(e -> {
 
             popupLayer.setVisible(true);
 
+            nameField.requestFocus();
         });
 
         // =====================================================
-        // CANCEL BUTTON ACTION
+        // CANCEL
         // =====================================================
 
         cancelBtn.setOnAction(e -> {
@@ -608,33 +608,38 @@ public class ManageResidents {
                     emailField,
                     statusField
             );
-
         });
 
         // =====================================================
-        // SAVE BUTTON ACTION
+        // SAVE RESIDENT
         // =====================================================
 
         saveBtn.setOnAction(e -> {
 
-            // =================================================
-            // GET VALUES
-            // =================================================
-
             String name =
-                    nameField.getText().trim();
+                    cleanValue(
+                            nameField.getText()
+                    );
 
             String flat =
-                    flatField.getText().trim();
+                    cleanValue(
+                            flatField.getText()
+                    );
 
             String mobile =
-                    mobileField.getText().trim();
+                    cleanValue(
+                            mobileField.getText()
+                    );
 
             String email =
-                    emailField.getText().trim();
+                    cleanEmail(
+                            emailField.getText()
+                    );
 
             String status =
-                    statusField.getText().trim();
+                    cleanValue(
+                            statusField.getText()
+                    );
 
             // =================================================
             // VALIDATION
@@ -656,7 +661,22 @@ public class ManageResidents {
             }
 
             // =================================================
-            // CONTROLLER CALL
+            // EMAIL VALIDATION
+            // =================================================
+
+            if (!isValidEmail(email)) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "Invalid Email",
+                        "Please enter a valid email address."
+                );
+
+                return;
+            }
+
+            // =================================================
+            // CONTROLLER
             // =================================================
 
             boolean success =
@@ -680,10 +700,8 @@ public class ManageResidents {
                         "Resident saved successfully!"
                 );
 
-                // Close popup
                 popupLayer.setVisible(false);
 
-                // Clear fields
                 clearFields(
                         nameField,
                         flatField,
@@ -692,7 +710,6 @@ public class ManageResidents {
                         statusField
                 );
 
-                // Refresh Firestore data
                 loadResidents(
                         residentController,
                         residentList
@@ -706,20 +723,21 @@ public class ManageResidents {
                         "Failed to save resident."
                 );
             }
-
         });
 
         // =====================================================
-        // SEARCH FUNCTION
+        // SEARCH
         // =====================================================
 
         search.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
 
                     String searchText =
-                            newValue
-                                    .toLowerCase()
-                                    .trim();
+                            newValue == null
+                                    ? ""
+                                    : newValue
+                                        .toLowerCase()
+                                        .trim();
 
                     residentList
                             .getChildren()
@@ -728,6 +746,10 @@ public class ManageResidents {
                     List<Resident> residents =
                             residentController
                                     .getAllResidents();
+
+                    // =================================================
+                    // NO RESIDENTS
+                    // =================================================
 
                     if (residents == null
                             || residents.isEmpty()) {
@@ -752,11 +774,15 @@ public class ManageResidents {
                     }
 
                     // =================================================
-                    // SEARCH EACH RESIDENT
+                    // SEARCH
                     // =================================================
 
                     for (Resident resident :
                             residents) {
+
+                        if (resident == null) {
+                            continue;
+                        }
 
                         String name =
                                 resident.getName() == null
@@ -779,9 +805,30 @@ public class ManageResidents {
                                             .getMobile()
                                             .toLowerCase();
 
-                        if (name.contains(searchText)
+                        String email =
+                                resident.getEmail() == null
+                                        ? ""
+                                        : resident
+                                            .getEmail()
+                                            .toLowerCase();
+
+                        String status =
+                                resident.getStatus() == null
+                                        ? ""
+                                        : resident
+                                            .getStatus()
+                                            .toLowerCase();
+
+                        // =================================================
+                        // SEARCH NAME / FLAT / MOBILE / EMAIL / STATUS
+                        // =================================================
+
+                        if (searchText.isEmpty()
+                                || name.contains(searchText)
                                 || flat.contains(searchText)
-                                || mobile.contains(searchText)) {
+                                || mobile.contains(searchText)
+                                || email.contains(searchText)
+                                || status.contains(searchText)) {
 
                             HBox row =
                                     createResidentRow(
@@ -890,6 +937,22 @@ public class ManageResidents {
         for (Resident resident :
                 residents) {
 
+            if (resident == null) {
+                continue;
+            }
+
+            /*
+             * Email is loaded inside Resident model.
+             *
+             * It is NOT displayed in the UI.
+             *
+             * Maintenance and other modules can use:
+             *
+             * resident.getEmail()
+             *
+             * to identify this resident.
+             */
+
             HBox residentRow =
                     createResidentRow(
                             resident.getName(),
@@ -919,14 +982,49 @@ public class ManageResidents {
     ) {
 
         nameField.clear();
-
         flatField.clear();
-
         mobileField.clear();
-
         emailField.clear();
-
         statusField.clear();
+    }
+
+    // =========================================================
+    // CLEAN VALUE
+    // =========================================================
+
+    private String cleanValue(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value.trim();
+    }
+
+    // =========================================================
+    // CLEAN EMAIL
+    // =========================================================
+
+    private String cleanEmail(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value
+                .trim()
+                .toLowerCase();
+    }
+
+    // =========================================================
+    // EMAIL VALIDATION
+    // =========================================================
+
+    private boolean isValidEmail(String email) {
+
+        return email.matches(
+                "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+        );
     }
 
     // =========================================================
@@ -1031,11 +1129,12 @@ public class ManageResidents {
         Label flat =
                 new Label(
                         "Flat: "
-                                + (
+                                +
+                                (
                                     flatNumber == null
                                             ? ""
                                             : flatNumber
-                                  )
+                                )
                 );
 
         flat.setPrefWidth(150);
@@ -1053,11 +1152,12 @@ public class ManageResidents {
         Label mobileLabel =
                 new Label(
                         "Mobile: "
-                                + (
+                                +
+                                (
                                     mobile == null
                                             ? ""
                                             : mobile
-                                  )
+                                )
                 );
 
         mobileLabel.setPrefWidth(220);

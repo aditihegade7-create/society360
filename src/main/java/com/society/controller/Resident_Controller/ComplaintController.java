@@ -1,6 +1,5 @@
 package com.society.controller.Resident_Controller;
 
-
 import com.society.dao.Resident_dao.ComplaintDAO;
 import com.society.model.Resident_model.ComplaintModel;
 import com.society.service.resident_service.ComplaintService;
@@ -11,15 +10,25 @@ public class ComplaintController {
 
     private final ComplaintService complaintService;
 
-    public ComplaintController(ComplaintDAO complaintDAO) {
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
+
+    public ComplaintController(
+            ComplaintDAO complaintDAO) {
 
         this.complaintService =
-                new ComplaintService(complaintDAO);
+                new ComplaintService(
+                        complaintDAO
+                );
     }
 
-    // ================= SUBMIT COMPLAINT =================
+    // =========================================================
+    // SUBMIT COMPLAINT
+    // =========================================================
 
     public ComplaintModel submitComplaint(
+            String email,
             String flatNumber,
             String category,
             String title,
@@ -29,6 +38,7 @@ public class ComplaintController {
             throws Exception {
 
         return complaintService.createComplaint(
+                email,
                 flatNumber,
                 category,
                 title,
@@ -38,18 +48,22 @@ public class ComplaintController {
         );
     }
 
-    // ================= GET MY COMPLAINTS =================
+    // =========================================================
+    // GET MY COMPLAINTS
+    // =========================================================
 
     public List<ComplaintModel> getMyComplaints(
-            String flatNumber)
+            String email)
             throws Exception {
 
         return complaintService.getMyComplaints(
-                flatNumber
+                email
         );
     }
 
-    // ================= GET ALL =================
+    // =========================================================
+    // GET ALL COMPLAINTS
+    // =========================================================
 
     public List<ComplaintModel> getAllComplaints()
             throws Exception {
@@ -57,18 +71,33 @@ public class ComplaintController {
         return complaintService.getAllComplaints();
     }
 
-    // ================= UPDATE STATUS =================
+    // =========================================================
+    // GET BY FLAT
+    // =========================================================
+
+    public List<ComplaintModel> getComplaintsByFlat(
+            String flatNumber)
+            throws Exception {
+
+        return complaintService.getComplaintsByFlat(
+                flatNumber
+        );
+    }
+
+    // =========================================================
+    // UPDATE STATUS
+    // =========================================================
 
     public void updateStatus(
+            String email,
             String complaintId,
             String status)
             throws Exception {
 
         complaintService.updateStatus(
+                email,
                 complaintId,
                 status
         );
     }
 }
-
-

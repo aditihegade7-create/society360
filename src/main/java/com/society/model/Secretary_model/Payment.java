@@ -3,16 +3,23 @@ package com.society.model.Secretary_model;
 public class Payment {
 
     // =========================================================
-    // AMENITY DETAILS
+    // AMENITY DATA
     // =========================================================
 
+    private String amenityId;
     private String amenityName;
     private String price;
     private String description;
     private String availability;
 
     // =========================================================
-    // BOOKING DETAILS
+    // USER EMAIL
+    // =========================================================
+
+    private String email;
+
+    // =========================================================
+    // BOOKING DATA
     // =========================================================
 
     private String bookingId;
@@ -21,17 +28,22 @@ public class Payment {
     private String bookingDate;
     private String startTime;
     private String endTime;
-    private String status;
 
     // =========================================================
-    // PAYMENT DETAILS
+    // PAYMENT DATA
     // =========================================================
 
     private String paymentAmount;
     private String paymentStatus;
 
     // =========================================================
-    // REQUIRED BY FIRESTORE
+    // BOOKING STATUS
+    // =========================================================
+
+    private String status;
+
+    // =========================================================
+    // DEFAULT CONSTRUCTOR
     // =========================================================
 
     public Payment() {
@@ -58,7 +70,6 @@ public class Payment {
     // =========================================================
 
     public Payment(
-            String bookingId,
             String residentName,
             String flatNo,
             String amenityName,
@@ -67,7 +78,6 @@ public class Payment {
             String endTime,
             String status) {
 
-        this.bookingId = bookingId;
         this.residentName = residentName;
         this.flatNo = flatNo;
         this.amenityName = amenityName;
@@ -78,8 +88,16 @@ public class Payment {
     }
 
     // =========================================================
-    // GETTER / SETTER - AMENITY NAME
+    // GETTERS / SETTERS
     // =========================================================
+
+    public String getAmenityId() {
+        return amenityId;
+    }
+
+    public void setAmenityId(String amenityId) {
+        this.amenityId = amenityId;
+    }
 
     public String getAmenityName() {
         return amenityName;
@@ -89,10 +107,6 @@ public class Payment {
         this.amenityName = amenityName;
     }
 
-    // =========================================================
-    // GETTER / SETTER - PRICE
-    // =========================================================
-
     public String getPrice() {
         return price;
     }
@@ -100,10 +114,6 @@ public class Payment {
     public void setPrice(String price) {
         this.price = price;
     }
-
-    // =========================================================
-    // GETTER / SETTER - DESCRIPTION
-    // =========================================================
 
     public String getDescription() {
         return description;
@@ -113,10 +123,6 @@ public class Payment {
         this.description = description;
     }
 
-    // =========================================================
-    // GETTER / SETTER - AVAILABILITY
-    // =========================================================
-
     public String getAvailability() {
         return availability;
     }
@@ -125,9 +131,13 @@ public class Payment {
         this.availability = availability;
     }
 
-    // =========================================================
-    // GETTER / SETTER - BOOKING ID
-    // =========================================================
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getBookingId() {
         return bookingId;
@@ -137,10 +147,6 @@ public class Payment {
         this.bookingId = bookingId;
     }
 
-    // =========================================================
-    // GETTER / SETTER - RESIDENT NAME
-    // =========================================================
-
     public String getResidentName() {
         return residentName;
     }
@@ -148,10 +154,6 @@ public class Payment {
     public void setResidentName(String residentName) {
         this.residentName = residentName;
     }
-
-    // =========================================================
-    // GETTER / SETTER - FLAT NO
-    // =========================================================
 
     public String getFlatNo() {
         return flatNo;
@@ -161,10 +163,6 @@ public class Payment {
         this.flatNo = flatNo;
     }
 
-    // =========================================================
-    // GETTER / SETTER - BOOKING DATE
-    // =========================================================
-
     public String getBookingDate() {
         return bookingDate;
     }
@@ -172,10 +170,6 @@ public class Payment {
     public void setBookingDate(String bookingDate) {
         this.bookingDate = bookingDate;
     }
-
-    // =========================================================
-    // GETTER / SETTER - START TIME
-    // =========================================================
 
     public String getStartTime() {
         return startTime;
@@ -185,10 +179,6 @@ public class Payment {
         this.startTime = startTime;
     }
 
-    // =========================================================
-    // GETTER / SETTER - END TIME
-    // =========================================================
-
     public String getEndTime() {
         return endTime;
     }
@@ -196,22 +186,6 @@ public class Payment {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
-
-    // =========================================================
-    // GETTER / SETTER - STATUS
-    // =========================================================
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    // =========================================================
-    // GETTER / SETTER - PAYMENT AMOUNT
-    // =========================================================
 
     public String getPaymentAmount() {
         return paymentAmount;
@@ -221,10 +195,6 @@ public class Payment {
         this.paymentAmount = paymentAmount;
     }
 
-    // =========================================================
-    // GETTER / SETTER - PAYMENT STATUS
-    // =========================================================
-
     public String getPaymentStatus() {
         return paymentStatus;
     }
@@ -233,27 +203,11 @@ public class Payment {
         this.paymentStatus = paymentStatus;
     }
 
-    // =========================================================
-    // TO STRING
-    // =========================================================
+    public String getStatus() {
+        return status;
+    }
 
-    @Override
-    public String toString() {
-
-        return "Payment{" +
-                "amenityName='" + amenityName + '\'' +
-                ", price='" + price + '\'' +
-                ", description='" + description + '\'' +
-                ", availability='" + availability + '\'' +
-                ", bookingId='" + bookingId + '\'' +
-                ", residentName='" + residentName + '\'' +
-                ", flatNo='" + flatNo + '\'' +
-                ", bookingDate='" + bookingDate + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", status='" + status + '\'' +
-                ", paymentAmount='" + paymentAmount + '\'' +
-                ", paymentStatus='" + paymentStatus + '\'' +
-                '}';
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -634,7 +634,7 @@ public class LogInPage {
             )) {
 
                 SecretaryDashboard dashboard =
-                        new SecretaryDashboard();
+                        new SecretaryDashboard(user);
 
                 stage.setScene(
                         dashboard.createScene(

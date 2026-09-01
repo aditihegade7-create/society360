@@ -6,26 +6,23 @@ import com.society.model.Secretary_model.Guard;
 
 public interface GuardDao {
 
-    // =====================================================
-    // ADD GUARD
-    // =====================================================
-
+    // Add Guard
     boolean addGuard(Guard guard);
 
-    // =====================================================
-    // FETCH ALL GUARDS
-    // =====================================================
-
+    // All Guards
     List<Guard> getAllGuards();
 
-    // =====================================================
-    // UPDATE GUARD
-    // =====================================================
+    // Guards of specific Society
+    List<Guard> getGuardsBySociety(String society);
 
+    // Update Guard
     boolean updateGuard(
             String id,
             String shift,
             String status,
             String assignedGate
     );
+
+    // Guard by Email
+    Guard getGuardByEmail(String email);
 }

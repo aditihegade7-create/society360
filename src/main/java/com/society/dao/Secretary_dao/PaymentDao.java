@@ -1,13 +1,18 @@
 package com.society.dao.Secretary_dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 import com.society.config.FirebaseConfig;
 import com.society.model.Secretary_model.Payment;
 
@@ -17,17 +22,14 @@ public class PaymentDao {
     // FIRESTORE
     // =========================================================
 
-    private Firestore firestore;
+    private final Firestore firestore;
 
     // =========================================================
-    // COLLECTION NAMES
+    // SECRETARY EMAIL
     // =========================================================
 
-    private static final String AMENITY_COLLECTION =
-            "Amenities";
-
-    private static final String BOOKING_COLLECTION =
-            "Payments";
+    private static final String SECRETARY_EMAIL =
+            "aditi@gmail.com";
 
     // =========================================================
     // CONSTRUCTOR
@@ -38,49 +40,145 @@ public class PaymentDao {
         firestore = FirebaseConfig.getFirestore();
 
         System.out.println(
-                "PaymentDao: Firestore connected."
+                "======================================"
         );
+
+        System.out.println(
+                "PaymentDao initialized"
+        );
+
+        System.out.println(
+                "Secretary Email = " + SECRETARY_EMAIL
+        );
+
+        System.out.println(
+                "======================================"
+        );
+    }
+
+    // =========================================================
+    // NORMALIZE EMAIL
+    // =========================================================
+
+    private String normalizeEmail(String email) {
+
+        if (email == null) {
+            return "";
+        }
+
+        return email.trim().toLowerCase();
     }
 
     // =========================================================
     // ADD AMENITY
     // =========================================================
 
-    public boolean addAmenity(Payment payment) {
+    public boolean addAmenity(
+            String name,
+            String price,
+            String description,
+            String availability) {
 
         try {
 
-            if (payment == null) {
-
-                System.out.println(
-                        "PaymentDao: Amenity is null."
-                );
-
+            if (name == null || name.trim().isEmpty()) {
                 return false;
             }
 
-            // -------------------------------------------------
-            // ADD DOCUMENT
-            // -------------------------------------------------
+            if (price == null || price.trim().isEmpty()) {
+                return false;
+            }
 
-            DocumentReference document =
+            if (description == null
+                    || description.trim().isEmpty()) {
+                return false;
+            }
+
+            if (availability == null
+                    || availability.trim().isEmpty()) {
+                return false;
+            }
+
+            String amenityId =
+                    UUID.randomUUID().toString();
+
+            Map<String, Object> data =
+                    new HashMap<>();
+
+            data.put(
+                    "amenityId",
+                    amenityId
+            );
+
+            data.put(
+                    "amenityName",
+                    name.trim()
+            );
+
+            data.put(
+                    "price",
+                    price.trim()
+            );
+
+            data.put(
+                    "description",
+                    description.trim()
+            );
+
+            data.put(
+                    "availability",
+                    availability.trim()
+            );
+
+            data.put(
+                    "createdByEmail",
+                    SECRETARY_EMAIL
+            );
+
+            // =====================================================
+            // FIRESTORE PATH
+            // =====================================================
+            //
+            // Amenities
+            //    / aditi@gmail.com
+            //        / amenities
+            //            / amenityId
+            //
+            // =====================================================
+
+            DocumentReference amenityRef =
                     firestore
-                            .collection(AMENITY_COLLECTION)
-                            .document();
+                            .collection("Amenities")
+                            .document(SECRETARY_EMAIL)
+                            .collection("amenities")
+                            .document(amenityId);
 
-            // -------------------------------------------------
-            // SAVE DATA
-            // -------------------------------------------------
-
-            document.set(payment).get();
+            amenityRef
+                    .set(data)
+                    .get();
 
             System.out.println(
-                    "Amenity added successfully."
+                    "======================================"
             );
 
             System.out.println(
-                    "Amenity ID: "
-                            + document.getId()
+                    "AMENITY SAVED SUCCESSFULLY"
+            );
+
+            System.out.println(
+                    "Amenity Name = " + name
+            );
+
+            System.out.println(
+                    "Amenity ID = " + amenityId
+            );
+
+            System.out.println(
+                    "Path = " + amenityRef.getPath()
+            );
+
+            System.out.println(
+                    "======================================"
             );
 
             return true;
@@ -88,7 +186,7 @@ public class PaymentDao {
         } catch (Exception e) {
 
             System.out.println(
-                    "PaymentDao: Error adding amenity."
+                    "ERROR WHILE ADDING AMENITY"
             );
 
             e.printStackTrace();
@@ -103,335 +201,835 @@ public class PaymentDao {
 
     public List<Payment> getAllAmenities() {
 
-        List<Payment> amenities =
+        List<Payment> list =
                 new ArrayList<>();
 
         try {
 
-            ApiFuture<QuerySnapshot> future =
-                    firestore
-                            .collection(AMENITY_COLLECTION)
-                            .get();
+            String secretaryEmail =
+                    normalizeEmail(SECRETARY_EMAIL);
 
             QuerySnapshot snapshot =
-                    future.get();
+                    firestore
+                            .collection("Amenities")
+                            .document(secretaryEmail)
+                            .collection("amenities")
+                            .get()
+                            .get();
 
-            for (DocumentSnapshot document :
+            System.out.println(
+                    "======================================"
+            );
+
+            System.out.println(
+                    "FETCHING AMENITIES"
+            );
+
+            System.out.println(
+                    "Secretary = " + secretaryEmail
+            );
+
+            System.out.println(
+                    "Total Amenities = " + snapshot.size()
+            );
+
+            System.out.println(
+                    "======================================"
+            );
+
+            for (QueryDocumentSnapshot document :
                     snapshot.getDocuments()) {
 
                 Payment payment =
-                        document.toObject(
-                                Payment.class
-                        );
+                        new Payment();
 
-                if (payment != null) {
+                payment.setAmenityId(
+                        getString(
+                                document,
+                                "amenityId"
+                        )
+                );
 
-                    payment.setBookingId(
+                // Fallback to Firestore document ID
+                if (payment.getAmenityId() == null
+                        || payment.getAmenityId()
+                                .trim()
+                                .isEmpty()) {
+
+                    payment.setAmenityId(
                             document.getId()
                     );
-
-                    amenities.add(payment);
                 }
-            }
 
-            System.out.println(
-                    "Amenities fetched: "
-                            + amenities.size()
-            );
+                payment.setAmenityName(
+                        getString(
+                                document,
+                                "amenityName"
+                        )
+                );
 
-        } catch (Exception e) {
+                payment.setPrice(
+                        getString(
+                                document,
+                                "price"
+                        )
+                );
 
-            System.out.println(
-                    "PaymentDao: Error fetching amenities."
-            );
+                payment.setDescription(
+                        getString(
+                                document,
+                                "description"
+                        )
+                );
 
-            e.printStackTrace();
-        }
+                payment.setAvailability(
+                        getString(
+                                document,
+                                "availability"
+                        )
+                );
 
-        return amenities;
-    }
-
-    // =========================================================
-    // ADD BOOKING
-    // =========================================================
-
-    public boolean addBooking(Payment payment) {
-
-        try {
-
-            if (payment == null) {
+                list.add(payment);
 
                 System.out.println(
-                        "PaymentDao: Booking is null."
-                );
-
-                return false;
-            }
-
-            // -------------------------------------------------
-            // CREATE DOCUMENT
-            // -------------------------------------------------
-
-            DocumentReference document =
-                    firestore
-                            .collection(BOOKING_COLLECTION)
-                            .document();
-
-            // -------------------------------------------------
-            // SET DOCUMENT ID IN MODEL
-            // -------------------------------------------------
-
-            payment.setBookingId(
-                    document.getId()
-            );
-
-            // -------------------------------------------------
-            // DEFAULT STATUS
-            // -------------------------------------------------
-
-            if (payment.getStatus() == null
-                    || payment.getStatus()
-                    .trim()
-                    .isEmpty()) {
-
-                payment.setStatus(
-                        "Pending"
+                        "Amenity = "
+                                + payment.getAmenityName()
+                                + " | ID = "
+                                + payment.getAmenityId()
                 );
             }
-
-            // -------------------------------------------------
-            // SAVE
-            // -------------------------------------------------
-
-            document.set(payment).get();
-
-            System.out.println(
-                    "Booking added successfully."
-            );
-
-            System.out.println(
-                    "Booking ID: "
-                            + document.getId()
-            );
-
-            return true;
 
         } catch (Exception e) {
 
             System.out.println(
-                    "PaymentDao: Error adding booking."
+                    "ERROR WHILE FETCHING AMENITIES"
             );
 
             e.printStackTrace();
-
-            return false;
         }
+
+        return list;
     }
 
     // =========================================================
     // GET ALL BOOKINGS
     // =========================================================
+    //
+    // THIS IS THE IMPORTANT METHOD.
+    //
+    // It does NOT depend on newly-created amenities.
+    //
+    // It manually goes through:
+    //
+    // Amenities
+    //    -> secretary email
+    //       -> amenities
+    //          -> EVERY amenity
+    //             -> bookings
+    //                -> EVERY resident
+    //
+    // Therefore old + new amenities both work.
+    //
+    // =========================================================
 
     public List<Payment> getAllBookings() {
 
-        List<Payment> bookings =
+        List<Payment> list =
                 new ArrayList<>();
 
         try {
 
-            ApiFuture<QuerySnapshot> future =
+            String secretaryEmail =
+                    normalizeEmail(SECRETARY_EMAIL);
+
+            // =====================================================
+            // GET ALL AMENITIES
+            // =====================================================
+
+            QuerySnapshot amenitiesSnapshot =
                     firestore
-                            .collection(BOOKING_COLLECTION)
+                            .collection("Amenities")
+                            .document(secretaryEmail)
+                            .collection("amenities")
+                            .get()
                             .get();
 
-            QuerySnapshot snapshot =
-                    future.get();
+            System.out.println(
+                    "=========================================="
+            );
 
-            for (DocumentSnapshot document :
-                    snapshot.getDocuments()) {
+            System.out.println(
+                    "FETCHING ALL BOOKINGS FOR SECRETARY"
+            );
 
-                Payment payment =
-                        document.toObject(
-                                Payment.class
+            System.out.println(
+                    "Secretary Email = "
+                            + secretaryEmail
+            );
+
+            System.out.println(
+                    "Amenities Found = "
+                            + amenitiesSnapshot.size()
+            );
+
+            System.out.println(
+                    "=========================================="
+            );
+
+            // =====================================================
+            // LOOP THROUGH EVERY AMENITY
+            // =====================================================
+
+            for (QueryDocumentSnapshot amenityDocument :
+                    amenitiesSnapshot.getDocuments()) {
+
+                String amenityId =
+                        getString(
+                                amenityDocument,
+                                "amenityId"
                         );
 
-                if (payment != null) {
+                if (amenityId.isEmpty()) {
 
-                    // -----------------------------------------
-                    // VERY IMPORTANT
-                    // -----------------------------------------
-                    // Firestore document ID is stored as
-                    // bookingId.
-                    //
-                    // This is required when Accept / Reject
-                    // button is clicked.
-                    // -----------------------------------------
+                    amenityId =
+                            amenityDocument.getId();
+                }
 
-                    payment.setBookingId(
-                            document.getId()
-                    );
+                String amenityName =
+                        getString(
+                                amenityDocument,
+                                "amenityName"
+                        );
 
-                    bookings.add(payment);
+                System.out.println(
+                        "------------------------------------------"
+                );
+
+                System.out.println(
+                        "Checking Amenity:"
+                );
+
+                System.out.println(
+                        "Amenity Name = "
+                                + amenityName
+                );
+
+                System.out.println(
+                        "Amenity ID = "
+                                + amenityId
+                );
+
+                // =================================================
+                // BOOKINGS SUBCOLLECTION
+                // =================================================
+
+                QuerySnapshot bookingsSnapshot =
+                        amenityDocument
+                                .getReference()
+                                .collection("bookings")
+                                .get()
+                                .get();
+
+                System.out.println(
+                        "Bookings Found = "
+                                + bookingsSnapshot.size()
+                );
+
+                // =================================================
+                // LOOP THROUGH EVERY BOOKING
+                // =================================================
+
+                for (QueryDocumentSnapshot bookingDocument :
+                        bookingsSnapshot.getDocuments()) {
+
+                    Payment payment =
+                            convertBooking(
+                                    bookingDocument,
+                                    amenityId,
+                                    amenityName
+                            );
+
+                    if (payment != null) {
+
+                        list.add(payment);
+
+                        System.out.println(
+                                "BOOKING FETCHED"
+                        );
+
+                        System.out.println(
+                                "Booking ID = "
+                                        + payment
+                                                .getBookingId()
+                        );
+
+                        System.out.println(
+                                "Resident = "
+                                        + payment
+                                                .getResidentName()
+                        );
+
+                        System.out.println(
+                                "Resident Email = "
+                                        + payment
+                                                .getEmail()
+                        );
+
+                        System.out.println(
+                                "Amenity = "
+                                        + payment
+                                                .getAmenityName()
+                        );
+
+                        System.out.println(
+                                "Date = "
+                                        + payment
+                                                .getBookingDate()
+                        );
+
+                        System.out.println(
+                                "Status = "
+                                        + payment
+                                                .getStatus()
+                        );
+
+                        System.out.println(
+                                "------------------------------------------"
+                        );
+                    }
                 }
             }
 
             System.out.println(
-                    "Bookings fetched: "
-                            + bookings.size()
+                    "=========================================="
+            );
+
+            System.out.println(
+                    "TOTAL BOOKINGS FETCHED = "
+                            + list.size()
+            );
+
+            System.out.println(
+                    "=========================================="
             );
 
         } catch (Exception e) {
 
             System.out.println(
-                    "PaymentDao: Error fetching bookings."
+                    "=========================================="
+            );
+
+            System.out.println(
+                    "ERROR WHILE FETCHING ALL BOOKINGS"
+            );
+
+            System.out.println(
+                    "=========================================="
             );
 
             e.printStackTrace();
         }
 
-        return bookings;
+        return list;
     }
 
     // =========================================================
-    // CHECK SLOT BOOKED
+    // CONVERT BOOKING DOCUMENT
     // =========================================================
 
-    public boolean isSlotBooked(
-            String amenityName,
-            String bookingDate,
-            String startTime,
-            String endTime) {
+    private Payment convertBooking(
+            DocumentSnapshot document,
+            String amenityId,
+            String amenityName) {
 
         try {
 
-            QuerySnapshot snapshot =
-                    firestore
-                            .collection(BOOKING_COLLECTION)
-                            .whereEqualTo(
-                                    "amenityName",
-                                    amenityName
-                            )
-                            .whereEqualTo(
-                                    "bookingDate",
-                                    bookingDate
-                            )
-                            .whereEqualTo(
-                                    "startTime",
-                                    startTime
-                            )
-                            .whereEqualTo(
-                                    "endTime",
-                                    endTime
-                            )
-                            .get()
-                            .get();
+            Payment payment =
+                    new Payment();
 
-            return !snapshot.isEmpty();
+            // =====================================================
+            // BOOKING ID
+            // =====================================================
+
+            String bookingId =
+                    getString(
+                            document,
+                            "bookingId"
+                    );
+
+            if (bookingId.isEmpty()) {
+
+                // fallback
+                bookingId =
+                        document.getId();
+            }
+
+            payment.setBookingId(
+                    bookingId
+            );
+
+            // =====================================================
+            // AMENITY ID
+            // =====================================================
+
+            String storedAmenityId =
+                    getString(
+                            document,
+                            "amenityId"
+                    );
+
+            if (storedAmenityId.isEmpty()) {
+
+                storedAmenityId =
+                        amenityId;
+            }
+
+            payment.setAmenityId(
+                    storedAmenityId
+            );
+
+            // =====================================================
+            // AMENITY NAME
+            // =====================================================
+
+            String storedAmenityName =
+                    getString(
+                            document,
+                            "amenityName"
+                    );
+
+            if (storedAmenityName.isEmpty()) {
+
+                storedAmenityName =
+                        amenityName;
+            }
+
+            payment.setAmenityName(
+                    storedAmenityName
+            );
+
+            // =====================================================
+            // RESIDENT NAME
+            // =====================================================
+
+            payment.setResidentName(
+                    getString(
+                            document,
+                            "residentName"
+                    )
+            );
+
+            // =====================================================
+            // RESIDENT EMAIL
+            // =====================================================
+
+            String residentEmail =
+                    getString(
+                            document,
+                            "residentEmail"
+                    );
+
+            /*
+             * Some of your old bookings may not have
+             * residentEmail field.
+             *
+             * In that case:
+             *
+             * document ID = resident email
+             */
+
+            if (residentEmail.isEmpty()) {
+
+                residentEmail =
+                        document.getId();
+            }
+
+            payment.setEmail(
+                    normalizeEmail(
+                            residentEmail
+                    )
+            );
+
+            // =====================================================
+            // FLAT NO
+            // =====================================================
+
+            payment.setFlatNo(
+                    getString(
+                            document,
+                            "flatNo"
+                    )
+            );
+
+            // =====================================================
+            // BOOKING DATE
+            // =====================================================
+
+            payment.setBookingDate(
+                    getString(
+                            document,
+                            "bookingDate"
+                    )
+            );
+
+            // =====================================================
+            // START TIME
+            // =====================================================
+
+            payment.setStartTime(
+                    getString(
+                            document,
+                            "startTime"
+                    )
+            );
+
+            // =====================================================
+            // END TIME
+            // =====================================================
+
+            payment.setEndTime(
+                    getString(
+                            document,
+                            "endTime"
+                    )
+            );
+
+            // =====================================================
+            // PAYMENT AMOUNT
+            // =====================================================
+
+            payment.setPaymentAmount(
+                    getString(
+                            document,
+                            "paymentAmount"
+                    )
+            );
+
+            // =====================================================
+            // PAYMENT STATUS
+            // =====================================================
+
+            String paymentStatus =
+                    getString(
+                            document,
+                            "paymentStatus"
+                    );
+
+            payment.setPaymentStatus(
+                    paymentStatus
+            );
+
+            // =====================================================
+            // BOOKING STATUS
+            // =====================================================
+
+            String bookingStatus =
+                    getString(
+                            document,
+                            "bookingStatus"
+                    );
+
+            if (bookingStatus.isEmpty()) {
+
+                // fallback if old data uses status
+                bookingStatus =
+                        getString(
+                                document,
+                                "status"
+                        );
+            }
+
+            if (bookingStatus.isEmpty()) {
+
+                bookingStatus =
+                        "PENDING";
+            }
+
+            payment.setStatus(
+                    bookingStatus
+                            .trim()
+                            .toUpperCase()
+            );
+
+            return payment;
 
         } catch (Exception e) {
 
             System.out.println(
-                    "PaymentDao: Error checking slot."
+                    "Error converting booking document:"
             );
 
             e.printStackTrace();
 
-            return false;
+            return null;
         }
     }
 
     // =========================================================
     // UPDATE BOOKING STATUS
     // =========================================================
+    //
+    // We first find the booking inside:
+    //
+    // Amenities
+    //    -> secretary
+    //       -> amenities
+    //          -> amenity
+    //             -> bookings
+    //
+    // =========================================================
 
     public boolean updateBookingStatus(
+            String email,
             String bookingId,
-            String status) {
+            String newStatus) {
 
         try {
 
-            // -------------------------------------------------
-            // VALIDATION
-            // -------------------------------------------------
+            email =
+                    normalizeEmail(email);
+
+            if (email.isEmpty()) {
+
+                System.out.println(
+                        "DAO ERROR: Email is empty."
+                );
+
+                return false;
+            }
 
             if (bookingId == null
                     || bookingId.trim().isEmpty()) {
 
                 System.out.println(
-                        "PaymentDao: Booking ID is empty."
+                        "DAO ERROR: Booking ID is empty."
                 );
 
                 return false;
             }
 
-            if (status == null
-                    || status.trim().isEmpty()) {
+            if (newStatus == null
+                    || newStatus.trim().isEmpty()) {
 
                 System.out.println(
-                        "PaymentDao: Status is empty."
+                        "DAO ERROR: Status is empty."
                 );
 
                 return false;
             }
 
-            // -------------------------------------------------
-            // DOCUMENT REFERENCE
-            // -------------------------------------------------
+            bookingId =
+                    bookingId.trim();
 
-            DocumentReference document =
+            newStatus =
+                    newStatus
+                            .trim()
+                            .toUpperCase();
+
+            if (!newStatus.equals("ACCEPTED")
+                    && !newStatus.equals("REJECTED")) {
+
+                System.out.println(
+                        "DAO ERROR: Invalid status = "
+                                + newStatus
+                );
+
+                return false;
+            }
+
+            // =====================================================
+            // GET ALL AMENITIES
+            // =====================================================
+
+            QuerySnapshot amenitiesSnapshot =
                     firestore
-                            .collection(BOOKING_COLLECTION)
+                            .collection("Amenities")
                             .document(
-                                    bookingId
+                                    normalizeEmail(
+                                            SECRETARY_EMAIL
+                                    )
+                            )
+                            .collection("amenities")
+                            .get()
+                            .get();
+
+            // =====================================================
+            // SEARCH BOOKING
+            // =====================================================
+
+            for (QueryDocumentSnapshot amenityDocument :
+                    amenitiesSnapshot.getDocuments()) {
+
+                QuerySnapshot bookingsSnapshot =
+                        amenityDocument
+                                .getReference()
+                                .collection("bookings")
+                                .get()
+                                .get();
+
+                for (QueryDocumentSnapshot bookingDocument :
+                        bookingsSnapshot.getDocuments()) {
+
+                    String firestoreBookingId =
+                            getString(
+                                    bookingDocument,
+                                    "bookingId"
                             );
 
-            // -------------------------------------------------
-            // CHECK DOCUMENT
-            // -------------------------------------------------
+                    String residentEmail =
+                            getString(
+                                    bookingDocument,
+                                    "residentEmail"
+                            );
 
-            DocumentSnapshot snapshot =
-                    document.get().get();
+                    // Old booking fallback
+                    if (residentEmail.isEmpty()) {
 
-            if (!snapshot.exists()) {
+                        residentEmail =
+                                bookingDocument.getId();
+                    }
 
-                System.out.println(
-                        "PaymentDao: Booking not found."
-                );
+                    residentEmail =
+                            normalizeEmail(
+                                    residentEmail
+                            );
 
-                return false;
+                    // =================================================
+                    // MATCH
+                    // =================================================
+
+                    if (bookingId.equals(
+                            firestoreBookingId)
+                            && email.equals(
+                                    residentEmail)) {
+
+                        DocumentReference bookingRef =
+                                bookingDocument
+                                        .getReference();
+
+                        System.out.println(
+                                "=========================================="
+                        );
+
+                        System.out.println(
+                                "UPDATING BOOKING"
+                        );
+
+                        System.out.println(
+                                "Resident Email = "
+                                        + email
+                        );
+
+                        System.out.println(
+                                "Booking ID = "
+                                        + bookingId
+                        );
+
+                        System.out.println(
+                                "Amenity = "
+                                        + getString(
+                                                amenityDocument,
+                                                "amenityName"
+                                        )
+                        );
+
+                        System.out.println(
+                                "Path = "
+                                        + bookingRef
+                                                .getPath()
+                        );
+
+                        System.out.println(
+                                "New Status = "
+                                        + newStatus
+                        );
+
+                        System.out.println(
+                                "=========================================="
+                        );
+
+                        // =================================================
+                        // UPDATE
+                        // =================================================
+
+                        Map<String, Object> update =
+                                new HashMap<>();
+
+                        update.put(
+                                "bookingStatus",
+                                newStatus
+                        );
+
+                        update.put(
+                                "residentEmail",
+                                email
+                        );
+
+                        update.put(
+                                "bookingId",
+                                bookingId
+                        );
+
+                        bookingRef
+                                .update(update)
+                                .get();
+
+                        // =================================================
+                        // VERIFY
+                        // =================================================
+
+                        DocumentSnapshot updated =
+                                bookingRef
+                                        .get()
+                                        .get();
+
+                        String status =
+                                getString(
+                                        updated,
+                                        "bookingStatus"
+                                );
+
+                        if (newStatus.equalsIgnoreCase(
+                                status)) {
+
+                            System.out.println(
+                                    "BOOKING STATUS UPDATED SUCCESSFULLY"
+                            );
+
+                            return true;
+                        }
+
+                        return false;
+                    }
+                }
             }
 
-            // -------------------------------------------------
-            // UPDATE STATUS
-            // -------------------------------------------------
-
-            document
-                    .update(
-                            "status",
-                            status
-                    )
-                    .get();
-
             System.out.println(
-                    "Booking status updated successfully."
+                    "=========================================="
             );
 
             System.out.println(
-                    "Booking ID: "
-                            + bookingId
+                    "BOOKING NOT FOUND"
             );
 
             System.out.println(
-                    "New Status: "
-                            + status
+                    "Email = " + email
             );
 
-            return true;
+            System.out.println(
+                    "Booking ID = " + bookingId
+            );
+
+            System.out.println(
+                    "=========================================="
+            );
+
+            return false;
 
         } catch (Exception e) {
 
             System.out.println(
-                    "PaymentDao: Error updating booking status."
+                    "ERROR WHILE UPDATING BOOKING"
             );
 
             e.printStackTrace();
@@ -441,90 +1039,27 @@ public class PaymentDao {
     }
 
     // =========================================================
-    // UPDATE AMENITY AVAILABILITY
+    // GET STRING
     // =========================================================
 
-    public boolean updateAmenityAvailability(
-            String amenityId,
-            String availability) {
+    private String getString(
+            DocumentSnapshot document,
+            String field) {
 
         try {
 
-            if (amenityId == null
-                    || amenityId.trim().isEmpty()) {
+            Object value =
+                    document.get(field);
 
-                return false;
+            if (value == null) {
+                return "";
             }
 
-            if (availability == null
-                    || availability.trim().isEmpty()) {
-
-                return false;
-            }
-
-            firestore
-                    .collection(AMENITY_COLLECTION)
-                    .document(amenityId)
-                    .update(
-                            "availability",
-                            availability
-                    )
-                    .get();
-
-            System.out.println(
-                    "Amenity availability updated."
-            );
-
-            return true;
+            return String.valueOf(value);
 
         } catch (Exception e) {
 
-            System.out.println(
-                    "PaymentDao: Error updating availability."
-            );
-
-            e.printStackTrace();
-
-            return false;
-        }
-    }
-
-    // =========================================================
-    // DELETE AMENITY
-    // =========================================================
-
-    public boolean deleteAmenity(
-            String amenityId) {
-
-        try {
-
-            if (amenityId == null
-                    || amenityId.trim().isEmpty()) {
-
-                return false;
-            }
-
-            firestore
-                    .collection(AMENITY_COLLECTION)
-                    .document(amenityId)
-                    .delete()
-                    .get();
-
-            System.out.println(
-                    "Amenity deleted successfully."
-            );
-
-            return true;
-
-        } catch (Exception e) {
-
-            System.out.println(
-                    "PaymentDao: Error deleting amenity."
-            );
-
-            e.printStackTrace();
-
-            return false;
+            return "";
         }
     }
 }

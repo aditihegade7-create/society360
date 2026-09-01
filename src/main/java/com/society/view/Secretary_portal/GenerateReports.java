@@ -26,27 +26,39 @@ import javafx.stage.Stage;
 
 public class GenerateReports {
 
+    // =========================================================
+    // CONTROLLER
+    // =========================================================
+
     private ReportController reportController;
+
+    // =========================================================
+    // TABLE
+    // =========================================================
 
     private TableView<Report> reportTable;
 
-    private ObservableList<Report> reportList;
+    private ObservableList<Report> reportList =
+            FXCollections.observableArrayList();
+
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
 
     public GenerateReports() {
 
-        reportController =
-                new ReportController();
+        reportController = new ReportController();
     }
 
-    // ============================================================
+    // =========================================================
     // CREATE SCENE
-    // ============================================================
+    // =========================================================
 
     public Scene createScene(Stage stage) {
 
-        // ========================================================
+        // =====================================================
         // SIDEBAR
-        // ========================================================
+        // =====================================================
 
         SecretarySidebar sidebarObj =
                 new SecretarySidebar();
@@ -54,9 +66,9 @@ public class GenerateReports {
         VBox sidebar =
                 sidebarObj.createSidebar(stage);
 
-        // ========================================================
+        // =====================================================
         // MAIN LAYOUT
-        // ========================================================
+        // =====================================================
 
         BorderPane mainLayout =
                 new BorderPane();
@@ -65,18 +77,16 @@ public class GenerateReports {
                 "-fx-background-color:#b3adad;"
         );
 
-        // ========================================================
+        // =====================================================
         // HEADER
-        // ========================================================
+        // =====================================================
 
         HBox header =
                 new HBox();
 
         header.setPadding(
-                new Insets(20)
+                new Insets(25, 25, 15, 25)
         );
-
-        header.setSpacing(15);
 
         header.setAlignment(
                 Pos.CENTER_LEFT
@@ -118,11 +128,13 @@ public class GenerateReports {
                 titleBox
         );
 
-        mainLayout.setTop(header);
+        mainLayout.setTop(
+                header
+        );
 
-        // ========================================================
+        // =====================================================
         // FILTER SECTION
-        // ========================================================
+        // =====================================================
 
         HBox filterBox =
                 new HBox();
@@ -130,7 +142,12 @@ public class GenerateReports {
         filterBox.setSpacing(15);
 
         filterBox.setPadding(
-                new Insets(15, 20, 15, 20)
+                new Insets(
+                        15,
+                        25,
+                        15,
+                        25
+                )
         );
 
         filterBox.setAlignment(
@@ -144,8 +161,13 @@ public class GenerateReports {
 
         filterLabel.setStyle(
                 "-fx-font-size:14px;" +
-                "-fx-font-weight:bold;"
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#434141;"
         );
+
+        // =====================================================
+        // SOURCE FILTER
+        // =====================================================
 
         ComboBox<String> sourceFilter =
                 new ComboBox<>();
@@ -163,29 +185,45 @@ public class GenerateReports {
                 "SOS"
         );
 
-        sourceFilter.setValue("All");
+        sourceFilter.setValue(
+                "All"
+        );
 
-        sourceFilter.setPrefWidth(180);
+        sourceFilter.setPrefWidth(
+                180
+        );
 
-        // ========================================================
+        sourceFilter.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:6;" +
+                "-fx-border-color:#cccccc;" +
+                "-fx-border-radius:6;"
+        );
+
+        // =====================================================
         // REFRESH BUTTON
-        // ========================================================
+        // =====================================================
 
         Button refreshButton =
                 new Button(
                         "↻ Refresh Reports"
                 );
 
+        refreshButton.setPrefHeight(
+                38
+        );
+
         refreshButton.setStyle(
                 "-fx-background-color:#434141;" +
                 "-fx-text-fill:white;" +
                 "-fx-font-weight:bold;" +
-                "-fx-padding:10px 18px;"
+                "-fx-background-radius:7;" +
+                "-fx-cursor:hand;"
         );
 
-        // ========================================================
-        // TOTAL LABEL
-        // ========================================================
+        // =====================================================
+        // TOTAL REPORTS LABEL
+        // =====================================================
 
         Label totalLabel =
                 new Label(
@@ -198,6 +236,10 @@ public class GenerateReports {
                 "-fx-text-fill:#183B56;"
         );
 
+        // =====================================================
+        // FILTER BOX CONTENT
+        // =====================================================
+
         filterBox.getChildren().addAll(
                 filterLabel,
                 sourceFilter,
@@ -205,15 +247,19 @@ public class GenerateReports {
                 totalLabel
         );
 
-        // ========================================================
+        // =====================================================
         // TABLE
-        // ========================================================
+        // =====================================================
 
         reportTable =
                 new TableView<>();
 
+        reportTable.setItems(
+                reportList
+        );
+
         reportTable.setColumnResizePolicy(
-                TableView.CONSTRAINED_RESIZE_POLICY
+                TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
         );
 
         reportTable.setPlaceholder(
@@ -222,9 +268,14 @@ public class GenerateReports {
                 )
         );
 
-        // ========================================================
+        reportTable.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-border-color:#dddddd;"
+        );
+
+        // =====================================================
         // SOURCE COLUMN
-        // ========================================================
+        // =====================================================
 
         TableColumn<Report, String> sourceColumn =
                 new TableColumn<>(
@@ -237,11 +288,13 @@ public class GenerateReports {
                 )
         );
 
-        sourceColumn.setPrefWidth(130);
+        sourceColumn.setPrefWidth(
+                120
+        );
 
-        // ========================================================
+        // =====================================================
         // TYPE COLUMN
-        // ========================================================
+        // =====================================================
 
         TableColumn<Report, String> typeColumn =
                 new TableColumn<>(
@@ -254,11 +307,13 @@ public class GenerateReports {
                 )
         );
 
-        typeColumn.setPrefWidth(130);
+        typeColumn.setPrefWidth(
+                140
+        );
 
-        // ========================================================
+        // =====================================================
         // TITLE COLUMN
-        // ========================================================
+        // =====================================================
 
         TableColumn<Report, String> titleColumn =
                 new TableColumn<>(
@@ -271,11 +326,13 @@ public class GenerateReports {
                 )
         );
 
-        titleColumn.setPrefWidth(180);
+        titleColumn.setPrefWidth(
+                180
+        );
 
-        // ========================================================
+        // =====================================================
         // DETAILS COLUMN
-        // ========================================================
+        // =====================================================
 
         TableColumn<Report, String> detailsColumn =
                 new TableColumn<>(
@@ -288,11 +345,13 @@ public class GenerateReports {
                 )
         );
 
-        detailsColumn.setPrefWidth(300);
+        detailsColumn.setPrefWidth(
+                300
+        );
 
-        // ========================================================
+        // =====================================================
         // DATE COLUMN
-        // ========================================================
+        // =====================================================
 
         TableColumn<Report, String> dateColumn =
                 new TableColumn<>(
@@ -305,11 +364,13 @@ public class GenerateReports {
                 )
         );
 
-        dateColumn.setPrefWidth(150);
+        dateColumn.setPrefWidth(
+                140
+        );
 
-        // ========================================================
+        // =====================================================
         // STATUS COLUMN
-        // ========================================================
+        // =====================================================
 
         TableColumn<Report, String> statusColumn =
                 new TableColumn<>(
@@ -322,7 +383,13 @@ public class GenerateReports {
                 )
         );
 
-        statusColumn.setPrefWidth(120);
+        statusColumn.setPrefWidth(
+                120
+        );
+
+        // =====================================================
+        // ADD COLUMNS
+        // =====================================================
 
         reportTable.getColumns().addAll(
                 sourceColumn,
@@ -333,15 +400,20 @@ public class GenerateReports {
                 statusColumn
         );
 
-        // ========================================================
+        // =====================================================
         // TABLE CONTAINER
-        // ========================================================
+        // =====================================================
 
         VBox tableBox =
                 new VBox();
 
         tableBox.setPadding(
-                new Insets(0, 20, 20, 20)
+                new Insets(
+                        0,
+                        25,
+                        25,
+                        25
+                )
         );
 
         tableBox.setStyle(
@@ -357,45 +429,40 @@ public class GenerateReports {
                 reportTable
         );
 
-        // ========================================================
+        // =====================================================
         // FILTER ACTION
-        // ========================================================
+        // =====================================================
 
-        sourceFilter.setOnAction(e -> {
+        sourceFilter.setOnAction(
+                e -> {
 
-            String selected =
-                    sourceFilter.getValue();
+                    String selected =
+                            sourceFilter.getValue();
 
-            filterReports(
-                    selected,
-                    totalLabel
-            );
-        });
-
-        // ========================================================
-        // REFRESH ACTION
-        // ========================================================
-
-        refreshButton.setOnAction(e -> {
-
-            loadReports(
-                    totalLabel,
-                    sourceFilter
-            );
-        });
-
-        // ========================================================
-        // LOAD INITIAL DATA
-        // ========================================================
-
-        loadReports(
-                totalLabel,
-                sourceFilter
+                    filterReports(
+                            selected,
+                            totalLabel
+                    );
+                }
         );
 
-        // ========================================================
+        // =====================================================
+        // REFRESH ACTION
+        // =====================================================
+
+        refreshButton.setOnAction(
+                e -> {
+
+                    loadReports(
+                            totalLabel,
+                            sourceFilter
+                    );
+                }
+        );
+
+        // =====================================================
         // CONTENT
-        // ========================================================
+        // =====================================================
 
         VBox content =
                 new VBox();
@@ -418,9 +485,9 @@ public class GenerateReports {
                 content
         );
 
-        // ========================================================
+        // =====================================================
         // BODY
-        // ========================================================
+        // =====================================================
 
         HBox body =
                 new HBox();
@@ -439,9 +506,9 @@ public class GenerateReports {
                 Priority.ALWAYS
         );
 
-        // ========================================================
-        // SCROLL
-        // ========================================================
+        // =====================================================
+        // OUTER SCROLL PANE
+        // =====================================================
 
         ScrollPane scrollPane =
                 new ScrollPane();
@@ -450,11 +517,16 @@ public class GenerateReports {
                 body
         );
 
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(
+                true
+        );
+
+        scrollPane.setFitToWidth(
+                true
+        );
 
         scrollPane.setHbarPolicy(
-                ScrollPane.ScrollBarPolicy.AS_NEEDED
+                ScrollPane.ScrollBarPolicy.NEVER
         );
 
         scrollPane.setVbarPolicy(
@@ -462,13 +534,22 @@ public class GenerateReports {
         );
 
         scrollPane.setStyle(
-                "-fx-background:#b3adad;" +
-                "-fx-background-color:#b3adad;"
+                "-fx-background-color:#b3adad;" +
+                "-fx-border-color:transparent;"
         );
 
-        // ========================================================
+        // =====================================================
+        // LOAD FIRESTORE DATA
+        // =====================================================
+
+        loadReports(
+                totalLabel,
+                sourceFilter
+        );
+
+        // =====================================================
         // SCENE
-        // ========================================================
+        // =====================================================
 
         Scene scene =
                 new Scene(
@@ -480,9 +561,9 @@ public class GenerateReports {
         return scene;
     }
 
-    // ============================================================
-    // LOAD REPORTS
-    // ============================================================
+    // =========================================================
+    // LOAD REPORTS FROM FIRESTORE
+    // =========================================================
 
     private void loadReports(
             Label totalLabel,
@@ -491,31 +572,64 @@ public class GenerateReports {
         try {
 
             System.out.println(
-                    "================================="
+                    "========================================"
             );
 
             System.out.println(
-                    "Fetching Reports..."
+                    "Fetching reports from Firestore..."
             );
+
+            // =================================================
+            // GET DATA THROUGH CONTROLLER
+            // =================================================
 
             List<Report> reports =
                     reportController.getAllReports();
+
+            // =================================================
+            // NULL CHECK
+            // =================================================
+
+            if (reports == null) {
+
+                reports =
+                        FXCollections
+                                .observableArrayList();
+            }
+
+            // =================================================
+            // UPDATE OBSERVABLE LIST
+            // =================================================
 
             reportList =
                     FXCollections.observableArrayList(
                             reports
                     );
 
+            // =================================================
+            // UPDATE TABLE
+            // =================================================
+
             reportTable.setItems(
                     reportList
             );
+
+            // =================================================
+            // UPDATE TOTAL
+            // =================================================
 
             totalLabel.setText(
                     "Total Reports: " +
                     reportList.size()
             );
 
-            sourceFilter.setValue("All");
+            // =================================================
+            // RESET FILTER
+            // =================================================
+
+            sourceFilter.setValue(
+                    "All"
+            );
 
             System.out.println(
                     "Reports loaded: " +
@@ -523,20 +637,21 @@ public class GenerateReports {
             );
 
             System.out.println(
-                    "================================="
+                    "========================================"
             );
 
         } catch (Exception e) {
 
             System.out.println(
-                    "Error loading reports: " +
-                    e.getMessage()
+                    "Error loading reports:"
             );
 
             e.printStackTrace();
 
+            reportList.clear();
+
             reportTable.setItems(
-                    FXCollections.observableArrayList()
+                    reportList
             );
 
             totalLabel.setText(
@@ -545,20 +660,30 @@ public class GenerateReports {
         }
     }
 
-    // ============================================================
+    // =========================================================
     // FILTER REPORTS
-    // ============================================================
+    // =========================================================
 
     private void filterReports(
             String selected,
             Label totalLabel) {
 
+        // =====================================================
+        // NULL CHECK
+        // =====================================================
+
         if (reportList == null) {
+
             return;
         }
 
-        if (selected == null ||
-                selected.equals("All")) {
+        // =====================================================
+        // SHOW ALL
+        // =====================================================
+
+        if (selected == null
+                || selected.trim().isEmpty()
+                || selected.equalsIgnoreCase("All")) {
 
             reportTable.setItems(
                     reportList
@@ -572,22 +697,50 @@ public class GenerateReports {
             return;
         }
 
+        // =====================================================
+        // FILTERED LIST
+        // =====================================================
+
         ObservableList<Report> filtered =
                 FXCollections.observableArrayList();
 
-        for (Report report :
-                reportList) {
+        for (Report report : reportList) {
 
-            if (report.getSource()
-                    .equalsIgnoreCase(selected)) {
+            if (report == null) {
 
-                filtered.add(report);
+                continue;
+            }
+
+            String source =
+                    report.getSource();
+
+            // =================================================
+            // NULL SAFE SOURCE CHECK
+            // =================================================
+
+            if (source != null
+                    && source.trim()
+                            .equalsIgnoreCase(
+                                    selected.trim()
+                            )) {
+
+                filtered.add(
+                        report
+                );
             }
         }
+
+        // =====================================================
+        // UPDATE TABLE
+        // =====================================================
 
         reportTable.setItems(
                 filtered
         );
+
+        // =====================================================
+        // UPDATE COUNT
+        // =====================================================
 
         totalLabel.setText(
                 "Total Reports: " +

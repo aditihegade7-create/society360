@@ -8,45 +8,121 @@ import com.society.model.Secretary_model.Resident;
 
 public class ResidentController {
 
-    private ResidentDao residentDao;
+    private final ResidentDao residentDao;
 
-    // =====================================================
+    // =========================================================
     // CONSTRUCTOR
-    // =====================================================
+    // =========================================================
 
     public ResidentController() {
 
-        residentDao = new ResidentDaoImpl();
+        residentDao =
+                new ResidentDaoImpl();
     }
 
-    // =====================================================
-    // ADD RESIDENT
-    // =====================================================
+    // =========================================================
+    // ADD / UPDATE RESIDENT
+    // =========================================================
 
     public boolean addResident(
             String name,
             String flat,
             String mobile,
             String email,
-            String status) {
+            String status
+    ) {
 
-        Resident resident = new Resident(
-                name,
-                flat,
-                mobile,
-                email,
-                status
-        );
+        try {
 
-        return residentDao.addResident(resident);
+            Resident resident =
+                    new Resident();
+
+            resident.setName(
+                    clean(name)
+            );
+
+            resident.setFlatNo(
+                    clean(flat)
+            );
+
+            resident.setPhone(
+                    clean(mobile)
+            );
+
+            resident.setEmail(
+                    cleanEmail(email)
+            );
+
+            resident.setStatus(
+                    clean(status)
+            );
+
+            return residentDao.addResident(
+                    resident
+            );
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "ResidentController Error: "
+                            + e.getMessage()
+            );
+
+            e.printStackTrace();
+
+            return false;
+        }
     }
 
-    // =====================================================
-    // FETCH ALL RESIDENTS
-    // =====================================================
+    // =========================================================
+    // GET ALL RESIDENTS
+    // =========================================================
 
     public List<Resident> getAllResidents() {
 
-        return residentDao.getAllResidents();
+        return residentDao
+                .getAllResidents();
+    }
+
+    // =========================================================
+    // GET RESIDENT BY EMAIL
+    // =========================================================
+
+    public Resident getResidentByEmail(
+            String email
+    ) {
+
+        return residentDao
+                .getResidentByEmail(
+                        cleanEmail(email)
+                );
+    }
+
+    // =========================================================
+    // CLEAN VALUE
+    // =========================================================
+
+    private String clean(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value.trim();
+    }
+
+    // =========================================================
+    // CLEAN EMAIL
+    // =========================================================
+
+    private String cleanEmail(String email) {
+
+        if (email == null) {
+            return "";
+        }
+
+        return email
+                .trim()
+                .toLowerCase();
     }
 }

@@ -9,4 +9,6 @@ public interface ResidentDao {
     boolean addResident(Resident resident);
 
     List<Resident> getAllResidents();
+
+    Resident getResidentByEmail(String email);
 }
