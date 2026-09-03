@@ -1,7 +1,6 @@
 package com.society.view.Welcome;
 
 import com.society.controller.welcome.UserController;
-import com.society.dao.Welcome.UserDao;
 import com.society.view.ScreenSize;
 
 import javafx.geometry.Insets;

@@ -1,73 +1,194 @@
 package com.society.view.Resident_portal;
 
+import com.society.controller.welcome.UserController;
 
+import com.society.controller.Resident_Controller.NoticeController;
 
-import javafx.scene.layout.Region;
+import com.society.dao.Resident_dao.ComplaintDAO;
+import com.society.dao.Resident_dao.VisitorDAO;
+import com.society.dao.Welcome.UserDao;
 
+import com.society.model.Resident_model.ComplaintModel;
+import com.society.model.Resident_model.VisitorModel;
+import com.society.model.Resident_model.NoticeModel;
+
+import com.society.model.Welcome.User;
+
+import com.society.config.FirebaseConfig;
 import com.society.view.ScreenSize;
+
+import javafx.application.Platform;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
+/**
+ * Resident Dashboard
+ *
+ * Dashboard data:
+ *
+ * 1. Resident name
+ * 2. Flat number
+ * 3. Active complaints
+ * 4. Visitors today
+ * 5. Society notices
+ *
+ * Society notices are fetched dynamically using the
+ * logged-in resident email.
+ */
 public class ResidentDashboard {
-private Scene residentDashboardScene;
 
- public Scene getResidentDashboardScene( Stage stage) {
-  
+    private Scene residentDashboardScene;
 
+    private String residentName;
+    private String flatNo;
+    private String LognEmail;
 
+    // =========================================================
+    // DASHBOARD DYNAMIC LABELS
+    // =========================================================
 
-        // ================= SIDEBAR =================
+    private Label complaintCountLabel;
+    private Label visitorCountLabel;
 
-        panel panelobj = new panel(stage);
+    // =========================================================
+    // GET RESIDENT DASHBOARD SCENE
+    // =========================================================
 
-        // ================= ROOT =================
+    public Scene getResidentDashboardScene(Stage stage) {
 
-        BorderPane root = new BorderPane();
+        // =====================================================
+        // GET LOGGED-IN USER
+        // =====================================================
 
-        // Your existing sidebar
-        root.setLeft(panelobj.getSidebar());
+        UserController userController =
+                new UserController();
 
-        // ================= MAIN CONTENT =================
+        String loggedInEmail =
+                UserDao.getLoggedInEmail();
 
-        VBox mainContent = new VBox(20);
+        this.LognEmail =
+                loggedInEmail;
+
+        User resident = null;
+
+        if (loggedInEmail != null
+                && !loggedInEmail.trim().isEmpty()) {
+
+            resident =
+                    userController.getUserByEmail(
+                            loggedInEmail
+                    );
+        }
+
+        // =====================================================
+        // RESIDENT DETAILS
+        // =====================================================
+
+        if (resident != null) {
+
+            residentName =
+                    resident.getName();
+
+            flatNo =
+                    resident.getFlatNo();
+
+        } else {
+
+            residentName =
+                    "Resident";
+
+            flatNo =
+                    "N/A";
+        }
+
+        // =====================================================
+        // SIDEBAR
+        // =====================================================
+
+        panel panelobj =
+                new panel(
+                        stage,
+                        loggedInEmail
+                );
+
+        // =====================================================
+        // ROOT
+        // =====================================================
+
+        BorderPane root =
+                new BorderPane();
+
+        root.setLeft(
+                panelobj.getSidebar()
+        );
+
+        // =====================================================
+        // MAIN CONTENT
+        // =====================================================
+
+        VBox mainContent =
+                new VBox(20);
 
         mainContent.setPadding(
-                new Insets(25, 30, 25, 30)
+                new Insets(
+                        25,
+                        30,
+                        25,
+                        30
+                )
         );
 
         mainContent.setStyle(
                 "-fx-background-color: #e8ddd5;"
         );
 
-        // ================= HEADER =================
+        // =====================================================
+        // HEADER
+        // =====================================================
 
-        HBox header = new HBox();
+        HBox header =
+                new HBox();
 
         header.setAlignment(
                 Pos.CENTER_LEFT
         );
 
-        VBox welcomeBox = new VBox(4);
+        VBox welcomeBox =
+                new VBox(4);
 
-        Label welcome = new Label(
-                "Good Morning, Vaishnavi 👋"
-        );
+        Label welcome =
+                new Label(
+                        "Good Morning, "
+                                + residentName
+                                + " 👋"
+                );
 
         welcome.setFont(
                 Font.font(
@@ -77,35 +198,49 @@ private Scene residentDashboardScene;
                 )
         );
 
-        welcome.setTextFill(Color.WHITE);
-
-        Label flat = new Label(
-                "Flat A-101 • Tower A"
+        welcome.setTextFill(
+                Color.WHITE
         );
+
+        Label flat =
+                new Label(
+                        "Flat "
+                                + flatNo
+                                + " • Tower A"
+                );
 
         flat.setFont(
-                Font.font("System", 13)
+                Font.font(
+                        "System",
+                        13
+                )
         );
 
-        flat.setTextFill(Color.WHITE);
+        flat.setTextFill(
+                Color.WHITE
+        );
 
         welcomeBox.getChildren().addAll(
                 welcome,
                 flat
         );
 
-        Region headerSpace = new Region();
+        Region headerSpace =
+                new Region();
 
         HBox.setHgrow(
                 headerSpace,
                 Priority.ALWAYS
         );
 
-        Label date = new Label(
-                "16 August 2026\nSunday"
-        );
+        Label date =
+                new Label(
+                        "16 August 2026\nSunday"
+                );
 
-        date.setTextFill(Color.WHITE);
+        date.setTextFill(
+                Color.WHITE
+        );
 
         date.setFont(
                 Font.font(
@@ -125,45 +260,90 @@ private Scene residentDashboardScene;
                 date
         );
 
-        // ================= SUMMARY CARDS =================
+        // =====================================================
+        // SUMMARY CARDS
+        // =====================================================
 
-        HBox summaryCards = new HBox(15);
+        HBox summaryCards =
+                new HBox(15);
 
-        VBox totalDue = createSummaryCard(
-                "Total Due",
-                "₹ 3,250",
-                "View Details"
-        );
+        // =====================================================
+        // TOTAL BILLS
+        // =====================================================
 
-        VBox maintenanceDue = createSummaryCard(
-                "Maintenance Due",
-                "₹ 1,250",
-                "Due: 20 Aug 2026"
-        );
+        VBox totalDuetal =
+                createSummaryCard(
+                        "Total Bills",
+                        "₹ 3,250",
+                        "View Details"
+                );
 
-        VBox complaints = createSummaryCard(
-                "Active Complaints",
-                "2",
-                "View Status"
-        );
+        // =====================================================
+        // MAINTENANCE BILLS
+        // =====================================================
 
-        VBox visitors = createSummaryCard(
-                "Visitors Today",
-                "1",
-                "View Log"
-        );
+        VBox maintenanceDue =
+                createSummaryCard(
+                        "Maintenance Bills",
+                        "₹ 1,250",
+                        "Due: 20 Aug 2026"
+                );
+
+        // =====================================================
+        // ACTIVE COMPLAINTS
+        // =====================================================
+
+        VBox complaints =
+                createSummaryCard(
+                        "Active Complaints",
+                        "0",
+                        "View Status"
+                );
+
+        // =====================================================
+        // VISITORS TODAY
+        // =====================================================
+
+        VBox visitors =
+                createSummaryCard(
+                        "Visitors Today",
+                        "0",
+                        "View Log"
+                );
+
+        // =====================================================
+        // GET LABELS FROM CARDS
+        // =====================================================
+
+        complaintCountLabel =
+                (Label) complaints
+                        .getChildren()
+                        .get(1);
+
+        visitorCountLabel =
+                (Label) visitors
+                        .getChildren()
+                        .get(1);
+
+        // =====================================================
+        // ADD SUMMARY CARDS
+        // =====================================================
 
         summaryCards.getChildren().addAll(
-                totalDue,
+                totalDuetal,
                 maintenanceDue,
                 complaints,
                 visitors
         );
 
-        // ================= QUICK ACTIONS =================
+        // =====================================================
+        // QUICK ACTIONS
+        // =====================================================
 
         Label quickTitle =
-                createSectionTitle("Quick Actions");
+                createSectionTitle(
+                        "Quick Actions"
+                );
 
         GridPane quickActions =
                 new GridPane();
@@ -171,17 +351,19 @@ private Scene residentDashboardScene;
         quickActions.setHgap(15);
         quickActions.setVgap(15);
 
+        // =====================================================
+        // PAY MAINTENANCE
+        // =====================================================
+
         Button payMaintenance =
                 createActionButton(
                         "Pay Maintenance",
                         "Secure Online Payment"
                 );
 
-        payMaintenance.setOnAction(e -> {
-            Residentbtn residentbtn = new Residentbtn();
-            stage.setScene(residentbtn.getResidentbtScene(stage)
-            );
-        });
+        // =====================================================
+        // RAISE COMPLAINT
+        // =====================================================
 
         Button raiseComplaint =
                 createActionButton(
@@ -195,9 +377,15 @@ private Scene residentDashboardScene;
                     new Complaint();
 
             stage.setScene(
-                    complaint.getComplaintScene(stage)
+                    complaint.getComplaintScene(
+                            stage
+                    )
             );
         });
+
+        // =====================================================
+        // BOOK AMENITY
+        // =====================================================
 
         Button bookAmenity =
                 createActionButton(
@@ -208,10 +396,22 @@ private Scene residentDashboardScene;
         bookAmenity.setOnAction(e -> {
 
             AmenitiesBooking booking =
-                    new AmenitiesBooking();
+                    new AmenitiesBooking(
+                            residentName,
+                            flatNo,
+                            loggedInEmail
+                    );
 
-            stage.setScene( booking.getAminityScene(stage));
+            stage.setScene(
+                    booking.getAminityScene(
+                            stage
+                    )
+            );
         });
+
+        // =====================================================
+        // INVITE VISITOR
+        // =====================================================
 
         Button inviteVisitor =
                 createActionButton(
@@ -225,9 +425,15 @@ private Scene residentDashboardScene;
                     new Visitor();
 
             stage.setScene(
-                    visitor.getVisitorScene(stage)
+                    visitor.getVisitorScene(
+                            stage
+                    )
             );
         });
+
+        // =====================================================
+        // ADD QUICK ACTIONS
+        // =====================================================
 
         quickActions.add(
                 payMaintenance,
@@ -253,7 +459,9 @@ private Scene residentDashboardScene;
                 1
         );
 
-        // ================= UPCOMING / DUE =================
+        // =====================================================
+        // UPCOMING / DUE
+        // =====================================================
 
         VBox upcomingBox =
                 new VBox(12);
@@ -268,7 +476,9 @@ private Scene residentDashboardScene;
         );
 
         Label upcomingTitle =
-                new Label("Upcoming / Due");
+                new Label(
+                        "Upcoming / Due"
+                );
 
         upcomingTitle.setFont(
                 Font.font(
@@ -304,7 +514,9 @@ private Scene residentDashboardScene;
                 )
         );
 
-        // ================= MIDDLE SECTION =================
+        // =====================================================
+        // MIDDLE SECTION
+        // =====================================================
 
         HBox middleSection =
                 new HBox(20);
@@ -341,12 +553,16 @@ private Scene residentDashboardScene;
                 upcomingBox
         );
 
-        // ================= BOTTOM SECTION =================
+        // =====================================================
+        // BOTTOM SECTION
+        // =====================================================
 
         HBox bottomSection =
                 new HBox(20);
 
-        // Society Notices
+        // =====================================================
+        // SOCIETY NOTICES
+        // =====================================================
 
         VBox noticesBox =
                 new VBox(12);
@@ -361,7 +577,9 @@ private Scene residentDashboardScene;
         );
 
         Label noticesTitle =
-                new Label("Society Notices");
+                new Label(
+                        "Society Notices"
+                );
 
         noticesTitle.setFont(
                 Font.font(
@@ -375,37 +593,58 @@ private Scene residentDashboardScene;
                 Color.web("#263238")
         );
 
-        Label notice1 =
-                new Label(
-                        "• Water supply will be shut down\n" +
-                        "  on 20 August from 10:00 AM to 6:00 PM."
-                );
+        // =====================================================
+        // NOTICE CONTENT CONTAINER
+        // =====================================================
 
-        notice1.setFont(
-                Font.font("System", 13)
+        VBox noticeContent =
+                new VBox(10);
+
+        noticeContent.setFillWidth(
+                true
         );
 
-        notice1.setWrapText(true);
+        // =====================================================
+        // INITIAL LOADING MESSAGE
+        // =====================================================
 
-        Label notice2 =
+        Label loadingNotice =
                 new Label(
-                        "• Society meeting will be held\n" +
-                        "  on Sunday at 5:00 PM."
+                        "Loading notices..."
                 );
 
-        notice2.setFont(
-                Font.font("System", 13)
+        loadingNotice.setFont(
+                Font.font(
+                        "System",
+                        13
+                )
         );
 
-        notice2.setWrapText(true);
+        loadingNotice.setTextFill(
+                Color.web("#789098")
+        );
+
+        noticeContent.getChildren().add(
+                loadingNotice
+        );
 
         noticesBox.getChildren().addAll(
                 noticesTitle,
-                notice1,
-                notice2
+                noticeContent
         );
 
-        // Community Poll
+        // =====================================================
+        // FETCH SOCIETY NOTICES
+        // =====================================================
+
+        loadSocietyNotices(
+                loggedInEmail,
+                noticeContent
+        );
+
+        // =====================================================
+        // COMMUNITY POLL
+        // =====================================================
 
         VBox pollBox =
                 new VBox(12);
@@ -420,7 +659,9 @@ private Scene residentDashboardScene;
         );
 
         Label pollTitle =
-                new Label("Community Poll");
+                new Label(
+                        "Community Poll"
+                );
 
         pollTitle.setFont(
                 Font.font(
@@ -439,7 +680,9 @@ private Scene residentDashboardScene;
                         "Should we organize a society picnic this month?"
                 );
 
-        question.setWrapText(true);
+        question.setWrapText(
+                true
+        );
 
         question.setFont(
                 Font.font(
@@ -450,7 +693,9 @@ private Scene residentDashboardScene;
         );
 
         Label yes =
-                new Label("Yes (78%)");
+                new Label(
+                        "Yes (78%)"
+                );
 
         yes.setFont(
                 Font.font(
@@ -461,12 +706,18 @@ private Scene residentDashboardScene;
         );
 
         ProgressBar yesBar =
-                new ProgressBar(0.78);
+                new ProgressBar(
+                        0.78
+                );
 
-        yesBar.setPrefWidth(250);
+        yesBar.setPrefWidth(
+                250
+        );
 
         Label no =
-                new Label("No (22%)");
+                new Label(
+                        "No (22%)"
+                );
 
         no.setFont(
                 Font.font(
@@ -477,9 +728,13 @@ private Scene residentDashboardScene;
         );
 
         ProgressBar noBar =
-                new ProgressBar(0.22);
+                new ProgressBar(
+                        0.22
+                );
 
-        noBar.setPrefWidth(250);
+        noBar.setPrefWidth(
+                250
+        );
 
         pollBox.getChildren().addAll(
                 pollTitle,
@@ -489,6 +744,10 @@ private Scene residentDashboardScene;
                 no,
                 noBar
         );
+
+        // =====================================================
+        // BOTTOM SECTION SIZING
+        // =====================================================
 
         HBox.setHgrow(
                 noticesBox,
@@ -505,34 +764,952 @@ private Scene residentDashboardScene;
                 pollBox
         );
 
-        // ================= ADD EVERYTHING =================
+        // =====================================================
+        // ADD EVERYTHING
+        // =====================================================
 
         mainContent.getChildren().addAll(
-                
                 summaryCards,
                 middleSection,
                 bottomSection
         );
 
-        header.setStyle("-fx-background-color: #4e342e");
+        // =====================================================
+        // HEADER STYLE
+        // =====================================================
 
-        BorderPane mainarea = new BorderPane();
-        mainarea.setTop(header);
-        // ================= ROOT =================
-      mainarea.setCenter(mainContent);
-        root.setCenter(mainarea);
+        header.setStyle(
+                "-fx-background-color: #4e342e"
+        );
 
-        return new Scene(
-                root,
-                 ScreenSize.getWidth(),
-                ScreenSize.getHeight());
-                
-        
+        // =====================================================
+        // MAIN AREA
+        // =====================================================
+
+        BorderPane mainarea =
+                new BorderPane();
+
+        mainarea.setTop(
+                header
+        );
+
+        mainarea.setCenter(
+                mainContent
+        );
+
+        root.setCenter(
+                mainarea
+        );
+
+        // =====================================================
+        // CREATE SCENE
+        // =====================================================
+
+        residentDashboardScene =
+                new Scene(
+                        root,
+                        ScreenSize.getWidth(),
+                        ScreenSize.getHeight()
+                );
+
+        // =====================================================
+        // FETCH DASHBOARD DATA
+        // =====================================================
+
+        loadDashboardData(
+                loggedInEmail
+        );
+
+        return residentDashboardScene;
     }
 
-    // =====================================================
+
+    // =========================================================
+    // LOAD SOCIETY NOTICES
+    // =========================================================
+
+    private void loadSocietyNotices(
+            String loggedInEmail,
+            VBox noticeContent) {
+
+        // -----------------------------------------------------
+        // VALIDATE EMAIL
+        // -----------------------------------------------------
+
+        if (loggedInEmail == null
+                || loggedInEmail.trim().isEmpty()) {
+
+            Platform.runLater(() -> {
+
+                noticeContent
+                        .getChildren()
+                        .clear();
+
+                Label noEmail =
+                        new Label(
+                                "Unable to load notices."
+                        );
+
+                noEmail.setFont(
+                        Font.font(
+                                "System",
+                                13
+                        )
+                );
+
+                noEmail.setTextFill(
+                        Color.web("#789098")
+                );
+
+                noticeContent
+                        .getChildren()
+                        .add(
+                                noEmail
+                        );
+            });
+
+            System.out.println(
+                    "========================================"
+            );
+
+            System.out.println(
+                    "RESIDENT NOTICE FETCH"
+            );
+
+            System.out.println(
+                    "Logged-in email is missing."
+            );
+
+            System.out.println(
+                    "========================================"
+            );
+
+            return;
+        }
+
+        // -----------------------------------------------------
+        // CLEAN EMAIL
+        // -----------------------------------------------------
+
+        final String email =
+                loggedInEmail
+                        .trim()
+                        .toLowerCase();
+
+        // -----------------------------------------------------
+        // BACKGROUND THREAD
+        // -----------------------------------------------------
+
+        Thread noticeThread =
+                new Thread(() -> {
+
+                    try {
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        System.out.println(
+                                "RESIDENT DASHBOARD NOTICE FETCH STARTED"
+                        );
+
+                        System.out.println(
+                                "Resident Email : "
+                                        + email
+                        );
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        // -------------------------------------------------
+                        // NOTICE CONTROLLER
+                        // -------------------------------------------------
+
+                        NoticeController noticeController =
+                                new NoticeController();
+
+                        // -------------------------------------------------
+                        // FETCH NOTICES
+                        // -------------------------------------------------
+
+                        List<NoticeModel> notices =
+                                noticeController
+                                        .getNoticesForResident(
+                                                email
+                                        );
+
+                        if (notices == null) {
+                            notices =
+                                    java.util.Collections.emptyList();
+                        }
+
+                        System.out.println(
+                                "Dashboard notices fetched = "
+                                        + notices.size()
+                        );
+
+                        // -------------------------------------------------
+                        // FINAL LIST
+                        // -------------------------------------------------
+
+                        final List<NoticeModel>
+                                finalNotices =
+                                        notices;
+
+                        // -------------------------------------------------
+                        // UPDATE JAVAFX UI
+                        // -------------------------------------------------
+
+                        Platform.runLater(() -> {
+
+                            noticeContent
+                                    .getChildren()
+                                    .clear();
+
+                            // ---------------------------------------------
+                            // NO NOTICES
+                            // ---------------------------------------------
+
+                            if (finalNotices.isEmpty()) {
+
+                                Label noNotices =
+                                        new Label(
+                                                "No society notices available."
+                                        );
+
+                                noNotices.setFont(
+                                        Font.font(
+                                                "System",
+                                                13
+                                        )
+                                );
+
+                                noNotices.setTextFill(
+                                        Color.web("#789098")
+                                );
+
+                                noNotices.setWrapText(
+                                        true
+                                );
+
+                                noticeContent
+                                        .getChildren()
+                                        .add(
+                                                noNotices
+                                        );
+
+                                System.out.println(
+                                        "No society notices found."
+                                );
+
+                                return;
+                            }
+
+                            // ---------------------------------------------
+                            // DISPLAY NOTICES
+                            // ---------------------------------------------
+                            //
+                            // Dashboard shows maximum 3 notices so the
+                            // existing dashboard layout remains compact.
+                            //
+                            // The complete Notices page can show all
+                            // notices.
+                            // ---------------------------------------------
+
+                            int displayCount =
+                                    Math.min(
+                                            finalNotices.size(),
+                                            3
+                                    );
+
+                            for (int i = 0;
+                                 i < displayCount;
+                                 i++) {
+
+                                NoticeModel notice =
+                                        finalNotices.get(i);
+
+                                if (notice == null) {
+                                    continue;
+                                }
+
+                                VBox noticeCard =
+                                        createDashboardNotice(
+                                                notice
+                                        );
+
+                                noticeContent
+                                        .getChildren()
+                                        .add(
+                                                noticeCard
+                                        );
+                            }
+
+                            System.out.println(
+                                    "Dashboard notice boxes added = "
+                                            + noticeContent
+                                                    .getChildren()
+                                                    .size()
+                            );
+                        });
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        System.out.println(
+                                "RESIDENT DASHBOARD NOTICE FETCH COMPLETED"
+                        );
+
+                        System.out.println(
+                                "Total Notices : "
+                                        + finalNotices.size()
+                        );
+
+                        System.out.println(
+                                "Resident Email : "
+                                        + email
+                        );
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                    } catch (Exception ex) {
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        System.out.println(
+                                "RESIDENT DASHBOARD NOTICE ERROR"
+                        );
+
+                        System.out.println(
+                                "Resident Email : "
+                                        + email
+                        );
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        ex.printStackTrace();
+
+                        Platform.runLater(() -> {
+
+                            noticeContent
+                                    .getChildren()
+                                    .clear();
+
+                            Label errorLabel =
+                                    new Label(
+                                            "Unable to load society notices."
+                                    );
+
+                            errorLabel.setFont(
+                                    Font.font(
+                                            "System",
+                                            13
+                                    )
+                            );
+
+                            errorLabel.setTextFill(
+                                    Color.web("#789098")
+                            );
+
+                            errorLabel.setWrapText(
+                                    true
+                            );
+
+                            noticeContent
+                                    .getChildren()
+                                    .add(
+                                            errorLabel
+                                    );
+                        });
+                    }
+                });
+
+        // -----------------------------------------------------
+        // DAEMON THREAD
+        // -----------------------------------------------------
+
+        noticeThread.setDaemon(
+                true
+        );
+
+        noticeThread.start();
+    }
+
+
+    // =========================================================
+    // CREATE DASHBOARD NOTICE
+    // =========================================================
+
+    private VBox createDashboardNotice(
+            NoticeModel notice) {
+
+        VBox card =
+                new VBox(4);
+
+        card.setPadding(
+                new Insets(
+                        7,
+                        0,
+                        7,
+                        0
+                )
+        );
+
+        // =====================================================
+        // TITLE
+        // =====================================================
+
+        String titleText =
+                safeNoticeValue(
+                        notice.getTitle()
+                );
+
+        if (titleText.isEmpty()) {
+            titleText =
+                    "Society Notice";
+        }
+
+        Label title =
+                new Label(
+                        "• " + titleText
+                );
+
+        title.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        13
+                )
+        );
+
+        title.setTextFill(
+                Color.web("#263238")
+        );
+
+        title.setWrapText(
+                true
+        );
+
+        // =====================================================
+        // DATE
+        // =====================================================
+
+        String noticeDate =
+                safeNoticeValue(
+                        notice.getDate()
+                );
+
+        Label date =
+                new Label(
+                        noticeDate
+                );
+
+        date.setFont(
+                Font.font(
+                        "System",
+                        11
+                )
+        );
+
+        date.setTextFill(
+                Color.web("#789098")
+        );
+
+        // =====================================================
+        // DESCRIPTION
+        // =====================================================
+
+        String descriptionText =
+                safeNoticeValue(
+                        notice.getDescription()
+                );
+
+        Label description =
+                new Label(
+                        descriptionText
+                );
+
+        description.setFont(
+                Font.font(
+                        "System",
+                        12
+                )
+        );
+
+        description.setTextFill(
+                Color.web("#607D8B")
+        );
+
+        description.setWrapText(
+                true
+        );
+
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        String statusText =
+                safeNoticeValue(
+                        notice.getStatus()
+                );
+
+        if (!statusText.isEmpty()) {
+
+            Label status =
+                    new Label(
+                            "Status: "
+                                    + statusText
+                    );
+
+            status.setFont(
+                    Font.font(
+                            "System",
+                            FontWeight.BOLD,
+                            11
+                    )
+            );
+
+            status.setTextFill(
+                    Color.web("#789098")
+            );
+
+            card.getChildren().addAll(
+                    title,
+                    date,
+                    description,
+                    status
+            );
+
+        } else {
+
+            card.getChildren().addAll(
+                    title,
+                    date,
+                    description
+            );
+        }
+
+        return card;
+    }
+
+
+    // =========================================================
+    // SAFE NOTICE VALUE
+    // =========================================================
+
+    private String safeNoticeValue(
+            String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value.trim();
+    }
+
+
+    // =========================================================
+    // LOAD DASHBOARD DATA
+    // =========================================================
+
+    private void loadDashboardData(
+            String loggedInEmail) {
+
+        if (loggedInEmail == null
+                || loggedInEmail.trim().isEmpty()) {
+
+            System.out.println(
+                    "Dashboard: Logged-in email is missing."
+            );
+
+            return;
+        }
+
+        Thread dashboardThread =
+                new Thread(() -> {
+
+                    try {
+
+                        String email =
+                                loggedInEmail
+                                        .trim()
+                                        .toLowerCase();
+
+                        // =====================================
+                        // FIRESTORE
+                        // =====================================
+
+                        ComplaintDAO complaintDAO =
+                                new ComplaintDAO(
+                                        FirebaseConfig
+                                                .getFirestore()
+                                );
+
+                        VisitorDAO visitorDAO =
+                                new VisitorDAO(
+                                        FirebaseConfig
+                                                .getFirestore()
+                                );
+
+                        // =====================================
+                        // FETCH COMPLAINTS
+                        // =====================================
+
+                        List<ComplaintModel> complaints =
+                                complaintDAO
+                                        .getComplaintsByEmail(
+                                                email
+                                        );
+
+                        int activeComplaintCount =
+                                countActiveComplaints(
+                                        complaints
+                                );
+
+                        // =====================================
+                        // FETCH TODAY'S VISITORS
+                        // =====================================
+
+                        int todayVisitorCount =
+                                getTodayVisitorCount(
+                                        visitorDAO,
+                                        email
+                                );
+
+                        // =====================================
+                        // UPDATE UI
+                        // =====================================
+
+                        Platform.runLater(() -> {
+
+                            if (complaintCountLabel != null) {
+
+                                complaintCountLabel.setText(
+                                        String.valueOf(
+                                                activeComplaintCount
+                                        )
+                                );
+                            }
+
+                            if (visitorCountLabel != null) {
+
+                                visitorCountLabel.setText(
+                                        String.valueOf(
+                                                todayVisitorCount
+                                        )
+                                );
+                            }
+                        });
+
+                        // =====================================
+                        // CONSOLE LOG
+                        // =====================================
+
+                        System.out.println(
+                                "================================="
+                        );
+
+                        System.out.println(
+                                "RESIDENT DASHBOARD DATA"
+                        );
+
+                        System.out.println(
+                                "Resident Email: "
+                                        + email
+                        );
+
+                        System.out.println(
+                                "Active Complaints: "
+                                        + activeComplaintCount
+                        );
+
+                        System.out.println(
+                                "Visitors Today: "
+                                        + todayVisitorCount
+                        );
+
+                        System.out.println(
+                                "================================="
+                        );
+
+                    } catch (Exception ex) {
+
+                        ex.printStackTrace();
+
+                        Platform.runLater(() -> {
+
+                            if (complaintCountLabel != null) {
+
+                                complaintCountLabel.setText(
+                                        "0"
+                                );
+                            }
+
+                            if (visitorCountLabel != null) {
+
+                                visitorCountLabel.setText(
+                                        "0"
+                                );
+                            }
+                        });
+                    }
+                });
+
+        // Do not block JavaFX UI
+
+        dashboardThread.setDaemon(
+                true
+        );
+
+        dashboardThread.start();
+    }
+
+
+    // =========================================================
+    // COUNT ACTIVE COMPLAINTS
+    // =========================================================
+
+    private int countActiveComplaints(
+            List<ComplaintModel> complaints) {
+
+        if (complaints == null
+                || complaints.isEmpty()) {
+
+            return 0;
+        }
+
+        int count = 0;
+
+        for (ComplaintModel complaint :
+                complaints) {
+
+            if (complaint == null) {
+                continue;
+            }
+
+            String status =
+                    complaint.getStatus();
+
+            // ---------------------------------------------
+            // If status is missing, consider complaint active
+            // ---------------------------------------------
+
+            if (status == null
+                    || status.trim().isEmpty()) {
+
+                count++;
+
+                continue;
+            }
+
+            String cleanStatus =
+                    status.trim()
+                            .toLowerCase();
+
+            // ---------------------------------------------
+            // Completed / closed statuses are NOT active
+            // ---------------------------------------------
+
+            if (cleanStatus.equals("resolved")
+                    || cleanStatus.equals("closed")
+                    || cleanStatus.equals("completed")
+                    || cleanStatus.equals("complete")
+                    || cleanStatus.equals("cancelled")
+                    || cleanStatus.equals("canceled")) {
+
+                continue;
+            }
+
+            // ---------------------------------------------
+            // Everything else is considered active
+            // ---------------------------------------------
+
+            count++;
+        }
+
+        return count;
+    }
+
+
+    // =========================================================
+    // GET TODAY'S VISITOR COUNT
+    // =========================================================
+
+    private int getTodayVisitorCount(
+            VisitorDAO visitorDAO,
+            String email)
+            throws Exception {
+
+        LocalDate today =
+                LocalDate.now();
+
+        /*
+         * Your VisitorDAO searches using:
+         *
+         * whereEqualTo("visitDate", date)
+         *
+         * Because your existing project may store visitDate
+         * in different common string formats, we try the
+         * common formats below.
+         *
+         * Duplicate visitor IDs are removed using a Set.
+         */
+
+        Set<String> visitorIds =
+                new HashSet<>();
+
+        // =====================================================
+        // FORMAT 1
+        // 02-09-2026
+        // =====================================================
+
+        String format1 =
+                today.format(
+                        DateTimeFormatter.ofPattern(
+                                "dd-MM-yyyy"
+                        )
+                );
+
+        addVisitorsForDate(
+                visitorDAO,
+                email,
+                format1,
+                visitorIds
+        );
+
+        // =====================================================
+        // FORMAT 2
+        // 02/09/2026
+        // =====================================================
+
+        String format2 =
+                today.format(
+                        DateTimeFormatter.ofPattern(
+                                "dd/MM/yyyy"
+                        )
+                );
+
+        addVisitorsForDate(
+                visitorDAO,
+                email,
+                format2,
+                visitorIds
+        );
+
+        // =====================================================
+        // FORMAT 3
+        // 2 September 2026
+        // =====================================================
+
+        String format3 =
+                today.format(
+                        DateTimeFormatter.ofPattern(
+                                "d MMMM yyyy"
+                        )
+                );
+
+        addVisitorsForDate(
+                visitorDAO,
+                email,
+                format3,
+                visitorIds
+        );
+
+        // =====================================================
+        // FORMAT 4
+        // 02 September 2026
+        // =====================================================
+
+        String format4 =
+                today.format(
+                        DateTimeFormatter.ofPattern(
+                                "dd MMMM yyyy"
+                        )
+                );
+
+        addVisitorsForDate(
+                visitorDAO,
+                email,
+                format4,
+                visitorIds
+        );
+
+        return visitorIds.size();
+    }
+
+
+    // =========================================================
+    // ADD VISITORS FOR A PARTICULAR DATE
+    // =========================================================
+
+    private void addVisitorsForDate(
+            VisitorDAO visitorDAO,
+            String email,
+            String date,
+            Set<String> visitorIds)
+            throws Exception {
+
+        List<VisitorModel> visitors =
+                visitorDAO.getVisitorsByDate(
+                        email,
+                        date
+                );
+
+        if (visitors == null
+                || visitors.isEmpty()) {
+
+            return;
+        }
+
+        for (VisitorModel visitor :
+                visitors) {
+
+            if (visitor == null) {
+                continue;
+            }
+
+            String id =
+                    visitor.getId();
+
+            if (id != null
+                    && !id.trim().isEmpty()) {
+
+                visitorIds.add(
+                        id.trim()
+                );
+
+            } else {
+
+                /*
+                 * Normally ID is always restored by VisitorDAO.
+                 * This fallback prevents duplicate counting from
+                 * becoming an issue when an ID is missing.
+                 */
+
+                String fallback =
+                        visitor.getVisitorName()
+                                + "|"
+                                + visitor.getVisitDate();
+
+                visitorIds.add(
+                        fallback
+                );
+            }
+        }
+    }
+
+
+    // =========================================================
     // SUMMARY CARD
-    // =====================================================
+    // =========================================================
 
     private VBox createSummaryCard(
             String title,
@@ -546,8 +1723,13 @@ private Scene residentDashboardScene;
                 new Insets(16)
         );
 
-        card.setPrefWidth(190);
-        card.setPrefHeight(110);
+        card.setPrefWidth(
+                190
+        );
+
+        card.setPrefHeight(
+                110
+        );
 
         card.setStyle(
                 "-fx-background-color: white;" +
@@ -555,7 +1737,9 @@ private Scene residentDashboardScene;
         );
 
         Label titleLabel =
-                new Label(title);
+                new Label(
+                        title
+                );
 
         titleLabel.setFont(
                 Font.font(
@@ -570,7 +1754,9 @@ private Scene residentDashboardScene;
         );
 
         Label amountLabel =
-                new Label(amount);
+                new Label(
+                        amount
+                );
 
         amountLabel.setFont(
                 Font.font(
@@ -585,10 +1771,15 @@ private Scene residentDashboardScene;
         );
 
         Label bottomLabel =
-                new Label(bottomText);
+                new Label(
+                        bottomText
+                );
 
         bottomLabel.setFont(
-                Font.font("System", 12)
+                Font.font(
+                        "System",
+                        12
+                )
         );
 
         bottomLabel.setTextFill(
@@ -604,15 +1795,18 @@ private Scene residentDashboardScene;
         return card;
     }
 
-    // =====================================================
+
+    // =========================================================
     // SECTION TITLE
-    // =====================================================
+    // =========================================================
 
     private Label createSectionTitle(
             String text) {
 
         Label label =
-                new Label(text);
+                new Label(
+                        text
+                );
 
         label.setFont(
                 Font.font(
@@ -629,9 +1823,10 @@ private Scene residentDashboardScene;
         return label;
     }
 
-    // =====================================================
+
+    // =========================================================
     // QUICK ACTION BUTTON
-    // =====================================================
+    // =========================================================
 
     private Button createActionButton(
             String title,
@@ -650,7 +1845,9 @@ private Scene residentDashboardScene;
         );
 
         Label titleLabel =
-                new Label(title);
+                new Label(
+                        title
+                );
 
         titleLabel.setFont(
                 Font.font(
@@ -661,10 +1858,15 @@ private Scene residentDashboardScene;
         );
 
         Label subtitleLabel =
-                new Label(subtitle);
+                new Label(
+                        subtitle
+                );
 
         subtitleLabel.setFont(
-                Font.font("System", 11)
+                Font.font(
+                        "System",
+                        11
+                )
         );
 
         subtitleLabel.setTextFill(
@@ -679,7 +1881,9 @@ private Scene residentDashboardScene;
                 subtitleLabel
         );
 
-        button.setGraphic(content);
+        button.setGraphic(
+                content
+        );
 
         button.setStyle(
                 "-fx-background-color: #F5F7F8;" +
@@ -691,9 +1895,10 @@ private Scene residentDashboardScene;
         return button;
     }
 
-    // =====================================================
+
+    // =========================================================
     // DUE ROW
-    // =====================================================
+    // =========================================================
 
     private HBox createDueRow(
             String title,
@@ -707,7 +1912,9 @@ private Scene residentDashboardScene;
         );
 
         Label titleLabel =
-                new Label(title);
+                new Label(
+                        title
+                );
 
         titleLabel.setFont(
                 Font.font(
@@ -718,7 +1925,9 @@ private Scene residentDashboardScene;
         );
 
         Label dateLabel =
-                new Label(date);
+                new Label(
+                        date
+                );
 
         dateLabel.setFont(
                 Font.font(
@@ -734,6 +1943,7 @@ private Scene residentDashboardScene;
 
         Region spacer =
                 new Region();
+
         HBox.setHgrow(
                 spacer,
                 Priority.ALWAYS
@@ -748,8 +1958,3 @@ private Scene residentDashboardScene;
         return row;
     }
 }
-
-
-
-  
-   

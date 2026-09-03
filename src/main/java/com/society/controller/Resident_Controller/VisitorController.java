@@ -10,14 +10,28 @@ public class VisitorController {
 
     private final VisitorService visitorService;
 
+    // =====================================================
+    // CONSTRUCTOR
+    // =====================================================
+
     public VisitorController(VisitorDAO visitorDAO) {
+
+        if (visitorDAO == null) {
+            throw new IllegalArgumentException(
+                    "VisitorDAO cannot be null."
+            );
+        }
 
         this.visitorService =
                 new VisitorService(visitorDAO);
     }
 
+    // =====================================================
     // SEND INVITE
+    // =====================================================
+
     public VisitorModel sendInvite(
+            String residentEmail,
             String visitorName,
             String phoneNumber,
             String purpose,
@@ -28,7 +42,16 @@ public class VisitorController {
             String vehicleNumber
     ) throws Exception {
 
+        if (residentEmail == null ||
+                residentEmail.trim().isEmpty()) {
+
+            throw new Exception(
+                    "Resident email is missing."
+            );
+        }
+
         return visitorService.createVisitor(
+                residentEmail.trim().toLowerCase(),
                 visitorName,
                 phoneNumber,
                 purpose,
@@ -40,30 +63,79 @@ public class VisitorController {
         );
     }
 
-    // GET TODAY'S VISITORS
-    public List<VisitorModel> getTodayVisitors()
-            throws Exception {
+    // =====================================================
+    // GET TODAY'S INVITED VISITORS
+    // =====================================================
 
-        return visitorService.getTodayVisitors();
+    public List<VisitorModel> getTodayVisitors(
+            String residentEmail
+    ) throws Exception {
+
+        if (residentEmail == null ||
+                residentEmail.trim().isEmpty()) {
+
+            throw new Exception(
+                    "Resident email is missing."
+            );
+        }
+
+        String email =
+                residentEmail.trim().toLowerCase();
+
+        return visitorService.getTodayVisitors(
+                email
+        );
     }
 
+    // =====================================================
     // VERIFY QR
+    // =====================================================
+
     public VisitorModel verifyQR(
             String qrToken
     ) throws Exception {
 
+        if (qrToken == null ||
+                qrToken.trim().isEmpty()) {
+
+            throw new Exception(
+                    "QR token is missing."
+            );
+        }
+
         return visitorService.verifyQR(
-                qrToken
+                qrToken.trim()
         );
     }
 
+    // =====================================================
     // ALLOW ENTRY
+    // =====================================================
+
     public void allowEntry(
+            String residentEmail,
             String visitorId
     ) throws Exception {
 
+        if (residentEmail == null ||
+                residentEmail.trim().isEmpty()) {
+
+            throw new Exception(
+                    "Resident email is missing."
+            );
+        }
+
+        if (visitorId == null ||
+                visitorId.trim().isEmpty()) {
+
+            throw new Exception(
+                    "Visitor ID is missing."
+            );
+        }
+
         visitorService.allowEntry(
-                visitorId
+                residentEmail.trim().toLowerCase(),
+                visitorId.trim()
         );
     }
 }

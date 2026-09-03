@@ -16,11 +16,23 @@ public class VisitorModel {
     private String status;
     private String qrToken;
     private boolean used;
+
+    // Firestore Timestamp -> Java Date
     private Date createdAt;
 
+    // Resident society
+    private String society;
+
+    // =====================================================
+    // REQUIRED BY FIRESTORE
+    // =====================================================
+
     public VisitorModel() {
-        // Required by Firestore
     }
+
+    // =====================================================
+    // ID
+    // =====================================================
 
     public String getId() {
         return id;
@@ -30,6 +42,10 @@ public class VisitorModel {
         this.id = id;
     }
 
+    // =====================================================
+    // VISITOR NAME
+    // =====================================================
+
     public String getVisitorName() {
         return visitorName;
     }
@@ -37,6 +53,10 @@ public class VisitorModel {
     public void setVisitorName(String visitorName) {
         this.visitorName = visitorName;
     }
+
+    // =====================================================
+    // PHONE NUMBER
+    // =====================================================
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -46,6 +66,10 @@ public class VisitorModel {
         this.phoneNumber = phoneNumber;
     }
 
+    // =====================================================
+    // PURPOSE
+    // =====================================================
+
     public String getPurpose() {
         return purpose;
     }
@@ -53,6 +77,10 @@ public class VisitorModel {
     public void setPurpose(String purpose) {
         this.purpose = purpose;
     }
+
+    // =====================================================
+    // VISIT DATE
+    // =====================================================
 
     public String getVisitDate() {
         return visitDate;
@@ -62,6 +90,10 @@ public class VisitorModel {
         this.visitDate = visitDate;
     }
 
+    // =====================================================
+    // VISIT TIME
+    // =====================================================
+
     public String getVisitTime() {
         return visitTime;
     }
@@ -69,6 +101,10 @@ public class VisitorModel {
     public void setVisitTime(String visitTime) {
         this.visitTime = visitTime;
     }
+
+    // =====================================================
+    // FLAT NUMBER
+    // =====================================================
 
     public String getFlatNumber() {
         return flatNumber;
@@ -78,6 +114,10 @@ public class VisitorModel {
         this.flatNumber = flatNumber;
     }
 
+    // =====================================================
+    // GATE
+    // =====================================================
+
     public String getGate() {
         return gate;
     }
@@ -85,6 +125,10 @@ public class VisitorModel {
     public void setGate(String gate) {
         this.gate = gate;
     }
+
+    // =====================================================
+    // VEHICLE NUMBER
+    // =====================================================
 
     public String getVehicleNumber() {
         return vehicleNumber;
@@ -94,6 +138,10 @@ public class VisitorModel {
         this.vehicleNumber = vehicleNumber;
     }
 
+    // =====================================================
+    // STATUS
+    // =====================================================
+
     public String getStatus() {
         return status;
     }
@@ -101,6 +149,10 @@ public class VisitorModel {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    // =====================================================
+    // QR TOKEN
+    // =====================================================
 
     public String getQrToken() {
         return qrToken;
@@ -110,6 +162,10 @@ public class VisitorModel {
         this.qrToken = qrToken;
     }
 
+    // =====================================================
+    // USED
+    // =====================================================
+
     public boolean isUsed() {
         return used;
     }
@@ -118,11 +174,27 @@ public class VisitorModel {
         this.used = used;
     }
 
+    // =====================================================
+    // CREATED AT
+    // =====================================================
+
     public Date getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // =====================================================
+    // SOCIETY
+    // =====================================================
+
+    public String getSociety() {
+        return society;
+    }
+
+    public void setSociety(String society) {
+        this.society = society;
     }
 }

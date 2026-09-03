@@ -45,23 +45,30 @@
             <artifactId>google-cloud-firestore</artifactId>
             <version>3.31.0</version>
         </dependency>
+       <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
+       </dependency>
+
+       <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.3</version>
+       </dependency>
+       <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.7.0</version>
+       </dependency>
+    <!-- ================= CLOUDINARY ================= -->
+
         <dependency>
-    <groupId>com.google.zxing</groupId>
-    <artifactId>core</artifactId>
-    <version>3.5.3</version>
-</dependency>
-
-    <dependency>
-        <groupId>com.google.zxing</groupId>
-        <artifactId>javase</artifactId>
-        <version>3.5.3</version>
-    </dependency>
-    <dependency>
-        <groupId>com.google.firebase</groupId>
-        <artifactId>firebase-admin</artifactId>
-        <version>9.7.0</version>
-    </dependency>
-
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http5</artifactId>
+            <version>2.3.2</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>

@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;

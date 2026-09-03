@@ -1,6 +1,7 @@
 package com.society.controller.welcome;
 
 import com.society.dao.Welcome.UserDao;
+import com.society.service.resident_service.UserSession;
 import com.society.view.Guard_portal.GuardDashboard;
 import com.society.view.Owner_portal.OwnerDashboard;
 import com.society.view.Resident_portal.ResidentDashboard;
@@ -35,6 +36,7 @@ public class logincontroller {
 
                 System.out.println(
                                 "Authentication successful.");
+                              
 
                 // ============================================
                 // 2. GET ROLE FROM FIRESTORE
