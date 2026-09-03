@@ -1,5 +1,7 @@
 package com.society.service.resident_service;
 
+
+    
 public class UserSession {
 
     // =========================================================
@@ -54,3 +56,5 @@ public class UserSession {
         );
     }
 }
+
+
