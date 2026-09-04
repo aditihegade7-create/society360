@@ -1,454 +1,325 @@
 package com.society.view.Resident_portal;
 
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import com.society.view.ScreenSize;
-
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-
-import javafx.stage.FileChooser;
-
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.society.controller.ImageUploadController;
+import com.society.service.resident_service.ResidentSession;
+import com.society.view.ScreenSize;
+
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.society.config.FirebaseConfig;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class Document {
 
-    public Scene getDocumentScene(Stage stage) {
+    // =========================================================
+    // TEMPORARY SELECTED FILES
+    // =========================================================
 
-        panel panelobj = new panel(stage);
+    private File aadhaarFile;
+    private File panFile;
+    private File ownershipFile;
+    private File addressFile;
 
-        // ================= ROOT =================
+    // =========================================================
+    // DOCUMENT SCENE
+    // =========================================================
+
+    public Scene getDocumentScene(Stage stage, String residentEmail) {
+
+        // =====================================================
+        // PANEL
+        // =====================================================
+
+        panel panelobj = new panel(stage, residentEmail);
+
+        // =====================================================
+        // ROOT
+        // =====================================================
 
         BorderPane root = new BorderPane();
 
-        root.setLeft(panelobj.getSidebar());
+        root.setLeft(
+                panelobj.getSidebar()
+        );
 
-
-        // ================= MAIN CONTENT =================
+        // =====================================================
+        // MAIN CONTENT
+        // =====================================================
 
         VBox mainContent = new VBox(20);
 
         mainContent.setPadding(
-                new Insets(30, 40, 30, 40)
-        );
-
-        mainContent.setStyle(
-                "-fx-background-color: #e8ddd5;"
-        );
-
-
-        // ================= HEADING =================
-
-        Label title = new Label("Documents");
-
-        title.setFont(
-                Font.font(
-                        "System",
-                        FontWeight.BOLD,
-                        28
+                new Insets(
+                        0,
+                        40,
+                        30,
+                        40
                 )
         );
 
-        title.setTextFill(Color.WHITE);
-
-
-        Label subtitle = new Label(
-                "Access and manage your society documents"
+        mainContent.setStyle(
+                "-fx-background-color:#e8ddd5;"
         );
 
-        subtitle.setFont(
-                Font.font("System", 14)
+        // =====================================================
+        // HEADER
+        // =====================================================
+
+        HBox header = new HBox();
+
+        header.setPrefHeight(100);
+
+        header.setPadding(
+                new Insets(20)
         );
 
-        subtitle.setTextFill(Color.WHITE);
-
-
-        VBox heading = new VBox(5);
-
-        heading.getChildren().addAll(
-                title,
-                subtitle
-        );
-
-
-        // ================= SEARCH =================
-
-        HBox searchBox = new HBox(12);
-
-        searchBox.setAlignment(
+        header.setAlignment(
                 Pos.CENTER_LEFT
         );
 
-
-        TextField searchField =
-                new TextField();
-
-        searchField.setPromptText(
-                "Search documents..."
+        header.setStyle(
+                "-fx-background-color:#4e342e;"
         );
 
-        searchField.setPrefWidth(280);
-        searchField.setPrefHeight(35);
+        // =====================================================
+        // HEADER TEXT
+        // =====================================================
 
+        VBox headerText = new VBox(4);
 
-        ComboBox<String> category =
-                new ComboBox<>();
+        Label greeting =
+                new Label(
+                        "Resident Documents"
+                );
 
-        category.setPromptText(
-                "Document Type"
+        greeting.setStyle(
+                "-fx-font-size:24px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:white;"
         );
 
-        category.getItems().addAll(
-                "All",
-                "Personal",
-                "Society",
-                "Financial",
-                "Other"
+        Label description =
+                new Label(
+                        "Upload and manage your documents"
+                );
+
+        description.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:white;"
         );
 
-        category.setPrefWidth(170);
-        category.setPrefHeight(35);
-
-
-        // ================= ADD DOCUMENT BUTTON =================
-
-        Button addDocumentButton =
-                new Button("+ Add Document");
-
-        addDocumentButton.setPrefHeight(35);
-
-        addDocumentButton.setStyle(
-                "-fx-background-color: #789098;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-weight: bold;" +
-                "-fx-background-radius: 5;"
+        headerText.getChildren().addAll(
+                greeting,
+                description
         );
 
+        // =====================================================
+        // HEADER SPACER
+        // =====================================================
 
-        searchBox.getChildren().addAll(
-                searchField,
-                category,
-                addDocumentButton
-        );
+        Region headerSpacer = new Region();
 
-
-        // ================= DOCUMENT LIST =================
-
-        VBox documentList =
-                new VBox(15);
-
-
-        // Document 1
-
-        VBox document1 = createDocument(
-                "Society Membership Certificate",
-                "Society",
-                "Issued: 10 August 2026",
-                "Available",
-                "View",
-                null
-        );
-
-
-        // Document 2
-
-        VBox document2 = createDocument(
-                "Maintenance Payment Receipt",
-                "Financial",
-                "Issued: 05 August 2026",
-                "Available",
-                "View",
-                null
-        );
-
-
-        // Document 3
-
-        VBox document3 = createDocument(
-                "Resident ID Card",
-                "Personal",
-                "Issued: 01 August 2026",
-                "Available",
-                "View",
-                null
-        );
-
-
-        // Document 4
-
-        VBox document4 = createDocument(
-                "Parking Allotment Letter",
-                "Society",
-                "Issued: 25 July 2026",
-                "Available",
-                "View",
-                null
-        );
-
-
-        documentList.getChildren().addAll(
-                document1,
-                document2,
-                document3,
-                document4
-        );
-
-
-        // ================= SCROLL =================
-
-        ScrollPane scrollPane =
-                new ScrollPane(documentList);
-
-        scrollPane.setFitToWidth(true);
-
-        scrollPane.setStyle(
-                "-fx-background-color: transparent;" +
-                "-fx-background: transparent;"
-        );
-
-        VBox.setVgrow(
-                scrollPane,
+        HBox.setHgrow(
+                headerSpacer,
                 Priority.ALWAYS
         );
 
+        // =====================================================
+        // DATE
+        // =====================================================
 
-        // ================= ADD DOCUMENT ACTION =================
+        Label day = new Label();
+        Label date = new Label();
 
-        addDocumentButton.setOnAction(e -> {
+        LocalDate today =
+                LocalDate.now();
 
-            FileChooser fileChooser =
-                    new FileChooser();
-
-            fileChooser.setTitle(
-                    "Select Document"
-            );
-
-
-            // Allow common document formats
-
-            FileChooser.ExtensionFilter extensionFilter =
-                    new FileChooser.ExtensionFilter(
-                            "Documents and Images",
-                            "*.pdf",
-                            "*.doc",
-                            "*.docx",
-                            "*.txt",
-                            "*.jpg",
-                            "*.jpeg",
-                            "*.png"
-                    );
-
-            fileChooser.getExtensionFilters().add(
-                    extensionFilter
-            );
-
-
-            // Open file chooser
-
-            File selectedFile =
-                    fileChooser.showOpenDialog(stage);
-
-
-            if (selectedFile != null) {
-
-                // ================= DOCUMENT TYPE =================
-
-                ChoiceDialog<String> typeDialog =
-                        new ChoiceDialog<>(
-                                "Personal",
-                                "Personal",
-                                "Society",
-                                "Financial",
-                                "Other"
-                        );
-
-                typeDialog.setTitle(
-                        "Document Type"
-                );
-
-                typeDialog.setHeaderText(
-                        "Select Document Type"
-                );
-
-                typeDialog.setContentText(
-                        "Document Type:"
-                );
-
-
-                typeDialog.showAndWait().ifPresent(
-                        selectedType -> {
-
-                            String fileName =
-                                    selectedFile.getName();
-
-
-                            String currentDate =
-                                    LocalDate.now().format(
-                                            DateTimeFormatter.ofPattern(
-                                                    "dd MMMM yyyy"
-                                            )
-                                    );
-
-
-                            // ================= CREATE NEW CARD =================
-
-                            VBox newDocument =
-                                    createDocument(
-                                            fileName,
-                                            selectedType,
-                                            "Uploaded: " + currentDate,
-                                            "Available",
-                                            "View",
-                                            selectedFile
-                                    );
-
-
-                            // Add uploaded document at top
-
-                            documentList
-                                    .getChildren()
-                                    .add(
-                                            0,
-                                            newDocument
-                                    );
-
-
-                            // Success message
-
-                            Alert alert =
-                                    new Alert(
-                                            Alert.AlertType.INFORMATION
-                                    );
-
-                            alert.setTitle(
-                                    "Document Uploaded"
-                            );
-
-                            alert.setHeaderText(
-                                    "Upload Successful"
-                            );
-
-                            alert.setContentText(
-                                    fileName +
-                                    "\n\nYour document has been added to the document list."
-                            );
-
-                            alert.showAndWait();
-
-                        }
-                );
-            }
-        });
-
-
-        // ================= SEARCH FUNCTION =================
-
-        searchField.textProperty().addListener(
-                (observable, oldValue, newValue) -> {
-
-                    String searchText =
-                            newValue.toLowerCase();
-
-                    for (javafx.scene.Node node :
-                            documentList.getChildren()) {
-
-                        VBox card =
-                                (VBox) node;
-
-                        String cardText =
-                                card.getUserData() != null
-                                ? card.getUserData().toString().toLowerCase()
-                                : "";
-
-                        card.setVisible(
-                                cardText.contains(searchText)
-                        );
-
-                        card.setManaged(
-                                cardText.contains(searchText)
-                        );
-                    }
-                }
+        day.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern(
+                                "EEEE"
+                        )
+                )
         );
 
+        date.setText(
+                today.format(
+                        DateTimeFormatter.ofPattern(
+                                "dd MMMM yyyy"
+                        )
+                )
+        );
 
-        // ================= CATEGORY FILTER =================
+        day.setStyle(
+                "-fx-text-fill:white;"
+        );
 
-        category.setOnAction(e -> {
+        date.setStyle(
+                "-fx-text-fill:white;"
+        );
 
-            String selectedCategory =
-                    category.getValue();
+        VBox dateBox =
+                new VBox(3);
 
+        dateBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
 
-            if (selectedCategory == null ||
-                    selectedCategory.equals("All")) {
+        dateBox.getChildren().addAll(
+                day,
+                date
+        );
 
-                for (javafx.scene.Node node :
-                        documentList.getChildren()) {
+        header.getChildren().addAll(
+                headerText,
+                headerSpacer,
+                dateBox
+        );
 
-                    node.setVisible(true);
-                    node.setManaged(true);
-                }
+        // =====================================================
+        // REQUIRED DOCUMENTS CARD
+        // =====================================================
 
-                return;
-            }
+        VBox documentCard =
+                new VBox(18);
 
+        documentCard.setPadding(
+                new Insets(25)
+        );
 
-            for (javafx.scene.Node node :
-                    documentList.getChildren()) {
+        documentCard.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-background-radius:15;" +
+                "-fx-border-color:#E5E7EB;" +
+                "-fx-border-radius:15;"
+        );
 
-                VBox card =
-                        (VBox) node;
+        // =====================================================
+        // CARD TITLE
+        // =====================================================
 
-                String cardText =
-                        card.getUserData() != null
-                        ? card.getUserData().toString()
-                        : "";
+        Label cardTitle =
+                new Label(
+                        "Required Documents"
+                );
 
-                boolean match =
-                        cardText.contains(
-                                selectedCategory
-                        );
+        cardTitle.setStyle(
+                "-fx-font-size:19px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
+        );
 
-                card.setVisible(match);
-                card.setManaged(match);
-            }
-        });
+        Label cardDescription =
+                new Label(
+                        "Upload documents in PDF format"
+                );
 
+        cardDescription.setStyle(
+                "-fx-font-size:13px;" +
+                "-fx-text-fill:#888888;"
+        );
 
-        // ================= ADD CONTENT =================
+        VBox cardHeading =
+                new VBox(4);
+
+        cardHeading.getChildren().addAll(
+                cardTitle,
+                cardDescription
+        );
+
+        // =====================================================
+        // DOCUMENT ROWS
+        // =====================================================
+
+        HBox aadhaar =
+                createDocumentRow(
+                        stage,
+                        "Aadhaar Card",
+                        "Identity Proof",
+                        "aadhaar"
+                );
+
+        HBox pan =
+                createDocumentRow(
+                        stage,
+                        "PAN Card",
+                        "Identity Proof",
+                        "pan"
+                );
+
+        HBox ownership =
+                createDocumentRow(
+                        stage,
+                        "Ownership Proof",
+                        "Property Document",
+                        "ownership"
+                );
+
+        HBox address =
+                createDocumentRow(
+                        stage,
+                        "Address Proof",
+                        "Address Document",
+                        "address"
+                );
+
+        // =====================================================
+        // ADD DOCUMENTS
+        // =====================================================
+
+        documentCard.getChildren().addAll(
+                cardHeading,
+                aadhaar,
+                pan,
+                ownership,
+                address
+        );
+
+        // =====================================================
+        // MAIN CONTENT
+        // =====================================================
 
         mainContent.getChildren().addAll(
-                heading,
-                searchBox,
-                scrollPane
+                header,
+                documentCard
         );
 
+        root.setCenter(
+                mainContent
+        );
 
-        BorderPane mainarea =
-                new BorderPane();
+        // =====================================================
+        // FETCH EXISTING DOCUMENTS
+        // =====================================================
 
-        mainarea.setTop(heading);
+        loadExistingDocuments();
 
-        mainarea.setCenter(mainContent);
-
-
-        root.setCenter(mainarea);
-
+        // =====================================================
+        // RETURN SCENE
+        // =====================================================
 
         return new Scene(
                 root,
@@ -457,368 +328,828 @@ public class Document {
         );
     }
 
+    // =========================================================
+    // CREATE DOCUMENT ROW
+    // =========================================================
 
-    // =====================================================
-    // DOCUMENT CARD
-    // =====================================================
-
-    private VBox createDocument(
+    private HBox createDocumentRow(
+            Stage stage,
             String documentName,
             String documentType,
-            String date,
-            String status,
-            String buttonText,
-            File uploadedFile) {
+            String documentKey) {
 
+        HBox row =
+                new HBox(15);
 
-        VBox card =
-                new VBox(10);
-
-
-        // Store information for search/filter
-
-        card.setUserData(
-                documentName +
-                " " +
-                documentType
-        );
-
-
-        card.setPadding(
-                new Insets(18)
-        );
-
-
-        card.setMaxWidth(
-                Double.MAX_VALUE
-        );
-
-
-        // ================= WHITE CARD =================
-
-        card.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-background-radius: 10;" +
-                "-fx-border-color: #E0E0E0;" +
-                "-fx-border-radius: 10;"
-        );
-
-
-        // ================= TOP ROW =================
-
-        HBox topRow =
-                new HBox();
-
-
-        topRow.setAlignment(
+        row.setAlignment(
                 Pos.CENTER_LEFT
         );
 
-
-        Label documentLabel =
-                new Label(documentName);
-
-
-        documentLabel.setFont(
-                Font.font(
-                        "System",
-                        FontWeight.BOLD,
-                        17
-                )
+        row.setPadding(
+                new Insets(15)
         );
 
-
-        documentLabel.setTextFill(
-                Color.web("#263238")
+        row.setStyle(
+                "-fx-background-color:#F8FAFC;" +
+                "-fx-background-radius:10;" +
+                "-fx-border-color:#E8EBEF;" +
+                "-fx-border-radius:10;"
         );
 
+        // =====================================================
+        // ICON
+        // =====================================================
+
+        Label icon =
+                new Label("📄");
+
+        icon.setStyle(
+                "-fx-font-size:25px;"
+        );
+
+        // =====================================================
+        // NAME
+        // =====================================================
+
+        Label name =
+                new Label(
+                        documentName
+                );
+
+        name.setStyle(
+                "-fx-font-size:15px;" +
+                "-fx-font-weight:bold;" +
+                "-fx-text-fill:#333333;"
+        );
+
+        Label type =
+                new Label(
+                        documentType
+                );
+
+        type.setStyle(
+                "-fx-font-size:11px;" +
+                "-fx-text-fill:#888888;"
+        );
+
+        VBox information =
+                new VBox(3);
+
+        information.setPrefWidth(
+                220
+        );
+
+        information.getChildren().addAll(
+                name,
+                type
+        );
+
+        // =====================================================
+        // FILE NAME
+        // =====================================================
+
+        Label fileName =
+                new Label(
+                        "No file selected"
+                );
+
+        fileName.setStyle(
+                "-fx-font-size:12px;" +
+                "-fx-text-fill:#999999;"
+        );
+
+        // =====================================================
+        // SPACER
+        // =====================================================
 
         Region spacer =
                 new Region();
-
 
         HBox.setHgrow(
                 spacer,
                 Priority.ALWAYS
         );
 
+        // =====================================================
+        // CHOOSE FILE
+        // =====================================================
 
-        Label statusLabel =
-                new Label(status);
+        Button chooseButton =
+                new Button(
+                        "Choose File"
+                );
 
-
-        statusLabel.setStyle(
-                "-fx-background-color: #789098;" +
-                "-fx-text-fill: white;" +
-                "-fx-padding: 5 12 5 12;" +
-                "-fx-background-radius: 15;" +
-                "-fx-font-weight: bold;"
+        chooseButton.setPrefWidth(
+                110
         );
 
-
-        topRow.getChildren().addAll(
-                documentLabel,
-                spacer,
-                statusLabel
+        chooseButton.setPrefHeight(
+                34
         );
 
-
-        // ================= DETAILS =================
-
-        HBox details =
-                new HBox(15);
-
-
-        Label typeLabel =
-                new Label(documentType);
-
-
-        typeLabel.setFont(
-                Font.font(
-                        "System",
-                        FontWeight.BOLD,
-                        13
-                )
+        chooseButton.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-border-color:#4e342e;" +
+                "-fx-border-radius:7;" +
+                "-fx-background-radius:7;" +
+                "-fx-text-fill:#4e342e;" +
+                "-fx-font-weight:bold;" +
+                "-fx-cursor:hand;"
         );
 
+        // =====================================================
+        // PREVIEW BUTTON
+        // =====================================================
 
-        typeLabel.setTextFill(
-                Color.web("#546E7A")
+        Button previewButton =
+                new Button(
+                        "Preview"
+                );
+
+        previewButton.setPrefWidth(
+                75
         );
 
-
-        Label dateLabel =
-                new Label(date);
-
-
-        dateLabel.setFont(
-                Font.font("System", 13)
+        previewButton.setPrefHeight(
+                34
         );
 
-
-        dateLabel.setTextFill(
-                Color.GRAY
+        previewButton.setStyle(
+                "-fx-background-color:white;" +
+                "-fx-text-fill:#4e342e;" +
+                "-fx-border-color:#4e342e;" +
+                "-fx-border-radius:7;" +
+                "-fx-background-radius:7;" +
+                "-fx-font-weight:bold;" +
+                "-fx-cursor:hand;"
         );
 
+        // =====================================================
+        // SAVE BUTTON
+        // =====================================================
 
-        details.getChildren().addAll(
-                typeLabel,
-                dateLabel
+        Button saveButton =
+                new Button(
+                        "Save"
+                );
+
+        saveButton.setPrefWidth(
+                70
         );
 
-
-        // ================= VIEW BUTTON =================
-
-        Button viewButton =
-                new Button("View");
-
-
-        viewButton.setStyle(
-                "-fx-background-color: #789098;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-weight: bold;" +
-                "-fx-background-radius: 5;"
+        saveButton.setPrefHeight(
+                34
         );
 
+        saveButton.setStyle(
+                "-fx-background-color:#4e342e;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;" +
+                "-fx-cursor:hand;"
+        );
 
-        viewButton.setOnAction(e -> {
+        // =====================================================
+        // REMOVE BUTTON
+        // =====================================================
 
-            // If this is an uploaded document
+        Button removeButton =
+                new Button(
+                        "Remove"
+                );
 
-            if (uploadedFile != null) {
+        removeButton.setPrefWidth(
+                80
+        );
 
-                try {
+        removeButton.setPrefHeight(
+                34
+        );
 
-                    if (Desktop.isDesktopSupported()) {
+        removeButton.setStyle(
+                "-fx-background-color:#b71c1c;" +
+                "-fx-text-fill:white;" +
+                "-fx-font-weight:bold;" +
+                "-fx-background-radius:7;" +
+                "-fx-cursor:hand;"
+        );
 
-                        Desktop.getDesktop().open(
-                                uploadedFile
-                        );
+        // =====================================================
+        // CHOOSE FILE ACTION
+        // =====================================================
 
-                    } else {
+        chooseButton.setOnAction(e -> {
 
-                        showAlert(
-                                "View Document",
-                                "Your system does not support opening files automatically."
-                        );
-                    }
+            FileChooser fileChooser =
+                    new FileChooser();
 
-                } catch (IOException ex) {
+            fileChooser.setTitle(
+                    "Select " + documentName
+            );
+
+            fileChooser.getExtensionFilters()
+                    .add(
+                            new FileChooser.ExtensionFilter(
+                                    "PDF Files",
+                                    "*.pdf"
+                            )
+                    );
+
+            File selectedFile =
+                    fileChooser.showOpenDialog(
+                            stage
+                    );
+
+            if (selectedFile == null) {
+                return;
+            }
+
+            // Store temporarily
+
+            setSelectedFile(
+                    documentKey,
+                    selectedFile
+            );
+
+            // Update UI
+
+            fileName.setText(
+                    selectedFile.getName()
+            );
+
+            fileName.setStyle(
+                    "-fx-font-size:12px;" +
+                    "-fx-text-fill:#4e3425;" +
+                    "-fx-font-weight:bold;"
+            );
+        });
+
+        // =====================================================
+        // PREVIEW ACTION
+        // =====================================================
+
+        previewButton.setOnAction(e -> {
+
+            File selectedFile =
+                    getSelectedFile(
+                            documentKey
+                    );
+
+            if (selectedFile == null) {
+
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "No File Selected",
+                        "Please select a PDF file first."
+                );
+
+                return;
+            }
+
+            try {
+
+                if (Desktop.isDesktopSupported()) {
+
+                    Desktop.getDesktop().open(
+                            selectedFile
+                    );
+
+                } else {
 
                     showAlert(
-                            "Error",
-                            "Unable to open the document."
+                            Alert.AlertType.WARNING,
+                            "Preview Not Supported",
+                            "Your system does not support PDF preview."
                     );
                 }
 
-            } else {
+            } catch (IOException ex) {
 
-                // Existing sample documents
-
-                Alert alert =
-                        new Alert(
-                                Alert.AlertType.INFORMATION
-                        );
-
-                alert.setTitle(
-                        "Document"
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Preview Error",
+                        "Unable to preview the document."
                 );
-
-                alert.setHeaderText(
-                        documentName
-                );
-
-                alert.setContentText(
-                        "Document Type: "
-                        + documentType
-                        + "\n"
-                        + date
-                        + "\nStatus: "
-                        + status
-                );
-
-                alert.showAndWait();
             }
         });
 
+        // =====================================================
+        // SAVE ACTION
+        // =====================================================
 
-        // ================= DOWNLOAD BUTTON =================
+        saveButton.setOnAction(e -> {
 
-        Button downloadButton =
-                new Button("Download");
+            File selectedFile =
+                    getSelectedFile(
+                            documentKey
+                    );
 
+            if (selectedFile == null) {
 
-        downloadButton.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-text-fill: #789098;" +
-                "-fx-border-color: #789098;" +
-                "-fx-border-radius: 5;" +
-                "-fx-font-weight: bold;"
-        );
-
-
-        downloadButton.setOnAction(e -> {
-
-            if (uploadedFile != null) {
-
-                FileChooser saveChooser =
-                        new FileChooser();
-
-                saveChooser.setTitle(
-                        "Save Document"
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "No File Selected",
+                        "Please select a PDF file first."
                 );
 
+                return;
+            }
 
-                saveChooser.setInitialFileName(
-                        uploadedFile.getName()
+            // =================================================
+            // CHECK LOGGED-IN EMAIL
+            // =================================================
+
+            String email =
+                    ResidentSession.getLoggedInEmail();
+
+            if (email == null ||
+                    email.trim().isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Login Required",
+                        "Logged-in resident email was not found."
                 );
 
+                return;
+            }
 
-                File saveFile =
-                        saveChooser.showSaveDialog(
-                                null
+            // =================================================
+            // DISABLE SAVE BUTTON
+            // =================================================
+
+            saveButton.setDisable(true);
+
+            saveButton.setText(
+                    "Uploading..."
+            );
+
+            try {
+
+                // =============================================
+                // STEP 1: CLOUDINARY UPLOAD
+                // =============================================
+
+                String uploadedUrl =
+                        uploadDocument(
+                                selectedFile
                         );
 
+                if (uploadedUrl == null ||
+                        uploadedUrl.trim().isEmpty()) {
 
-                if (saveFile != null) {
+                    showAlert(
+                            Alert.AlertType.ERROR,
+                            "Upload Failed",
+                            "Document upload failed.\n\n"
+                            + "Please check your internet connection "
+                            + "and Cloudinary configuration."
+                    );
 
-                    try {
-
-                        Files.copy(
-                                uploadedFile.toPath(),
-                                saveFile.toPath(),
-                                StandardCopyOption.REPLACE_EXISTING
-                        );
-
-
-                        showAlert(
-                                "Download",
-                                "Document downloaded successfully."
-                        );
-
-
-                    } catch (IOException ex) {
-
-                        showAlert(
-                                "Error",
-                                "Unable to download the document."
-                        );
-                    }
+                    return;
                 }
 
-            } else {
+                // =============================================
+                // STEP 2: FIRESTORE SAVE
+                // =============================================
 
-                Alert alert =
-                        new Alert(
-                                Alert.AlertType.INFORMATION
+                boolean saved =
+                        saveDocumentToFirestore(
+                                email,
+                                documentKey,
+                                documentType,
+                                documentName,
+                                uploadedUrl
                         );
 
-                alert.setTitle(
-                        "Download"
-                );
+                if (!saved) {
 
-                alert.setHeaderText(
+                    showAlert(
+                            Alert.AlertType.ERROR,
+                            "Firestore Error",
+                            "Document was uploaded to Cloudinary "
+                            + "but could not be saved in Firestore."
+                    );
+
+                    return;
+                }
+
+                // =============================================
+                // SUCCESS
+                // =============================================
+
+                showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Document Saved",
                         documentName
+                        + " uploaded successfully.\n\n"
+                        + "Document saved for:\n"
+                        + email
+                        + "\n\n"
+                        + "Cloudinary URL:\n"
+                        + uploadedUrl
                 );
 
-                alert.setContentText(
-                        "This is a sample document.\n"
-                        + "No actual file is attached."
-                );
+            } finally {
 
-                alert.showAndWait();
+                saveButton.setDisable(false);
+
+                saveButton.setText(
+                        "Save"
+                );
             }
         });
 
+        // =====================================================
+        // REMOVE ACTION
+        // =====================================================
 
-        // ================= BUTTON BOX =================
+        removeButton.setOnAction(e -> {
 
-        HBox buttonBox =
-                new HBox(10);
+            File selectedFile =
+                    getSelectedFile(
+                            documentKey
+                    );
 
+            if (selectedFile == null) {
 
-        buttonBox.setAlignment(
-                Pos.CENTER_RIGHT
+                showAlert(
+                        Alert.AlertType.WARNING,
+                        "No Document",
+                        "There is no document to remove."
+                );
+
+                return;
+            }
+
+            Alert confirmation =
+                    new Alert(
+                            Alert.AlertType.CONFIRMATION
+                    );
+
+            confirmation.setTitle(
+                    "Remove Document"
+            );
+
+            confirmation.setHeaderText(
+                    "Remove " + documentName
+            );
+
+            confirmation.setContentText(
+                    "Are you sure you want to remove this document?"
+            );
+
+            if (confirmation.showAndWait()
+                    .orElse(ButtonType.CANCEL)
+                    == ButtonType.OK) {
+
+                // Remove temporarily
+
+                setSelectedFile(
+                        documentKey,
+                        null
+                );
+
+                fileName.setText(
+                        "No file selected"
+                );
+
+                fileName.setStyle(
+                        "-fx-font-size:12px;" +
+                        "-fx-text-fill:#999999;"
+                );
+
+                showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Document Removed",
+                        documentName +
+                        " removed successfully."
+                );
+            }
+        });
+
+        // =====================================================
+        // ADD CONTROLS
+        // =====================================================
+
+        row.getChildren().addAll(
+                icon,
+                information,
+                fileName,
+                spacer,
+                chooseButton,
+                previewButton,
+                saveButton,
+                removeButton
         );
 
-
-        buttonBox.getChildren().addAll(
-                viewButton,
-                downloadButton
-        );
-
-
-        // ================= ADD EVERYTHING =================
-
-        card.getChildren().addAll(
-                topRow,
-                details,
-                buttonBox
-        );
-
-
-        return card;
+        return row;
     }
 
+    // =========================================================
+    // GET SELECTED FILE
+    // =========================================================
 
-    // =====================================================
-    // ALERT METHOD
-    // =====================================================
+    private File getSelectedFile(
+            String documentKey) {
+
+        switch (documentKey) {
+
+            case "aadhaar":
+                return aadhaarFile;
+
+            case "pan":
+                return panFile;
+
+            case "ownership":
+                return ownershipFile;
+
+            case "address":
+                return addressFile;
+
+            default:
+                return null;
+        }
+    }
+
+    // =========================================================
+    // SET SELECTED FILE
+    // =========================================================
+
+    private void setSelectedFile(
+            String documentKey,
+            File file) {
+
+        switch (documentKey) {
+
+            case "aadhaar":
+                aadhaarFile = file;
+                break;
+
+            case "pan":
+                panFile = file;
+                break;
+
+            case "ownership":
+                ownershipFile = file;
+                break;
+
+            case "address":
+                addressFile = file;
+                break;
+        }
+    }
+
+    // =========================================================
+    // CLOUDINARY UPLOAD
+    // =========================================================
+
+    private static String uploadDocument(
+            File file) {
+
+        if (file == null ||
+                !file.exists() ||
+                !file.isFile()) {
+
+            System.out.println(
+                    "Invalid document file."
+            );
+
+            return null;
+        }
+
+        try {
+
+            System.out.println(
+                    "Uploading document: "
+                    + file.getName()
+            );
+
+            String url =
+                    ImageUploadController.imageUpload(
+                            file
+                    );
+
+            if (url == null ||
+                    url.trim().isEmpty()) {
+
+                System.out.println(
+                        "Cloudinary returned an empty URL."
+                );
+
+                return null;
+            }
+
+            System.out.println(
+                    "Document uploaded successfully."
+            );
+
+            System.out.println(
+                    "Cloudinary URL: "
+                    + url
+            );
+
+            return url;
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Document upload failed."
+            );
+
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    // =========================================================
+    // SAVE DOCUMENT TO FIRESTORE
+    // =========================================================
+
+    private boolean saveDocumentToFirestore(
+            String email,
+            String documentKey,
+            String documentType,
+            String documentName,
+            String cloudinaryUrl) {
+
+        try {
+
+            Firestore db =
+                    FirebaseConfig.getFirestore();
+
+            // =================================================
+            // documents
+            //      |
+            //      |-- resident email
+            //      |
+            //      |-- documentKey
+            // =================================================
+
+            DocumentReference documentReference =
+                    db.collection("documents")
+                      .document(email)
+                      .collection("documents")
+                      .document(documentKey);
+
+            Map<String, Object> data =
+                    new HashMap<>();
+
+            data.put(
+                    "email",
+                    email
+            );
+
+            data.put(
+                    "documentType",
+                    documentType
+            );
+
+            data.put(
+                    "documentName",
+                    documentName
+            );
+
+            data.put(
+                    "cloudinaryUrl",
+                    cloudinaryUrl
+            );
+
+            data.put(
+                    "uploadedAt",
+                    System.currentTimeMillis()
+            );
+
+            documentReference.set(
+                    data
+            ).get();
+
+            System.out.println(
+                    "Document saved to Firestore."
+            );
+
+            System.out.println(
+                    "Resident Email: "
+                    + email
+            );
+
+            System.out.println(
+                    "Document Type: "
+                    + documentType
+            );
+
+            return true;
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Firestore document save failed."
+            );
+
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    // =========================================================
+    // LOAD EXISTING DOCUMENTS
+    // =========================================================
+
+    private void loadExistingDocuments() {
+
+        String email =
+                ResidentSession.getLoggedInEmail();
+
+        if (email == null ||
+                email.trim().isEmpty()) {
+
+            System.out.println(
+                    "No logged-in resident email."
+            );
+
+            return;
+        }
+
+        try {
+
+            Firestore db =
+                    FirebaseConfig.getFirestore();
+
+            String[] documentKeys = {
+                    "aadhaar",
+                    "pan",
+                    "ownership",
+                    "address"
+            };
+
+            for (String documentKey : documentKeys) {
+
+                DocumentSnapshot snapshot =
+                        db.collection("documents")
+                          .document(email)
+                          .collection("documents")
+                          .document(documentKey)
+                          .get()
+                          .get();
+
+                if (snapshot.exists()) {
+
+                    System.out.println(
+                            "Document found: "
+                            + documentKey
+                    );
+
+                    System.out.println(
+                            "Cloudinary URL: "
+                            + snapshot.getString(
+                                    "cloudinaryUrl"
+                                               )
+                    );
+
+                } else {
+
+                    System.out.println(
+                            "No document found: "
+                            + documentKey
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Error fetching resident documents."
+            );
+
+            e.printStackTrace();
+        }
+    }
+
+    // =========================================================
+    // ALERT
+    // =========================================================
 
     private void showAlert(
+            Alert.AlertType type,
             String title,
             String message) {
 
         Alert alert =
-                new Alert(
-                        Alert.AlertType.INFORMATION
-                );
+                new Alert(type);
 
-        alert.setTitle(title);
+        alert.setTitle(
+                title
+        );
 
-        alert.setHeaderText(null);
+        alert.setHeaderText(
+                null
+        );
 
-        alert.setContentText(message);
+        alert.setContentText(
+                message
+        );
 
         alert.showAndWait();
     }

@@ -1,12 +1,15 @@
 package com.society.model.Resident_model;
 
-
-  
 import java.util.Date;
 
 public class ComplaintModel {
 
+    // =========================================================
+    // FIELDS
+    // =========================================================
+
     private String id;
+    private String email;
     private String flatNumber;
     private String category;
     private String title;
@@ -16,12 +19,21 @@ public class ComplaintModel {
     private String status;
     private Date createdAt;
 
-    // REQUIRED by Firestore
+    // =========================================================
+    // EMPTY CONSTRUCTOR
+    // Required by Firestore
+    // =========================================================
+
     public ComplaintModel() {
     }
 
+    // =========================================================
+    // PARAMETERIZED CONSTRUCTOR
+    // =========================================================
+
     public ComplaintModel(
             String id,
+            String email,
             String flatNumber,
             String category,
             String title,
@@ -32,6 +44,7 @@ public class ComplaintModel {
             Date createdAt) {
 
         this.id = id;
+        this.email = email;
         this.flatNumber = flatNumber;
         this.category = category;
         this.title = title;
@@ -41,6 +54,10 @@ public class ComplaintModel {
         this.status = status;
         this.createdAt = createdAt;
     }
+
+    // =========================================================
+    // ID
+    // =========================================================
 
     public String getId() {
         return id;
@@ -50,6 +67,22 @@ public class ComplaintModel {
         this.id = id;
     }
 
+    // =========================================================
+    // EMAIL
+    // =========================================================
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // =========================================================
+    // FLAT NUMBER
+    // =========================================================
+
     public String getFlatNumber() {
         return flatNumber;
     }
@@ -57,6 +90,10 @@ public class ComplaintModel {
     public void setFlatNumber(String flatNumber) {
         this.flatNumber = flatNumber;
     }
+
+    // =========================================================
+    // CATEGORY
+    // =========================================================
 
     public String getCategory() {
         return category;
@@ -66,6 +103,10 @@ public class ComplaintModel {
         this.category = category;
     }
 
+    // =========================================================
+    // TITLE
+    // =========================================================
+
     public String getTitle() {
         return title;
     }
@@ -73,6 +114,10 @@ public class ComplaintModel {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    // =========================================================
+    // DESCRIPTION
+    // =========================================================
 
     public String getDescription() {
         return description;
@@ -82,6 +127,10 @@ public class ComplaintModel {
         this.description = description;
     }
 
+    // =========================================================
+    // IMAGE FILE NAME
+    // =========================================================
+
     public String getImageFileName() {
         return imageFileName;
     }
@@ -89,6 +138,10 @@ public class ComplaintModel {
     public void setImageFileName(String imageFileName) {
         this.imageFileName = imageFileName;
     }
+
+    // =========================================================
+    // PREFERRED DATE
+    // =========================================================
 
     public String getPreferredDate() {
         return preferredDate;
@@ -98,6 +151,10 @@ public class ComplaintModel {
         this.preferredDate = preferredDate;
     }
 
+    // =========================================================
+    // STATUS
+    // =========================================================
+
     public String getStatus() {
         return status;
     }
@@ -105,6 +162,10 @@ public class ComplaintModel {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    // =========================================================
+    // CREATED AT
+    // =========================================================
 
     public Date getCreatedAt() {
         return createdAt;
@@ -114,5 +175,3 @@ public class ComplaintModel {
         this.createdAt = createdAt;
     }
 }
-
-

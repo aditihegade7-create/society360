@@ -1,10 +1,6 @@
 package com.society.view.Resident_portal;
 
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QuerySnapshot;
-
-import com.society.config.FirebaseConfig;
+import com.society.controller.Resident_Controller.NoticeController;
 import com.society.model.Resident_model.NoticeModel;
 import com.society.view.ScreenSize;
 
@@ -30,32 +26,64 @@ import java.util.List;
 
 public class Notice {
 
+    // =========================================================
+    // ALL NOTICES
+    // =========================================================
+
     private List<NoticeModel> allNotices =
             new ArrayList<>();
 
+    // =========================================================
+    // NOTICE CONTROLLER
+    // =========================================================
+
+    private final NoticeController noticeController;
+
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
+
+    public Notice() {
+
+        noticeController =
+                new NoticeController();
+    }
 
     // =========================================================
     // SCENE
     // =========================================================
 
-    public Scene getResidentbtScene(Stage stage) {
+    public Scene getResidentbtScene(
+            Stage stage,
+            String residentEmail) {
 
+        // =====================================================
         // ROOT
-        BorderPane root = new BorderPane();
+        // =====================================================
 
+        BorderPane root =
+                new BorderPane();
+
+        // =====================================================
         // SIDEBAR
-        panel panelobj = new panel(stage);
+        // =====================================================
+
+        panel panelobj =
+                new panel(
+                        stage,
+                        residentEmail
+                );
 
         root.setLeft(
                 panelobj.getSidebar()
         );
 
-
         // =====================================================
         // MAIN CONTENT
         // =====================================================
 
-        VBox mainContent = new VBox(20);
+        VBox mainContent =
+                new VBox(20);
 
         mainContent.setPadding(
                 new Insets(30)
@@ -64,7 +92,6 @@ public class Notice {
         mainContent.setStyle(
                 "-fx-background-color: #e8ddd5;"
         );
-
 
         // =====================================================
         // HEADING
@@ -81,8 +108,9 @@ public class Notice {
                 )
         );
 
-        title.setTextFill(Color.WHITE);
-
+        title.setTextFill(
+                Color.WHITE
+        );
 
         Label subtitle =
                 new Label(
@@ -90,11 +118,15 @@ public class Notice {
                 );
 
         subtitle.setFont(
-                Font.font("System", 14)
+                Font.font(
+                        "System",
+                        14
+                )
         );
 
-        subtitle.setTextFill(Color.WHITE);
-
+        subtitle.setTextFill(
+                Color.WHITE
+        );
 
         VBox heading =
                 new VBox(5);
@@ -116,7 +148,6 @@ public class Notice {
                 subtitle
         );
 
-
         // =====================================================
         // FILTER
         // =====================================================
@@ -127,7 +158,6 @@ public class Notice {
         filterBox.setAlignment(
                 Pos.CENTER_LEFT
         );
-
 
         ComboBox<String> category =
                 new ComboBox<>();
@@ -144,8 +174,9 @@ public class Notice {
                 "General"
         );
 
-        category.setPrefWidth(180);
-
+        category.setPrefWidth(
+                180
+        );
 
         TextField search =
                 new TextField();
@@ -154,14 +185,14 @@ public class Notice {
                 "Search notices..."
         );
 
-        search.setPrefWidth(250);
-
+        search.setPrefWidth(
+                250
+        );
 
         filterBox.getChildren().addAll(
                 category,
                 search
         );
-
 
         // =====================================================
         // NOTICE CONTAINER
@@ -178,14 +209,9 @@ public class Notice {
                 true
         );
 
-        /*
-         * IMPORTANT
-         * Give the container a visible background.
-         */
         noticeContainer.setStyle(
                 "-fx-background-color: #e8ddd5;"
         );
-
 
         // =====================================================
         // SCROLL PANE
@@ -198,9 +224,13 @@ public class Notice {
                 noticeContainer
         );
 
-        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToWidth(
+                true
+        );
 
-        scrollPane.setFitToHeight(false);
+        scrollPane.setFitToHeight(
+                false
+        );
 
         scrollPane.setHbarPolicy(
                 ScrollPane.ScrollBarPolicy.NEVER
@@ -222,14 +252,14 @@ public class Notice {
                 "-fx-background-color: #e8ddd5;"
         );
 
-
-        // VERY IMPORTANT
+        // =====================================================
+        // VERTICAL GROW
+        // =====================================================
 
         VBox.setVgrow(
                 scrollPane,
                 Priority.ALWAYS
         );
-
 
         // =====================================================
         // ADD TO MAIN CONTENT
@@ -241,7 +271,6 @@ public class Notice {
                 scrollPane
         );
 
-
         // =====================================================
         // CENTER
         // =====================================================
@@ -250,15 +279,14 @@ public class Notice {
                 mainContent
         );
 
-
         // =====================================================
-        // FETCH
+        // FETCH NOTICES
         // =====================================================
 
         fetchNotices(
-                noticeContainer
+                noticeContainer,
+                residentEmail
         );
-
 
         // =====================================================
         // SCENE
@@ -271,203 +299,229 @@ public class Notice {
                         ScreenSize.getHeight()
                 );
 
-
         return scene;
     }
-
 
     // =========================================================
     // FETCH NOTICES
     // =========================================================
 
     private void fetchNotices(
-            VBox noticeContainer) {
+            VBox noticeContainer,
+            String residentEmail) {
 
         Thread thread =
                 new Thread(() -> {
 
                     try {
 
-                        System.out.println(
-                                "Fetching notices..."
-                        );
-
-
-                        // GET FIRESTORE
-
-                        Firestore db =
-                                FirebaseConfig.getFirestore();
-
-
-                        // GET COLLECTION
-
-                        QuerySnapshot snapshot =
-                                db.collection("Notices")
-                                  .get()
-                                  .get();
-
-
-                        System.out.println(
-                                "Number of notices = "
-                                + snapshot.size()
-                        );
-
-
-                        List<NoticeModel> fetchedNotices =
-                                new ArrayList<>();
-
-
                         // =================================================
-                        // READ DOCUMENTS
+                        // START LOG
                         // =================================================
 
-                        for (
-                                DocumentSnapshot document :
-                                snapshot.getDocuments()
-                        ) {
+                        System.out.println(
+                                "========================================"
+                        );
 
-                            String title =
-                                    document.getString(
-                                            "title"
-                                    );
+                        System.out.println(
+                                "RESIDENT NOTICE FETCH STARTED"
+                        );
 
-                            String date =
-                                    document.getString(
-                                            "date"
-                                    );
+                        System.out.println(
+                                "Logged-in Resident Email : "
+                                        + residentEmail
+                        );
 
-                            String description =
-                                    document.getString(
-                                            "description"
-                                    );
+                        System.out.println(
+                                "========================================"
+                        );
 
-                            String status =
-                                    document.getString(
-                                            "status"
-                                    );
+                        // =================================================
+                        // VALIDATE RESIDENT EMAIL
+                        // =================================================
 
+                        if (residentEmail == null
+                                || residentEmail.trim().isEmpty()) {
 
-                            System.out.println(
-                                    "Title = " + title
-                            );
-
-                            System.out.println(
-                                    "Date = " + date
-                            );
-
-                            System.out.println(
-                                    "Description = "
-                                    + description
-                            );
-
-                            System.out.println(
-                                    "Status = " + status
-                            );
-
-
-                            NoticeModel notice =
-                                    new NoticeModel(
-                                            title,
-                                            date,
-                                            description,
-                                            status
-                                    );
-
-
-                            fetchedNotices.add(
-                                    notice
+                            throw new IllegalArgumentException(
+                                    "Resident email is empty."
                             );
                         }
 
+                        String email =
+                                residentEmail.trim();
 
                         // =================================================
-                        // JAVAFX THREAD
+                        // FETCH THROUGH CONTROLLER
+                        // =================================================
+
+                        List<NoticeModel> fetchedNotices =
+                                noticeController
+                                        .getNoticesForResident(
+                                                email
+                                        );
+
+                        // =================================================
+                        // LOG RESULT
+                        // =================================================
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        System.out.println(
+                                "TOTAL NOTICES FETCHED : "
+                                        + fetchedNotices.size()
+                        );
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        // =================================================
+                        // JAVAFX APPLICATION THREAD
                         // =================================================
 
                         Platform.runLater(() -> {
 
                             System.out.println(
-                                    "Updating JavaFX UI..."
+                                    "Updating JavaFX Notice UI..."
                             );
 
+                            // =============================================
+                            // CLEAR OLD DATA
+                            // =============================================
 
                             allNotices.clear();
+
+                            // =============================================
+                            // ADD NEW DATA
+                            // =============================================
 
                             allNotices.addAll(
                                     fetchedNotices
                             );
 
+                            // =============================================
+                            // CLEAR CONTAINER
+                            // =============================================
 
                             noticeContainer
                                     .getChildren()
                                     .clear();
 
+                            // =============================================
+                            // NO NOTICES
+                            // =============================================
 
-                            // =================================================
-                            // ADD NOTICE BOXES
-                            // =================================================
+                            if (fetchedNotices.isEmpty()) {
 
-                            for (
-                                    NoticeModel notice :
-                                    fetchedNotices
-                            ) {
-
-                                VBox box =
-                                        createNoticeBox(
-                                                notice
+                                Label noNotice =
+                                        new Label(
+                                                "No notices available"
                                         );
 
+                                noNotice.setFont(
+                                        Font.font(
+                                                "System",
+                                                15
+                                        )
+                                );
+
+                                noNotice.setTextFill(
+                                        Color.web(
+                                                "#607D8B"
+                                        )
+                                );
 
                                 noticeContainer
                                         .getChildren()
                                         .add(
-                                                box
+                                                noNotice
                                         );
+
+                            } else {
+
+                                // =========================================
+                                // CREATE NOTICE BOXES
+                                // =========================================
+
+                                for (
+                                        NoticeModel notice :
+                                        fetchedNotices
+                                ) {
+
+                                    VBox box =
+                                            createNoticeBox(
+                                                    notice
+                                            );
+
+                                    noticeContainer
+                                            .getChildren()
+                                            .add(
+                                                    box
+                                            );
+                                }
                             }
 
+                            // =============================================
+                            // LOG UI COUNT
+                            // =============================================
 
                             System.out.println(
                                     "Notice boxes added = "
-                                    + noticeContainer
+                                            + noticeContainer
                                             .getChildren()
                                             .size()
                             );
 
+                            // =============================================
+                            // FORCE LAYOUT
+                            // =============================================
 
-                            // Force layout calculation
+                            noticeContainer.applyCss();
 
-                            noticeContainer
-                                    .applyCss();
-
-                            noticeContainer
-                                    .layout();
-
-
+                            noticeContainer.layout();
                         });
-
 
                     } catch (Exception e) {
 
+                        // =================================================
+                        // ERROR LOG
+                        // =================================================
+
+                        System.out.println(
+                                "========================================"
+                        );
+
+                        System.out.println(
+                                "ERROR WHILE FETCHING NOTICES"
+                        );
+
+                        System.out.println(
+                                "========================================"
+                        );
+
                         e.printStackTrace();
 
+                        // =================================================
+                        // SHOW ERROR IN JAVAFX
+                        // =================================================
 
                         Platform.runLater(() -> {
 
                             noticeContainer
                                     .getChildren()
                                     .clear();
-
 
                             Label error =
                                     new Label(
                                             "Error loading notices"
                                     );
 
-
                             error.setTextFill(
                                     Color.RED
                             );
-
 
                             noticeContainer
                                     .getChildren()
@@ -476,15 +530,16 @@ public class Notice {
                                     );
                         });
                     }
-
                 });
 
+        // =========================================================
+        // DAEMON THREAD
+        // =========================================================
 
         thread.setDaemon(true);
 
         thread.start();
     }
-
 
     // =========================================================
     // CREATE NOTICE BOX
@@ -493,27 +548,20 @@ public class Notice {
     private VBox createNoticeBox(
             NoticeModel notice) {
 
-
         VBox box =
                 new VBox(12);
-
 
         box.setPadding(
                 new Insets(20)
         );
 
-
-        /*
-         * IMPORTANT
-         * Make the box wide enough to be visible.
-         */
-
-        box.setMinHeight(130);
+        box.setMinHeight(
+                130
+        );
 
         box.setMaxWidth(
                 Double.MAX_VALUE
         );
-
 
         box.setStyle(
                 "-fx-background-color: white;" +
@@ -522,9 +570,8 @@ public class Notice {
                 "-fx-border-radius: 10;"
         );
 
-
         // =====================================================
-        // TITLE + STATUS
+        // TITLE
         // =====================================================
 
         Label titleLabel =
@@ -534,7 +581,6 @@ public class Notice {
                                 : notice.getTitle()
                 );
 
-
         titleLabel.setFont(
                 Font.font(
                         "System",
@@ -543,11 +589,13 @@ public class Notice {
                 )
         );
 
-
         titleLabel.setTextFill(
                 Color.web("#263238")
         );
 
+        // =====================================================
+        // STATUS
+        // =====================================================
 
         Label statusLabel =
                 new Label(
@@ -555,7 +603,6 @@ public class Notice {
                                 ? ""
                                 : notice.getStatus()
                 );
-
 
         statusLabel.setFont(
                 Font.font(
@@ -565,11 +612,9 @@ public class Notice {
                 )
         );
 
-
         statusLabel.setTextFill(
                 Color.WHITE
         );
-
 
         statusLabel.setPadding(
                 new Insets(
@@ -580,27 +625,26 @@ public class Notice {
                 )
         );
 
-
         statusLabel.setStyle(
                 "-fx-background-color: #2e7d32;" +
                 "-fx-background-radius: 15;"
         );
 
+        // =====================================================
+        // TOP ROW
+        // =====================================================
 
         HBox topRow =
                 new HBox(10);
-
 
         topRow.setAlignment(
                 Pos.CENTER_LEFT
         );
 
-
         topRow.getChildren().addAll(
                 titleLabel,
                 statusLabel
         );
-
 
         // =====================================================
         // DATE
@@ -609,13 +653,12 @@ public class Notice {
         Label dateLabel =
                 new Label(
                         "Date • "
-                        + (
-                        notice.getDate() == null
-                                ? ""
-                                : notice.getDate()
+                                + (
+                                notice.getDate() == null
+                                        ? ""
+                                        : notice.getDate()
                         )
                 );
-
 
         dateLabel.setFont(
                 Font.font(
@@ -624,11 +667,9 @@ public class Notice {
                 )
         );
 
-
         dateLabel.setTextFill(
                 Color.web("#607D8B")
         );
-
 
         // =====================================================
         // DESCRIPTION
@@ -641,13 +682,13 @@ public class Notice {
                                 : notice.getDescription()
                 );
 
-
-        descriptionLabel.setWrapText(true);
+        descriptionLabel.setWrapText(
+                true
+        );
 
         descriptionLabel.setMaxWidth(
                 Double.MAX_VALUE
         );
-
 
         descriptionLabel.setFont(
                 Font.font(
@@ -656,11 +697,9 @@ public class Notice {
                 )
         );
 
-
         descriptionLabel.setTextFill(
                 Color.web("#455A64")
         );
-
 
         // =====================================================
         // ADD TO BOX
@@ -671,7 +710,6 @@ public class Notice {
                 dateLabel,
                 descriptionLabel
         );
-
 
         return box;
     }

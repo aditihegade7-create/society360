@@ -1,6 +1,3 @@
-
-
-
 package com.society.service.resident_service;
 
 import com.society.dao.Resident_dao.ComplaintDAO;
@@ -12,15 +9,33 @@ import java.util.UUID;
 
 public class ComplaintService {
 
+    // =========================================================
+    // DAO
+    // =========================================================
+
     private final ComplaintDAO complaintDAO;
 
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
+
     public ComplaintService(ComplaintDAO complaintDAO) {
+
+        if (complaintDAO == null) {
+            throw new IllegalArgumentException(
+                    "ComplaintDAO cannot be null."
+            );
+        }
+
         this.complaintDAO = complaintDAO;
     }
 
-    // ================= CREATE COMPLAINT =================
+    // =========================================================
+    // CREATE COMPLAINT
+    // =========================================================
 
     public ComplaintModel createComplaint(
+            String email,
             String flatNumber,
             String category,
             String title,
@@ -29,50 +44,176 @@ public class ComplaintService {
             String preferredDate)
             throws Exception {
 
+        // =====================================================
+        // VALIDATION
+        // =====================================================
+
+        if (email == null
+                || email.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Logged-in email is missing."
+            );
+        }
+
+        if (category == null
+                || category.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Complaint category is required."
+            );
+        }
+
+        if (title == null
+                || title.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Complaint title is required."
+            );
+        }
+
+        if (description == null
+                || description.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Complaint description is required."
+            );
+        }
+
+        if (preferredDate == null
+                || preferredDate.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Preferred date is required."
+            );
+        }
+
+        // =====================================================
+        // CREATE MODEL
+        // =====================================================
+
         ComplaintModel complaint =
                 new ComplaintModel();
 
-        // Generate unique ID
+        // =====================================================
+        // ID
+        // =====================================================
+
         complaint.setId(
                 UUID.randomUUID().toString()
         );
 
-        complaint.setFlatNumber(flatNumber);
+        // =====================================================
+        // EMAIL
+        // =====================================================
 
-        complaint.setCategory(category);
+        complaint.setEmail(
+                email.trim()
+        );
 
-        complaint.setTitle(title);
+        // =====================================================
+        // FLAT NUMBER
+        // =====================================================
 
-        complaint.setDescription(description);
+        complaint.setFlatNumber(
+                flatNumber == null
+                        ? ""
+                        : flatNumber.trim()
+        );
 
-        complaint.setImageFileName(imageFileName);
+        // =====================================================
+        // CATEGORY
+        // =====================================================
 
-        complaint.setPreferredDate(preferredDate);
+        complaint.setCategory(
+                category.trim()
+        );
 
-        // Default status
-        complaint.setStatus("IN PROGRESS");
+        // =====================================================
+        // TITLE
+        // =====================================================
 
-        // Creation time
-        complaint.setCreatedAt(new Date());
+        complaint.setTitle(
+                title.trim()
+        );
 
-        // Save to Firestore
-        complaintDAO.saveComplaint(complaint);
+        // =====================================================
+        // DESCRIPTION
+        // =====================================================
+
+        complaint.setDescription(
+                description.trim()
+        );
+
+        // =====================================================
+        // IMAGE
+        // =====================================================
+
+        complaint.setImageFileName(
+                imageFileName == null
+                        ? ""
+                        : imageFileName
+        );
+
+        // =====================================================
+        // PREFERRED DATE
+        // =====================================================
+
+        complaint.setPreferredDate(
+                preferredDate.trim()
+        );
+
+        // =====================================================
+        // DEFAULT STATUS
+        // =====================================================
+
+        complaint.setStatus(
+                "IN PROGRESS"
+        );
+
+        // =====================================================
+        // CREATED DATE
+        // =====================================================
+
+        complaint.setCreatedAt(
+                new Date()
+        );
+
+        // =====================================================
+        // SAVE
+        // =====================================================
+
+        complaintDAO.saveComplaint(
+                complaint
+        );
 
         return complaint;
     }
 
-    // ================= GET MY COMPLAINTS =================
+    // =========================================================
+    // GET MY COMPLAINTS
+    // =========================================================
 
     public List<ComplaintModel> getMyComplaints(
-            String flatNumber)
+            String email)
             throws Exception {
 
-        return complaintDAO.getComplaintsByFlat(
-                flatNumber
+        if (email == null
+                || email.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Email is required."
+            );
+        }
+
+        return complaintDAO.getComplaintsByEmail(
+                email.trim()
         );
     }
 
-    // ================= GET ALL =================
+    // =========================================================
+    // GET ALL COMPLAINTS
+    // =========================================================
 
     public List<ComplaintModel> getAllComplaints()
             throws Exception {
@@ -80,18 +221,65 @@ public class ComplaintService {
         return complaintDAO.getAllComplaints();
     }
 
-    // ================= UPDATE STATUS =================
+    // =========================================================
+    // GET COMPLAINTS BY FLAT
+    // =========================================================
+
+    public List<ComplaintModel> getComplaintsByFlat(
+            String flatNumber)
+            throws Exception {
+
+        if (flatNumber == null
+                || flatNumber.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Flat number is required."
+            );
+        }
+
+        return complaintDAO.getComplaintsByFlat(
+                flatNumber.trim()
+        );
+    }
+
+    // =========================================================
+    // UPDATE STATUS
+    // =========================================================
 
     public void updateStatus(
+            String email,
             String complaintId,
             String status)
             throws Exception {
 
+        if (email == null
+                || email.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Email is required."
+            );
+        }
+
+        if (complaintId == null
+                || complaintId.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Complaint ID is required."
+            );
+        }
+
+        if (status == null
+                || status.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Status is required."
+            );
+        }
+
         complaintDAO.updateStatus(
-                complaintId,
-                status
+                email.trim(),
+                complaintId.trim(),
+                status.trim()
         );
     }
 }
-
-

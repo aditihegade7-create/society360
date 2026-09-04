@@ -1,6 +1,8 @@
 
 package com.society.model.Secretary_model;
 
+import com.google.cloud.firestore.Firestore;
+
 public class Event {
 
     // =====================================================
@@ -18,7 +20,7 @@ public class Event {
     // REQUIRED BY FIRESTORE
     // =====================================================
 
-    public Event() {
+    public Event(Firestore firestore) {
     }
 
     // =====================================================

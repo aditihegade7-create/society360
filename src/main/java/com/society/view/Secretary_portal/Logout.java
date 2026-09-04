@@ -1,7 +1,6 @@
 package com.society.view.Secretary_portal;
 
 import com.society.view.ScreenSize;
-import com.society.view.Authentication.LoginPage;
 import com.society.view.Welcome.LogInPage;
 
 import javafx.geometry.Insets;

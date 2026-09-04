@@ -1,29 +1,33 @@
 package com.society.model.Resident_model;
 
 public class Amenities {
-
     private String amenityId;
     private String amenityName;
     private String description;
     private String price;
     private String availability;
 
-    // Required empty constructor for Firestore
+    // Runtime-only value. It is not required to exist as a Firestore field.
+    private String secretaryEmail;
+
     public Amenities() {
     }
 
-    public Amenities(
-            String amenityId,
-            String amenityName,
-            String description,
-            String price,
-            String availability) {
-
+    public Amenities(String amenityId, String amenityName,
+                     String description, String price,
+                     String availability) {
         this.amenityId = amenityId;
         this.amenityName = amenityName;
         this.description = description;
         this.price = price;
         this.availability = availability;
+    }
+
+    public Amenities(String amenityId, String amenityName,
+                     String description, String price,
+                     String availability, String secretaryEmail) {
+        this(amenityId, amenityName, description, price, availability);
+        this.secretaryEmail = secretaryEmail;
     }
 
     public String getAmenityId() {
@@ -66,6 +70,14 @@ public class Amenities {
         this.availability = availability;
     }
 
+    public String getSecretaryEmail() {
+        return secretaryEmail;
+    }
+
+    public void setSecretaryEmail(String secretaryEmail) {
+        this.secretaryEmail = secretaryEmail;
+    }
+
     @Override
     public String toString() {
         return "Amenities{" +
@@ -74,6 +86,7 @@ public class Amenities {
                 ", description='" + description + '\'' +
                 ", price='" + price + '\'' +
                 ", availability='" + availability + '\'' +
+                ", secretaryEmail='" + secretaryEmail + '\'' +
                 '}';
     }
 }

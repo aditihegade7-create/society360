@@ -11,9 +11,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
@@ -27,138 +30,99 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
-import java.awt.Desktop;
-import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class AmenitiesBooking {
 
     private VBox cardsContainer;
+    private VBox upcomingBookingsContainer;
 
     private final AmenitiesController amenitiesController;
     private final RazorpayService razorpay;
 
-    // =========================================================
-    // CONSTRUCTOR
-    // =========================================================
+    private final String residentName;
+    private final String flatNo;
+    private final String loginEmail;
 
-    public AmenitiesBooking() {
+    /*
+     * These are the application's available amenity time slots.
+     * They are not resident/secretary-specific data.
+     */
+    private static final List<String> TIME_SLOTS = Arrays.asList(
+            "08:00 AM - 10:00 AM",
+            "10:00 AM - 12:00 PM",
+            "12:00 PM - 02:00 PM",
+            "02:00 PM - 04:00 PM",
+            "04:00 PM - 06:00 PM",
+            "06:00 PM - 08:00 PM"
+    );
 
-        amenitiesController = new AmenitiesController();
+    private static final DateTimeFormatter TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
 
-        razorpay = new RazorpayService();
+    public AmenitiesBooking(
+            String residentName,
+            String flatNo,
+            String loginEmail) {
+
+        this.residentName = safe(residentName);
+        this.flatNo = safe(flatNo);
+        this.loginEmail = normalizeEmail(loginEmail);
+
+        /*
+         * AmenitiesController resolves the secretary dynamically
+         * from the logged-in resident.
+         */
+        this.amenitiesController =
+                new AmenitiesController(this.loginEmail);
+
+        this.razorpay = new RazorpayService();
     }
-
-    // =========================================================
-    // MAIN SCENE
-    // =========================================================
 
     public Scene getAminityScene(Stage stage) {
 
-        // =====================================================
-        // SIDEBAR
-        // =====================================================
-
-        panel panelobj = new panel(stage);
-
-        // =====================================================
-        // ROOT
-        // =====================================================
+        panel panelobj = new panel(stage, loginEmail);
 
         BorderPane root = new BorderPane();
 
         root.setLeft(panelobj.getSidebar());
 
-        // =====================================================
-        // MAIN AREA
-        // =====================================================
-
         BorderPane mainArea = new BorderPane();
 
-        // =====================================================
-        // HEADER
-        // =====================================================
-
         VBox heading = new VBox(3);
+        heading.setPadding(new Insets(15, 20, 15, 20));
+        heading.setStyle("-fx-background-color: white;");
 
-        heading.setPadding(
-                new Insets(5, 0, 8, 0)
-        );
+        Label title = new Label("Book Amenity");
+        title.setFont(Font.font("System", FontWeight.BOLD, 28));
+        title.setTextFill(Color.web("#4e342e"));
 
-        heading.setStyle(
-                "-fx-background-color: #4e342e;"
-        );
+        Label subtitle = new Label("Reserve society amenities");
+        subtitle.setFont(Font.font("System", 14));
+        subtitle.setTextFill(Color.web("#757575"));
 
-        Label title = new Label(
-                "Book Amenity"
-        );
-
-        title.setFont(
-                Font.font(
-                        "System",
-                        FontWeight.BOLD,
-                        28
-                )
-        );
-
-        title.setTextFill(
-                Color.web("#0d2b52")
-        );
-
-        Label subtitle = new Label(
-                "Reserve society amenities"
-        );
-
-        subtitle.setFont(
-                Font.font(
-                        "System",
-                        14
-                )
-        );
-
-        subtitle.setTextFill(
-                Color.web("#9e9e9e")
-        );
-
-        heading.getChildren().addAll(
-                title,
-                subtitle
-        );
+        heading.getChildren().addAll(title, subtitle);
 
         mainArea.setTop(heading);
 
-        // =====================================================
-        // CONTENT
-        // =====================================================
-
         VBox content = new VBox(20);
-
-        content.setPadding(
-                new Insets(
-                        27,
-                        38,
-                        30,
-                        38
-                )
-        );
-
-        content.setStyle(
-                "-fx-background-color: #e8ddd5;"
-        );
-
-        // =====================================================
-        // CARDS CONTAINER
-        // =====================================================
+        content.setPadding(new Insets(27, 38, 30, 38));
+        content.setStyle("-fx-background-color: #e8ddd5;");
 
         cardsContainer = new VBox(15);
 
         loadAmenities();
-
-        // =====================================================
-        // UPCOMING BOOKING
-        // =====================================================
 
         VBox upcomingSection = createUpcomingBooking();
 
@@ -167,25 +131,12 @@ public class AmenitiesBooking {
                 upcomingSection
         );
 
-        VBox.setVgrow(
-                cardsContainer,
-                Priority.ALWAYS
-        );
-
-        // =====================================================
-        // SCROLL PANE
-        // =====================================================
-
         ScrollPane scrollPane = new ScrollPane();
-
         scrollPane.setContent(content);
-
         scrollPane.setFitToWidth(true);
-
         scrollPane.setHbarPolicy(
                 ScrollPane.ScrollBarPolicy.NEVER
         );
-
         scrollPane.setStyle(
                 "-fx-background: #e8ddd5;" +
                 "-fx-background-color: #e8ddd5;"
@@ -193,28 +144,14 @@ public class AmenitiesBooking {
 
         mainArea.setCenter(scrollPane);
 
-        // =====================================================
-        // SET MAIN AREA
-        // =====================================================
-
         root.setCenter(mainArea);
 
-        // =====================================================
-        // SCENE
-        // =====================================================
-
-        Scene scene = new Scene(
+        return new Scene(
                 root,
                 ScreenSize.getWidth(),
                 ScreenSize.getHeight()
         );
-
-        return scene;
     }
-
-    // =========================================================
-    // LOAD AMENITIES FROM FIRESTORE
-    // =========================================================
 
     private void loadAmenities() {
 
@@ -223,12 +160,10 @@ public class AmenitiesBooking {
         List<Amenities> amenities =
                 amenitiesController.getAmenities();
 
-        if (amenities == null ||
-                amenities.isEmpty()) {
+        if (amenities == null || amenities.isEmpty()) {
 
-            Label empty = new Label(
-                    "No amenities available."
-            );
+            Label empty =
+                    new Label("No amenities available.");
 
             empty.setFont(
                     Font.font(
@@ -238,28 +173,14 @@ public class AmenitiesBooking {
                     )
             );
 
-            cardsContainer.getChildren().add(
-                    empty
-            );
-
+            cardsContainer.getChildren().add(empty);
             return;
         }
-
-        // =====================================================
-        // GRID
-        // =====================================================
 
         GridPane grid = new GridPane();
 
         grid.setHgap(16);
-
         grid.setVgap(16);
-
-        grid.setPadding(
-                new Insets(0)
-        );
-
-        // Three equal columns
 
         for (int i = 0; i < 3; i++) {
 
@@ -267,18 +188,10 @@ public class AmenitiesBooking {
                     new ColumnConstraints();
 
             column.setPercentWidth(33.33);
+            column.setHgrow(Priority.ALWAYS);
 
-            column.setHgrow(
-                    Priority.ALWAYS
-            );
-
-            grid.getColumnConstraints()
-                    .add(column);
+            grid.getColumnConstraints().add(column);
         }
-
-        // =====================================================
-        // ADD CARDS
-        // =====================================================
 
         int row = 0;
         int column = 0;
@@ -286,15 +199,9 @@ public class AmenitiesBooking {
         for (Amenities amenity : amenities) {
 
             VBox card =
-                    createAmenityCard(
-                            amenity
-                    );
+                    createAmenityCard(amenity);
 
-            grid.add(
-                    card,
-                    column,
-                    row
-            );
+            grid.add(card, column, row);
 
             GridPane.setHgrow(
                     card,
@@ -304,34 +211,21 @@ public class AmenitiesBooking {
             column++;
 
             if (column == 3) {
-
                 column = 0;
-
                 row++;
             }
         }
 
-        cardsContainer.getChildren()
-                .add(grid);
+        cardsContainer.getChildren().add(grid);
     }
 
-    // =========================================================
-    // AMENITY CARD
-    // =========================================================
-
-    private VBox createAmenityCard(
-            Amenities amenity) {
+    private VBox createAmenityCard(Amenities amenity) {
 
         VBox card = new VBox(9);
 
-        card.setPadding(
-                new Insets(16)
-        );
-
+        card.setPadding(new Insets(16));
         card.setMinHeight(148);
-
         card.setPrefHeight(148);
-
         card.setMaxHeight(170);
 
         card.setStyle(
@@ -339,13 +233,10 @@ public class AmenitiesBooking {
                 "-fx-background-radius: 8;"
         );
 
-        // =====================================================
-        // NAME
-        // =====================================================
-
-        Label name = new Label(
-                amenity.getAmenityName()
-        );
+        Label name =
+                new Label(
+                        safe(amenity.getAmenityName())
+                );
 
         name.setFont(
                 Font.font(
@@ -356,18 +247,15 @@ public class AmenitiesBooking {
         );
 
         name.setTextFill(
-                Color.web("#0d2b52")
+                Color.web("#4e342e")
         );
 
-        // =====================================================
-        // PRICE
-        // =====================================================
-
-        Label price = new Label(
-                formatPrice(
-                        amenity.getPrice()
-                )
-        );
+        Label price =
+                new Label(
+                        formatPrice(
+                                amenity.getPrice()
+                        )
+                );
 
         price.setFont(
                 Font.font(
@@ -381,13 +269,10 @@ public class AmenitiesBooking {
                 Color.web("#263238")
         );
 
-        // =====================================================
-        // DESCRIPTION
-        // =====================================================
-
-        Label description = new Label(
-                amenity.getDescription()
-        );
+        Label description =
+                new Label(
+                        safe(amenity.getDescription())
+                );
 
         description.setWrapText(true);
 
@@ -396,25 +281,20 @@ public class AmenitiesBooking {
         );
 
         description.setFont(
-                Font.font(
-                        "System",
-                        13
-                )
+                Font.font("System", 13)
         );
 
-        // =====================================================
-        // BOTTOM ROW
-        // =====================================================
-
-        HBox bottomRow = new HBox(10);
+        HBox bottomRow =
+                new HBox(10);
 
         bottomRow.setAlignment(
                 Pos.CENTER_LEFT
         );
 
-        Label availability = new Label(
-                amenity.getAvailability()
-        );
+        Label availability =
+                new Label(
+                        safe(amenity.getAvailability())
+                );
 
         availability.setFont(
                 Font.font(
@@ -428,7 +308,8 @@ public class AmenitiesBooking {
                 Color.web("#00843D")
         );
 
-        Region spacer = new Region();
+        Region spacer =
+                new Region();
 
         HBox.setHgrow(
                 spacer,
@@ -439,7 +320,6 @@ public class AmenitiesBooking {
                 new Button("Book");
 
         bookButton.setPrefWidth(76);
-
         bookButton.setPrefHeight(30);
 
         bookButton.setStyle(
@@ -450,9 +330,7 @@ public class AmenitiesBooking {
         );
 
         bookButton.setOnAction(
-                e -> showBookingDialog(
-                        amenity
-                )
+                e -> showBookingDialog(amenity)
         );
 
         bottomRow.getChildren().addAll(
@@ -471,12 +349,7 @@ public class AmenitiesBooking {
         return card;
     }
 
-    // =========================================================
-    // FORMAT PRICE
-    // =========================================================
-
-    private String formatPrice(
-            String price) {
+    private String formatPrice(String price) {
 
         if (price == null ||
                 price.trim().isEmpty()) {
@@ -490,22 +363,26 @@ public class AmenitiesBooking {
                         ""
                 );
 
-        if (number.isEmpty()) {
-
-            return price;
-        }
-
-        return "₹ " + number;
+        return number.isEmpty()
+                ? price
+                : "₹ " + number;
     }
-
-    // =========================================================
-    // BOOKING DIALOG
-    // =========================================================
 
     private void showBookingDialog(
             Amenities amenity) {
 
-        VBox box = new VBox(15);
+        if (amenity == null ||
+                isEmpty(amenity.getAmenityId())) {
+
+            showError(
+                    "This amenity could not be identified."
+            );
+
+            return;
+        }
+
+        VBox box =
+                new VBox(15);
 
         box.setAlignment(
                 Pos.CENTER
@@ -519,14 +396,11 @@ public class AmenitiesBooking {
                 "-fx-background-color: #e8ddd5;"
         );
 
-        // =====================================================
-        // TITLE
-        // =====================================================
-
-        Label title = new Label(
-                "Book " +
-                amenity.getAmenityName()
-        );
+        Label title =
+                new Label(
+                        "Book " +
+                        safe(amenity.getAmenityName())
+                );
 
         title.setFont(
                 Font.font(
@@ -540,12 +414,38 @@ public class AmenitiesBooking {
                 Color.web("#4e342e")
         );
 
-        // =====================================================
-        // DATE
-        // =====================================================
+        Label residentLabel =
+                new Label(
+                        "Resident: " +
+                        residentName
+                );
+
+        residentLabel.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        14
+                )
+        );
+
+        Label flatLabel =
+                new Label(
+                        "Flat No: " +
+                        flatNo
+                );
+
+        flatLabel.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        14
+                )
+        );
 
         Label dateLabel =
-                new Label("Select Date");
+                new Label(
+                        "Select Date"
+                );
 
         dateLabel.setFont(
                 Font.font(
@@ -556,20 +456,48 @@ public class AmenitiesBooking {
         );
 
         DatePicker datePicker =
-                new DatePicker();
-
-        datePicker.setValue(
-                LocalDate.now()
-        );
+                new DatePicker(
+                        LocalDate.now()
+                );
 
         datePicker.setPrefWidth(250);
 
-        // =====================================================
-        // TIME SLOT
-        // =====================================================
+        datePicker.setDayCellFactory(
+                new Callback<DatePicker, DateCell>() {
+
+                    @Override
+                    public DateCell call(
+                            DatePicker picker) {
+
+                        return new DateCell() {
+
+                            @Override
+                            public void updateItem(
+                                    LocalDate date,
+                                    boolean empty) {
+
+                                super.updateItem(
+                                        date,
+                                        empty
+                                );
+
+                                if (date != null &&
+                                        date.isBefore(
+                                                LocalDate.now()
+                                        )) {
+
+                                    setDisable(true);
+                                }
+                            }
+                        };
+                    }
+                }
+        );
 
         Label timeLabel =
-                new Label("Select Time Slot");
+                new Label(
+                        "Select Time Slot"
+                );
 
         timeLabel.setFont(
                 Font.font(
@@ -582,30 +510,266 @@ public class AmenitiesBooking {
         ComboBox<String> timeSlot =
                 new ComboBox<>();
 
-        timeSlot.getItems().addAll(
-
-                "08:00 AM - 10:00 AM",
-
-                "10:00 AM - 12:00 PM",
-
-                "12:00 PM - 02:00 PM",
-
-                "02:00 PM - 04:00 PM",
-
-                "04:00 PM - 06:00 PM",
-
-                "06:00 PM - 08:00 PM"
-        );
+        timeSlot.setPrefWidth(250);
 
         timeSlot.setPromptText(
                 "Select time slot"
         );
 
-        timeSlot.setPrefWidth(250);
+        timeSlot.getItems().setAll(
+                TIME_SLOTS
+        );
 
-        // =====================================================
-        // PAYMENT BUTTON
-        // =====================================================
+        /*
+         * These properties hold the latest Firestore availability
+         * information for the selected date.
+         */
+        timeSlot.getProperties().put(
+                "unavailableSlots",
+                new HashSet<String>()
+        );
+
+        timeSlot.getProperties().put(
+                "endedSlots",
+                new HashSet<String>()
+        );
+
+        /*
+         * Dropdown cell.
+         *
+         * No getSetProperty() helper is used.
+         */
+        timeSlot.setCellFactory(
+                comboBox -> new ListCell<String>() {
+
+                    @Override
+                    protected void updateItem(
+                            String item,
+                            boolean empty) {
+
+                        super.updateItem(
+                                item,
+                                empty
+                        );
+
+                        if (empty || item == null) {
+
+                            setText(null);
+                            setDisable(false);
+                            setStyle("");
+
+                            return;
+                        }
+
+                        Object unavailableValue =
+                                comboBox.getProperties().get(
+                                        "unavailableSlots"
+                                );
+
+                        Object endedValue =
+                                comboBox.getProperties().get(
+                                        "endedSlots"
+                                );
+
+                        Set<?> unavailable =
+                                unavailableValue instanceof Set<?>
+                                        ? (Set<?>) unavailableValue
+                                        : java.util.Collections.emptySet();
+
+                        Set<?> ended =
+                                endedValue instanceof Set<?>
+                                        ? (Set<?>) endedValue
+                                        : java.util.Collections.emptySet();
+
+                        if (unavailable.contains(item)) {
+
+                            setText(
+                                    item +
+                                    "  (UNAVAILABLE)"
+                            );
+
+                            setDisable(true);
+
+                            setStyle(
+                                    "-fx-text-fill: #b02a37;"
+                            );
+
+                        } else if (ended.contains(item)) {
+
+                            setText(
+                                    item +
+                                    "  (ENDED)"
+                            );
+
+                            setDisable(true);
+
+                            setStyle(
+                                    "-fx-text-fill: #757575;"
+                            );
+
+                        } else {
+
+                            setText(item);
+
+                            setDisable(false);
+
+                            setStyle(
+                                    "-fx-text-fill: #16823b;"
+                            );
+                        }
+                    }
+                }
+        );
+
+        /*
+         * Selected-value display.
+         */
+        timeSlot.setButtonCell(
+                new ListCell<String>() {
+
+                    @Override
+                    protected void updateItem(
+                            String item,
+                            boolean empty) {
+
+                        super.updateItem(
+                                item,
+                                empty
+                        );
+
+                        if (empty || item == null) {
+
+                            setText(null);
+                            setStyle("");
+
+                            return;
+                        }
+
+                        Object unavailableValue =
+                                timeSlot.getProperties().get(
+                                        "unavailableSlots"
+                                );
+
+                        Object endedValue =
+                                timeSlot.getProperties().get(
+                                        "endedSlots"
+                                );
+
+                        Set<?> unavailable =
+                                unavailableValue instanceof Set<?>
+                                        ? (Set<?>) unavailableValue
+                                        : java.util.Collections.emptySet();
+
+                        Set<?> ended =
+                                endedValue instanceof Set<?>
+                                        ? (Set<?>) endedValue
+                                        : java.util.Collections.emptySet();
+
+                        if (unavailable.contains(item)) {
+
+                            setText(
+                                    item +
+                                    "  (UNAVAILABLE)"
+                            );
+
+                            setStyle(
+                                    "-fx-text-fill: #b02a37;"
+                            );
+
+                        } else if (ended.contains(item)) {
+
+                            setText(
+                                    item +
+                                    "  (ENDED)"
+                            );
+
+                            setStyle(
+                                    "-fx-text-fill: #757575;"
+                            );
+
+                        } else {
+
+                            setText(item);
+
+                            setStyle(
+                                    "-fx-text-fill: #16823b;"
+                            );
+                        }
+                    }
+                }
+        );
+
+        /*
+         * Prevent selection of an unavailable or ended slot.
+         */
+        timeSlot.valueProperty().addListener(
+                (obs, oldValue, newValue) -> {
+
+                    if (newValue == null) {
+                        return;
+                    }
+
+                    Object unavailableValue =
+                            timeSlot.getProperties().get(
+                                    "unavailableSlots"
+                            );
+
+                    Object endedValue =
+                            timeSlot.getProperties().get(
+                                    "endedSlots"
+                            );
+
+                    Set<?> unavailable =
+                            unavailableValue instanceof Set<?>
+                                    ? (Set<?>) unavailableValue
+                                    : java.util.Collections.emptySet();
+
+                    Set<?> ended =
+                            endedValue instanceof Set<?>
+                                    ? (Set<?>) endedValue
+                                    : java.util.Collections.emptySet();
+
+                    if (unavailable.contains(newValue)) {
+
+                        timeSlot.getSelectionModel()
+                                .clearSelection();
+
+                        showError(
+                                "This time slot is already booked and accepted by another resident."
+                        );
+
+                    } else if (ended.contains(newValue)) {
+
+                        timeSlot.getSelectionModel()
+                                .clearSelection();
+
+                        showError(
+                                "This time slot has already ended for today."
+                        );
+                    }
+                }
+        );
+
+        /*
+         * Refresh availability whenever the date changes.
+         */
+        datePicker.valueProperty().addListener(
+                (obs, oldDate, newDate) ->
+                        updateAvailableTimeSlots(
+                                amenity,
+                                newDate,
+                                timeSlot
+                        )
+        );
+
+        /*
+         * Initial availability.
+         */
+        updateAvailableTimeSlots(
+                amenity,
+                datePicker.getValue(),
+                timeSlot
+        );
 
         Button paymentButton =
                 new Button(
@@ -620,108 +784,317 @@ public class AmenitiesBooking {
                 "-fx-background-radius: 6;"
         );
 
-        // =====================================================
-        // POPUP
-        // =====================================================
-
-        Stage popup = new Stage();
+        Stage popup =
+                new Stage();
 
         popup.setTitle(
                 "Book Amenity"
         );
 
-        Scene scene = new Scene(
-                box,
-                400,
-                420
+        popup.setScene(
+                new Scene(
+                        box,
+                        400,
+                        480
+                )
         );
 
-        popup.setScene(scene);
+        paymentButton.setOnAction(e -> {
 
-        // =====================================================
-        // PAYMENT BUTTON ACTION
-        // =====================================================
+            LocalDate selectedDate =
+                    datePicker.getValue();
 
-        paymentButton.setOnAction(
-                e -> {
+            String selectedSlot =
+                    timeSlot.getValue();
 
-                    if (datePicker.getValue()
-                            == null) {
+            if (selectedDate == null) {
 
-                        showError(
-                                "Please select date."
-                        );
+                showError(
+                        "Please select date."
+                );
 
-                        return;
-                    }
+                return;
+            }
 
-                    if (timeSlot.getValue()
-                            == null) {
+            if (selectedDate.isBefore(
+                    LocalDate.now())) {
 
-                        showError(
-                                "Please select time slot."
-                        );
+                showError(
+                        "Please select today or a future date."
+                );
 
-                        return;
-                    }
+                return;
+            }
 
-                    String selectedSlot =
-                            timeSlot.getValue();
+            if (selectedSlot == null ||
+                    selectedSlot.trim().isEmpty()) {
 
-                    String[] times =
-                            selectedSlot.split(
-                                    " - "
-                            );
+                showError(
+                        "Please select time slot."
+                );
 
-                    String startTime =
-                            times[0];
+                return;
+            }
 
-                    String endTime =
-                            times[1];
-
-                    popup.close();
-
-                    startPayment(
-                            amenity,
-                            datePicker
-                                    .getValue()
-                                    .toString(),
-                            startTime,
-                            endTime
+            Object unavailableValue =
+                    timeSlot.getProperties().get(
+                            "unavailableSlots"
                     );
-                }
-        );
+
+            Object endedValue =
+                    timeSlot.getProperties().get(
+                            "endedSlots"
+                    );
+
+            Set<?> unavailable =
+                    unavailableValue instanceof Set<?>
+                            ? (Set<?>) unavailableValue
+                            : java.util.Collections.emptySet();
+
+            Set<?> ended =
+                    endedValue instanceof Set<?>
+                            ? (Set<?>) endedValue
+                            : java.util.Collections.emptySet();
+
+            if (unavailable.contains(
+                    selectedSlot)) {
+
+                timeSlot.getSelectionModel()
+                        .clearSelection();
+
+                showError(
+                        "This time slot is already unavailable."
+                );
+
+                return;
+            }
+
+            if (ended.contains(selectedSlot)) {
+
+                timeSlot.getSelectionModel()
+                        .clearSelection();
+
+                showError(
+                        "This time slot has already ended."
+                );
+
+                return;
+            }
+
+            String[] times =
+                    selectedSlot.split(" - ");
+
+            if (times.length != 2) {
+
+                showError(
+                        "Invalid time slot selected."
+                );
+
+                return;
+            }
+
+            String startTime =
+                    times[0].trim();
+
+            String endTime =
+                    times[1].trim();
+
+            String bookingDate =
+                    selectedDate.toString();
+
+            /*
+             * IMPORTANT:
+             *
+             * This is the first final Firestore availability check.
+             * It prevents a stale UI from allowing an already accepted
+             * slot to proceed to payment.
+             */
+            if (!amenitiesController.isSlotAvailable(
+                    amenity,
+                    bookingDate,
+                    startTime,
+                    endTime
+            )) {
+
+                updateAvailableTimeSlots(
+                        amenity,
+                        selectedDate,
+                        timeSlot
+                );
+
+                timeSlot.getSelectionModel()
+                        .clearSelection();
+
+                showError(
+                        "This time slot is no longer available. Please select another slot."
+                );
+
+                return;
+            }
+
+            popup.close();
+
+            startPayment(
+                    amenity,
+                    bookingDate,
+                    startTime,
+                    endTime
+            );
+        });
 
         box.getChildren().addAll(
-
                 title,
-
+                residentLabel,
+                flatLabel,
                 dateLabel,
-
                 datePicker,
-
                 timeLabel,
-
                 timeSlot,
-
                 paymentButton
         );
 
         popup.show();
     }
 
-    // =========================================================
-    // START PAYMENT
-    // =========================================================
+    private void updateAvailableTimeSlots(
+            Amenities amenity,
+            LocalDate selectedDate,
+            ComboBox<String> timeSlot) {
+
+        if (amenity == null ||
+                selectedDate == null ||
+                timeSlot == null) {
+
+            return;
+        }
+
+        Set<String> unavailableSlots =
+                new HashSet<>();
+
+        Set<String> endedSlots =
+                new HashSet<>();
+
+        try {
+
+            String bookingDate =
+                    selectedDate.toString();
+
+            /*
+             * Only ACCEPTED bookings are returned here.
+             *
+             * PENDING requests do not block the slot.
+             * REJECTED requests do not block the slot.
+             */
+            Set<String> accepted =
+                    amenitiesController
+                            .getUnavailableAcceptedSlots(
+                                    amenity,
+                                    bookingDate
+                            );
+
+            if (accepted != null) {
+
+                unavailableSlots.addAll(
+                        accepted
+                );
+            }
+
+            /*
+             * A slot whose end time has passed today
+             * cannot be newly booked.
+             */
+            if (selectedDate.isEqual(
+                    LocalDate.now())) {
+
+                LocalTime now =
+                        LocalTime.now();
+
+                for (String slot : TIME_SLOTS) {
+
+                    String[] times =
+                            slot.split(" - ");
+
+                    if (times.length != 2) {
+                        continue;
+                    }
+
+                    LocalTime end =
+                            parseTime(times[1]);
+
+                    if (end != null &&
+                            !now.isBefore(end)) {
+
+                        endedSlots.add(slot);
+                    }
+                }
+            }
+
+            /*
+             * Store the latest values on the ComboBox.
+             */
+            timeSlot.getProperties().put(
+                    "unavailableSlots",
+                    unavailableSlots
+            );
+
+            timeSlot.getProperties().put(
+                    "endedSlots",
+                    endedSlots
+            );
+
+            /*
+             * Re-create the item list so JavaFX redraws
+             * the cells using the latest properties.
+             */
+            timeSlot.getItems().setAll(
+                    TIME_SLOTS
+            );
+
+            timeSlot.getSelectionModel()
+                    .clearSelection();
+
+            if (unavailableSlots.isEmpty() &&
+                    endedSlots.isEmpty()) {
+
+                timeSlot.setPromptText(
+                        "Select time slot"
+                );
+
+            } else {
+
+                timeSlot.setPromptText(
+                        "Select an available time slot"
+                );
+            }
+
+            /*
+             * No ComboBox.refresh() is used.
+             */
+            timeSlot.requestLayout();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            timeSlot.getProperties().put(
+                    "unavailableSlots",
+                    new HashSet<String>()
+            );
+
+            timeSlot.getProperties().put(
+                    "endedSlots",
+                    new HashSet<String>()
+            );
+
+            timeSlot.getSelectionModel()
+                    .clearSelection();
+        }
+    }
 
     private void startPayment(
-
             Amenities amenity,
-
             String bookingDate,
-
             String startTime,
-
             String endTime) {
 
         double amount;
@@ -731,6 +1104,14 @@ public class AmenitiesBooking {
             String price =
                     amenity.getPrice();
 
+            if (price == null ||
+                    price.trim().isEmpty()) {
+
+                throw new NumberFormatException(
+                        "Price is empty"
+                );
+            }
+
             String number =
                     price.replaceAll(
                             "[^0-9.]",
@@ -738,38 +1119,35 @@ public class AmenitiesBooking {
                     );
 
             amount =
-                    Double.parseDouble(
-                            number
-                    );
+                    Double.parseDouble(number);
+
+            if (amount <= 0) {
+
+                throw new NumberFormatException(
+                        "Price must be greater than zero"
+                );
+            }
 
         } catch (Exception e) {
 
             showError(
                     "Invalid amenity price: " +
-                    amenity.getPrice()
+                    safe(amenity.getPrice())
             );
 
             return;
         }
-
-        // =====================================================
-        // PROCESSING WINDOW
-        // =====================================================
 
         Stage processingStage =
                 createProcessingStage();
 
         processingStage.show();
 
-        // =====================================================
-        // RAZORPAY TASK
-        // =====================================================
-
         final double finalAmount =
                 amount;
 
         Task<String> paymentTask =
-                new Task<>() {
+                new Task<String>() {
 
                     @Override
                     protected String call()
@@ -778,95 +1156,82 @@ public class AmenitiesBooking {
                         return razorpay
                                 .createPaymentLink(
                                         finalAmount,
-                                        amenity
-                                                .getAmenityName()
-                                                + " Booking"
+                                        safe(
+                                                amenity.getAmenityName()
+                                        ) +
+                                        " Booking"
                                 );
                     }
                 };
 
-        // =====================================================
-        // SUCCESS
-        // =====================================================
+        paymentTask.setOnSucceeded(e -> {
 
-        paymentTask.setOnSucceeded(
-                e -> {
+            processingStage.close();
 
-                    processingStage.close();
+            String paymentUrl =
+                    paymentTask.getValue();
 
-                    String paymentUrl =
-                            paymentTask.getValue();
+            if (paymentUrl == null ||
+                    paymentUrl.trim().isEmpty()) {
 
-                    try {
-
-                        razorpay.openPaymentPage(
-                                paymentUrl
-                        );
-
-                        showPaymentWaiting(
-                                amenity,
-                                bookingDate,
-                                startTime,
-                                endTime,
-                                finalAmount
-                        );
-
-                    } catch (Exception ex) {
-
-                        ex.printStackTrace();
-
-                        showError(
-                                "Unable to open Razorpay payment page."
-                        );
-                    }
-                }
-        );
-
-        // =====================================================
-        // FAILED
-        // =====================================================
-
-        paymentTask.setOnFailed(
-                e -> {
-
-                    processingStage.close();
-
-                    Throwable error =
-                            paymentTask
-                                    .getException();
-
-                    if (error != null) {
-
-                        error.printStackTrace();
-                    }
-
-                    showError(
-                            "Unable to create Razorpay payment.\n\n"
-                            +
-                            "Please check your Razorpay Key ID "
-                            +
-                            "and Key Secret."
-                    );
-                }
-        );
-
-        Thread thread =
-                new Thread(
-                        paymentTask
+                showError(
+                        "Razorpay did not return a payment link."
                 );
 
-        thread.setDaemon(true);
+                return;
+            }
 
+            try {
+
+                razorpay.openPaymentPage(
+                        paymentUrl
+                );
+
+                showPaymentWaiting(
+                        amenity,
+                        bookingDate,
+                        startTime,
+                        endTime,
+                        finalAmount
+                );
+
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
+
+                showError(
+                        "Unable to open Razorpay payment page."
+                );
+            }
+        });
+
+        paymentTask.setOnFailed(e -> {
+
+            processingStage.close();
+
+            Throwable error =
+                    paymentTask.getException();
+
+            if (error != null) {
+                error.printStackTrace();
+            }
+
+            showError(
+                    "Unable to create Razorpay payment."
+            );
+        });
+
+        Thread thread =
+                new Thread(paymentTask);
+
+        thread.setDaemon(true);
         thread.start();
     }
 
-    // =========================================================
-    // PAYMENT PROCESSING WINDOW
-    // =========================================================
-
     private Stage createProcessingStage() {
 
-        VBox box = new VBox(18);
+        VBox box =
+                new VBox(18);
 
         box.setAlignment(
                 Pos.CENTER
@@ -913,7 +1278,8 @@ public class AmenitiesBooking {
                 message
         );
 
-        Stage stage = new Stage();
+        Stage stage =
+                new Stage();
 
         stage.setTitle(
                 "Payment"
@@ -932,23 +1298,15 @@ public class AmenitiesBooking {
         return stage;
     }
 
-    // =========================================================
-    // PAYMENT WAITING
-    // =========================================================
-
     private void showPaymentWaiting(
-
             Amenities amenity,
-
             String bookingDate,
-
             String startTime,
-
             String endTime,
-
             double amount) {
 
-        VBox box = new VBox(18);
+        VBox box =
+                new VBox(18);
 
         box.setAlignment(
                 Pos.CENTER
@@ -984,10 +1342,8 @@ public class AmenitiesBooking {
 
         Label message =
                 new Label(
-                        "Razorpay payment page has been opened.\n\n"
-                        +
-                        "Complete your UPI payment there.\n"
-                        +
+                        "Razorpay payment page has been opened.\n\n" +
+                        "Complete your payment there.\n" +
                         "After successful payment, come back here."
                 );
 
@@ -1011,10 +1367,6 @@ public class AmenitiesBooking {
                 )
         );
 
-        // =====================================================
-        // COMPLETED BUTTON
-        // =====================================================
-
         Button completedButton =
                 new Button(
                         "I Have Completed Payment"
@@ -1028,20 +1380,8 @@ public class AmenitiesBooking {
                 "-fx-background-radius: 6;"
         );
 
-        // =====================================================
-        // CANCEL
-        // =====================================================
-
         Button cancelButton =
-                new Button(
-                        "Cancel"
-                );
-
-        cancelButton.setStyle(
-                "-fx-background-color: #eeeeee;" +
-                "-fx-text-fill: #333333;" +
-                "-fx-padding: 10 25;"
-        );
+                new Button("Cancel");
 
         HBox buttons =
                 new HBox(
@@ -1055,19 +1395,15 @@ public class AmenitiesBooking {
         );
 
         box.getChildren().addAll(
-
                 title,
-
                 progress,
-
                 message,
-
                 amountLabel,
-
                 buttons
         );
 
-        Stage stage = new Stage();
+        Stage stage =
+                new Stage();
 
         stage.setTitle(
                 "Razorpay Payment"
@@ -1083,55 +1419,34 @@ public class AmenitiesBooking {
 
         stage.setResizable(false);
 
-        // =====================================================
-        // COMPLETED
-        // =====================================================
+        completedButton.setOnAction(e -> {
 
-        completedButton.setOnAction(
-                e -> {
+            stage.close();
 
-                    stage.close();
+            verifyPaymentAndSave(
+                    amenity,
+                    bookingDate,
+                    startTime,
+                    endTime,
+                    amount
+            );
+        });
 
-                    verifyPaymentAndSave(
-                            amenity,
-                            bookingDate,
-                            startTime,
-                            endTime,
-                            amount
-                    );
-                }
-        );
+        cancelButton.setOnAction(e -> {
 
-        // =====================================================
-        // CANCEL
-        // =====================================================
+            stage.close();
 
-        cancelButton.setOnAction(
-                e -> {
-
-                    stage.close();
-
-                    showPaymentFailed();
-                }
-        );
+            showPaymentFailed();
+        });
 
         stage.show();
     }
 
-    // =========================================================
-    // VERIFY PAYMENT
-    // =========================================================
-
     private void verifyPaymentAndSave(
-
             Amenities amenity,
-
             String bookingDate,
-
             String startTime,
-
             String endTime,
-
             double amount) {
 
         Alert alert =
@@ -1148,14 +1463,13 @@ public class AmenitiesBooking {
         );
 
         alert.setContentText(
-                "Confirm only if Razorpay shows that your UPI payment was successful."
+                "Confirm only if Razorpay shows that your payment was successful."
         );
 
-        alert.showAndWait()
-                .ifPresent(result -> {
+        alert.showAndWait().ifPresent(
+                result -> {
 
-                    if (result ==
-                            javafx.scene.control.ButtonType.OK) {
+                    if (result == ButtonType.OK) {
 
                         saveBooking(
                                 amenity,
@@ -1169,45 +1483,60 @@ public class AmenitiesBooking {
 
                         showPaymentFailed();
                     }
-                });
+                }
+        );
     }
 
-    // =========================================================
-    // SAVE BOOKING
-    // =========================================================
-
     private void saveBooking(
-
             Amenities amenity,
-
             String bookingDate,
-
             String startTime,
-
             String endTime,
-
             double amount) {
 
         try {
 
+            /*
+             * SECOND final Firestore check.
+             *
+             * This protects against another accepted booking
+             * appearing while the resident was on Razorpay.
+             */
+            if (!amenitiesController.isSlotAvailable(
+                    amenity,
+                    bookingDate,
+                    startTime,
+                    endTime
+            )) {
+
+                showError(
+                        "Payment was completed, but this time slot has already been accepted by another resident. The booking was not created."
+                );
+
+                loadAmenities();
+                loadUpcomingBookings();
+
+                return;
+            }
+
+            /*
+             * Booking is created as:
+             *
+             * paymentStatus = SUCCESS
+             * bookingStatus = PENDING
+             */
             String bookingId =
                     amenitiesController.saveBooking(
-
                             amenity,
-
                             bookingDate,
-
                             startTime,
-
                             endTime,
-
-                            "CONFIRMED",
-
+                            flatNo,
+                            residentName,
+                            loginEmail,
+                            "PENDING",
                             "SUCCESS",
-
-                            String.valueOf(
-                                    amount
-                            )
+                            String.valueOf(amount)
                     );
 
             if (bookingId != null) {
@@ -1217,11 +1546,12 @@ public class AmenitiesBooking {
                 );
 
                 loadAmenities();
+                loadUpcomingBookings();
 
             } else {
 
                 showError(
-                        "Payment completed but booking could not be saved."
+                        "Payment completed but booking could not be saved because the slot is no longer available."
                 );
             }
 
@@ -1234,10 +1564,6 @@ public class AmenitiesBooking {
             );
         }
     }
-
-    // =========================================================
-    // UPCOMING BOOKING
-    // =========================================================
 
     private VBox createUpcomingBooking() {
 
@@ -1261,30 +1587,403 @@ public class AmenitiesBooking {
                 Color.web("#263238")
         );
 
-        HBox booking =
-                new HBox(20);
+        upcomingBookingsContainer =
+                new VBox(10);
 
-        booking.setAlignment(
-                Pos.CENTER_LEFT
+        section.getChildren().addAll(
+                title,
+                upcomingBookingsContainer
         );
 
-        booking.setPadding(
+        loadUpcomingBookings();
+
+        return section;
+    }
+
+    private void loadUpcomingBookings() {
+
+        if (upcomingBookingsContainer == null) {
+            return;
+        }
+
+        upcomingBookingsContainer
+                .getChildren()
+                .clear();
+
+        if (isEmpty(loginEmail)) {
+
+            Label error =
+                    new Label(
+                            "Unable to identify logged-in resident."
+                    );
+
+            error.setTextFill(
+                    Color.web("#b02a37")
+            );
+
+            upcomingBookingsContainer
+                    .getChildren()
+                    .add(error);
+
+            return;
+        }
+
+        List<Map<String, Object>> bookings =
+                amenitiesController
+                        .getResidentBookings(
+                                loginEmail
+                        );
+
+        if (bookings == null ||
+                bookings.isEmpty()) {
+
+            Label empty =
+                    new Label(
+                            "You have no upcoming bookings."
+                    );
+
+            empty.setFont(
+                    Font.font(
+                            "System",
+                            14
+                    )
+            );
+
+            empty.setTextFill(
+                    Color.web("#757575")
+            );
+
+            upcomingBookingsContainer
+                    .getChildren()
+                    .add(empty);
+
+            return;
+        }
+
+        bookings.sort(
+                Comparator.comparing(
+                        booking ->
+                                getValue(
+                                        booking,
+                                        "bookingDate"
+                                )
+                )
+        );
+
+        LocalDate today =
+                LocalDate.now();
+
+        boolean foundUpcoming =
+                false;
+
+        for (Map<String, Object> booking :
+                bookings) {
+
+            if (booking == null) {
+                continue;
+            }
+
+            String bookingDate =
+                    getValue(
+                            booking,
+                            "bookingDate"
+                    );
+
+            String bookingStatus =
+                    getValue(
+                            booking,
+                            "bookingStatus"
+                    );
+
+            if (bookingStatus.isEmpty()) {
+                bookingStatus = "PENDING";
+            }
+
+            if ("CANCELLED".equalsIgnoreCase(
+                    bookingStatus)) {
+
+                continue;
+            }
+
+            try {
+
+                LocalDate date =
+                        LocalDate.parse(
+                                bookingDate
+                        );
+
+                if (date.isBefore(today)) {
+                    continue;
+                }
+
+            } catch (Exception ignored) {
+                /*
+                 * Keep the booking visible if
+                 * its date cannot be parsed.
+                 */
+            }
+
+            upcomingBookingsContainer
+                    .getChildren()
+                    .add(
+                            createBookingCard(
+                                    booking
+                            )
+                    );
+
+            foundUpcoming = true;
+        }
+
+        if (!foundUpcoming) {
+
+            Label empty =
+                    new Label(
+                            "You have no upcoming bookings."
+                    );
+
+            empty.setFont(
+                    Font.font(
+                            "System",
+                            14
+                    )
+            );
+
+            empty.setTextFill(
+                    Color.web("#757575")
+            );
+
+            upcomingBookingsContainer
+                    .getChildren()
+                    .add(empty);
+        }
+    }
+
+    private VBox createBookingCard(
+            Map<String, Object> booking) {
+
+        VBox card =
+                new VBox(8);
+
+        card.setPadding(
                 new Insets(18)
         );
 
-        booking.setMinHeight(62);
-
-        booking.setStyle(
+        card.setStyle(
                 "-fx-background-color: white;" +
                 "-fx-background-radius: 8;"
         );
 
         Label amenity =
                 new Label(
-                        "Community Hall"
+                        getValue(
+                                booking,
+                                "amenityName"
+                        )
                 );
 
         amenity.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        17
+                )
+        );
+
+        amenity.setTextFill(
+                Color.web("#4e342e")
+        );
+
+        Label idLabel =
+                new Label(
+                        "Booking ID: " +
+                        getValue(
+                                booking,
+                                "bookingId"
+                        )
+                );
+
+        idLabel.setFont(
+                Font.font(
+                        "System",
+                        12
+                )
+        );
+
+        idLabel.setTextFill(
+                Color.web("#757575")
+        );
+
+        String bookingDate =
+                getValue(
+                        booking,
+                        "bookingDate"
+                );
+
+        Label date =
+                new Label(
+                        "Date: " +
+                        formatDate(
+                                bookingDate
+                        )
+                );
+
+        date.setFont(
+                Font.font(
+                        "System",
+                        14
+                )
+        );
+
+        Label time =
+                new Label(
+                        "Time: " +
+                        getValue(
+                                booking,
+                                "startTime"
+                        ) +
+                        " - " +
+                        getValue(
+                                booking,
+                                "endTime"
+                        )
+                );
+
+        time.setFont(
+                Font.font(
+                        "System",
+                        14
+                )
+        );
+
+        Label flat =
+                new Label(
+                        "Flat: " +
+                        getValue(
+                                booking,
+                                "flatNo"
+                        )
+                );
+
+        flat.setFont(
+                Font.font(
+                        "System",
+                        14
+                )
+        );
+
+        Label resident =
+                new Label(
+                        "Resident: " +
+                        getValue(
+                                booking,
+                                "residentName"
+                        )
+                );
+
+        resident.setFont(
+                Font.font(
+                        "System",
+                        14
+                )
+        );
+
+        Label amount =
+                new Label(
+                        "Amount: ₹ " +
+                        getValue(
+                                booking,
+                                "paymentAmount"
+                        )
+                );
+
+        amount.setFont(
+                Font.font(
+                        "System",
+                        14
+                )
+        );
+
+        String bookingStatus =
+                getValue(
+                        booking,
+                        "bookingStatus"
+                );
+
+        if (bookingStatus.isEmpty()) {
+            bookingStatus = "PENDING";
+        }
+
+        Label statusLabel =
+                new Label(
+                        bookingStatus.toUpperCase()
+                );
+
+        statusLabel.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        13
+                )
+        );
+
+        statusLabel.setPadding(
+                new Insets(
+                        6,
+                        14,
+                        6,
+                        14
+                )
+        );
+
+        if ("ACCEPTED".equalsIgnoreCase(
+                bookingStatus)) {
+
+            statusLabel.setStyle(
+                    "-fx-background-color: #d8f3df;" +
+                    "-fx-text-fill: #16823b;" +
+                    "-fx-background-radius: 15;"
+            );
+
+        } else if ("REJECTED".equalsIgnoreCase(
+                bookingStatus)) {
+
+            statusLabel.setStyle(
+                    "-fx-background-color: #f8d7da;" +
+                    "-fx-text-fill: #b02a37;" +
+                    "-fx-background-radius: 15;"
+            );
+
+        } else if ("PROGRESS".equalsIgnoreCase(
+                bookingStatus)) {
+
+            statusLabel.setStyle(
+                    "-fx-background-color: #dbeafe;" +
+                    "-fx-text-fill: #1d4ed8;" +
+                    "-fx-background-radius: 15;"
+            );
+
+        } else {
+
+            statusLabel.setStyle(
+                    "-fx-background-color: #fff3cd;" +
+                    "-fx-text-fill: #856404;" +
+                    "-fx-background-radius: 15;"
+            );
+        }
+
+        HBox statusRow =
+                new HBox();
+
+        statusRow.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        Label statusText =
+                new Label(
+                        "Booking Status:"
+                );
+
+        statusText.setFont(
                 Font.font(
                         "System",
                         FontWeight.BOLD,
@@ -1292,63 +1991,113 @@ public class AmenitiesBooking {
                 )
         );
 
-        Label date =
-                new Label(
-                        "17 May 2025"
-                );
-
-        Label time =
-                new Label(
-                        "06:00 PM - 10:00 PM"
-                );
-
-        Region spacer =
+        Region statusSpacer =
                 new Region();
 
         HBox.setHgrow(
-                spacer,
+                statusSpacer,
                 Priority.ALWAYS
         );
 
-        Label status =
-                new Label(
-                        "Confirmed"
+        statusRow.getChildren().addAll(
+                statusText,
+                statusSpacer,
+                statusLabel
+        );
+
+        String paymentStatus =
+                getValue(
+                        booking,
+                        "paymentStatus"
                 );
 
-        status.setPadding(
-                new Insets(
-                        8,
-                        12,
-                        8,
-                        12
+        if (paymentStatus.isEmpty()) {
+            paymentStatus = "UNKNOWN";
+        }
+
+        Label paymentLabel =
+                new Label(
+                        "Payment: " +
+                        paymentStatus.toUpperCase()
+                );
+
+        paymentLabel.setFont(
+                Font.font(
+                        "System",
+                        FontWeight.BOLD,
+                        13
                 )
         );
 
-        status.setStyle(
-                "-fx-background-color: #d8f3df;" +
-                "-fx-text-fill: #16823b;" +
-                "-fx-background-radius: 15;"
-        );
+        if ("PAID".equalsIgnoreCase(
+                paymentStatus)
+                ||
+                "SUCCESS".equalsIgnoreCase(
+                        paymentStatus)) {
 
-        booking.getChildren().addAll(
+            paymentLabel.setTextFill(
+                    Color.web("#16823b")
+            );
+
+        } else {
+
+            paymentLabel.setTextFill(
+                    Color.web("#856404")
+            );
+        }
+
+        card.getChildren().addAll(
                 amenity,
+                idLabel,
                 date,
                 time,
-                spacer,
-                status
+                flat,
+                resident,
+                amount,
+                statusRow,
+                paymentLabel
         );
 
-        section.getChildren().addAll(
-                title,
-                booking
-        );
-
-        return section;
+        return card;
     }
 
-    // =========================================================
-    // SUCCESS
-    // =========================================================
+    private String getValue(
+            Map<String, Object> data,
+            String key) {
+
+        if (data == null ||
+                key == null) {
+
+            return "";
+        }
+
+        Object value =
+                data.get(key);
+
+        return value == null
+                ? ""
+                : value.toString();
+    }
+
+    private String formatDate(
+            String date) {
+
+        try {
+
+            LocalDate localDate =
+                    LocalDate.parse(date);
+
+            return localDate.format(
+                    DateTimeFormatter.ofPattern(
+                            "dd MMM yyyy"
+                    )
+            );
+
+        } catch (Exception e) {
+
+            return safe(date);
+        }
+    }
 
     private void showPaymentSuccess(
             String bookingId) {
@@ -1359,7 +2108,7 @@ public class AmenitiesBooking {
                 );
 
         alert.setTitle(
-                "Booking Successful"
+                "Booking Request Submitted"
         );
 
         alert.setHeaderText(
@@ -1367,18 +2116,15 @@ public class AmenitiesBooking {
         );
 
         alert.setContentText(
-                "Your amenity has been booked successfully.\n\n"
-                +
+                "Your payment was successful and your amenity booking request has been sent to the Secretary.\n\n" +
                 "Booking ID: " +
-                bookingId
+                bookingId +
+                "\n" +
+                "Booking Status: PENDING"
         );
 
         alert.showAndWait();
     }
-
-    // =========================================================
-    // PAYMENT FAILED
-    // =========================================================
 
     private void showPaymentFailed() {
 
@@ -1402,10 +2148,6 @@ public class AmenitiesBooking {
         alert.showAndWait();
     }
 
-    // =========================================================
-    // ERROR
-    // =========================================================
-
     private void showError(
             String message) {
 
@@ -1425,5 +2167,50 @@ public class AmenitiesBooking {
         );
 
         alert.showAndWait();
+    }
+
+    private static LocalTime parseTime(
+            String value) {
+
+        try {
+
+            return LocalTime.parse(
+                    value.trim()
+                            .toUpperCase(
+                                    Locale.ENGLISH
+                            ),
+                    TIME_FORMATTER
+            );
+
+        } catch (Exception e) {
+
+            return null;
+        }
+    }
+
+    private static String safe(
+            String value) {
+
+        return value == null
+                ? ""
+                : value.trim();
+    }
+
+    private static String normalizeEmail(
+            String value) {
+
+        return value == null
+                ? ""
+                : value.trim()
+                        .toLowerCase(
+                                Locale.ENGLISH
+                        );
+    }
+
+    private static boolean isEmpty(
+            String value) {
+
+        return value == null ||
+                value.trim().isEmpty();
     }
 }

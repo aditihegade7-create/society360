@@ -17,10 +17,10 @@ public class RazorpayService {
     // =====================================================
 
     private static final String KEY_ID =
-            "rzp_test_TVVxUJAaiBthxu";
+            "rzp_test_TWfWEBbT8ZzPHa";
 
     private static final String KEY_SECRET =
-            "2cZIBZFcTu5K4JGbC2uAuR1Q";
+            "BbCK4ly09CXmMie1ynM6wc5g";
 
     // =====================================================
     // RAZORPAY API

@@ -12,7 +12,7 @@ public class SecretarySidebar {
         public VBox createSidebar(Stage stage) {
 
                 // SIDEBAR
-        
+
                 VBox sidebar = new VBox();
 
                 sidebar.setPrefWidth(280);
@@ -320,6 +320,17 @@ public class SecretarySidebar {
                                         profile.createScene(stage));
                 });
 
+                Button parking = new Button("Parking");
+
+                parking.setOnAction(e -> {
+
+                        SecretaryParking secretaryParking = new SecretaryParking();
+
+                        stage.setScene(
+                                        secretaryParking.getParkingScene());
+
+                        stage.show();
+                });
                 // =====================================================
                 // LOGOUT
                 // =====================================================
@@ -364,6 +375,7 @@ public class SecretarySidebar {
                                 eventsBtn,
                                 reportsBtn,
                                 profileBtn,
+                                parking,
                                 logoutBtn);
 
                 return sidebar;
