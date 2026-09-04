@@ -1,5 +1,6 @@
 package com.society.view.Secretary_portal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.society.controller.Secretary_Controller.OwnerController;
@@ -57,6 +58,13 @@ public class ManageOwner {
     private TextField search;
 
     // =====================================================
+    // OWNER CACHE
+    // =====================================================
+
+    private List<Owner> allOwners =
+            new ArrayList<>();
+
+    // =====================================================
     // CREATE SCENE
     // =====================================================
 
@@ -66,7 +74,8 @@ public class ManageOwner {
         // CONTROLLER
         // =====================================================
 
-        ownerController = new OwnerController();
+        ownerController =
+                new OwnerController();
 
         // =====================================================
         // SIDEBAR
@@ -119,7 +128,7 @@ public class ManageOwner {
 
         Label subtitle =
                 new Label(
-                        "View and manage all flat owners"
+                        "View and manage owners of your society"
                 );
 
         subtitle.setStyle(
@@ -329,7 +338,7 @@ public class ManageOwner {
             loadOwners();
 
             System.out.println(
-                    "Owner data refreshed from Firestore."
+                    "Owner data refreshed."
             );
         });
 
@@ -379,49 +388,75 @@ public class ManageOwner {
 
     // =====================================================
     // LOAD OWNERS
+    //
+    // IMPORTANT:
+    // Only logged-in Secretary's society owners
     // =====================================================
 
     private void loadOwners() {
 
         ownerList.getChildren().clear();
 
-        List<Owner> owners =
-                ownerController.getAllOwners();
+        try {
 
-        if (owners == null ||
-                owners.isEmpty()) {
+            /*
+             * DO NOT USE:
+             *
+             * ownerController.getAllOwners()
+             *
+             * because that returns owners from
+             * every society.
+             */
 
-            Label emptyLabel =
-                    new Label(
-                            "No owners found."
-                    );
+            allOwners =
+                    ownerController
+                            .getOwnersBySociety();
 
-            emptyLabel.setStyle(
-                    "-fx-font-size:16px;" +
-                    "-fx-text-fill:#555555;"
-            );
+            if (allOwners == null) {
 
-            ownerList.getChildren().add(
-                    emptyLabel
-            );
-
-            return;
-        }
-
-        for (Owner owner : owners) {
-
-            if (owner == null) {
-                continue;
+                allOwners =
+                        new ArrayList<>();
             }
 
-            ownerList.getChildren().add(
-                    createOwnerRow(owner)
+            System.out.println(
+                    "Owners of logged-in Secretary's society: "
+                            + allOwners.size()
+            );
+
+            if (allOwners.isEmpty()) {
+
+                showEmptyMessage(
+                        "No owners found in your society."
+                );
+
+                return;
+            }
+
+            for (Owner owner : allOwners) {
+
+                if (owner == null) {
+                    continue;
+                }
+
+                ownerList.getChildren().add(
+                        createOwnerRow(owner)
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            showEmptyMessage(
+                    "Unable to load owners."
             );
         }
     }
 
     // =====================================================
     // FILTER OWNERS
+    //
+    // Local search on already loaded society owners
     // =====================================================
 
     private void filterOwners(
@@ -436,14 +471,45 @@ public class ManageOwner {
                                 .toLowerCase()
                                 .trim();
 
-        List<Owner> owners =
-                ownerController.getAllOwners();
+        // =====================================================
+        // EMPTY SEARCH
+        // =====================================================
+
+        if (text.isEmpty()) {
+
+            if (allOwners == null ||
+                    allOwners.isEmpty()) {
+
+                showEmptyMessage(
+                        "No owners found in your society."
+                );
+
+                return;
+            }
+
+            for (Owner owner : allOwners) {
+
+                if (owner == null) {
+                    continue;
+                }
+
+                ownerList.getChildren().add(
+                        createOwnerRow(owner)
+                );
+            }
+
+            return;
+        }
+
+        // =====================================================
+        // SEARCH CACHE
+        // =====================================================
 
         boolean found = false;
 
-        if (owners != null) {
+        if (allOwners != null) {
 
-            for (Owner owner : owners) {
+            for (Owner owner : allOwners) {
 
                 if (owner == null) {
                     continue;
@@ -469,9 +535,6 @@ public class ManageOwner {
                         safe(owner.getStatus())
                                 .toLowerCase();
 
-                // IMPORTANT:
-                // Society name should come from
-                // Owner's society field.
                 String society =
                         safe(owner.getSociety())
                                 .toLowerCase();
@@ -492,20 +555,14 @@ public class ManageOwner {
             }
         }
 
+        // =====================================================
+        // NOTHING FOUND
+        // =====================================================
+
         if (!found) {
 
-            Label emptyLabel =
-                    new Label(
-                            "No matching owners found."
-                    );
-
-            emptyLabel.setStyle(
-                    "-fx-font-size:16px;" +
-                    "-fx-text-fill:#555555;"
-            );
-
-            ownerList.getChildren().add(
-                    emptyLabel
+            showEmptyMessage(
+                    "No matching owners found."
             );
         }
     }
@@ -747,10 +804,6 @@ public class ManageOwner {
 
     private void openAddOwnerDialog() {
 
-        // =====================================================
-        // OVERLAY
-        // =====================================================
-
         StackPane overlay =
                 new StackPane();
 
@@ -848,7 +901,7 @@ public class ManageOwner {
         );
 
         // =====================================================
-        // SOCIETY NAME
+        // SOCIETY
         // =====================================================
 
         Label societyLabel =
@@ -1165,8 +1218,6 @@ public class ManageOwner {
                         overlay
                 );
 
-                // Clear fields
-
                 societyField.clear();
                 nameField.clear();
                 flatField.clear();
@@ -1174,7 +1225,9 @@ public class ManageOwner {
                 emailField.clear();
                 statusField.clear();
 
-                // Reload
+                // -------------------------------------------------
+                // Reload only logged-in Secretary's society
+                // -------------------------------------------------
 
                 loadOwners();
 
@@ -1183,8 +1236,8 @@ public class ManageOwner {
                 showAlert(
                         Alert.AlertType.ERROR,
                         "Error",
-                        "Failed to save owner.\n" +
-                        "This email may already exist."
+                        "Failed to save owner.\n"
+                                + "This email may already exist."
                 );
             }
         });
@@ -1221,6 +1274,28 @@ public class ManageOwner {
             rootStack.getChildren()
                     .remove(overlay);
         }
+    }
+
+    // =====================================================
+    // EMPTY MESSAGE
+    // =====================================================
+
+    private void showEmptyMessage(
+            String message) {
+
+        ownerList.getChildren().clear();
+
+        Label emptyLabel =
+                new Label(message);
+
+        emptyLabel.setStyle(
+                "-fx-font-size:16px;" +
+                "-fx-text-fill:#555555;"
+        );
+
+        ownerList.getChildren().add(
+                emptyLabel
+        );
     }
 
     // =====================================================

@@ -1,17 +1,14 @@
 package com.society.controller.Secretary_Controller;
 
-import java.util.List;
-
 import com.society.dao.Secretary_dao.PaymentDao;
 import com.society.model.Secretary_model.Payment;
 
+import java.util.List;
+
 public class PaymentController {
 
-    // =========================================================
-    // DAO
-    // =========================================================
-
     private final PaymentDao paymentDao;
+
 
     // =========================================================
     // CONSTRUCTOR
@@ -22,6 +19,7 @@ public class PaymentController {
         paymentDao =
                 new PaymentDao();
     }
+
 
     // =========================================================
     // ADD AMENITY
@@ -41,6 +39,7 @@ public class PaymentController {
         );
     }
 
+
     // =========================================================
     // GET ALL AMENITIES
     // =========================================================
@@ -50,6 +49,7 @@ public class PaymentController {
         return paymentDao.getAllAmenities();
     }
 
+
     // =========================================================
     // GET ALL BOOKINGS
     // =========================================================
@@ -58,6 +58,7 @@ public class PaymentController {
 
         return paymentDao.getAllBookings();
     }
+
 
     // =========================================================
     // UPDATE BOOKING STATUS

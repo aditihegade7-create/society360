@@ -1,45 +1,107 @@
 package com.society.view.Secretary_portal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.society.controller.Secretary_Controller.ReportController;
+import com.society.dao.Welcome.UserDao;
 import com.society.model.Secretary_model.Report;
+import com.society.model.Welcome.User;
 import com.society.view.ScreenSize;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * GenerateReports
+ *
+ * Secretary Daily Reports page.
+ *
+ * Data flow:
+ *
+ * Secretary login
+ *       ↓
+ * ReportController
+ *       ↓
+ * Secretary society
+ *       ↓
+ * ReportDao
+ *       ↓
+ * Reports collection
+ *       +
+ * visitors/{email}/visitor_records/*
+ *       ↓
+ * Report list
+ *       ↓
+ * JavaFX table
+ */
 public class GenerateReports {
+
+    // =========================================================
+    // COLORS
+    // =========================================================
+
+    private static final String BACKGROUND =
+            "#F7F7F7";
+
+    private static final String DARK =
+            "#3D322E";
+
+    private static final String TEXT =
+            "#292525";
+
+    private static final String SECONDARY =
+            "#666666";
+
+    private static final String GREEN =
+            "#47785B";
+
+    private static final String BORDER =
+            "#E1E1E1";
 
     // =========================================================
     // CONTROLLER
     // =========================================================
 
-    private ReportController reportController;
+    private final ReportController reportController;
 
     // =========================================================
     // TABLE
     // =========================================================
 
-    private TableView<Report> reportTable;
+    private final TableView<Report> reportTable =
+            new TableView<>();
 
-    private ObservableList<Report> reportList =
+    private final ObservableList<Report> reportList =
             FXCollections.observableArrayList();
+
+    // =========================================================
+    // CURRENT FILTER
+    // =========================================================
+
+    private String currentFilter =
+            "All";
 
     // =========================================================
     // CONSTRUCTOR
@@ -47,14 +109,80 @@ public class GenerateReports {
 
     public GenerateReports() {
 
-        reportController = new ReportController();
+        reportController =
+                new ReportController();
     }
 
     // =========================================================
     // CREATE SCENE
     // =========================================================
 
-    public Scene createScene(Stage stage) {
+    public Scene createScene(
+            Stage stage) {
+
+        // =====================================================
+        // LOGIN CHECK
+        // =====================================================
+
+        String loggedInEmail =
+                UserDao.getLoggedInEmail();
+
+        if (isEmpty(loggedInEmail)) {
+
+            showError(
+                    "Session Error",
+                    "No logged-in secretary was found."
+            );
+
+            return new Scene(
+                    new VBox(),
+                    ScreenSize.getWidth(),
+                    ScreenSize.getHeight()
+            );
+        }
+
+        // =====================================================
+        // SECRETARY
+        // =====================================================
+
+        User secretary =
+                reportController
+                        .getLoggedInSecretary();
+
+        if (secretary == null) {
+
+            showError(
+                    "Secretary Error",
+                    "Secretary profile could not be found."
+            );
+
+            return new Scene(
+                    new VBox(),
+                    ScreenSize.getWidth(),
+                    ScreenSize.getHeight()
+            );
+        }
+
+        // =====================================================
+        // SOCIETY
+        // =====================================================
+
+        String society =
+                secretary.getSociety();
+
+        if (isEmpty(society)) {
+
+            showError(
+                    "Society Error",
+                    "Society information could not be found."
+            );
+
+            return new Scene(
+                    new VBox(),
+                    ScreenSize.getWidth(),
+                    ScreenSize.getHeight()
+            );
+        }
 
         // =====================================================
         // SIDEBAR
@@ -64,425 +192,42 @@ public class GenerateReports {
                 new SecretarySidebar();
 
         VBox sidebar =
-                sidebarObj.createSidebar(stage);
+                sidebarObj.createSidebar(
+                        stage
+                );
 
         // =====================================================
-        // MAIN LAYOUT
+        // MAIN
         // =====================================================
 
-        BorderPane mainLayout =
+        BorderPane main =
                 new BorderPane();
 
-        mainLayout.setStyle(
-                "-fx-background-color:#b3adad;"
+        main.setStyle(
+                "-fx-background-color:"
+                        + BACKGROUND
+                        + ";"
         );
 
         // =====================================================
         // HEADER
         // =====================================================
 
-        HBox header =
-                new HBox();
-
-        header.setPadding(
-                new Insets(25, 25, 15, 25)
-        );
-
-        header.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        header.setStyle(
-                "-fx-background-color:#b3adad;"
-        );
-
-        Label title =
-                new Label(
-                        "Generate Reports"
-                );
-
-        title.setStyle(
-                "-fx-font-size:26px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#434141;"
-        );
-
-        Label subtitle =
-                new Label(
-                        "View reports and data collected from all society portals"
-                );
-
-        subtitle.setStyle(
-                "-fx-font-size:13px;" +
-                "-fx-text-fill:#555555;"
-        );
-
-        VBox titleBox =
-                new VBox(
-                        5,
-                        title,
-                        subtitle
-                );
-
-        header.getChildren().add(
-                titleBox
-        );
-
-        mainLayout.setTop(
-                header
-        );
-
-        // =====================================================
-        // FILTER SECTION
-        // =====================================================
-
-        HBox filterBox =
-                new HBox();
-
-        filterBox.setSpacing(15);
-
-        filterBox.setPadding(
-                new Insets(
-                        15,
-                        25,
-                        15,
-                        25
+        main.setTop(
+                createHeader(
+                        secretary
                 )
-        );
-
-        filterBox.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        Label filterLabel =
-                new Label(
-                        "Filter by Source:"
-                );
-
-        filterLabel.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#434141;"
-        );
-
-        // =====================================================
-        // SOURCE FILTER
-        // =====================================================
-
-        ComboBox<String> sourceFilter =
-                new ComboBox<>();
-
-        sourceFilter.getItems().addAll(
-                "All",
-                "Guards",
-                "Residents",
-                "Owners",
-                "Complaints",
-                "Maintenance",
-                "Payments",
-                "Events",
-                "Notices",
-                "SOS"
-        );
-
-        sourceFilter.setValue(
-                "All"
-        );
-
-        sourceFilter.setPrefWidth(
-                180
-        );
-
-        sourceFilter.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-background-radius:6;" +
-                "-fx-border-color:#cccccc;" +
-                "-fx-border-radius:6;"
-        );
-
-        // =====================================================
-        // REFRESH BUTTON
-        // =====================================================
-
-        Button refreshButton =
-                new Button(
-                        "↻ Refresh Reports"
-                );
-
-        refreshButton.setPrefHeight(
-                38
-        );
-
-        refreshButton.setStyle(
-                "-fx-background-color:#434141;" +
-                "-fx-text-fill:white;" +
-                "-fx-font-weight:bold;" +
-                "-fx-background-radius:7;" +
-                "-fx-cursor:hand;"
-        );
-
-        // =====================================================
-        // TOTAL REPORTS LABEL
-        // =====================================================
-
-        Label totalLabel =
-                new Label(
-                        "Total Reports: 0"
-                );
-
-        totalLabel.setStyle(
-                "-fx-font-size:14px;" +
-                "-fx-font-weight:bold;" +
-                "-fx-text-fill:#183B56;"
-        );
-
-        // =====================================================
-        // FILTER BOX CONTENT
-        // =====================================================
-
-        filterBox.getChildren().addAll(
-                filterLabel,
-                sourceFilter,
-                refreshButton,
-                totalLabel
-        );
-
-        // =====================================================
-        // TABLE
-        // =====================================================
-
-        reportTable =
-                new TableView<>();
-
-        reportTable.setItems(
-                reportList
-        );
-
-        reportTable.setColumnResizePolicy(
-                TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
-        );
-
-        reportTable.setPlaceholder(
-                new Label(
-                        "No reports found."
-                )
-        );
-
-        reportTable.setStyle(
-                "-fx-background-color:white;" +
-                "-fx-border-color:#dddddd;"
-        );
-
-        // =====================================================
-        // SOURCE COLUMN
-        // =====================================================
-
-        TableColumn<Report, String> sourceColumn =
-                new TableColumn<>(
-                        "Source"
-                );
-
-        sourceColumn.setCellValueFactory(
-                new PropertyValueFactory<>(
-                        "source"
-                )
-        );
-
-        sourceColumn.setPrefWidth(
-                120
-        );
-
-        // =====================================================
-        // TYPE COLUMN
-        // =====================================================
-
-        TableColumn<Report, String> typeColumn =
-                new TableColumn<>(
-                        "Report Type"
-                );
-
-        typeColumn.setCellValueFactory(
-                new PropertyValueFactory<>(
-                        "type"
-                )
-        );
-
-        typeColumn.setPrefWidth(
-                140
-        );
-
-        // =====================================================
-        // TITLE COLUMN
-        // =====================================================
-
-        TableColumn<Report, String> titleColumn =
-                new TableColumn<>(
-                        "Title / Name"
-                );
-
-        titleColumn.setCellValueFactory(
-                new PropertyValueFactory<>(
-                        "title"
-                )
-        );
-
-        titleColumn.setPrefWidth(
-                180
-        );
-
-        // =====================================================
-        // DETAILS COLUMN
-        // =====================================================
-
-        TableColumn<Report, String> detailsColumn =
-                new TableColumn<>(
-                        "Details"
-                );
-
-        detailsColumn.setCellValueFactory(
-                new PropertyValueFactory<>(
-                        "details"
-                )
-        );
-
-        detailsColumn.setPrefWidth(
-                300
-        );
-
-        // =====================================================
-        // DATE COLUMN
-        // =====================================================
-
-        TableColumn<Report, String> dateColumn =
-                new TableColumn<>(
-                        "Date"
-                );
-
-        dateColumn.setCellValueFactory(
-                new PropertyValueFactory<>(
-                        "date"
-                )
-        );
-
-        dateColumn.setPrefWidth(
-                140
-        );
-
-        // =====================================================
-        // STATUS COLUMN
-        // =====================================================
-
-        TableColumn<Report, String> statusColumn =
-                new TableColumn<>(
-                        "Status"
-                );
-
-        statusColumn.setCellValueFactory(
-                new PropertyValueFactory<>(
-                        "status"
-                )
-        );
-
-        statusColumn.setPrefWidth(
-                120
-        );
-
-        // =====================================================
-        // ADD COLUMNS
-        // =====================================================
-
-        reportTable.getColumns().addAll(
-                sourceColumn,
-                typeColumn,
-                titleColumn,
-                detailsColumn,
-                dateColumn,
-                statusColumn
-        );
-
-        // =====================================================
-        // TABLE CONTAINER
-        // =====================================================
-
-        VBox tableBox =
-                new VBox();
-
-        tableBox.setPadding(
-                new Insets(
-                        0,
-                        25,
-                        25,
-                        25
-                )
-        );
-
-        tableBox.setStyle(
-                "-fx-background-color:#b3adad;"
-        );
-
-        VBox.setVgrow(
-                reportTable,
-                Priority.ALWAYS
-        );
-
-        tableBox.getChildren().add(
-                reportTable
-        );
-
-        // =====================================================
-        // FILTER ACTION
-        // =====================================================
-
-        sourceFilter.setOnAction(
-                e -> {
-
-                    String selected =
-                            sourceFilter.getValue();
-
-                    filterReports(
-                            selected,
-                            totalLabel
-                    );
-                }
-        );
-
-        // =====================================================
-        // REFRESH ACTION
-        // =====================================================
-
-        refreshButton.setOnAction(
-                e -> {
-
-                    loadReports(
-                            totalLabel,
-                            sourceFilter
-                    );
-                }
         );
 
         // =====================================================
         // CONTENT
         // =====================================================
 
-        VBox content =
-                new VBox();
-
-        content.setStyle(
-                "-fx-background-color:#b3adad;"
-        );
-
-        content.getChildren().addAll(
-                filterBox,
-                tableBox
-        );
-
-        VBox.setVgrow(
-                tableBox,
-                Priority.ALWAYS
-        );
-
-        mainLayout.setCenter(
-                content
+        main.setCenter(
+                createContent(
+                        stage,
+                        society
+                )
         );
 
         // =====================================================
@@ -493,236 +238,940 @@ public class GenerateReports {
                 new HBox();
 
         body.setStyle(
-                "-fx-background-color:#b3adad;"
+                "-fx-background-color:"
+                        + BACKGROUND
+                        + ";"
         );
 
         body.getChildren().addAll(
                 sidebar,
-                mainLayout
+                main
         );
 
         HBox.setHgrow(
-                mainLayout,
+                main,
                 Priority.ALWAYS
         );
 
         // =====================================================
-        // OUTER SCROLL PANE
+        // SCROLL
         // =====================================================
 
-        ScrollPane scrollPane =
+        ScrollPane scroll =
                 new ScrollPane();
 
-        scrollPane.setContent(
+        scroll.setContent(
                 body
         );
 
-        scrollPane.setFitToHeight(
+        scroll.setFitToWidth(
                 true
         );
 
-        scrollPane.setFitToWidth(
+        scroll.setFitToHeight(
                 true
         );
 
-        scrollPane.setHbarPolicy(
+        scroll.setHbarPolicy(
                 ScrollPane.ScrollBarPolicy.NEVER
         );
 
-        scrollPane.setVbarPolicy(
+        scroll.setVbarPolicy(
                 ScrollPane.ScrollBarPolicy.AS_NEEDED
         );
 
-        scrollPane.setStyle(
-                "-fx-background-color:#b3adad;" +
-                "-fx-border-color:transparent;"
+        scroll.setStyle(
+                "-fx-background-color:"
+                        + BACKGROUND
+                        + ";"
+                        + "-fx-border-color:transparent;"
         );
 
         // =====================================================
-        // LOAD FIRESTORE DATA
+        // LOAD
         // =====================================================
 
-        loadReports(
-                totalLabel,
-                sourceFilter
-        );
+        loadReports();
 
         // =====================================================
         // SCENE
         // =====================================================
 
-        Scene scene =
-                new Scene(
-                        scrollPane,
-                        ScreenSize.getWidth(),
-                        ScreenSize.getHeight()
-                );
-
-        return scene;
+        return new Scene(
+                scroll,
+                ScreenSize.getWidth(),
+                ScreenSize.getHeight()
+        );
     }
 
     // =========================================================
-    // LOAD REPORTS FROM FIRESTORE
+    // HEADER
     // =========================================================
 
-    private void loadReports(
-            Label totalLabel,
-            ComboBox<String> sourceFilter) {
+    private VBox createHeader(
+            User secretary) {
 
-        try {
+        VBox header =
+                new VBox();
 
-            System.out.println(
-                    "========================================"
-            );
+        header.setPadding(
+                new Insets(
+                        22,
+                        30,
+                        18,
+                        30
+                )
+        );
 
-            System.out.println(
-                    "Fetching reports from Firestore..."
-            );
+        header.setSpacing(
+                5
+        );
 
-            // =================================================
-            // GET DATA THROUGH CONTROLLER
-            // =================================================
+        header.setStyle(
+                "-fx-background-color:white;"
+                        + "-fx-border-color:"
+                        + BORDER
+                        + ";"
+                        + "-fx-border-width:0 0 1 0;"
+        );
 
-            List<Report> reports =
-                    reportController.getAllReports();
+        Label title =
+                new Label(
+                        "Daily Reports"
+                );
 
-            // =================================================
-            // NULL CHECK
-            // =================================================
+        title.setStyle(
+                "-fx-font-size:26px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:"
+                        + DARK
+                        + ";"
+        );
 
-            if (reports == null) {
+        Label subtitle =
+                new Label(
+                        "Generate and review daily society activity reports"
+                );
 
-                reports =
-                        FXCollections
-                                .observableArrayList();
-            }
+        subtitle.setStyle(
+                "-fx-font-size:14px;"
+                        + "-fx-text-fill:"
+                        + SECONDARY
+                        + ";"
+        );
 
-            // =================================================
-            // UPDATE OBSERVABLE LIST
-            // =================================================
+        Label secretaryLabel =
+                new Label(
+                        "Secretary: "
+                                + safe(
+                                        secretary.getName()
+                                )
+                                + "    |    Society: "
+                                + safe(
+                                        secretary.getSociety()
+                                )
+                );
 
-            reportList =
-                    FXCollections.observableArrayList(
+        secretaryLabel.setStyle(
+                "-fx-font-size:13px;"
+                        + "-fx-text-fill:"
+                        + SECONDARY
+                        + ";"
+        );
+
+        header.getChildren().addAll(
+                title,
+                subtitle,
+                secretaryLabel
+        );
+
+        return header;
+    }
+
+    // =========================================================
+    // CONTENT
+    // =========================================================
+
+    private VBox createContent(
+            Stage stage,
+            String society) {
+
+        VBox content =
+                new VBox(
+                        18
+                );
+
+        content.setPadding(
+                new Insets(
+                        25
+                )
+        );
+
+        content.setFillWidth(
+                true
+        );
+
+        // =====================================================
+        // SOCIETY CARD
+        // =====================================================
+
+        VBox societyCard =
+                new VBox(
+                        5
+                );
+
+        societyCard.setPadding(
+                new Insets(
+                        18
+                )
+        );
+
+        societyCard.setStyle(
+                "-fx-background-color:white;"
+                        + "-fx-background-radius:10;"
+                        + "-fx-border-color:"
+                        + BORDER
+                        + ";"
+                        + "-fx-border-radius:10;"
+        );
+
+        Label societyTitle =
+                new Label(
+                        "Society"
+                );
+
+        societyTitle.setStyle(
+                "-fx-font-size:13px;"
+                        + "-fx-text-fill:"
+                        + SECONDARY
+                        + ";"
+        );
+
+        Label societyValue =
+                new Label(
+                        society
+                );
+
+        societyValue.setStyle(
+                "-fx-font-size:19px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:"
+                        + TEXT
+                        + ";"
+        );
+
+        societyCard.getChildren().addAll(
+                societyTitle,
+                societyValue
+        );
+
+        // =====================================================
+        // CATEGORY BUTTONS
+        // =====================================================
+
+        HBox categoryBox =
+                new HBox(
+                        10
+                );
+
+        categoryBox.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        Button allButton =
+                createCategoryButton(
+                        "All"
+                );
+
+        Button securityButton =
+                createCategoryButton(
+                        "Security"
+                );
+
+        Button visitorButton =
+                createCategoryButton(
+                        "Visitor"
+                );
+
+        Button parkingButton =
+                createCategoryButton(
+                        "Parking"
+                );
+
+        Button incidentButton =
+                createCategoryButton(
+                        "Incident"
+                );
+
+        Button otherButton =
+                createCategoryButton(
+                        "Other"
+                );
+
+        allButton.setOnAction(
+                e -> {
+                    currentFilter = "All";
+                    filterTable(
+                            currentFilter
+                    );
+                }
+        );
+
+        securityButton.setOnAction(
+                e -> {
+                    currentFilter = "Security";
+                    filterTable(
+                            currentFilter
+                    );
+                }
+        );
+
+        visitorButton.setOnAction(
+                e -> {
+                    currentFilter = "Visitor";
+                    filterTable(
+                            currentFilter
+                    );
+                }
+        );
+
+        parkingButton.setOnAction(
+                e -> {
+                    currentFilter = "Parking";
+                    filterTable(
+                            currentFilter
+                    );
+                }
+        );
+
+        incidentButton.setOnAction(
+                e -> {
+                    currentFilter = "Incident";
+                    filterTable(
+                            currentFilter
+                    );
+                }
+        );
+
+        otherButton.setOnAction(
+                e -> {
+                    currentFilter = "Other";
+                    filterTable(
+                            currentFilter
+                    );
+                }
+        );
+
+        categoryBox.getChildren().addAll(
+                allButton,
+                securityButton,
+                visitorButton,
+                parkingButton,
+                incidentButton,
+                otherButton
+        );
+
+        // =====================================================
+        // REFRESH
+        // =====================================================
+
+        Button refreshButton =
+                new Button(
+                        "⟳ Refresh"
+                );
+
+        refreshButton.setPrefHeight(
+                38
+        );
+
+        refreshButton.setStyle(
+                "-fx-background-color:white;"
+                        + "-fx-text-fill:"
+                        + DARK
+                        + ";"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-border-color:"
+                        + BORDER
+                        + ";"
+                        + "-fx-border-radius:7;"
+                        + "-fx-background-radius:7;"
+                        + "-fx-cursor:hand;"
+        );
+
+        refreshButton.setOnAction(
+                e -> loadReports()
+        );
+
+        HBox filterRow =
+                new HBox(
+                        10
+                );
+
+        filterRow.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        filterRow.getChildren().addAll(
+                categoryBox,
+                refreshButton
+        );
+
+        // =====================================================
+        // TABLE CARD
+        // =====================================================
+
+        VBox tableCard =
+                new VBox(
+                        12
+                );
+
+        tableCard.setPadding(
+                new Insets(
+                        18
+                )
+        );
+
+        tableCard.setStyle(
+                "-fx-background-color:white;"
+                        + "-fx-background-radius:10;"
+                        + "-fx-border-color:"
+                        + BORDER
+                        + ";"
+                        + "-fx-border-radius:10;"
+        );
+
+        Label tableTitle =
+                new Label(
+                        "Recent Reports"
+                );
+
+        tableTitle.setStyle(
+                "-fx-font-size:19px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:"
+                        + TEXT
+                        + ";"
+        );
+
+        configureTable(
+                stage
+        );
+
+        VBox.setVgrow(
+                reportTable,
+                Priority.ALWAYS
+        );
+
+        tableCard.getChildren().addAll(
+                tableTitle,
+                new Separator(),
+                reportTable
+        );
+
+        VBox.setVgrow(
+                tableCard,
+                Priority.ALWAYS
+        );
+
+        content.getChildren().addAll(
+                societyCard,
+                filterRow,
+                tableCard
+        );
+
+        return content;
+    }
+
+    // =========================================================
+    // CATEGORY BUTTON
+    // =========================================================
+
+    private Button createCategoryButton(
+            String text) {
+
+        Button button =
+                new Button(
+                        text
+                );
+
+        button.setPrefHeight(
+                38
+        );
+
+        button.setPrefWidth(
+                105
+        );
+
+        button.setStyle(
+                "-fx-background-color:"
+                        + DARK
+                        + ";"
+                        + "-fx-text-fill:white;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-background-radius:7;"
+                        + "-fx-cursor:hand;"
+        );
+
+        return button;
+    }
+
+    // =========================================================
+    // CONFIGURE TABLE
+    // =========================================================
+
+    private void configureTable(
+            Stage owner) {
+
+        reportTable.setItems(
+                reportList
+        );
+
+        reportTable.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
+
+        reportTable.setPlaceholder(
+                new Label(
+                        "No reports found."
+                )
+        );
+
+        // =====================================================
+        // TYPE
+        // =====================================================
+
+        TableColumn<Report, String> typeColumn =
+                new TableColumn<>(
+                        "Report Type"
+                );
+
+        typeColumn.setCellValueFactory(
+                data ->
+                        new SimpleStringProperty(
+                                safe(
+                                        data.getValue()
+                                                .getType()
+                                )
+                        )
+        );
+
+        // =====================================================
+        // SOURCE
+        // =====================================================
+
+        TableColumn<Report, String> sourceColumn =
+                new TableColumn<>(
+                        "Source"
+                );
+
+        sourceColumn.setCellValueFactory(
+                data ->
+                        new SimpleStringProperty(
+                                safe(
+                                        data.getValue()
+                                                .getSource()
+                                )
+                        )
+        );
+
+        // =====================================================
+        // TITLE
+        // =====================================================
+
+        TableColumn<Report, String> titleColumn =
+                new TableColumn<>(
+                        "Title"
+                );
+
+        titleColumn.setCellValueFactory(
+                data ->
+                        new SimpleStringProperty(
+                                safe(
+                                        data.getValue()
+                                                .getTitle()
+                                )
+                        )
+        );
+
+        // =====================================================
+        // SUBMITTED BY
+        // =====================================================
+
+        TableColumn<Report, String> submittedColumn =
+                new TableColumn<>(
+                        "Submitted By"
+                );
+
+        submittedColumn.setCellValueFactory(
+                data ->
+                        new SimpleStringProperty(
+                                safe(
+                                        data.getValue()
+                                                .getSubmittedBy()
+                                )
+                        )
+        );
+
+        // =====================================================
+        // DATE
+        // =====================================================
+
+        TableColumn<Report, String> dateColumn =
+                new TableColumn<>(
+                        "Date & Time"
+                );
+
+        dateColumn.setCellValueFactory(
+                data ->
+                        new SimpleStringProperty(
+                                safe(
+                                        data.getValue()
+                                                .getDate()
+                                )
+                        )
+        );
+
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        TableColumn<Report, String> statusColumn =
+                new TableColumn<>(
+                        "Status"
+                );
+
+        statusColumn.setCellValueFactory(
+                data ->
+                        new SimpleStringProperty(
+                                safe(
+                                        data.getValue()
+                                                .getStatus()
+                                )
+                        )
+        );
+
+        // =====================================================
+        // VIEW
+        // =====================================================
+
+        TableColumn<Report, Void> viewColumn =
+                new TableColumn<>(
+                        "View"
+                );
+
+        viewColumn.setCellFactory(
+                column ->
+                        new TableCell<Report, Void>() {
+
+                            private final Button viewButton =
+                                    new Button(
+                                            "View"
+                                    );
+
+                            {
+                                viewButton.setStyle(
+                                        "-fx-background-color:"
+                                                + DARK
+                                                + ";"
+                                                + "-fx-text-fill:white;"
+                                                + "-fx-font-weight:bold;"
+                                                + "-fx-background-radius:6;"
+                                                + "-fx-cursor:hand;"
+                                );
+
+                                viewButton.setOnAction(
+                                        event -> {
+
+                                            int index =
+                                                    getIndex();
+
+                                            if (index < 0
+                                                    || index >=
+                                                    getTableView()
+                                                            .getItems()
+                                                            .size()) {
+
+                                                return;
+                                            }
+
+                                            Report report =
+                                                    getTableView()
+                                                            .getItems()
+                                                            .get(
+                                                                    index
+                                                            );
+
+                                            showReportDetails(
+                                                    report,
+                                                    owner
+                                            );
+                                        }
+                                );
+                            }
+
+                            @Override
+                            protected void updateItem(
+                                    Void item,
+                                    boolean empty) {
+
+                                super.updateItem(
+                                        item,
+                                        empty
+                                );
+
+                                if (empty) {
+
+                                    setGraphic(
+                                            null
+                                    );
+
+                                } else {
+
+                                    setGraphic(
+                                            viewButton
+                                    );
+
+                                    setAlignment(
+                                            Pos.CENTER
+                                    );
+                                }
+                            }
+                        }
+        );
+
+        // =====================================================
+        // WIDTH
+        // =====================================================
+
+        typeColumn.setPrefWidth(
+                130
+        );
+
+        sourceColumn.setPrefWidth(
+                150
+        );
+
+        titleColumn.setPrefWidth(
+                190
+        );
+
+        submittedColumn.setPrefWidth(
+                180
+        );
+
+        dateColumn.setPrefWidth(
+                170
+        );
+
+        statusColumn.setPrefWidth(
+                110
+        );
+
+        viewColumn.setPrefWidth(
+                90
+        );
+
+        // =====================================================
+        // ADD
+        // =====================================================
+
+        reportTable.getColumns().clear();
+
+        reportTable.getColumns().addAll(
+                typeColumn,
+                sourceColumn,
+                titleColumn,
+                submittedColumn,
+                dateColumn,
+                statusColumn,
+                viewColumn
+        );
+    }
+
+    // =========================================================
+    // LOAD REPORTS
+    // =========================================================
+
+    private void loadReports() {
+
+        Task<List<Report>> task =
+                new Task<>() {
+
+                    @Override
+                    protected List<Report> call()
+                            throws Exception {
+
+                        return reportController
+                                .getAllReports();
+                    }
+                };
+
+        reportTable.setPlaceholder(
+                new Label(
+                        "Loading reports..."
+                )
+        );
+
+        task.setOnSucceeded(
+                event -> {
+
+                    List<Report> reports =
+                            task.getValue();
+
+                    if (reports == null) {
+
+                        reports =
+                                new ArrayList<>();
+                    }
+
+                    reportList.clear();
+
+                    reportList.addAll(
                             reports
                     );
 
-            // =================================================
-            // UPDATE TABLE
-            // =================================================
+                    currentFilter =
+                            "All";
 
-            reportTable.setItems(
-                    reportList
-            );
+                    reportTable.setItems(
+                            reportList
+                    );
 
-            // =================================================
-            // UPDATE TOTAL
-            // =================================================
+                    reportTable.setPlaceholder(
+                            new Label(
+                                    "No reports found for this society."
+                            )
+                    );
 
-            totalLabel.setText(
-                    "Total Reports: " +
-                    reportList.size()
-            );
+                    System.out.println(
+                            "========================================"
+                    );
 
-            // =================================================
-            // RESET FILTER
-            // =================================================
+                    System.out.println(
+                            "REPORTS FETCHED SUCCESSFULLY"
+                    );
 
-            sourceFilter.setValue(
-                    "All"
-            );
+                    System.out.println(
+                            "Total Reports : "
+                                    + reports.size()
+                    );
 
-            System.out.println(
-                    "Reports loaded: " +
-                    reportList.size()
-            );
+                    System.out.println(
+                            "Logged-in Email : "
+                                    + reportController
+                                    .getLoggedInEmail()
+                    );
 
-            System.out.println(
-                    "========================================"
-            );
+                    System.out.println(
+                            "Secretary Society : "
+                                    + reportController
+                                    .getSocietyName()
+                    );
 
-        } catch (Exception e) {
+                    System.out.println(
+                            "========================================"
+                    );
+                }
+        );
 
-            System.out.println(
-                    "Error loading reports:"
-            );
+        task.setOnFailed(
+                event -> {
 
-            e.printStackTrace();
+                    reportList.clear();
 
-            reportList.clear();
+                    reportTable.setItems(
+                            reportList
+                    );
 
-            reportTable.setItems(
-                    reportList
-            );
+                    reportTable.setPlaceholder(
+                            new Label(
+                                    "Unable to load reports."
+                            )
+                    );
 
-            totalLabel.setText(
-                    "Total Reports: 0"
-            );
-        }
+                    Throwable error =
+                            task.getException();
+
+                    System.err.println(
+                            "========================================"
+                    );
+
+                    System.err.println(
+                            "REPORT FETCH FAILED"
+                    );
+
+                    if (error != null) {
+
+                        error.printStackTrace();
+                    }
+
+                    System.err.println(
+                            "========================================"
+                    );
+
+                    showError(
+                            "Reports Error",
+                            "Unable to load reports."
+                    );
+                }
+        );
+
+        Thread thread =
+                new Thread(
+                        task
+                );
+
+        thread.setDaemon(
+                true
+        );
+
+        thread.start();
     }
 
     // =========================================================
-    // FILTER REPORTS
+    // FILTER TABLE
     // =========================================================
 
-    private void filterReports(
-            String selected,
-            Label totalLabel) {
+    private void filterTable(
+            String filter) {
 
-        // =====================================================
-        // NULL CHECK
-        // =====================================================
-
-        if (reportList == null) {
-
-            return;
-        }
-
-        // =====================================================
-        // SHOW ALL
-        // =====================================================
-
-        if (selected == null
-                || selected.trim().isEmpty()
-                || selected.equalsIgnoreCase("All")) {
+        if (filter == null
+                || filter.equalsIgnoreCase(
+                        "All"
+                )) {
 
             reportTable.setItems(
                     reportList
             );
 
-            totalLabel.setText(
-                    "Total Reports: " +
-                    reportList.size()
-            );
-
             return;
         }
-
-        // =====================================================
-        // FILTERED LIST
-        // =====================================================
 
         ObservableList<Report> filtered =
                 FXCollections.observableArrayList();
 
-        for (Report report : reportList) {
+        for (Report report :
+                reportList) {
 
             if (report == null) {
-
                 continue;
             }
 
+            String type =
+                    safe(
+                            report.getType()
+                    );
+
             String source =
-                    report.getSource();
+                    safe(
+                            report.getSource()
+                    );
 
-            // =================================================
-            // NULL SAFE SOURCE CHECK
-            // =================================================
-
-            if (source != null
-                    && source.trim()
-                            .equalsIgnoreCase(
-                                    selected.trim()
-                            )) {
+            if (matchesFilter(
+                    type,
+                    source,
+                    filter
+            )) {
 
                 filtered.add(
                         report
@@ -730,21 +1179,557 @@ public class GenerateReports {
             }
         }
 
-        // =====================================================
-        // UPDATE TABLE
-        // =====================================================
-
         reportTable.setItems(
                 filtered
         );
+    }
+
+    // =========================================================
+    // MATCH FILTER
+    // =========================================================
+
+    private boolean matchesFilter(
+            String type,
+            String source,
+            String filter) {
+
+        String typeLower =
+                safe(type)
+                        .toLowerCase();
+
+        String sourceLower =
+                safe(source)
+                        .toLowerCase();
+
+        String filterLower =
+                safe(filter)
+                        .toLowerCase();
 
         // =====================================================
-        // UPDATE COUNT
+        // DIRECT MATCH
         // =====================================================
 
-        totalLabel.setText(
-                "Total Reports: " +
-                filtered.size()
+        if (typeLower.contains(
+                filterLower
+        )) {
+
+            return true;
+        }
+
+        if (sourceLower.contains(
+                filterLower
+        )) {
+
+            return true;
+        }
+
+        // =====================================================
+        // SECURITY
+        // =====================================================
+
+        if (filter.equalsIgnoreCase(
+                "Security"
+        )) {
+
+            return sourceLower.contains(
+                    "guard"
+            )
+                    || sourceLower.contains(
+                    "security"
+            )
+                    || typeLower.contains(
+                    "guard"
+            )
+                    || typeLower.contains(
+                    "security"
+            );
+        }
+
+        // =====================================================
+        // VISITOR
+        // =====================================================
+
+        if (filter.equalsIgnoreCase(
+                "Visitor"
+        )) {
+
+            return sourceLower.contains(
+                    "visitor"
+            )
+                    || typeLower.contains(
+                    "visitor"
+            )
+                    || typeLower.contains(
+                    "visitors"
+            );
+        }
+
+        // =====================================================
+        // PARKING
+        // =====================================================
+
+        if (filter.equalsIgnoreCase(
+                "Parking"
+        )) {
+
+            return sourceLower.contains(
+                    "parking"
+            )
+                    || typeLower.contains(
+                    "parking"
+            );
+        }
+
+        // =====================================================
+        // INCIDENT
+        // =====================================================
+
+        if (filter.equalsIgnoreCase(
+                "Incident"
+        )) {
+
+            return sourceLower.contains(
+                    "complaint"
+            )
+                    || sourceLower.contains(
+                    "sos"
+            )
+                    || sourceLower.contains(
+                    "emergency"
+            )
+                    || sourceLower.contains(
+                    "incident"
+            )
+                    || typeLower.contains(
+                    "complaint"
+            )
+                    || typeLower.contains(
+                    "sos"
+            )
+                    || typeLower.contains(
+                    "emergency"
+            )
+                    || typeLower.contains(
+                    "incident"
+            );
+        }
+
+        // =====================================================
+        // OTHER
+        // =====================================================
+
+        if (filter.equalsIgnoreCase(
+                "Other"
+        )) {
+
+            return !sourceLower.contains(
+                    "guard"
+            )
+                    && !sourceLower.contains(
+                    "security"
+            )
+                    && !sourceLower.contains(
+                    "visitor"
+            )
+                    && !typeLower.contains(
+                    "visitor"
+            )
+                    && !sourceLower.contains(
+                    "parking"
+            )
+                    && !typeLower.contains(
+                    "parking"
+            )
+                    && !sourceLower.contains(
+                    "complaint"
+            )
+                    && !typeLower.contains(
+                    "complaint"
+            )
+                    && !sourceLower.contains(
+                    "incident"
+            )
+                    && !typeLower.contains(
+                    "incident"
+            );
+        }
+
+        return false;
+    }
+
+    // =========================================================
+    // REPORT DETAILS
+    // =========================================================
+
+    private void showReportDetails(
+            Report report,
+            Stage owner) {
+
+        if (report == null) {
+            return;
+        }
+
+        Stage dialog =
+                new Stage();
+
+        dialog.initOwner(
+                owner
         );
+
+        dialog.initModality(
+                Modality.APPLICATION_MODAL
+        );
+
+        dialog.setTitle(
+                "Report Details"
+        );
+
+        VBox root =
+                new VBox(
+                        14
+                );
+
+        root.setPadding(
+                new Insets(
+                        25
+                )
+        );
+
+        root.setPrefWidth(
+                650
+        );
+
+        root.setPrefHeight(
+                650
+        );
+
+        root.setStyle(
+                "-fx-background-color:white;"
+        );
+
+        // =====================================================
+        // TITLE
+        // =====================================================
+
+        Label title =
+                new Label(
+                        safe(
+                                report.getTitle()
+                        )
+                );
+
+        title.setStyle(
+                "-fx-font-size:22px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:"
+                        + DARK
+                        + ";"
+        );
+
+        // =====================================================
+        // BASIC INFORMATION
+        // =====================================================
+
+        VBox information =
+                new VBox(
+                        8
+                );
+
+        addInfoRow(
+                information,
+                "Report Type",
+                report.getType()
+        );
+
+        addInfoRow(
+                information,
+                "Source",
+                report.getSource()
+        );
+
+        addInfoRow(
+                information,
+                "Submitted By",
+                report.getSubmittedBy()
+        );
+
+        addInfoRow(
+                information,
+                "Email",
+                report.getEmail()
+        );
+
+        addInfoRow(
+                information,
+                "Society",
+                report.getSocietyName()
+        );
+
+        addInfoRow(
+                information,
+                "Society ID",
+                report.getSocietyId()
+        );
+
+        addInfoRow(
+                information,
+                "Date & Time",
+                report.getDate()
+        );
+
+        addInfoRow(
+                information,
+                "Status",
+                report.getStatus()
+        );
+
+        // =====================================================
+        // DETAILS
+        // =====================================================
+
+        Label detailsTitle =
+                new Label(
+                        "Details"
+                );
+
+        detailsTitle.setStyle(
+                "-fx-font-size:16px;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-text-fill:"
+                        + TEXT
+                        + ";"
+        );
+
+        TextArea detailsArea =
+                new TextArea(
+                        safe(
+                                report.getDetails()
+                        )
+                );
+
+        detailsArea.setEditable(
+                false
+        );
+
+        detailsArea.setWrapText(
+                true
+        );
+
+        detailsArea.setPrefHeight(
+                360
+        );
+
+        detailsArea.setStyle(
+                "-fx-control-inner-background:#FAFAFA;"
+                        + "-fx-font-size:13px;"
+                        + "-fx-text-fill:"
+                        + TEXT
+                        + ";"
+        );
+
+        VBox.setVgrow(
+                detailsArea,
+                Priority.ALWAYS
+        );
+
+        // =====================================================
+        // CLOSE
+        // =====================================================
+
+        Button close =
+                new Button(
+                        "Close"
+                );
+
+        close.setPrefWidth(
+                100
+        );
+
+        close.setPrefHeight(
+                38
+        );
+
+        close.setStyle(
+                "-fx-background-color:"
+                        + DARK
+                        + ";"
+                        + "-fx-text-fill:white;"
+                        + "-fx-font-weight:bold;"
+                        + "-fx-background-radius:7;"
+                        + "-fx-cursor:hand;"
+        );
+
+        close.setOnAction(
+                event ->
+                        dialog.close()
+        );
+
+        HBox closeBox =
+                new HBox(
+                        close
+                );
+
+        closeBox.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        root.getChildren().addAll(
+                title,
+                new Separator(),
+                information,
+                new Separator(),
+                detailsTitle,
+                detailsArea,
+                closeBox
+        );
+
+        Scene scene =
+                new Scene(
+                        root
+                );
+
+        dialog.setScene(
+                scene
+        );
+
+        dialog.setResizable(
+                false
+        );
+
+        dialog.showAndWait();
+    }
+
+    // =========================================================
+    // INFO ROW
+    // =========================================================
+
+    private void addInfoRow(
+            VBox parent,
+            String labelText,
+            String valueText) {
+
+        HBox row =
+                new HBox(
+                        10
+                );
+
+        row.setAlignment(
+                Pos.CENTER_LEFT
+        );
+
+        Label label =
+                new Label(
+                        labelText + ":"
+                );
+
+        label.setPrefWidth(
+                120
+        );
+
+        label.setStyle(
+                "-fx-font-weight:bold;"
+                        + "-fx-text-fill:"
+                        + SECONDARY
+                        + ";"
+        );
+
+        Label value =
+                new Label(
+                        safe(
+                                valueText
+                        )
+                );
+
+        value.setWrapText(
+                true
+        );
+
+        value.setStyle(
+                "-fx-text-fill:"
+                        + TEXT
+                        + ";"
+        );
+
+        HBox.setHgrow(
+                value,
+                Priority.ALWAYS
+        );
+
+        row.getChildren().addAll(
+                label,
+                value
+        );
+
+        parent.getChildren().add(
+                row
+        );
+    }
+
+    // =========================================================
+    // SAFE
+    // =========================================================
+
+    private String safe(
+            String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value.trim();
+    }
+
+    // =========================================================
+    // EMPTY
+    // =========================================================
+
+    private boolean isEmpty(
+            String value) {
+
+        return value == null
+                || value.trim().isEmpty();
+    }
+
+    // =========================================================
+    // ERROR
+    // =========================================================
+
+    private void showError(
+            String title,
+            String message) {
+
+        Runnable action =
+                () -> {
+
+                    Alert alert =
+                            new Alert(
+                                    Alert.AlertType.ERROR
+                            );
+
+                    alert.setTitle(
+                            title
+                    );
+
+                    alert.setHeaderText(
+                            null
+                    );
+
+                    alert.setContentText(
+                            message
+                    );
+
+                    alert.showAndWait();
+                };
+
+        if (Platform.isFxApplicationThread()) {
+
+            action.run();
+
+        } else {
+
+            Platform.runLater(
+                    action
+            );
+        }
     }
 }

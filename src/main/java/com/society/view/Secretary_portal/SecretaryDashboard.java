@@ -3,12 +3,14 @@ package com.society.view.Secretary_portal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import com.society.controller.Secretary_Controller.DashboardController;
-import com.society.model.Secretary_model.DashboardData;
+import com.society.dao.Secretary_dao.DashboardDao;
 import com.society.model.Welcome.User;
 import com.society.view.ScreenSize;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -36,7 +38,7 @@ public class SecretaryDashboard {
     private DashboardController dashboardController;
 
     // ============================================================
-    // DASHBOARD LABELS
+    // DASHBOARD CARD LABELS
     // ============================================================
 
     private Label residentsCount;
@@ -44,6 +46,28 @@ public class SecretaryDashboard {
     private Label guardsCount;
     private Label complaintsCount;
     private Label maintenanceAmount;
+
+    // ============================================================
+    // RECENT SOS
+    // ============================================================
+
+    private Label recentSOSMessage;
+
+    // ============================================================
+    // UPCOMING EVENTS
+    // ============================================================
+
+    private Label upcomingEventsMessage;
+
+    // ============================================================
+    // TODAY OVERVIEW
+    // ============================================================
+
+    private Label overviewResidents;
+    private Label overviewOwners;
+    private Label overviewGuards;
+    private Label overviewComplaints;
+    private Label overviewMaintenance;
 
     // ============================================================
     // LOGGED-IN USER
@@ -59,21 +83,48 @@ public class SecretaryDashboard {
 
         this.loggedInUser = loggedInUser;
 
-        this.dashboardController =
-                new DashboardController();
+        String email = getUserEmail();
+
+        // ========================================================
+        // CREATE CONTROLLER USING SECRETARY EMAIL
+        // ========================================================
+
+        if (email == null
+                || email.trim().isEmpty()
+                || email.equalsIgnoreCase("NULL")) {
+
+            System.out.println(
+                    "ERROR: Secretary email is not available."
+            );
+
+            dashboardController = null;
+
+        } else {
+
+            dashboardController =
+                    new DashboardController(email);
+        }
+
+        // ========================================================
+        // DEBUG
+        // ========================================================
 
         System.out.println(
-                "================================================");
+                "================================================"
+        );
 
         System.out.println(
-                "SecretaryDashboard opened");
+                "SecretaryDashboard opened"
+        );
 
         System.out.println(
                 "Secretary Dashboard User Email: "
-                        + getUserEmail());
+                        + email
+        );
 
         System.out.println(
-                "================================================");
+                "================================================"
+        );
     }
 
     // ============================================================
@@ -90,7 +141,10 @@ public class SecretaryDashboard {
             return "NULL";
         }
 
-        return loggedInUser.getEmail();
+        return loggedInUser
+                .getEmail()
+                .trim()
+                .toLowerCase();
     }
 
     // ============================================================
@@ -106,13 +160,15 @@ public class SecretaryDashboard {
         if (loggedInUser == null) {
 
             System.out.println(
-                    "WARNING: SecretaryDashboard has NULL User.");
+                    "WARNING: SecretaryDashboard has NULL User."
+            );
 
         } else {
 
             System.out.println(
                     "Dashboard logged-in email: "
-                            + loggedInUser.getEmail());
+                            + loggedInUser.getEmail()
+            );
         }
 
         // ========================================================
@@ -120,10 +176,14 @@ public class SecretaryDashboard {
         // ========================================================
 
         SecretarySidebar sidebarObj =
-                new SecretarySidebar(loggedInUser);
+                new SecretarySidebar(
+                        loggedInUser
+                );
 
         VBox sidebar =
-                sidebarObj.createSidebar(stage);
+                sidebarObj.createSidebar(
+                        stage
+                );
 
         // ========================================================
         // HEADER
@@ -135,13 +195,16 @@ public class SecretaryDashboard {
         header.setPrefHeight(80);
 
         header.setPadding(
-                new Insets(20));
+                new Insets(20)
+        );
 
         header.setAlignment(
-                Pos.CENTER_LEFT);
+                Pos.CENTER_LEFT
+        );
 
         header.setStyle(
-                "-fx-background-color:#b3adad;");
+                "-fx-background-color:#b3adad;"
+        );
 
         // ========================================================
         // GREETING
@@ -150,12 +213,14 @@ public class SecretaryDashboard {
         Label greeting =
                 new Label(
                         getGreeting()
-                                + ", Secretary 👋");
+                                + ", Secretary 👋"
+                );
 
         greeting.setStyle(
                 "-fx-font-size:24px;"
                         + "-fx-font-weight:bold;"
-                        + "-fx-text-fill:#434141;");
+                        + "-fx-text-fill:#434141;"
+        );
 
         // ========================================================
         // SPACER
@@ -166,7 +231,8 @@ public class SecretaryDashboard {
 
         HBox.setHgrow(
                 spacer,
-                Priority.ALWAYS);
+                Priority.ALWAYS
+        );
 
         // ========================================================
         // NOTIFICATION
@@ -176,7 +242,8 @@ public class SecretaryDashboard {
                 new Label("🔔");
 
         notification.setStyle(
-                "-fx-font-size:20px;");
+                "-fx-font-size:20px;"
+        );
 
         // ========================================================
         // DATE
@@ -189,36 +256,47 @@ public class SecretaryDashboard {
                 new Label(
                         today.format(
                                 DateTimeFormatter.ofPattern(
-                                        "EEEE")));
+                                        "EEEE"
+                                )
+                        )
+                );
 
         day.setStyle(
                 "-fx-font-size:13px;"
-                        + "-fx-font-weight:bold;");
+                        + "-fx-font-weight:bold;"
+        );
 
         Label date =
                 new Label(
                         today.format(
                                 DateTimeFormatter.ofPattern(
-                                        "dd MMMM yyyy")));
+                                        "dd MMMM yyyy"
+                                )
+                        )
+                );
 
         date.setStyle(
                 "-fx-font-size:12px;"
-                        + "-fx-text-fill:#555555;");
+                        + "-fx-text-fill:#555555;"
+        );
 
         VBox dateBox =
                 new VBox(
                         2,
                         day,
-                        date);
+                        date
+                );
 
         dateBox.setAlignment(
-                Pos.CENTER_RIGHT);
+                Pos.CENTER_RIGHT
+        );
 
         header.getChildren().addAll(
                 greeting,
                 spacer,
                 notification,
-                dateBox);
+                dateBox
+        );
 
         // ========================================================
         // RESIDENTS CARD
@@ -227,7 +305,8 @@ public class SecretaryDashboard {
         VBox residentsCard =
                 createDashboardCard(
                         "Residents",
-                        "Total Residents");
+                        "Total Residents"
+                );
 
         residentsCount =
                 (Label) residentsCard
@@ -241,7 +320,8 @@ public class SecretaryDashboard {
         VBox ownersCard =
                 createDashboardCard(
                         "Owners",
-                        "Total Owners");
+                        "Total Owners"
+                );
 
         ownersCount =
                 (Label) ownersCard
@@ -255,7 +335,8 @@ public class SecretaryDashboard {
         VBox guardsCard =
                 createDashboardCard(
                         "Guards",
-                        "Total Guards");
+                        "Total Guards"
+                );
 
         guardsCount =
                 (Label) guardsCard
@@ -269,7 +350,8 @@ public class SecretaryDashboard {
         VBox complaintsCard =
                 createDashboardCard(
                         "Complaints",
-                        "Open Complaints");
+                        "Open Complaints"
+                );
 
         complaintsCount =
                 (Label) complaintsCard
@@ -283,7 +365,8 @@ public class SecretaryDashboard {
         VBox maintenanceCard =
                 createDashboardCard(
                         "Maintenance",
-                        "Total Maitenance");
+                        "Total Maintenance"
+                );
 
         maintenanceAmount =
                 (Label) maintenanceCard
@@ -300,24 +383,29 @@ public class SecretaryDashboard {
         cardsRow.setSpacing(20);
 
         cardsRow.setPadding(
-                new Insets(20));
+                new Insets(20)
+        );
 
         cardsRow.setStyle(
-                "-fx-background-color:#b3adad;");
+                "-fx-background-color:#b3adad;"
+        );
 
         cardsRow.getChildren().addAll(
                 residentsCard,
                 ownersCard,
                 guardsCard,
                 complaintsCard,
-                maintenanceCard);
+                maintenanceCard
+        );
 
         // ========================================================
         // QUICK ACTIONS
         // ========================================================
 
         VBox quickActions =
-                createQuickActions(stage);
+                createQuickActions(
+                        stage
+                );
 
         // ========================================================
         // TODAY OVERVIEW
@@ -331,14 +419,18 @@ public class SecretaryDashboard {
         // ========================================================
 
         VBox upcomingEvents =
-                createUpcomingEvents(stage);
+                createUpcomingEvents(
+                        stage
+                );
 
         // ========================================================
         // RECENT SOS
         // ========================================================
 
         VBox recentSOS =
-                createRecentSOS(stage);
+                createRecentSOS(
+                        stage
+                );
 
         // ========================================================
         // LEFT COLUMN
@@ -351,7 +443,8 @@ public class SecretaryDashboard {
 
         leftColumn.getChildren().addAll(
                 quickActions,
-                recentSOS);
+                recentSOS
+        );
 
         // ========================================================
         // LOWER CONTENT
@@ -367,15 +460,19 @@ public class SecretaryDashboard {
                         0,
                         20,
                         20,
-                        20));
+                        20
+                )
+        );
 
         lowerContent.setStyle(
-                "-fx-background-color:#b3adad;");
+                "-fx-background-color:#b3adad;"
+        );
 
         lowerContent.getChildren().addAll(
                 leftColumn,
                 todayOverview,
-                upcomingEvents);
+                upcomingEvents
+        );
 
         // ========================================================
         // MAIN CONTENT
@@ -385,19 +482,23 @@ public class SecretaryDashboard {
                 new VBox();
 
         mainContent.setStyle(
-                "-fx-background-color:#b3adad;");
+                "-fx-background-color:#b3adad;"
+        );
 
         mainContent.setMaxWidth(
-                Double.MAX_VALUE);
+                Double.MAX_VALUE
+        );
 
         mainContent.getChildren().addAll(
                 header,
                 cardsRow,
-                lowerContent);
+                lowerContent
+        );
 
         HBox.setHgrow(
                 mainContent,
-                Priority.ALWAYS);
+                Priority.ALWAYS
+        );
 
         // ========================================================
         // BODY
@@ -410,7 +511,8 @@ public class SecretaryDashboard {
 
         body.getChildren().addAll(
                 sidebar,
-                mainContent);
+                mainContent
+        );
 
         // ========================================================
         // SCROLL PANE
@@ -419,21 +521,30 @@ public class SecretaryDashboard {
         ScrollPane scrollPane =
                 new ScrollPane();
 
-        scrollPane.setContent(body);
+        scrollPane.setContent(
+                body
+        );
 
-        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToHeight(
+                true
+        );
 
-        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToWidth(
+                true
+        );
 
         scrollPane.setHbarPolicy(
-                ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                ScrollPane.ScrollBarPolicy.AS_NEEDED
+        );
 
         scrollPane.setVbarPolicy(
-                ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                ScrollPane.ScrollBarPolicy.AS_NEEDED
+        );
 
         scrollPane.setStyle(
                 "-fx-background:#b3adad;"
-                        + "-fx-background-color:#b3adad;");
+                        + "-fx-background-color:#b3adad;"
+        );
 
         // ========================================================
         // ROOT
@@ -443,14 +554,17 @@ public class SecretaryDashboard {
                 new VBox();
 
         root.setStyle(
-                "-fx-background-color:#b3adad;");
+                "-fx-background-color:#b3adad;"
+        );
 
         root.getChildren().add(
-                scrollPane);
+                scrollPane
+        );
 
         VBox.setVgrow(
                 scrollPane,
-                Priority.ALWAYS);
+                Priority.ALWAYS
+        );
 
         // ========================================================
         // SCENE
@@ -460,13 +574,18 @@ public class SecretaryDashboard {
                 new Scene(
                         root,
                         ScreenSize.getWidth(),
-                        ScreenSize.getHeight());
+                        ScreenSize.getHeight()
+                );
 
         // ========================================================
-        // LOAD DASHBOARD DATA
+        // LOAD DATA
         // ========================================================
 
         loadDashboardData();
+
+        loadRecentSOS();
+
+        loadUpcomingEvents();
 
         return secretaryDash;
     }
@@ -475,66 +594,61 @@ public class SecretaryDashboard {
     // QUICK ACTIONS
     // ============================================================
 
-    private VBox createQuickActions(
-            Stage stage) {
+    private VBox createQuickActions(Stage stage) {
 
         VBox box =
                 new VBox();
 
         box.setPrefWidth(330);
-
         box.setMinWidth(300);
-
         box.setPrefHeight(280);
-
         box.setSpacing(10);
-
-        box.setPadding(
-                new Insets(20));
+        box.setPadding(new Insets(20));
 
         box.setStyle(
                 "-fx-background-color:white;"
                         + "-fx-border-color:#E5E7EB;"
                         + "-fx-border-radius:10;"
-                        + "-fx-background-radius:10;");
-
-        // ========================================================
-        // TITLE
-        // ========================================================
+                        + "-fx-background-radius:10;"
+        );
 
         Label title =
                 new Label(
-                        "Quick Actions");
+                        "Quick Actions"
+                );
 
         title.setStyle(
                 "-fx-font-size:17px;"
                         + "-fx-font-weight:bold;"
-                        + "-fx-text-fill:#183B56;");
-
-        // ========================================================
-        // BUTTONS
-        // ========================================================
+                        + "-fx-text-fill:#183B56;"
+        );
 
         Button addResident =
                 new Button(
-                        "👥   Add Resident");
+                        "👥   Add Resident"
+                );
 
         Button addNotice =
                 new Button(
-                        "▣   Add Notice");
+                        "▣   Add Notice"
+                );
 
         Button viewPayments =
                 new Button(
-                        "▣   View Payments");
+                        "▣   View Payments"
+                );
 
         addResident.setMaxWidth(
-                Double.MAX_VALUE);
+                Double.MAX_VALUE
+        );
 
         addNotice.setMaxWidth(
-                Double.MAX_VALUE);
+                Double.MAX_VALUE
+        );
 
         viewPayments.setMaxWidth(
-                Double.MAX_VALUE);
+                Double.MAX_VALUE
+        );
 
         String buttonStyle =
                 "-fx-background-color:#f4f6f7;"
@@ -543,9 +657,17 @@ public class SecretaryDashboard {
                         + "-fx-alignment:CENTER-LEFT;"
                         + "-fx-padding:12px;";
 
-        addResident.setStyle(buttonStyle);
-        addNotice.setStyle(buttonStyle);
-        viewPayments.setStyle(buttonStyle);
+        addResident.setStyle(
+                buttonStyle
+        );
+
+        addNotice.setStyle(
+                buttonStyle
+        );
+
+        viewPayments.setStyle(
+                buttonStyle
+        );
 
         // ========================================================
         // ADD RESIDENT
@@ -557,7 +679,10 @@ public class SecretaryDashboard {
                     new ManageEvents();
 
             stage.setScene(
-                    residents.createScene(stage));
+                    residents.createScene(
+                            stage
+                    )
+            );
         });
 
         // ========================================================
@@ -568,22 +693,29 @@ public class SecretaryDashboard {
 
             System.out.println(
                     "Quick Action Notice Email: "
-                            + getUserEmail());
+                            + getUserEmail()
+            );
 
             if (loggedInUser == null) {
 
                 System.out.println(
                         "ERROR: Cannot open ManageNotices."
-                                + " loggedInUser is NULL.");
+                                + " loggedInUser is NULL."
+                );
 
                 return;
             }
 
             ManageNotices notices =
-                    new ManageNotices(loggedInUser);
+                    new ManageNotices(
+                            loggedInUser
+                    );
 
             stage.setScene(
-                    notices.createScene(stage));
+                    notices.createScene(
+                            stage
+                    )
+            );
         });
 
         // ========================================================
@@ -596,14 +728,18 @@ public class SecretaryDashboard {
                     new ManagePayment();
 
             stage.setScene(
-                    payment.createScene(stage));
+                    payment.createScene(
+                            stage
+                    )
+            );
         });
 
         box.getChildren().addAll(
                 title,
                 addResident,
                 addNotice,
-                viewPayments);
+                viewPayments
+        );
 
         return box;
     }
@@ -620,46 +756,56 @@ public class SecretaryDashboard {
                 new VBox();
 
         card.setPrefWidth(200);
-
         card.setMinWidth(170);
-
         card.setPrefHeight(130);
 
         card.setPadding(
-                new Insets(20));
+                new Insets(20)
+        );
 
         card.setSpacing(8);
 
         card.setStyle(
                 "-fx-background-color:white;"
-                        + "-fx-background-radius:10;");
+                        + "-fx-background-radius:10;"
+        );
 
         Label titleLabel =
-                new Label(title);
+                new Label(
+                        title
+                );
 
         titleLabel.setStyle(
                 "-fx-font-size:14px;"
-                        + "-fx-text-fill:#666666;");
+                        + "-fx-text-fill:#666666;"
+        );
 
         Label countLabel =
-                new Label("0");
+                new Label(
+                        "0"
+                );
 
         countLabel.setStyle(
                 "-fx-font-size:28px;"
                         + "-fx-font-weight:bold;"
-                        + "-fx-text-fill:#123C36;");
+                        + "-fx-text-fill:#123C36;"
+        );
 
         Label bottomLabel =
-                new Label(bottomText);
+                new Label(
+                        bottomText
+                );
 
         bottomLabel.setStyle(
                 "-fx-font-size:13px;"
-                        + "-fx-text-fill:#777777;");
+                        + "-fx-text-fill:#777777;"
+        );
 
         card.getChildren().addAll(
                 titleLabel,
                 countLabel,
-                bottomLabel);
+                bottomLabel
+        );
 
         return card;
     }
@@ -674,76 +820,98 @@ public class SecretaryDashboard {
                 new VBox();
 
         box.setPrefWidth(330);
-
         box.setMinWidth(300);
-
         box.setPrefHeight(480);
-
         box.setSpacing(12);
-
-        box.setPadding(
-                new Insets(18));
+        box.setPadding(new Insets(18));
 
         box.setStyle(
                 "-fx-background-color:white;"
                         + "-fx-border-color:#E5E7EB;"
                         + "-fx-border-radius:10;"
-                        + "-fx-background-radius:10;");
+                        + "-fx-background-radius:10;"
+        );
 
         Label title =
                 new Label(
-                        "Today's Overview");
+                        "Today's Overview"
+                );
 
         title.setStyle(
                 "-fx-font-size:18px;"
                         + "-fx-font-weight:bold;"
-                        + "-fx-text-fill:#183B56;");
+                        + "-fx-text-fill:#183B56;"
+        );
 
-        Label info1 =
+        overviewResidents =
                 new Label(
-                        "Residents Data");
+                        "Residents Data"
+                );
 
-        Label info2 =
+        overviewOwners =
                 new Label(
-                        "Owners Data");
+                        "Owners Data"
+                );
 
-        Label info3 =
+        overviewGuards =
                 new Label(
-                        "Guards Data");
+                        "Guards Data"
+                );
 
-        Label info4 =
+        overviewComplaints =
                 new Label(
-                        "Complaints Data");
+                        "Complaints Data"
+                );
 
-        Label info5 =
+        overviewMaintenance =
                 new Label(
-                        "Maintenance Data");
+                        "Maintenance Data"
+                );
 
-        styleOverviewLabel(info1);
-        styleOverviewLabel(info2);
-        styleOverviewLabel(info3);
-        styleOverviewLabel(info4);
-        styleOverviewLabel(info5);
+        styleOverviewLabel(
+                overviewResidents
+        );
+
+        styleOverviewLabel(
+                overviewOwners
+        );
+
+        styleOverviewLabel(
+                overviewGuards
+        );
+
+        styleOverviewLabel(
+                overviewComplaints
+        );
+
+        styleOverviewLabel(
+                overviewMaintenance
+        );
 
         Label note =
                 new Label(
-                        "Dashboard data is fetched from Firestore.");
+                        "Dashboard data is fetched from Firestore."
+                );
 
-        note.setWrapText(true);
+        note.setWrapText(
+                true
+        );
 
         note.setStyle(
                 "-fx-font-size:12px;"
                         + "-fx-text-fill:#777777;"
-                        + "-fx-padding:10px;");
+                        + "-fx-padding:10px;"
+        );
 
         box.getChildren().addAll(
                 title,
-                info1,
-                info2,
-                info3,
-                info4,
-                info5,
-                note);
+                overviewResidents,
+                overviewOwners,
+                overviewGuards,
+                overviewComplaints,
+                overviewMaintenance,
+                note
+        );
 
         return box;
     }
@@ -759,51 +927,55 @@ public class SecretaryDashboard {
                 new VBox();
 
         box.setPrefWidth(330);
-
         box.setMinWidth(300);
-
         box.setPrefHeight(480);
-
         box.setSpacing(12);
-
-        box.setPadding(
-                new Insets(18));
+        box.setPadding(new Insets(18));
 
         box.setStyle(
                 "-fx-background-color:white;"
                         + "-fx-border-color:#E5E7EB;"
                         + "-fx-border-radius:10;"
-                        + "-fx-background-radius:10;");
+                        + "-fx-background-radius:10;"
+        );
 
         Label title =
                 new Label(
-                        "Upcoming Events");
+                        "Upcoming Events"
+                );
 
         title.setStyle(
                 "-fx-font-size:18px;"
                         + "-fx-font-weight:bold;"
-                        + "-fx-text-fill:#183B56;");
+                        + "-fx-text-fill:#183B56;"
+        );
 
-        Label eventInfo =
+        upcomingEventsMessage =
                 new Label(
-                        "No event data loaded yet.");
+                        "No event data loaded yet."
+                );
 
-        eventInfo.setWrapText(true);
+        upcomingEventsMessage.setWrapText(
+                true
+        );
 
-        eventInfo.setStyle(
+        upcomingEventsMessage.setStyle(
                 "-fx-font-size:13px;"
                         + "-fx-text-fill:#555555;"
-                        + "-fx-padding:8px;");
+                        + "-fx-padding:8px;"
+        );
 
         Button viewEvents =
                 new Button(
-                        "View All Events");
+                        "View All Events"
+                );
 
         viewEvents.setStyle(
                 "-fx-background-color:transparent;"
                         + "-fx-text-fill:#4169A1;"
                         + "-fx-font-size:13px;"
-                        + "-fx-font-weight:bold;");
+                        + "-fx-font-weight:bold;"
+        );
 
         viewEvents.setOnAction(e -> {
 
@@ -811,13 +983,17 @@ public class SecretaryDashboard {
                     new ManageEvents();
 
             stage.setScene(
-                    events.createScene(stage));
+                    events.createScene(
+                            stage
+                    )
+            );
         });
 
         box.getChildren().addAll(
                 title,
-                eventInfo,
-                viewEvents);
+                upcomingEventsMessage,
+                viewEvents
+        );
 
         return box;
     }
@@ -833,52 +1009,58 @@ public class SecretaryDashboard {
                 new VBox();
 
         box.setPrefWidth(330);
-
         box.setMinWidth(300);
-
         box.setPrefHeight(180);
-
         box.setSpacing(10);
-
-        box.setPadding(
-                new Insets(18));
+        box.setPadding(new Insets(18));
 
         box.setStyle(
                 "-fx-background-color:white;"
                         + "-fx-border-color:#E5E7EB;"
                         + "-fx-border-radius:10;"
-                        + "-fx-background-radius:10;");
+                        + "-fx-background-radius:10;"
+        );
+
+        // ========================================================
+        // TITLE ROW
+        // ========================================================
 
         HBox titleRow =
                 new HBox();
 
         titleRow.setAlignment(
-                Pos.CENTER_LEFT);
+                Pos.CENTER_LEFT
+        );
 
         Label title =
                 new Label(
-                        "Recent SOS Alerts");
+                        "Recent SOS Alerts"
+                );
 
         title.setStyle(
                 "-fx-font-size:17px;"
                         + "-fx-font-weight:bold;"
-                        + "-fx-text-fill:#D9534F;");
+                        + "-fx-text-fill:#D9534F;"
+        );
 
         Region spacer =
                 new Region();
 
         HBox.setHgrow(
                 spacer,
-                Priority.ALWAYS);
+                Priority.ALWAYS
+        );
 
         Button viewAll =
                 new Button(
-                        "View All");
+                        "View All"
+                );
 
         viewAll.setStyle(
                 "-fx-background-color:transparent;"
                         + "-fx-text-fill:#4169A1;"
-                        + "-fx-font-size:13px;");
+                        + "-fx-font-size:13px;"
+        );
 
         viewAll.setOnAction(e -> {
 
@@ -886,26 +1068,45 @@ public class SecretaryDashboard {
                     new ViewSos();
 
             stage.setScene(
-                    sos.createScene(stage));
+                    sos.createScene(
+                            stage
+                    )
+            );
         });
 
         titleRow.getChildren().addAll(
                 title,
                 spacer,
-                viewAll);
+                viewAll
+        );
 
-        Label message =
+        // ========================================================
+        // SOS MESSAGE
+        // ========================================================
+
+        recentSOSMessage =
                 new Label(
-                        "No recent SOS alerts.");
+                        "No recent SOS alerts."
+                );
 
-        message.setStyle(
+        recentSOSMessage.setWrapText(
+                true
+        );
+
+        recentSOSMessage.setStyle(
                 "-fx-font-size:13px;"
                         + "-fx-text-fill:#777777;"
-                        + "-fx-padding:8px;");
+                        + "-fx-padding:8px;"
+        );
+
+        // ========================================================
+        // ADD CORRECT COMPONENTS
+        // ========================================================
 
         box.getChildren().addAll(
                 titleRow,
-                message);
+                recentSOSMessage
+        );
 
         return box;
     }
@@ -916,128 +1117,298 @@ public class SecretaryDashboard {
 
     private void loadDashboardData() {
 
-        try {
+        if (dashboardController == null) {
 
             System.out.println(
-                    "Fetching Dashboard data from Firestore...");
-
-            DashboardData data =
-                    dashboardController
-                            .getDashboardData();
-
-            if (data == null) {
-
-                System.out.println(
-                        "DashboardData is NULL.");
-
-                setDefaultValues();
-
-                return;
-            }
-
-            // ====================================================
-            // RESIDENTS
-            // ====================================================
-
-            if (residentsCount != null) {
-
-                residentsCount.setText(
-                        String.valueOf(
-                                data.getTotalResidents()));
-            }
-
-            // ====================================================
-            // OWNERS
-            // ====================================================
-
-            if (ownersCount != null) {
-
-                ownersCount.setText(
-                        String.valueOf(
-                                data.getTotalOwners()));
-            }
-
-            // ====================================================
-            // GUARDS
-            // ====================================================
-
-            if (guardsCount != null) {
-
-                guardsCount.setText(
-                        String.valueOf(
-                                data.getTotalGuards()));
-            }
-
-            // ====================================================
-            // COMPLAINTS
-            // ====================================================
-
-            if (complaintsCount != null) {
-
-                complaintsCount.setText(
-                        String.valueOf(
-                                data.getOpenComplaints()));
-            }
-
-            // ====================================================
-            // MAINTENANCE
-            // ====================================================
-
-            if (maintenanceAmount != null) {
-
-                maintenanceAmount.setText(
-                        "₹ "
-                                + formatAmount(
-                                        data.getMaintenanceCollection()));
-            }
-
-            // ====================================================
-            // DEBUG
-            // ====================================================
-
-            System.out.println(
-                    "----------------------------------------");
-
-            System.out.println(
-                    "Dashboard data fetched successfully.");
-
-            System.out.println(
-                    "Residents: "
-                            + data.getTotalResidents());
-
-            System.out.println(
-                    "Owners: "
-                            + data.getTotalOwners());
-
-            System.out.println(
-                    "Guards: "
-                            + data.getTotalGuards());
-
-            System.out.println(
-                    "Open Complaints: "
-                            + data.getOpenComplaints());
-
-            System.out.println(
-                    "Maintenance: ₹"
-                            + data.getMaintenanceCollection());
-
-            System.out.println(
-                    "Dashboard User Email: "
-                            + getUserEmail());
-
-            System.out.println(
-                    "----------------------------------------");
-
-        } catch (Exception e) {
-
-            System.out.println(
-                    "Dashboard data fetch error: "
-                            + e.getMessage());
-
-            e.printStackTrace();
+                    "ERROR: DashboardController is NULL."
+            );
 
             setDefaultValues();
+
+            return;
         }
+
+        System.out.println(
+                "========================================"
+        );
+
+        System.out.println(
+                "FETCHING SECRETARY DASHBOARD DATA..."
+        );
+
+        System.out.println(
+                "Secretary Email : "
+                        + getUserEmail()
+        );
+
+        System.out.println(
+                "========================================"
+        );
+
+        Thread dashboardThread =
+                new Thread(() -> {
+
+                    try {
+
+                        // =================================================
+                        // GET SECRETARY SOCIETY
+                        // =================================================
+
+                        String societyName =
+                                dashboardController
+                                        .getSocietyName();
+
+                        System.out.println(
+                                "Secretary Society : "
+                                        + societyName
+                        );
+
+                        if (societyName == null
+                                || societyName.trim().isEmpty()) {
+
+                            System.out.println(
+                                    "ERROR: Secretary society is NULL."
+                            );
+
+                            Platform.runLater(
+                                    this::setDefaultValues
+                            );
+
+                            return;
+                        }
+
+                        // =================================================
+                        // RESIDENTS
+                        // =================================================
+
+                        int totalResidents =
+                                dashboardController
+                                        .getResidentCount();
+
+                        // =================================================
+                        // OWNERS
+                        // =================================================
+
+                        int totalOwners =
+                                dashboardController
+                                        .getOwnerCount();
+
+                        // =================================================
+                        // GUARDS
+                        // =================================================
+
+                        int totalGuards =
+                                dashboardController
+                                        .getGuardCount();
+
+                        // =================================================
+                        // COMPLAINTS
+                        // =================================================
+
+                        int totalComplaints =
+                                dashboardController
+                                        .getOpenComplaints();
+
+                        // =================================================
+                        // MAINTENANCE
+                        // =================================================
+
+                        double totalMaintenance =
+                                dashboardController
+                                        .getMaintenanceCollection();
+
+                        // =================================================
+                        // UPDATE JAVAFX UI
+                        // =================================================
+
+                        Platform.runLater(() -> {
+
+                            // ------------------------------------------------
+                            // RESIDENTS
+                            // ------------------------------------------------
+
+                            if (residentsCount != null) {
+
+                                residentsCount.setText(
+                                        String.valueOf(
+                                                totalResidents
+                                        )
+                                );
+                            }
+
+                            // ------------------------------------------------
+                            // OWNERS
+                            // ------------------------------------------------
+
+                            if (ownersCount != null) {
+
+                                ownersCount.setText(
+                                        String.valueOf(
+                                                totalOwners
+                                        )
+                                );
+                            }
+
+                            // ------------------------------------------------
+                            // GUARDS
+                            // ------------------------------------------------
+
+                            if (guardsCount != null) {
+
+                                guardsCount.setText(
+                                        String.valueOf(
+                                                totalGuards
+                                        )
+                                );
+                            }
+
+                            // ------------------------------------------------
+                            // COMPLAINTS
+                            // ------------------------------------------------
+
+                            if (complaintsCount != null) {
+
+                                complaintsCount.setText(
+                                        String.valueOf(
+                                                totalComplaints
+                                        )
+                                );
+                            }
+
+                            // ------------------------------------------------
+                            // MAINTENANCE
+                            // ------------------------------------------------
+
+                            if (maintenanceAmount != null) {
+
+                                maintenanceAmount.setText(
+                                        formatAmount(
+                                                totalMaintenance
+                                        )
+                                );
+                            }
+
+                            // =================================================
+                            // TODAY'S OVERVIEW
+                            // =================================================
+
+                            if (overviewResidents != null) {
+
+                                overviewResidents.setText(
+                                        "Residents: "
+                                                + totalResidents
+                                );
+                            }
+
+                            if (overviewOwners != null) {
+
+                                overviewOwners.setText(
+                                        "Owners: "
+                                                + totalOwners
+                                );
+                            }
+
+                            if (overviewGuards != null) {
+
+                                overviewGuards.setText(
+                                        "Guards: "
+                                                + totalGuards
+                                );
+                            }
+
+                            if (overviewComplaints != null) {
+
+                                overviewComplaints.setText(
+                                        "Open Complaints: "
+                                                + totalComplaints
+                                );
+                            }
+
+                            if (overviewMaintenance != null) {
+
+                                overviewMaintenance.setText(
+                                        "Maintenance: ₹"
+                                                + formatAmount(
+                                                        totalMaintenance
+                                                )
+                                );
+                            }
+                        });
+
+                        // =================================================
+                        // DEBUG
+                        // =================================================
+
+                        System.out.println(
+                                "----------------------------------------"
+                        );
+
+                        System.out.println(
+                                "SECRETARY DASHBOARD DATA"
+                        );
+
+                        System.out.println(
+                                "Secretary Email : "
+                                        + getUserEmail()
+                        );
+
+                        System.out.println(
+                                "Society         : "
+                                        + societyName
+                        );
+
+                        System.out.println(
+                                "Residents       : "
+                                        + totalResidents
+                        );
+
+                        System.out.println(
+                                "Owners          : "
+                                        + totalOwners
+                        );
+
+                        System.out.println(
+                                "Guards          : "
+                                        + totalGuards
+                        );
+
+                        System.out.println(
+                                "Open Complaints : "
+                                        + totalComplaints
+                        );
+
+                        System.out.println(
+                                "Maintenance     : ₹"
+                                        + totalMaintenance
+                        );
+
+                        System.out.println(
+                                "----------------------------------------"
+                        );
+
+                    } catch (Exception e) {
+
+                        System.out.println(
+                                "ERROR: Failed to fetch dashboard data."
+                        );
+
+                        System.out.println(
+                                "Error: "
+                                        + e.getMessage()
+                        );
+
+                        e.printStackTrace();
+
+                        Platform.runLater(
+                                this::setDefaultValues
+                        );
+                    }
+
+                });
+
+        dashboardThread.setDaemon(true);
+
+        dashboardThread.start();
     }
 
     // ============================================================
@@ -1047,28 +1418,53 @@ public class SecretaryDashboard {
     private void setDefaultValues() {
 
         if (residentsCount != null) {
-
             residentsCount.setText("0");
         }
 
         if (ownersCount != null) {
-
             ownersCount.setText("0");
         }
 
         if (guardsCount != null) {
-
             guardsCount.setText("0");
         }
 
         if (complaintsCount != null) {
-
             complaintsCount.setText("0");
         }
 
         if (maintenanceAmount != null) {
+            maintenanceAmount.setText("0");
+        }
 
-            maintenanceAmount.setText("₹ 0");
+        if (overviewResidents != null) {
+            overviewResidents.setText(
+                    "Residents: 0"
+            );
+        }
+
+        if (overviewOwners != null) {
+            overviewOwners.setText(
+                    "Owners: 0"
+            );
+        }
+
+        if (overviewGuards != null) {
+            overviewGuards.setText(
+                    "Guards: 0"
+            );
+        }
+
+        if (overviewComplaints != null) {
+            overviewComplaints.setText(
+                    "Open Complaints: 0"
+            );
+        }
+
+        if (overviewMaintenance != null) {
+            overviewMaintenance.setText(
+                    "Maintenance: ₹0"
+            );
         }
     }
 
@@ -1083,16 +1479,18 @@ public class SecretaryDashboard {
 
             return String.format(
                     "%d",
-                    (long) amount);
+                    (long) amount
+            );
         }
 
         return String.format(
                 "%.2f",
-                amount);
+                amount
+        );
     }
 
     // ============================================================
-    // OVERVIEW LABEL
+    // OVERVIEW LABEL STYLE
     // ============================================================
 
     private void styleOverviewLabel(
@@ -1101,7 +1499,268 @@ public class SecretaryDashboard {
         label.setStyle(
                 "-fx-font-size:13px;"
                         + "-fx-text-fill:#555555;"
-                        + "-fx-padding:7px;");
+                        + "-fx-padding:7px;"
+        );
+    }
+
+    // ============================================================
+    // LOAD RECENT SOS
+    // ============================================================
+
+    private void loadRecentSOS() {
+
+        if (dashboardController == null) {
+            return;
+        }
+
+        Thread thread =
+                new Thread(() -> {
+
+                    try {
+
+                        List<DashboardDao.SosAlertData> alerts =
+                                dashboardController
+                                        .getRecentSOSAlerts();
+
+                        Platform.runLater(() -> {
+
+                            if (recentSOSMessage == null) {
+                                return;
+                            }
+
+                            if (alerts == null
+                                    || alerts.isEmpty()) {
+
+                                recentSOSMessage.setText(
+                                        "No recent SOS alerts."
+                                );
+
+                                return;
+                            }
+
+                            StringBuilder text =
+                                    new StringBuilder();
+
+                            int limit =
+                                    Math.min(
+                                            alerts.size(),
+                                            3
+                                    );
+
+                            for (int i = 0;
+                                    i < limit;
+                                    i++) {
+
+                                DashboardDao.SosAlertData alert =
+                                        alerts.get(i);
+
+                                String type =
+                                        alert.type == null
+                                                || alert.type.trim().isEmpty()
+                                                ? "Emergency Alert"
+                                                : alert.type;
+
+                                String location =
+                                        alert.location == null
+                                                || alert.location.trim().isEmpty()
+                                                ? "Location unavailable"
+                                                : alert.location;
+
+                                String status =
+                                        alert.status == null
+                                                || alert.status.trim().isEmpty()
+                                                ? "ACTIVE"
+                                                : alert.status;
+
+                                text.append(
+                                        type
+                                );
+
+                                text.append(
+                                        " • "
+                                );
+
+                                text.append(
+                                        location
+                                );
+
+                                text.append(
+                                        " • "
+                                );
+
+                                text.append(
+                                        status
+                                );
+
+                                if (i < limit - 1) {
+
+                                    text.append(
+                                            "\n\n"
+                                    );
+                                }
+                            }
+
+                            recentSOSMessage.setText(
+                                    text.toString()
+                            );
+                        });
+
+                    } catch (Exception e) {
+
+                        System.out.println(
+                                "ERROR: Failed to load SOS alerts."
+                        );
+
+                        e.printStackTrace();
+
+                        Platform.runLater(() -> {
+
+                            if (recentSOSMessage != null) {
+
+                                recentSOSMessage.setText(
+                                        "Unable to load SOS alerts."
+                                );
+                            }
+                        });
+                    }
+
+                });
+
+        thread.setDaemon(true);
+
+        thread.start();
+    }
+
+    // ============================================================
+    // LOAD UPCOMING EVENTS
+    // ============================================================
+
+    private void loadUpcomingEvents() {
+
+        if (dashboardController == null) {
+            return;
+        }
+
+        Thread thread =
+                new Thread(() -> {
+
+                    try {
+
+                        List<DashboardDao.EventData> events =
+                                dashboardController
+                                        .getUpcomingEvents();
+
+                        Platform.runLater(() -> {
+
+                            if (upcomingEventsMessage == null) {
+                                return;
+                            }
+
+                            if (events == null
+                                    || events.isEmpty()) {
+
+                                upcomingEventsMessage.setText(
+                                        "No upcoming events."
+                                );
+
+                                return;
+                            }
+
+                            StringBuilder text =
+                                    new StringBuilder();
+
+                            int limit =
+                                    Math.min(
+                                            events.size(),
+                                            4
+                                    );
+
+                            for (int i = 0;
+                                    i < limit;
+                                    i++) {
+
+                                DashboardDao.EventData event =
+                                        events.get(i);
+
+                                String title =
+                                        event.title == null
+                                                || event.title.trim().isEmpty()
+                                                ? "Event"
+                                                : event.title;
+
+                                String date =
+                                        event.date == null
+                                                ? ""
+                                                : event.date.trim();
+
+                                String time =
+                                        event.time == null
+                                                ? ""
+                                                : event.time.trim();
+
+                                text.append(
+                                        title
+                                );
+
+                                if (!date.isEmpty()) {
+
+                                    text.append(
+                                            "\n"
+                                    );
+
+                                    text.append(
+                                            date
+                                    );
+                                }
+
+                                if (!time.isEmpty()) {
+
+                                    text.append(
+                                            " • "
+                                    );
+
+                                    text.append(
+                                            time
+                                    );
+                                }
+
+                                if (i < limit - 1) {
+
+                                    text.append(
+                                            "\n\n"
+                                    );
+                                }
+                            }
+
+                            upcomingEventsMessage.setText(
+                                    text.toString()
+                            );
+                        });
+
+                    } catch (Exception e) {
+
+                        System.out.println(
+                                "ERROR: Failed to load upcoming events."
+                        );
+
+                        e.printStackTrace();
+
+                        Platform.runLater(() -> {
+
+                            if (upcomingEventsMessage != null) {
+
+                                upcomingEventsMessage.setText(
+                                        "Unable to load upcoming events."
+                                );
+                            }
+                        });
+                    }
+
+                });
+
+        thread.setDaemon(true);
+
+        thread.start();
     }
 
     // ============================================================
@@ -1115,15 +1774,18 @@ public class SecretaryDashboard {
                         .now()
                         .getHour();
 
-        if (hour >= 5 && hour < 12) {
+        if (hour >= 5
+                && hour < 12) {
 
             return "Good Morning";
 
-        } else if (hour >= 12 && hour < 17) {
+        } else if (hour >= 12
+                && hour < 17) {
 
             return "Good Afternoon";
 
-        } else if (hour >= 17 && hour < 21) {
+        } else if (hour >= 17
+                && hour < 21) {
 
             return "Good Evening";
 

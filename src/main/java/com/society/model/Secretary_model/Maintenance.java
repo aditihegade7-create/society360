@@ -37,10 +37,34 @@ public class Maintenance {
     private String society;
 
     // =========================================================
-    // DEFAULT CONSTRUCTOR
+    // CONSTRUCTOR USED BY EXISTING CONTROLLER
+    // =========================================================
+    //
+    // Existing MaintenanceController मध्ये हा constructor
+    // 9 parameters सह call केला जात आहे.
+    //
+    // First 3 parameters currently empty आहेत.
+    // Actual maintenance information पुढील parameters मध्ये आहे.
+    //
     // =========================================================
 
-    public Maintenance(String string, String string2, String string3, String string4, String string5, String string6, String string7, String secretaryEmail, String society2) {
+    public Maintenance(
+            String string,
+            String string2,
+            String string3,
+            String string4,
+            String string5,
+            String string6,
+            String string7,
+            String secretaryEmail,
+            String society2) {
+
+        this.amount = string4;
+        this.month = string5;
+        this.date = string6;
+        this.status = string7;
+        this.addedBySecretaryEmail = secretaryEmail;
+        this.society = society2;
     }
 
     // =========================================================

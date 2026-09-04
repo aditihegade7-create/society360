@@ -1,19 +1,20 @@
 package com.society.dao.Secretary_dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 
 import com.society.config.FirebaseConfig;
 import com.society.dao.Welcome.UserDao;
 import com.society.model.Secretary_model.Poll;
+import com.society.model.Welcome.User;
 
 public class PollDao {
 
@@ -24,14 +25,12 @@ public class PollDao {
     private final Firestore firestore;
 
     // =========================================================
-    // COLLECTION NAMES
+    // COLLECTION
     // =========================================================
 
-    private static final String MAIN_COLLECTION =
-            "Polls";
+    private static final String COLLECTION_NAME = "Polls";
 
-    private static final String SUB_COLLECTION =
-            "polls";
+    private static final String SUB_COLLECTION = "polls";
 
     // =========================================================
     // CONSTRUCTOR
@@ -39,34 +38,32 @@ public class PollDao {
 
     public PollDao() {
 
-        firestore =
-                FirebaseConfig.getFirestore();
+        firestore = FirebaseConfig.getFirestore();
     }
 
     // =========================================================
-    // GET LOGGED-IN EMAIL
+    // GET LOGGED-IN SECRETARY
     // =========================================================
 
-    private String getLoggedInEmail() {
+    private User getLoggedInSecretary() {
 
         try {
 
-            String email =
-                    UserDao.getLoggedInEmail();
+            UserDao userDao = new UserDao();
 
-            if (email == null
-                    || email.trim().isEmpty()) {
+            User secretary =
+                    userDao.getLoggedInSecretary();
+
+            if (secretary == null) {
 
                 System.out.println(
-                        "ERROR: Logged-in email not found."
+                        "No logged-in secretary found."
                 );
 
                 return null;
             }
 
-            return email
-                    .trim()
-                    .toLowerCase();
+            return secretary;
 
         } catch (Exception e) {
 
@@ -77,22 +74,53 @@ public class PollDao {
     }
 
     // =========================================================
-    // GET POLL COLLECTION
+    // GET SECRETARY EMAIL
     // =========================================================
 
-    private CollectionReference getPollCollection() {
+    private String getLoggedInEmail() {
 
-        String email =
-                getLoggedInEmail();
+        User secretary =
+                getLoggedInSecretary();
 
-        if (email == null) {
+        if (secretary == null) {
             return null;
         }
 
-        return firestore
-                .collection(MAIN_COLLECTION)
-                .document(email)
-                .collection(SUB_COLLECTION);
+        String email =
+                secretary.getEmail();
+
+        if (email == null
+                || email.trim().isEmpty()) {
+
+            return null;
+        }
+
+        return email.trim().toLowerCase();
+    }
+
+    // =========================================================
+    // GET SECRETARY SOCIETY
+    // =========================================================
+
+    private String getLoggedInSociety() {
+
+        User secretary =
+                getLoggedInSecretary();
+
+        if (secretary == null) {
+            return null;
+        }
+
+        String society =
+                secretary.getSociety();
+
+        if (society == null
+                || society.trim().isEmpty()) {
+
+            return null;
+        }
+
+        return society.trim();
     }
 
     // =========================================================
@@ -103,55 +131,153 @@ public class PollDao {
 
         try {
 
-            if (poll == null) {
-                return false;
-            }
+            // -------------------------------------------------
+            // GET LOGGED-IN EMAIL
+            // -------------------------------------------------
 
             String email =
                     getLoggedInEmail();
 
             if (email == null) {
+
+                System.out.println(
+                        "Cannot create poll. "
+                        + "Secretary email not found."
+                );
+
                 return false;
             }
 
-            CollectionReference collection =
-                    getPollCollection();
+            // -------------------------------------------------
+            // GET SOCIETY
+            // -------------------------------------------------
 
-            if (collection == null) {
+            String society =
+                    getLoggedInSociety();
+
+            if (society == null) {
+
+                System.out.println(
+                        "Cannot create poll. "
+                        + "Secretary society not found."
+                );
+
                 return false;
             }
 
-            poll.setCreatedByEmail(email);
+            // -------------------------------------------------
+            // PREPARE DATA
+            // -------------------------------------------------
 
-            DocumentReference reference =
-                    collection.document();
+            Map<String, Object> pollData =
+                    new HashMap<>();
 
-            poll.setPollId(
-                    reference.getId()
+            pollData.put(
+                    "question",
+                    poll.getQuestion()
             );
 
-            reference
-                    .set(poll.toMap())
-                    .get();
+            pollData.put(
+                    "type",
+                    poll.getType()
+            );
+
+            pollData.put(
+                    "description",
+                    poll.getDescription()
+            );
+
+            pollData.put(
+                    "createdDate",
+                    poll.getCreatedDate()
+            );
+
+            pollData.put(
+                    "endDate",
+                    poll.getEndDate()
+            );
+
+            pollData.put(
+                    "targetAudience",
+                    poll.getTargetAudience()
+            );
+
+            pollData.put(
+                    "status",
+                    poll.getStatus()
+            );
+
+            pollData.put(
+                    "options",
+                    poll.getOptions()
+            );
+
+            pollData.put(
+                    "voteCounts",
+                    poll.getVoteCounts()
+            );
+
+            pollData.put(
+                    "totalVotes",
+                    poll.getTotalVotes()
+            );
+
+            // -------------------------------------------------
+            // IMPORTANT IDENTITY DATA
+            // -------------------------------------------------
+
+            pollData.put(
+                    "email",
+                    email
+            );
+
+            pollData.put(
+                    "society",
+                    society
+            );
+
+            pollData.put(
+                    "timestamp",
+                    System.currentTimeMillis()
+            );
+
+            // -------------------------------------------------
+            // FIRESTORE
+            //
+            // Polls
+            //    └── email
+            //          └── polls
+            //                └── auto generated poll ID
+            //
+            // -------------------------------------------------
+
+            ApiFuture<DocumentReference> future =
+                    firestore
+                            .collection(COLLECTION_NAME)
+                            .document(email)
+                            .collection(SUB_COLLECTION)
+                            .add(pollData);
+
+            DocumentReference document =
+                    future.get();
 
             System.out.println(
-                    "========================================"
+                    "Poll created successfully."
             );
 
             System.out.println(
-                    "POLL SAVED SUCCESSFULLY"
+                    "Poll ID : "
+                            + document.getId()
             );
 
             System.out.println(
-                    "Email: " + email
+                    "Email   : "
+                            + email
             );
 
             System.out.println(
-                    "Poll ID: " + poll.getPollId()
-            );
-
-            System.out.println(
-                    "========================================"
+                    "Society : "
+                            + society
             );
 
             return true;
@@ -159,7 +285,7 @@ public class PollDao {
         } catch (Exception e) {
 
             System.out.println(
-                    "Error adding poll:"
+                    "Error while adding poll:"
             );
 
             e.printStackTrace();
@@ -174,52 +300,50 @@ public class PollDao {
 
     public List<Poll> getAllPolls() {
 
-        List<Poll> polls =
+        List<Poll> pollList =
                 new ArrayList<>();
 
         try {
 
-            CollectionReference collection =
-                    getPollCollection();
+            String email =
+                    getLoggedInEmail();
 
-            if (collection == null) {
-                return polls;
+            if (email == null) {
+                return pollList;
             }
 
+            // -------------------------------------------------
+            // FETCH USING EMAIL
+            // -------------------------------------------------
+
             ApiFuture<QuerySnapshot> future =
-                    collection.get();
+                    firestore
+                            .collection(COLLECTION_NAME)
+                            .document(email)
+                            .collection(SUB_COLLECTION)
+                            .get();
 
             QuerySnapshot snapshot =
                     future.get();
 
-            for (QueryDocumentSnapshot document :
+            for (DocumentSnapshot document :
                     snapshot.getDocuments()) {
 
                 Poll poll =
-                        documentToPoll(document);
+                        document.toObject(Poll.class);
 
                 if (poll != null) {
 
-                    polls.add(poll);
+                    pollList.add(poll);
                 }
             }
 
-            System.out.println(
-                    "Fetched "
-                            + polls.size()
-                            + " polls."
-            );
-
         } catch (Exception e) {
-
-            System.out.println(
-                    "Error fetching polls:"
-            );
 
             e.printStackTrace();
         }
 
-        return polls;
+        return pollList;
     }
 
     // =========================================================
@@ -228,20 +352,48 @@ public class PollDao {
 
     public List<Poll> getActivePolls() {
 
-        List<Poll> result =
+        List<Poll> activePolls =
                 new ArrayList<>();
 
-        for (Poll poll : getAllPolls()) {
+        try {
 
-            if (poll.getStatus() != null
-                    && poll.getStatus()
-                    .equalsIgnoreCase("ACTIVE")) {
+            String email =
+                    getLoggedInEmail();
 
-                result.add(poll);
+            if (email == null) {
+                return activePolls;
             }
+
+            ApiFuture<QuerySnapshot> future =
+                    firestore
+                            .collection(COLLECTION_NAME)
+                            .document(email)
+                            .collection(SUB_COLLECTION)
+                            .get();
+
+            QuerySnapshot snapshot =
+                    future.get();
+
+            for (DocumentSnapshot document :
+                    snapshot.getDocuments()) {
+
+                Poll poll =
+                        document.toObject(Poll.class);
+
+                if (poll != null
+                        && "ACTIVE".equalsIgnoreCase(
+                                poll.getStatus())) {
+
+                    activePolls.add(poll);
+                }
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
 
-        return result;
+        return activePolls;
     }
 
     // =========================================================
@@ -250,42 +402,100 @@ public class PollDao {
 
     public List<Poll> getSurveys() {
 
-        List<Poll> result =
+        List<Poll> surveys =
                 new ArrayList<>();
 
-        for (Poll poll : getAllPolls()) {
+        try {
 
-            if (poll.getType() != null
-                    && poll.getType()
-                    .equalsIgnoreCase("Survey")) {
+            String email =
+                    getLoggedInEmail();
 
-                result.add(poll);
+            if (email == null) {
+                return surveys;
             }
+
+            ApiFuture<QuerySnapshot> future =
+                    firestore
+                            .collection(COLLECTION_NAME)
+                            .document(email)
+                            .collection(SUB_COLLECTION)
+                            .get();
+
+            QuerySnapshot snapshot =
+                    future.get();
+
+            for (DocumentSnapshot document :
+                    snapshot.getDocuments()) {
+
+                Poll poll =
+                        document.toObject(Poll.class);
+
+                if (poll != null
+                        && poll.getType() != null
+                        && poll.getType()
+                                .equalsIgnoreCase("SURVEY")) {
+
+                    surveys.add(poll);
+                }
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
 
-        return result;
+        return surveys;
     }
 
     // =========================================================
-    // GET CLOSED POLLS
+    // GET HISTORY
     // =========================================================
 
     public List<Poll> getHistory() {
 
-        List<Poll> result =
+        List<Poll> history =
                 new ArrayList<>();
 
-        for (Poll poll : getAllPolls()) {
+        try {
 
-            if (poll.getStatus() != null
-                    && poll.getStatus()
-                    .equalsIgnoreCase("CLOSED")) {
+            String email =
+                    getLoggedInEmail();
 
-                result.add(poll);
+            if (email == null) {
+                return history;
             }
+
+            ApiFuture<QuerySnapshot> future =
+                    firestore
+                            .collection(COLLECTION_NAME)
+                            .document(email)
+                            .collection(SUB_COLLECTION)
+                            .get();
+
+            QuerySnapshot snapshot =
+                    future.get();
+
+            for (DocumentSnapshot document :
+                    snapshot.getDocuments()) {
+
+                Poll poll =
+                        document.toObject(Poll.class);
+
+                if (poll != null
+                        && poll.getStatus() != null
+                        && poll.getStatus()
+                                .equalsIgnoreCase("CLOSED")) {
+
+                    history.add(poll);
+                }
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
 
-        return result;
+        return history;
     }
 
     // =========================================================
@@ -296,37 +506,27 @@ public class PollDao {
 
         try {
 
-            if (pollId == null
+            String email =
+                    getLoggedInEmail();
+
+            if (email == null
+                    || pollId == null
                     || pollId.trim().isEmpty()) {
 
                 return false;
             }
 
-            CollectionReference collection =
-                    getPollCollection();
+            DocumentReference pollRef =
+                    firestore
+                            .collection(COLLECTION_NAME)
+                            .document(email)
+                            .collection(SUB_COLLECTION)
+                            .document(pollId);
 
-            if (collection == null) {
-                return false;
-            }
-
-            DocumentReference reference =
-                    collection.document(pollId);
-
-            DocumentSnapshot snapshot =
-                    reference.get().get();
-
-            if (!snapshot.exists()) {
-
-                System.out.println(
-                        "Poll not found: " + pollId
-                );
-
-                return false;
-            }
-
-            reference
-                    .update("status", "CLOSED")
-                    .get();
+            pollRef.update(
+                    "status",
+                    "CLOSED"
+            ).get();
 
             return true;
 
@@ -346,20 +546,20 @@ public class PollDao {
 
         try {
 
-            if (pollId == null
+            String email =
+                    getLoggedInEmail();
+
+            if (email == null
+                    || pollId == null
                     || pollId.trim().isEmpty()) {
 
                 return false;
             }
 
-            CollectionReference collection =
-                    getPollCollection();
-
-            if (collection == null) {
-                return false;
-            }
-
-            collection
+            firestore
+                    .collection(COLLECTION_NAME)
+                    .document(email)
+                    .collection(SUB_COLLECTION)
                     .document(pollId)
                     .delete()
                     .get();
@@ -384,98 +584,99 @@ public class PollDao {
 
         try {
 
-            if (pollId == null
+            String email =
+                    getLoggedInEmail();
+
+            if (email == null
+                    || pollId == null
                     || pollId.trim().isEmpty()) {
 
                 return false;
             }
 
-            CollectionReference collection =
-                    getPollCollection();
+            DocumentReference pollRef =
+                    firestore
+                            .collection(COLLECTION_NAME)
+                            .document(email)
+                            .collection(SUB_COLLECTION)
+                            .document(pollId);
 
-            if (collection == null) {
+            DocumentSnapshot document =
+                    pollRef.get().get();
+
+            if (!document.exists()) {
                 return false;
             }
 
-            DocumentReference reference =
-                    collection.document(pollId);
+            Poll poll =
+                    document.toObject(Poll.class);
 
-            DocumentSnapshot snapshot =
-                    reference.get().get();
-
-            if (!snapshot.exists()) {
+            if (poll == null) {
                 return false;
             }
 
-            String status =
-                    snapshot.getString("status");
+            // -------------------------------------------------
+            // CHECK OPTION INDEX
+            // -------------------------------------------------
 
-            if (status == null
-                    || !status.equalsIgnoreCase("ACTIVE")) {
-
-                return false;
-            }
+            List<String> options =
+                    poll.getOptions();
 
             List<Long> voteCounts =
-                    new ArrayList<>();
+                    poll.getVoteCounts();
 
-            List<?> storedVotes =
-                    (List<?>) snapshot.get("voteCounts");
+            if (options == null
+                    || voteCounts == null) {
 
-            if (storedVotes != null) {
-
-                for (Object value :
-                        storedVotes) {
-
-                    if (value instanceof Number) {
-
-                        voteCounts.add(
-                                ((Number) value)
-                                        .longValue()
-                        );
-
-                    } else {
-
-                        voteCounts.add(0L);
-                    }
-                }
+                return false;
             }
 
             if (optionIndex < 0
-                    || optionIndex >= voteCounts.size()) {
+                    || optionIndex >= options.size()) {
 
                 return false;
+            }
+
+            if (optionIndex >= voteCounts.size()) {
+
+                return false;
+            }
+
+            // -------------------------------------------------
+            // INCREASE VOTE
+            // -------------------------------------------------
+
+            Long currentCount =
+                    voteCounts.get(optionIndex);
+
+            if (currentCount == null) {
+                currentCount = 0L;
             }
 
             voteCounts.set(
                     optionIndex,
-                    voteCounts.get(optionIndex) + 1
+                    currentCount + 1
             );
 
-            long totalVotes = 0;
+            // -------------------------------------------------
+            // TOTAL VOTES
+            // -------------------------------------------------
 
-            if (snapshot.contains("totalVotes")) {
-
-                Long storedTotal =
-                        snapshot.getLong("totalVotes");
-
-                if (storedTotal != null) {
-
-                    totalVotes =
-                            storedTotal;
-                }
-            }
+            long totalVotes =
+                    poll.getTotalVotes();
 
             totalVotes++;
 
-            reference
-                    .update(
-                            "voteCounts",
-                            voteCounts,
-                            "totalVotes",
-                            totalVotes
-                    )
-                    .get();
+            // -------------------------------------------------
+            // UPDATE FIRESTORE
+            // -------------------------------------------------
+
+            pollRef.update(
+                    "voteCounts",
+                    voteCounts,
+                    "totalVotes",
+                    totalVotes
+            ).get();
 
             return true;
 
@@ -485,183 +686,5 @@ public class PollDao {
 
             return false;
         }
-    }
-
-    // =========================================================
-    // DOCUMENT -> POLL
-    // =========================================================
-
-    private Poll documentToPoll(
-            DocumentSnapshot document) {
-
-        try {
-
-            Poll poll =
-                    new Poll();
-
-            String pollId =
-                    document.getString("pollId");
-
-            if (pollId == null
-                    || pollId.isEmpty()) {
-
-                pollId =
-                        document.getId();
-            }
-
-            poll.setPollId(pollId);
-
-            poll.setQuestion(
-                    document.getString("question")
-            );
-
-            poll.setType(
-                    document.getString("type")
-            );
-
-            poll.setDescription(
-                    document.getString("description")
-            );
-
-            poll.setCreatedDate(
-                    document.getString("createdDate")
-            );
-
-            poll.setEndDate(
-                    document.getString("endDate")
-            );
-
-            poll.setTargetAudience(
-                    document.getString("targetAudience")
-            );
-
-            poll.setStatus(
-                    document.getString("status")
-            );
-
-            poll.setCreatedByEmail(
-                    document.getString("createdByEmail")
-            );
-
-            // =====================================================
-            // OPTIONS
-            // =====================================================
-
-            List<String> options =
-                    new ArrayList<>();
-
-            List<?> storedOptions =
-                    (List<?>) document.get("options");
-
-            if (storedOptions != null) {
-
-                for (Object value :
-                        storedOptions) {
-
-                    if (value != null) {
-
-                        options.add(
-                                String.valueOf(value)
-                        );
-                    }
-                }
-            }
-
-            poll.setOptions(options);
-
-            // =====================================================
-            // VOTE COUNTS
-            // =====================================================
-
-            List<Long> voteCounts =
-                    new ArrayList<>();
-
-            List<?> storedVotes =
-                    (List<?>) document.get("voteCounts");
-
-            if (storedVotes != null) {
-
-                for (Object value :
-                        storedVotes) {
-
-                    if (value instanceof Number) {
-
-                        voteCounts.add(
-                                ((Number) value)
-                                        .longValue()
-                        );
-
-                    } else {
-
-                        voteCounts.add(0L);
-                    }
-                }
-            }
-
-            while (voteCounts.size()
-                    < options.size()) {
-
-                voteCounts.add(0L);
-            }
-
-            poll.setVoteCounts(voteCounts);
-
-            // =====================================================
-            // TOTAL
-            // =====================================================
-
-            Long totalVotes = null;
-
-            if (document.contains("totalVotes")) {
-
-                totalVotes =
-                        document.getLong(
-                                "totalVotes"
-                        );
-            }
-
-            if (totalVotes == null) {
-
-                totalVotes =
-                        calculateVotes(
-                                voteCounts
-                        );
-            }
-
-            poll.setTotalVotes(totalVotes);
-
-            return poll;
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
-    // =========================================================
-    // CALCULATE TOTAL VOTES
-    // =========================================================
-
-    private long calculateVotes(
-            List<Long> voteCounts) {
-
-        long total = 0;
-
-        if (voteCounts == null) {
-            return 0;
-        }
-
-        for (Long value :
-                voteCounts) {
-
-            if (value != null) {
-
-                total += value;
-            }
-        }
-
-        return total;
     }
 }

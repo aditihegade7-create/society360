@@ -14,9 +14,17 @@ public interface OwnerDao {
 
     // =========================================================
     // GET ALL OWNERS
+    // Used by Secretary
     // =========================================================
 
     List<Owner> getAllOwners();
+
+    // =========================================================
+    // GET OWNERS BY SOCIETY
+    // Used when owners of a particular society are required
+    // =========================================================
+
+    List<Owner> getOwnersBySociety(String society);
 
     // =========================================================
     // GET OWNER BY EMAIL
@@ -34,7 +42,8 @@ public interface OwnerDao {
             String flat,
             String mobile,
             String status,
-            String society);
+            String society
+    );
 
     // =========================================================
     // DELETE OWNER

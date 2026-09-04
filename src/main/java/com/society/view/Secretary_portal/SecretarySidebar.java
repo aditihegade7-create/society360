@@ -403,17 +403,17 @@ public class SecretarySidebar {
         });
 
         // ========================================================
-        // GENERATE REPORTS
+        // Daily Reports REPORTS
         // ========================================================
 
         Button reportsBtn =
                 createMenuButton(
-                        "Generate Reports");
+                        "Daily Reports");
 
         reportsBtn.setOnAction(e -> {
 
             System.out.println(
-                    "Generate Reports clicked. Email: "
+                    "Daily Reports clicked. Email: "
                             + getUserEmail());
 
             GenerateReports report =
@@ -523,9 +523,9 @@ public class SecretarySidebar {
 
                 reportsBtn,
 
-                profileBtn,
+                pollsBtn,
 
-                pollsBtn
+                profileBtn
         );
 
         return sidebar;

@@ -20,9 +20,7 @@ public class PollController {
     // =========================================================
 
     public PollController() {
-
-        pollDao =
-                new PollDao();
+        pollDao = new PollDao();
     }
 
     // =========================================================
@@ -41,50 +39,48 @@ public class PollController {
 
             if (question == null
                     || question.trim().isEmpty()) {
-
                 return false;
             }
 
             if (type == null
                     || type.trim().isEmpty()) {
-
                 return false;
             }
 
             if (endDate == null
                     || endDate.trim().isEmpty()) {
-
                 return false;
             }
 
             if (options == null
                     || options.size() < 2) {
-
                 return false;
             }
 
-            List<String> cleanOptions =
-                    new ArrayList<>();
+            // -------------------------------------------------
+            // CLEAN OPTIONS
+            // -------------------------------------------------
 
-            for (String option :
-                    options) {
+            List<String> cleanOptions = new ArrayList<>();
+
+            for (String option : options) {
 
                 if (option != null
                         && !option.trim().isEmpty()) {
 
-                    cleanOptions.add(
-                            option.trim()
-                    );
+                    cleanOptions.add(option.trim());
                 }
             }
 
             if (cleanOptions.size() < 2) {
-
                 return false;
             }
 
-            List<Long> voteCounts =
-                    new ArrayList<>();
+            // -------------------------------------------------
+            // INITIAL VOTE COUNTS
+            // -------------------------------------------------
+
+            List<Long> voteCounts = new ArrayList<>();
 
             for (int i = 0;
                     i < cleanOptions.size();
@@ -93,16 +89,15 @@ public class PollController {
                 voteCounts.add(0L);
             }
 
-            Poll poll =
-                    new Poll();
+            // -------------------------------------------------
+            // CREATE POLL OBJECT
+            // -------------------------------------------------
 
-            poll.setQuestion(
-                    question.trim()
-            );
+            Poll poll = new Poll();
 
-            poll.setType(
-                    type.trim()
-            );
+            poll.setQuestion(question.trim());
+
+            poll.setType(type.trim());
 
             poll.setDescription(
                     description == null
@@ -114,9 +109,7 @@ public class PollController {
                     LocalDate.now().toString()
             );
 
-            poll.setEndDate(
-                    endDate.trim()
-            );
+            poll.setEndDate(endDate.trim());
 
             poll.setTargetAudience(
                     targetAudience == null
@@ -124,19 +117,17 @@ public class PollController {
                             : targetAudience.trim()
             );
 
-            poll.setStatus(
-                    "ACTIVE"
-            );
+            poll.setStatus("ACTIVE");
 
-            poll.setOptions(
-                    cleanOptions
-            );
+            poll.setOptions(cleanOptions);
 
-            poll.setVoteCounts(
-                    voteCounts
-            );
+            poll.setVoteCounts(voteCounts);
 
             poll.setTotalVotes(0);
+
+            // -------------------------------------------------
+            // DAO
+            // -------------------------------------------------
 
             return pollDao.addPoll(poll);
 
@@ -153,7 +144,6 @@ public class PollController {
     // =========================================================
 
     public List<Poll> getAllPolls() {
-
         return pollDao.getAllPolls();
     }
 
@@ -162,7 +152,6 @@ public class PollController {
     // =========================================================
 
     public List<Poll> getActivePolls() {
-
         return pollDao.getActivePolls();
     }
 
@@ -171,7 +160,6 @@ public class PollController {
     // =========================================================
 
     public List<Poll> getSurveys() {
-
         return pollDao.getSurveys();
     }
 
@@ -180,7 +168,6 @@ public class PollController {
     // =========================================================
 
     public List<Poll> getHistory() {
-
         return pollDao.getHistory();
     }
 
@@ -188,24 +175,16 @@ public class PollController {
     // CLOSE
     // =========================================================
 
-    public boolean closePoll(
-            String pollId) {
-
-        return pollDao.closePoll(
-                pollId
-        );
+    public boolean closePoll(String pollId) {
+        return pollDao.closePoll(pollId);
     }
 
     // =========================================================
     // DELETE
     // =========================================================
 
-    public boolean deletePoll(
-            String pollId) {
-
-        return pollDao.deletePoll(
-                pollId
-        );
+    public boolean deletePoll(String pollId) {
+        return pollDao.deletePoll(pollId);
     }
 
     // =========================================================

@@ -22,8 +22,8 @@ public class manegedao {
     // =========================================================
 
     private static final String MAIN_COLLECTION = "Maintenance";
-
     private static final String RECORDS_COLLECTION = "records";
+    private static final String RESIDENTS_COLLECTION = "Residents";
 
     // =========================================================
     // FIRESTORE
@@ -40,6 +40,7 @@ public class manegedao {
         this.firestore = FirebaseConfig.getFirestore();
 
         if (this.firestore == null) {
+
             throw new IllegalStateException(
                     "Firestore initialization failed. "
                     + "FirebaseConfig.getFirestore() returned null."
@@ -47,7 +48,7 @@ public class manegedao {
         }
 
         System.out.println(
-                "MaintenanceDao initialized successfully."
+                "Maintenance DAO initialized successfully."
         );
     }
 
@@ -55,10 +56,12 @@ public class manegedao {
     // ADD MAINTENANCE
     // =========================================================
     //
-    // IMPORTANT:
-    // Maintenance is now stored under SECRETARY EMAIL.
+    // Firestore:
     //
-    // Maintenance/{secretaryEmail}/records/{maintenanceId}
+    // Maintenance
+    //    └── secretaryEmail
+    //         └── records
+    //              └── maintenanceId
     //
     // =========================================================
 
@@ -119,17 +122,45 @@ public class manegedao {
             society = society.trim();
 
             // -------------------------------------------------
-            // SECRETARY RECORDS COLLECTION
+            // SECRETARY DOCUMENT
+            // -------------------------------------------------
+
+            DocumentReference secretaryDocument =
+                    firestore
+                            .collection(MAIN_COLLECTION)
+                            .document(secretaryEmail);
+
+            // -------------------------------------------------
+            // CREATE / UPDATE PARENT DOCUMENT
+            // -------------------------------------------------
+
+            Map<String, Object> secretaryData =
+                    new HashMap<>();
+
+            secretaryData.put(
+                    "email",
+                    secretaryEmail
+            );
+
+            secretaryData.put(
+                    "society",
+                    society
+            );
+
+            secretaryDocument
+                    .set(secretaryData)
+                    .get();
+
+            // -------------------------------------------------
+            // RECORDS COLLECTION
             // -------------------------------------------------
 
             CollectionReference records =
-                    firestore
-                            .collection(MAIN_COLLECTION)
-                            .document(secretaryEmail)
+                    secretaryDocument
                             .collection(RECORDS_COLLECTION);
 
             // -------------------------------------------------
-            // CREATE NEW DOCUMENT
+            // NEW DOCUMENT
             // -------------------------------------------------
 
             DocumentReference document =
@@ -139,24 +170,16 @@ public class manegedao {
                     document.getId();
 
             // -------------------------------------------------
-            // PREPARE DATA
+            // DATA
             // -------------------------------------------------
 
             Map<String, Object> data =
                     new HashMap<>();
 
-            // -------------------------------------------------
-            // MAINTENANCE ID
-            // -------------------------------------------------
-
             data.put(
                     "maintenanceId",
                     maintenanceId
             );
-
-            // -------------------------------------------------
-            // AMOUNT
-            // -------------------------------------------------
 
             data.put(
                     "amount",
@@ -165,20 +188,12 @@ public class manegedao {
                     )
             );
 
-            // -------------------------------------------------
-            // MONTH
-            // -------------------------------------------------
-
             data.put(
                     "month",
                     safeValue(
                             maintenance.getMonth()
                     )
             );
-
-            // -------------------------------------------------
-            // DATE
-            // -------------------------------------------------
 
             data.put(
                     "date",
@@ -187,10 +202,6 @@ public class manegedao {
                     )
             );
 
-            // -------------------------------------------------
-            // STATUS
-            // -------------------------------------------------
-
             data.put(
                     "status",
                     normalizeStatus(
@@ -198,18 +209,10 @@ public class manegedao {
                     )
             );
 
-            // -------------------------------------------------
-            // SECRETARY EMAIL
-            // -------------------------------------------------
-
             data.put(
                     "addedBySecretaryEmail",
                     secretaryEmail
             );
-
-            // -------------------------------------------------
-            // SOCIETY
-            // -------------------------------------------------
 
             data.put(
                     "society",
@@ -217,7 +220,7 @@ public class manegedao {
             );
 
             // -------------------------------------------------
-            // SAVE DEBUG
+            // DEBUG
             // -------------------------------------------------
 
             System.out.println(
@@ -229,50 +232,44 @@ public class manegedao {
             );
 
             System.out.println(
-                    "Added By Secretary = "
+                    "Secretary Email = "
                             + secretaryEmail
             );
 
             System.out.println(
-                    "Society             = "
+                    "Society = "
                             + society
             );
 
             System.out.println(
-                    "Amount              = "
-                            + safeValue(
-                                    maintenance.getAmount()
-                            )
+                    "Amount = "
+                            + maintenance.getAmount()
             );
 
             System.out.println(
-                    "Month               = "
-                            + safeValue(
-                                    maintenance.getMonth()
-                            )
+                    "Month = "
+                            + maintenance.getMonth()
             );
 
             System.out.println(
-                    "Date                = "
-                            + safeValue(
-                                    maintenance.getDate()
-                            )
+                    "Date = "
+                            + maintenance.getDate()
             );
 
             System.out.println(
-                    "Status              = "
+                    "Status = "
                             + normalizeStatus(
                                     maintenance.getStatus()
                             )
             );
 
             System.out.println(
-                    "Maintenance ID      = "
+                    "Maintenance ID = "
                             + maintenanceId
             );
 
             System.out.println(
-                    "Firestore Path      = Maintenance/"
+                    "Firestore Path = Maintenance/"
                             + secretaryEmail
                             + "/records/"
                             + maintenanceId
@@ -309,140 +306,14 @@ public class manegedao {
     }
 
     // =========================================================
-    // GET ALL MAINTENANCE
-    // =========================================================
-    //
-    // Reads:
-    //
-    // Maintenance/{secretaryEmail}/records/*
-    //
-    // No collectionGroup query.
-    // No Firestore index required.
-    //
+    // SECRETARY:
+    // GET MAINTENANCE BY SECRETARY EMAIL + SOCIETY
     // =========================================================
 
-    public List<Maintenance> getAllMaintenance() {
-
-        List<Maintenance> maintenanceList =
-                new ArrayList<>();
-
-        try {
-
-            CollectionReference mainCollection =
-                    firestore.collection(
-                            MAIN_COLLECTION
-                    );
-
-            ApiFuture<QuerySnapshot> future =
-                    mainCollection.get();
-
-            QuerySnapshot secretarySnapshot =
-                    future.get();
-
-            System.out.println(
-                    "Maintenance secretary documents = "
-                            + secretarySnapshot.size()
-            );
-
-            // -------------------------------------------------
-            // LOOP SECRETARY DOCUMENTS
-            // -------------------------------------------------
-
-            for (DocumentSnapshot secretaryDocument :
-                    secretarySnapshot.getDocuments()) {
-
-                if (secretaryDocument == null ||
-                        !secretaryDocument.exists()) {
-
-                    continue;
-                }
-
-                String secretaryEmail =
-                        secretaryDocument.getId();
-
-                if (secretaryEmail == null ||
-                        secretaryEmail.trim().isEmpty()) {
-
-                    continue;
-                }
-
-                secretaryEmail =
-                        secretaryEmail
-                                .trim()
-                                .toLowerCase();
-
-                // -------------------------------------------------
-                // RECORDS
-                // -------------------------------------------------
-
-                CollectionReference records =
-                        secretaryDocument
-                                .getReference()
-                                .collection(
-                                        RECORDS_COLLECTION
-                                );
-
-                QuerySnapshot recordSnapshot =
-                        records.get().get();
-
-                System.out.println(
-                        "Secretary Email = "
-                                + secretaryEmail
-                                + " | Records = "
-                                + recordSnapshot.size()
-                );
-
-                // -------------------------------------------------
-                // LOOP RECORDS
-                // -------------------------------------------------
-
-                for (DocumentSnapshot document :
-                        recordSnapshot.getDocuments()) {
-
-                    if (document == null ||
-                            !document.exists()) {
-
-                        continue;
-                    }
-
-                    Maintenance maintenance =
-                            documentToMaintenance(
-                                    document,
-                                    secretaryEmail
-                            );
-
-                    if (maintenance != null) {
-
-                        maintenanceList.add(
-                                maintenance
-                        );
-                    }
-                }
-            }
-
-            System.out.println(
-                    "Total maintenance fetched = "
-                            + maintenanceList.size()
-            );
-
-        } catch (Exception e) {
-
-            System.err.println(
-                    "Error while fetching all maintenance:"
-            );
-
-            e.printStackTrace();
-        }
-
-        return maintenanceList;
-    }
-
-    // =========================================================
-    // GET MAINTENANCE BY SECRETARY EMAIL
-    // =========================================================
-
-    public List<Maintenance> getMaintenanceBySecretaryEmail(
-            String secretaryEmail) {
+    public List<Maintenance>
+    getMaintenanceBySecretaryEmailAndSociety(
+            String secretaryEmail,
+            String secretarySociety) {
 
         List<Maintenance> list =
                 new ArrayList<>();
@@ -459,6 +330,147 @@ public class manegedao {
                 return list;
             }
 
+            if (secretarySociety == null ||
+                    secretarySociety.trim().isEmpty()) {
+
+                System.err.println(
+                        "Secretary society is empty."
+                );
+
+                return list;
+            }
+
+            secretaryEmail =
+                    secretaryEmail
+                            .trim()
+                            .toLowerCase();
+
+            secretarySociety =
+                    secretarySociety.trim();
+
+            System.out.println(
+                    "=========================================="
+            );
+
+            System.out.println(
+                    "FETCHING SECRETARY MAINTENANCE"
+            );
+
+            System.out.println(
+                    "Secretary Email = "
+                            + secretaryEmail
+            );
+
+            System.out.println(
+                    "Secretary Society = "
+                            + secretarySociety
+            );
+
+            CollectionReference records =
+                    firestore
+                            .collection(MAIN_COLLECTION)
+                            .document(secretaryEmail)
+                            .collection(RECORDS_COLLECTION);
+
+            QuerySnapshot snapshot =
+                    records
+                            .get()
+                            .get();
+
+            System.out.println(
+                    "Records found = "
+                            + snapshot.size()
+            );
+
+            for (DocumentSnapshot document :
+                    snapshot.getDocuments()) {
+
+                if (document == null ||
+                        !document.exists()) {
+
+                    continue;
+                }
+
+                String recordEmail =
+                        getString(
+                                document,
+                                "addedBySecretaryEmail"
+                        );
+
+                String recordSociety =
+                        getString(
+                                document,
+                                "society"
+                        );
+
+                boolean emailMatch =
+                        recordEmail
+                                .equalsIgnoreCase(
+                                        secretaryEmail
+                                );
+
+                boolean societyMatch =
+                        recordSociety
+                                .equalsIgnoreCase(
+                                        secretarySociety
+                                );
+
+                if (!emailMatch ||
+                        !societyMatch) {
+
+                    continue;
+                }
+
+                Maintenance maintenance =
+                        documentToMaintenance(
+                                document,
+                                secretaryEmail
+                        );
+
+                if (maintenance != null) {
+
+                    list.add(
+                            maintenance
+                    );
+                }
+            }
+
+            System.out.println(
+                    "Matching maintenance = "
+                            + list.size()
+            );
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Error while fetching secretary maintenance:"
+            );
+
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // =========================================================
+    // GET MAINTENANCE BY SECRETARY EMAIL
+    // =========================================================
+
+    public List<Maintenance>
+    getMaintenanceBySecretaryEmail(
+            String secretaryEmail) {
+
+        List<Maintenance> list =
+                new ArrayList<>();
+
+        try {
+
+            if (secretaryEmail == null ||
+                    secretaryEmail.trim().isEmpty()) {
+
+                return list;
+            }
+
             secretaryEmail =
                     secretaryEmail
                             .trim()
@@ -471,7 +483,9 @@ public class manegedao {
                             .collection(RECORDS_COLLECTION);
 
             QuerySnapshot snapshot =
-                    records.get().get();
+                    records
+                            .get()
+                            .get();
 
             for (DocumentSnapshot document :
                     snapshot.getDocuments()) {
@@ -490,16 +504,11 @@ public class manegedao {
 
                 if (maintenance != null) {
 
-                    list.add(maintenance);
+                    list.add(
+                            maintenance
+                    );
                 }
             }
-
-            System.out.println(
-                    "Maintenance for Secretary "
-                            + secretaryEmail
-                            + " = "
-                            + list.size()
-            );
 
         } catch (Exception e) {
 
@@ -514,13 +523,388 @@ public class manegedao {
     }
 
     // =========================================================
-    // UPDATE STATUS
+    // RESIDENT:
+    // GET MAINTENANCE BY RESIDENT EMAIL
     // =========================================================
     //
-    // Now update path is:
+    // IMPORTANT:
     //
-    // Maintenance/{secretaryEmail}/records/{maintenanceId}
+    // Resident email is NOT used as Maintenance document ID.
     //
+    // First:
+    //
+    // Residents/{residentEmail}
+    //
+    // get society
+    //
+    // Then:
+    //
+    // Maintenance/{secretaryEmail}/records/*
+    //
+    // filter:
+    //
+    // maintenance.society == resident.society
+    //
+    // collectionGroup is used so records are found even if
+    // some parent Maintenance documents were previously missing.
+    //
+    // =========================================================
+
+    public List<Maintenance>
+    getMaintenanceByEmail(
+            String residentEmail) {
+
+        List<Maintenance> list =
+                new ArrayList<>();
+
+        try {
+
+            // -------------------------------------------------
+            // VALIDATE RESIDENT EMAIL
+            // -------------------------------------------------
+
+            if (residentEmail == null ||
+                    residentEmail.trim().isEmpty()) {
+
+                System.err.println(
+                        "Resident email is empty."
+                );
+
+                return list;
+            }
+
+            residentEmail =
+                    residentEmail
+                            .trim()
+                            .toLowerCase();
+
+            System.out.println(
+                    "=========================================="
+            );
+
+            System.out.println(
+                    "FETCHING RESIDENT MAINTENANCE"
+            );
+
+            System.out.println(
+                    "Resident Email = "
+                            + residentEmail
+            );
+
+            // -------------------------------------------------
+            // GET RESIDENT DOCUMENT
+            // -------------------------------------------------
+
+            DocumentReference residentReference =
+                    firestore
+                            .collection(
+                                    RESIDENTS_COLLECTION
+                            )
+                            .document(
+                                    residentEmail
+                            );
+
+            DocumentSnapshot residentDocument =
+                    residentReference
+                            .get()
+                            .get();
+
+            // -------------------------------------------------
+            // CHECK RESIDENT
+            // -------------------------------------------------
+
+            if (!residentDocument.exists()) {
+
+                System.err.println(
+                        "Resident document not found."
+                );
+
+                System.err.println(
+                        "Path = Residents/"
+                                + residentEmail
+                );
+
+                return list;
+            }
+
+            // -------------------------------------------------
+            // GET SOCIETY
+            // -------------------------------------------------
+
+            String residentSociety =
+                    getString(
+                            residentDocument,
+                            "society"
+                    );
+
+            if (residentSociety.isEmpty()) {
+
+                System.err.println(
+                        "Society not found for resident."
+                );
+
+                System.err.println(
+                        "Resident Email = "
+                                + residentEmail
+                );
+
+                return list;
+            }
+
+            residentSociety =
+                    residentSociety.trim();
+
+            System.out.println(
+                    "Resident Society = "
+                            + residentSociety
+            );
+
+            // -------------------------------------------------
+            // FETCH ALL RECORDS
+            // -------------------------------------------------
+            //
+            // records is the subcollection name:
+            //
+            // Maintenance/{secretaryEmail}/records
+            //
+            // -------------------------------------------------
+
+            ApiFuture<QuerySnapshot> future =
+                    firestore
+                            .collectionGroup(
+                                    RECORDS_COLLECTION
+                            )
+                            .get();
+
+            QuerySnapshot snapshot =
+                    future.get();
+
+            System.out.println(
+                    "Total maintenance records = "
+                            + snapshot.size()
+            );
+
+            // -------------------------------------------------
+            // FILTER BY SOCIETY
+            // -------------------------------------------------
+
+            for (DocumentSnapshot document :
+                    snapshot.getDocuments()) {
+
+                if (document == null ||
+                        !document.exists()) {
+
+                    continue;
+                }
+
+                // -------------------------------------------------
+                // RECORD SOCIETY
+                // -------------------------------------------------
+
+                String maintenanceSociety =
+                        getString(
+                                document,
+                                "society"
+                        );
+
+                if (maintenanceSociety.isEmpty()) {
+
+                    continue;
+                }
+
+                // -------------------------------------------------
+                // SOCIETY MATCH
+                // -------------------------------------------------
+
+                boolean societyMatch =
+                        maintenanceSociety
+                                .trim()
+                                .equalsIgnoreCase(
+                                        residentSociety
+                                );
+
+                if (!societyMatch) {
+
+                    continue;
+                }
+
+                // -------------------------------------------------
+                // SECRETARY EMAIL
+                // -------------------------------------------------
+
+                String secretaryEmail =
+                        getString(
+                                document,
+                                "addedBySecretaryEmail"
+                        );
+
+                // -------------------------------------------------
+                // FALLBACK SECRETARY EMAIL
+                // -------------------------------------------------
+
+                if (secretaryEmail.isEmpty()) {
+
+                    try {
+
+                        secretaryEmail =
+                                document
+                                        .getReference()
+                                        .getParent()
+                                        .getParent()
+                                        .getId();
+
+                    } catch (Exception e) {
+
+                        secretaryEmail = "";
+                    }
+                }
+
+                // -------------------------------------------------
+                // CONVERT
+                // -------------------------------------------------
+
+                Maintenance maintenance =
+                        documentToMaintenance(
+                                document,
+                                secretaryEmail
+                        );
+
+                if (maintenance != null) {
+
+                    list.add(
+                            maintenance
+                    );
+
+                    System.out.println(
+                            "Resident maintenance matched:"
+                    );
+
+                    System.out.println(
+                            "Maintenance ID = "
+                                    + maintenance
+                                            .getMaintenanceId()
+                    );
+
+                    System.out.println(
+                            "Society = "
+                                    + maintenance
+                                            .getSociety()
+                    );
+
+                    System.out.println(
+                            "Secretary = "
+                                    + maintenance
+                                            .getAddedBySecretaryEmail()
+                    );
+                }
+            }
+
+            System.out.println(
+                    "=========================================="
+            );
+
+            System.out.println(
+                    "TOTAL MAINTENANCE FOR RESIDENT SOCIETY = "
+                            + list.size()
+            );
+
+            System.out.println(
+                    "=========================================="
+            );
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Error while fetching maintenance by resident email:"
+            );
+
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // =========================================================
+    // GET ALL MAINTENANCE
+    // =========================================================
+
+    public List<Maintenance> getAllMaintenance() {
+
+        List<Maintenance> list =
+                new ArrayList<>();
+
+        try {
+
+            ApiFuture<QuerySnapshot> future =
+                    firestore
+                            .collectionGroup(
+                                    RECORDS_COLLECTION
+                            )
+                            .get();
+
+            QuerySnapshot snapshot =
+                    future.get();
+
+            for (DocumentSnapshot document :
+                    snapshot.getDocuments()) {
+
+                if (document == null ||
+                        !document.exists()) {
+
+                    continue;
+                }
+
+                String secretaryEmail =
+                        getString(
+                                document,
+                                "addedBySecretaryEmail"
+                        );
+
+                if (secretaryEmail.isEmpty()) {
+
+                    try {
+
+                        secretaryEmail =
+                                document
+                                        .getReference()
+                                        .getParent()
+                                        .getParent()
+                                        .getId();
+
+                    } catch (Exception e) {
+
+                        secretaryEmail = "";
+                    }
+                }
+
+                Maintenance maintenance =
+                        documentToMaintenance(
+                                document,
+                                secretaryEmail
+                        );
+
+                if (maintenance != null) {
+
+                    list.add(
+                            maintenance
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Error while fetching all maintenance:"
+            );
+
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // =========================================================
+    // UPDATE STATUS
     // =========================================================
 
     public boolean updateMaintenanceStatus(
@@ -533,29 +917,17 @@ public class manegedao {
             if (secretaryEmail == null ||
                     secretaryEmail.trim().isEmpty()) {
 
-                System.err.println(
-                        "Secretary email is empty."
-                );
-
                 return false;
             }
 
             if (maintenanceId == null ||
                     maintenanceId.trim().isEmpty()) {
 
-                System.err.println(
-                        "Maintenance ID is empty."
-                );
-
                 return false;
             }
 
             if (newStatus == null ||
                     newStatus.trim().isEmpty()) {
-
-                System.err.println(
-                        "New status is empty."
-                );
 
                 return false;
             }
@@ -581,7 +953,8 @@ public class manegedao {
                             .document(maintenanceId);
 
             DocumentSnapshot snapshot =
-                    ref.get().get();
+                    ref.get()
+                            .get();
 
             if (!snapshot.exists()) {
 
@@ -598,22 +971,7 @@ public class manegedao {
             ).get();
 
             System.out.println(
-                    "Maintenance status updated successfully."
-            );
-
-            System.out.println(
-                    "Secretary Email = "
-                            + secretaryEmail
-            );
-
-            System.out.println(
-                    "Maintenance ID = "
-                            + maintenanceId
-            );
-
-            System.out.println(
-                    "New Status = "
-                            + newStatus
+                    "Maintenance status updated."
             );
 
             return true;
@@ -671,10 +1029,6 @@ public class manegedao {
 
             if (!document.exists()) {
 
-                System.err.println(
-                        "Maintenance not found."
-                );
-
                 return null;
             }
 
@@ -711,11 +1065,35 @@ public class manegedao {
                 return null;
             }
 
+            // -------------------------------------------------
+            // ID
+            // -------------------------------------------------
+
+            String maintenanceId =
+                    getString(
+                            document,
+                            "maintenanceId"
+                    );
+
+            if (maintenanceId.isEmpty()) {
+
+                maintenanceId =
+                        document.getId();
+            }
+
+            // -------------------------------------------------
+            // AMOUNT
+            // -------------------------------------------------
+
             String amount =
                     getString(
                             document,
                             "amount"
                     );
+
+            // -------------------------------------------------
+            // MONTH
+            // -------------------------------------------------
 
             String month =
                     getString(
@@ -723,11 +1101,19 @@ public class manegedao {
                             "month"
                     );
 
+            // -------------------------------------------------
+            // DATE
+            // -------------------------------------------------
+
             String date =
                     getString(
                             document,
                             "date"
                     );
+
+            // -------------------------------------------------
+            // STATUS
+            // -------------------------------------------------
 
             String status =
                     normalizeStatus(
@@ -736,6 +1122,10 @@ public class manegedao {
                                     "status"
                             )
                     );
+
+            // -------------------------------------------------
+            // SECRETARY EMAIL
+            // -------------------------------------------------
 
             String addedBySecretaryEmail =
                     getString(
@@ -754,28 +1144,22 @@ public class manegedao {
                             .trim()
                             .toLowerCase();
 
+            // -------------------------------------------------
+            // SOCIETY
+            // -------------------------------------------------
+
             String society =
                     getString(
                             document,
                             "society"
                     );
 
-            String maintenanceId =
-                    getString(
-                            document,
-                            "maintenanceId"
-                    );
-
             // -------------------------------------------------
-            // NEW MODEL
-            //
-            // No resident email/name/flat required.
+            // MODEL
             // -------------------------------------------------
 
             return new Maintenance(
-                    "",
-                    "",
-                    "",
+                    maintenanceId,
                     amount,
                     month,
                     date,
@@ -787,8 +1171,7 @@ public class manegedao {
         } catch (Exception e) {
 
             System.err.println(
-                    "Error converting Firestore document "
-                            + "to Maintenance:"
+                    "Error converting document to Maintenance:"
             );
 
             e.printStackTrace();
@@ -822,7 +1205,9 @@ public class manegedao {
                 return "";
             }
 
-            return String.valueOf(value).trim();
+            return String.valueOf(
+                    value
+            ).trim();
 
         } catch (Exception e) {
 
@@ -838,6 +1223,7 @@ public class manegedao {
             String value) {
 
         if (value == null) {
+
             return "";
         }
 
@@ -861,22 +1247,32 @@ public class manegedao {
                 status.trim();
 
         if (value.equalsIgnoreCase("pending")) {
+
             return "Pending";
         }
 
         if (value.equalsIgnoreCase("paid")) {
+
             return "Paid";
         }
 
         if (value.equalsIgnoreCase("overdue")) {
+
             return "Overdue";
         }
 
+        if (value.equalsIgnoreCase("unpaid")) {
+
+            return "Pending";
+        }
+
         if (value.equalsIgnoreCase("open")) {
+
             return "Pending";
         }
 
         if (value.equalsIgnoreCase("in progress")) {
+
             return "In Progress";
         }
 

@@ -34,7 +34,7 @@ import javafx.stage.Stage;
 import java.nio.file.Path;
 import java.util.List;
 
-public class Visitor {
+public class Visitor<visitorController> {
 
     private VisitorController visitorController;
 

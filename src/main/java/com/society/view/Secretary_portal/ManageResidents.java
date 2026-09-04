@@ -1,5 +1,6 @@
 package com.society.view.Secretary_portal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.society.controller.Secretary_Controller.ResidentController;
@@ -22,13 +23,31 @@ import javafx.scene.layout.VBox;
 
 public class ManageResidents {
 
+    // =========================================================
+    // SCENE
+    // =========================================================
+
     private Scene Resident;
+
+    // =========================================================
+    // CURRENT RESIDENTS
+    //
+    // This list contains ONLY the logged-in Secretary's
+    // society residents.
+    // =========================================================
+
+    private List<Resident> currentResidents =
+            new ArrayList<>();
 
     // =========================================================
     // CREATE SCENE
     // =========================================================
 
     public Scene createScene(javafx.stage.Stage stage) {
+
+        // =====================================================
+        // CONTROLLER
+        // =====================================================
 
         ResidentController residentController =
                 new ResidentController();
@@ -84,7 +103,7 @@ public class ManageResidents {
 
         Label subtitle =
                 new Label(
-                        "View and manage all residents"
+                        "View and manage residents of your society"
                 );
 
         subtitle.setStyle(
@@ -100,7 +119,7 @@ public class ManageResidents {
                 new TextField();
 
         search.setPromptText(
-                "Search resident, flat no., phone..."
+                "Search resident, flat no., phone, email..."
         );
 
         search.setPrefHeight(45);
@@ -219,6 +238,11 @@ public class ManageResidents {
 
         // =====================================================
         // INITIAL LOAD
+        //
+        // IMPORTANT:
+        // getResidentsBySociety()
+        //
+        // NOT getAllResidents()
         // =====================================================
 
         loadResidents(
@@ -676,7 +700,31 @@ public class ManageResidents {
             }
 
             // =================================================
-            // CONTROLLER
+            // CHECK SECRETARY SOCIETY
+            //
+            // This is an extra safety check before saving.
+            // =================================================
+
+            String secretarySociety =
+                    residentController
+                            .getLoggedInSecretarySociety();
+
+            if (secretarySociety == null
+                    || secretarySociety.trim().isEmpty()) {
+
+                showAlert(
+                        Alert.AlertType.ERROR,
+                        "Society Error",
+                        "Unable to identify your society."
+                );
+
+                return;
+            }
+
+            // =================================================
+            // SAVE THROUGH CONTROLLER
+            //
+            // Controller automatically assigns society.
             // =================================================
 
             boolean success =
@@ -698,6 +746,8 @@ public class ManageResidents {
                         Alert.AlertType.INFORMATION,
                         "Success",
                         "Resident saved successfully!"
+                                + "\n\nSociety: "
+                                + secretarySociety
                 );
 
                 popupLayer.setVisible(false);
@@ -709,6 +759,10 @@ public class ManageResidents {
                         emailField,
                         statusField
                 );
+
+                // =================================================
+                // RELOAD ONLY CURRENT SECRETARY SOCIETY
+                // =================================================
 
                 loadResidents(
                         residentController,
@@ -727,6 +781,12 @@ public class ManageResidents {
 
         // =====================================================
         // SEARCH
+        //
+        // IMPORTANT:
+        // Search currentResidents only.
+        //
+        // currentResidents already contains ONLY the
+        // logged-in Secretary's society residents.
         // =====================================================
 
         search.textProperty().addListener(
@@ -736,138 +796,14 @@ public class ManageResidents {
                             newValue == null
                                     ? ""
                                     : newValue
-                                        .toLowerCase()
-                                        .trim();
+                                            .toLowerCase()
+                                            .trim();
 
-                    residentList
-                            .getChildren()
-                            .clear();
-
-                    List<Resident> residents =
-                            residentController
-                                    .getAllResidents();
-
-                    // =================================================
-                    // NO RESIDENTS
-                    // =================================================
-
-                    if (residents == null
-                            || residents.isEmpty()) {
-
-                        Label emptyLabel =
-                                new Label(
-                                        "No residents found."
-                                );
-
-                        emptyLabel.setStyle(
-                                "-fx-font-size:16px;" +
-                                "-fx-text-fill:#555555;"
-                        );
-
-                        residentList
-                                .getChildren()
-                                .add(
-                                        emptyLabel
-                                );
-
-                        return;
-                    }
-
-                    // =================================================
-                    // SEARCH
-                    // =================================================
-
-                    for (Resident resident :
-                            residents) {
-
-                        if (resident == null) {
-                            continue;
-                        }
-
-                        String name =
-                                resident.getName() == null
-                                        ? ""
-                                        : resident
-                                            .getName()
-                                            .toLowerCase();
-
-                        String flat =
-                                resident.getFlat() == null
-                                        ? ""
-                                        : resident
-                                            .getFlat()
-                                            .toLowerCase();
-
-                        String mobile =
-                                resident.getMobile() == null
-                                        ? ""
-                                        : resident
-                                            .getMobile()
-                                            .toLowerCase();
-
-                        String email =
-                                resident.getEmail() == null
-                                        ? ""
-                                        : resident
-                                            .getEmail()
-                                            .toLowerCase();
-
-                        String status =
-                                resident.getStatus() == null
-                                        ? ""
-                                        : resident
-                                            .getStatus()
-                                            .toLowerCase();
-
-                        // =================================================
-                        // SEARCH NAME / FLAT / MOBILE / EMAIL / STATUS
-                        // =================================================
-
-                        if (searchText.isEmpty()
-                                || name.contains(searchText)
-                                || flat.contains(searchText)
-                                || mobile.contains(searchText)
-                                || email.contains(searchText)
-                                || status.contains(searchText)) {
-
-                            HBox row =
-                                    createResidentRow(
-                                            resident.getName(),
-                                            resident.getFlat(),
-                                            resident.getMobile(),
-                                            resident.getStatus()
-                                    );
-
+                    displayResidents(
+                            currentResidents,
+                            searchText,
                             residentList
-                                    .getChildren()
-                                    .add(row);
-                        }
-                    }
-
-                    // =================================================
-                    // NO SEARCH RESULT
-                    // =================================================
-
-                    if (residentList
-                            .getChildren()
-                            .isEmpty()) {
-
-                        Label noResult =
-                                new Label(
-                                        "No matching residents found."
-                                );
-
-                        noResult.setStyle(
-                                "-fx-font-size:16px;" +
-                                "-fx-text-fill:#555555;"
-                        );
-
-                        residentList
-                                .getChildren()
-                                .add(
-                                        noResult
-                                );
-                    }
+                    );
                 }
         );
 
@@ -888,7 +824,15 @@ public class ManageResidents {
     }
 
     // =========================================================
-    // LOAD RESIDENTS FROM FIRESTORE
+    // LOAD RESIDENTS
+    //
+    // VERY IMPORTANT:
+    //
+    // getResidentsBySociety()
+    //
+    // NOT:
+    //
+    // getAllResidents()
     // =========================================================
 
     private void loadResidents(
@@ -896,16 +840,191 @@ public class ManageResidents {
             VBox residentList
     ) {
 
+        // =====================================================
+        // CLEAR OLD UI
+        // =====================================================
+
         residentList
                 .getChildren()
                 .clear();
 
-        List<Resident> residents =
-                residentController
-                        .getAllResidents();
+        // =====================================================
+        // CLEAR OLD LIST
+        // =====================================================
+
+        currentResidents.clear();
 
         // =====================================================
-        // NO DATA
+        // GET ONLY LOGGED-IN SECRETARY SOCIETY RESIDENTS
+        // =====================================================
+
+        List<Resident> residents =
+                residentController
+                        .getResidentsBySociety();
+
+        // =====================================================
+        // NULL CHECK
+        // =====================================================
+
+        if (residents == null) {
+
+            residents =
+                    new ArrayList<>();
+        }
+
+        // =====================================================
+        // EXTRA UI-SIDE SAFETY FILTER
+        //
+        // Even if DAO somehow returns wrong society,
+        // we verify it again here.
+        // =====================================================
+
+        String secretarySociety =
+                residentController
+                        .getLoggedInSecretarySociety();
+
+        if (secretarySociety == null
+                || secretarySociety.trim().isEmpty()) {
+
+            Label errorLabel =
+                    new Label(
+                            "Unable to identify your society."
+                    );
+
+            errorLabel.setStyle(
+                    "-fx-font-size:16px;" +
+                    "-fx-text-fill:#D32F2F;"
+            );
+
+            residentList
+                    .getChildren()
+                    .add(
+                            errorLabel
+                    );
+
+            return;
+        }
+
+        secretarySociety =
+                secretarySociety.trim();
+
+        // =====================================================
+        // FINAL SOCIETY FILTER
+        // =====================================================
+
+        for (Resident resident : residents) {
+
+            if (resident == null) {
+
+                continue;
+            }
+
+            String residentSociety =
+                    resident.getSociety();
+
+            if (residentSociety == null
+                    || residentSociety.trim().isEmpty()) {
+
+                System.out.println(
+                        "UI BLOCKED: Society missing for "
+                                + resident.getEmail()
+                );
+
+                continue;
+            }
+
+            residentSociety =
+                    residentSociety.trim();
+
+            // =================================================
+            // EXACT SOCIETY CHECK
+            // =================================================
+
+            if (!residentSociety.equalsIgnoreCase(
+                    secretarySociety
+            )) {
+
+                System.out.println(
+                        "UI BLOCKED: "
+                                + resident.getEmail()
+                                + " | Society = "
+                                + residentSociety
+                                + " | Required = "
+                                + secretarySociety
+                );
+
+                continue;
+            }
+
+            // =================================================
+            // ADD TO CURRENT LIST
+            // =================================================
+
+            currentResidents.add(
+                    resident
+            );
+        }
+
+        // =====================================================
+        // DISPLAY
+        // =====================================================
+
+        displayResidents(
+                currentResidents,
+                "",
+                residentList
+        );
+
+        // =====================================================
+        // DEBUG
+        // =====================================================
+
+        System.out.println(
+                "=========================================="
+        );
+
+        System.out.println(
+                "MANAGE RESIDENTS UI"
+        );
+
+        System.out.println(
+                "Secretary Society = ["
+                        + secretarySociety
+                        + "]"
+        );
+
+        System.out.println(
+                "Residents Loaded = "
+                        + currentResidents.size()
+        );
+
+        System.out.println(
+                "=========================================="
+        );
+    }
+
+    // =========================================================
+    // DISPLAY RESIDENTS
+    //
+    // Used for both normal display and search.
+    // =========================================================
+
+    private void displayResidents(
+            List<Resident> residents,
+            String searchText,
+            VBox residentList
+    ) {
+
+        // =====================================================
+        // CLEAR UI
+        // =====================================================
+
+        residentList
+                .getChildren()
+                .clear();
+
+        // =====================================================
+        // NULL / EMPTY
         // =====================================================
 
         if (residents == null
@@ -913,7 +1032,9 @@ public class ManageResidents {
 
             Label emptyLabel =
                     new Label(
-                            "No residents found."
+                            searchText.isEmpty()
+                                    ? "No residents found."
+                                    : "No matching residents found."
                     );
 
             emptyLabel.setStyle(
@@ -931,42 +1052,144 @@ public class ManageResidents {
         }
 
         // =====================================================
-        // DISPLAY RESIDENTS
+        // NORMALIZE SEARCH
         // =====================================================
 
-        for (Resident resident :
-                residents) {
+        String query =
+                searchText == null
+                        ? ""
+                        : searchText
+                                .toLowerCase()
+                                .trim();
+
+        int matchCount = 0;
+
+        // =====================================================
+        // LOOP
+        // =====================================================
+
+        for (Resident resident : residents) {
 
             if (resident == null) {
+
                 continue;
             }
 
-            /*
-             * Email is loaded inside Resident model.
-             *
-             * It is NOT displayed in the UI.
-             *
-             * Maintenance and other modules can use:
-             *
-             * resident.getEmail()
-             *
-             * to identify this resident.
-             */
+            // =================================================
+            // GET VALUES
+            // =================================================
 
-            HBox residentRow =
-                    createResidentRow(
-                            resident.getName(),
-                            resident.getFlat(),
-                            resident.getMobile(),
+            String name =
+                    safeLower(
+                            resident.getName()
+                    );
+
+            String flat =
+                    safeLower(
+                            resident.getFlat()
+                    );
+
+            String mobile =
+                    safeLower(
+                            resident.getMobile()
+                    );
+
+            String email =
+                    safeLower(
+                            resident.getEmail()
+                    );
+
+            String status =
+                    safeLower(
                             resident.getStatus()
                     );
+
+            String society =
+                    safeLower(
+                            resident.getSociety()
+                    );
+
+            // =================================================
+            // SEARCH
+            //
+            // Society is also included in search, but because
+            // currentResidents is already society-filtered,
+            // another society cannot appear.
+            // =================================================
+
+            boolean matches =
+                    query.isEmpty()
+                            || name.contains(query)
+                            || flat.contains(query)
+                            || mobile.contains(query)
+                            || email.contains(query)
+                            || status.contains(query)
+                            || society.contains(query);
+
+            // =================================================
+            // ADD MATCH
+            // =================================================
+
+            if (matches) {
+
+                HBox row =
+                        createResidentRow(
+                                resident.getName(),
+                                resident.getFlat(),
+                                resident.getMobile(),
+                                resident.getStatus()
+                        );
+
+                residentList
+                        .getChildren()
+                        .add(
+                                row
+                        );
+
+                matchCount++;
+            }
+        }
+
+        // =====================================================
+        // NO SEARCH RESULT
+        // =====================================================
+
+        if (matchCount == 0) {
+
+            Label noResult =
+                    new Label(
+                            "No matching residents found."
+                    );
+
+            noResult.setStyle(
+                    "-fx-font-size:16px;" +
+                    "-fx-text-fill:#555555;"
+            );
 
             residentList
                     .getChildren()
                     .add(
-                            residentRow
+                            noResult
                     );
         }
+    }
+
+    // =========================================================
+    // SAFE LOWERCASE
+    // =========================================================
+
+    private String safeLower(
+            String value
+    ) {
+
+        if (value == null) {
+
+            return "";
+        }
+
+        return value
+                .trim()
+                .toLowerCase();
     }
 
     // =========================================================
@@ -982,9 +1205,13 @@ public class ManageResidents {
     ) {
 
         nameField.clear();
+
         flatField.clear();
+
         mobileField.clear();
+
         emailField.clear();
+
         statusField.clear();
     }
 
@@ -992,9 +1219,12 @@ public class ManageResidents {
     // CLEAN VALUE
     // =========================================================
 
-    private String cleanValue(String value) {
+    private String cleanValue(
+            String value
+    ) {
 
         if (value == null) {
+
             return "";
         }
 
@@ -1005,9 +1235,12 @@ public class ManageResidents {
     // CLEAN EMAIL
     // =========================================================
 
-    private String cleanEmail(String value) {
+    private String cleanEmail(
+            String value
+    ) {
 
         if (value == null) {
+
             return "";
         }
 
@@ -1020,7 +1253,9 @@ public class ManageResidents {
     // EMAIL VALIDATION
     // =========================================================
 
-    private boolean isValidEmail(String email) {
+    private boolean isValidEmail(
+            String email
+    ) {
 
         return email.matches(
                 "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"

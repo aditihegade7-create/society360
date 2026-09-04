@@ -7,6 +7,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
+
 import com.society.config.FirebaseConfig;
 import com.society.model.Secretary_model.Owner;
 
@@ -37,6 +38,10 @@ public class OwnerDaoImpl implements OwnerDao {
 
         try {
 
+            // -------------------------------------------------
+            // VALIDATE OWNER
+            // -------------------------------------------------
+
             if (owner == null) {
 
                 System.out.println(
@@ -45,6 +50,10 @@ public class OwnerDaoImpl implements OwnerDao {
 
                 return false;
             }
+
+            // -------------------------------------------------
+            // GET EMAIL
+            // -------------------------------------------------
 
             String email = owner.getEmail();
 
@@ -59,19 +68,19 @@ public class OwnerDaoImpl implements OwnerDao {
             }
 
             // -------------------------------------------------
-            // Normalize email
+            // NORMALIZE EMAIL
             // -------------------------------------------------
 
             email = email.trim().toLowerCase();
 
             // -------------------------------------------------
-            // Keep normalized email inside model
+            // SET NORMALIZED EMAIL IN MODEL
             // -------------------------------------------------
 
             owner.setEmail(email);
 
             // -------------------------------------------------
-            // Check if email already exists
+            // CHECK DUPLICATE OWNER
             // -------------------------------------------------
 
             DocumentSnapshot existingDocument =
@@ -92,7 +101,8 @@ public class OwnerDaoImpl implements OwnerDao {
             }
 
             // -------------------------------------------------
-            // STORE USING EMAIL AS DOCUMENT ID
+            // SAVE OWNER
+            // EMAIL = DOCUMENT ID
             // -------------------------------------------------
 
             firestore
@@ -136,6 +146,10 @@ public class OwnerDaoImpl implements OwnerDao {
 
         try {
 
+            // -------------------------------------------------
+            // FETCH ALL OWNER DOCUMENTS
+            // -------------------------------------------------
+
             ApiFuture<QuerySnapshot> future =
                     firestore
                             .collection("Owners")
@@ -145,7 +159,7 @@ public class OwnerDaoImpl implements OwnerDao {
                     future.get();
 
             // -------------------------------------------------
-            // LOOP THROUGH DOCUMENTS
+            // CONVERT DOCUMENTS TO OWNER OBJECTS
             // -------------------------------------------------
 
             for (DocumentSnapshot document :
@@ -158,36 +172,37 @@ public class OwnerDaoImpl implements OwnerDao {
                                     Owner.class
                             );
 
-                    if (owner != null) {
+                    if (owner == null) {
+                        continue;
+                    }
 
-                        // -------------------------------------------------
-                        // Firestore document ID is email
-                        // -------------------------------------------------
+                    // -------------------------------------------------
+                    // DOCUMENT ID
+                    // -------------------------------------------------
 
-                        String documentEmail =
-                                document.getId();
+                    String documentEmail =
+                            document.getId();
 
-                        owner.setId(
+                    owner.setId(
+                            documentEmail
+                    );
+
+                    // -------------------------------------------------
+                    // IF EMAIL FIELD IS MISSING
+                    // USE DOCUMENT ID
+                    // -------------------------------------------------
+
+                    if (owner.getEmail() == null ||
+                            owner.getEmail()
+                                    .trim()
+                                    .isEmpty()) {
+
+                        owner.setEmail(
                                 documentEmail
                         );
-
-                        // -------------------------------------------------
-                        // If email field is missing,
-                        // use document ID
-                        // -------------------------------------------------
-
-                        if (owner.getEmail() == null ||
-                                owner.getEmail()
-                                        .trim()
-                                        .isEmpty()) {
-
-                            owner.setEmail(
-                                    documentEmail
-                            );
-                        }
-
-                        owners.add(owner);
                     }
+
+                    owners.add(owner);
 
                 } catch (Exception e) {
 
@@ -218,13 +233,152 @@ public class OwnerDaoImpl implements OwnerDao {
     }
 
     // =========================================================
-    // GET OWNER BY EMAIL
+    // GET OWNERS BY SOCIETY
+    //
+    // This method fetches ONLY owners belonging to
+    // the supplied society.
     // =========================================================
 
     @Override
-    public Owner getOwnerByEmail(String email) {
+    public List<Owner> getOwnersBySociety(
+            String society) {
+
+        List<Owner> owners =
+                new ArrayList<>();
 
         try {
+
+            // -------------------------------------------------
+            // VALIDATE SOCIETY
+            // -------------------------------------------------
+
+            if (society == null ||
+                    society.trim().isEmpty()) {
+
+                System.out.println(
+                        "Society is empty."
+                );
+
+                return owners;
+            }
+
+            society = society.trim();
+
+            System.out.println(
+                    "Fetching owners for society: "
+                            + society
+            );
+
+            // -------------------------------------------------
+            // FIRESTORE QUERY
+            //
+            // Owners
+            //   |
+            //   +-- society == supplied society
+            // -------------------------------------------------
+
+            ApiFuture<QuerySnapshot> future =
+                    firestore
+                            .collection("Owners")
+                            .whereEqualTo(
+                                    "society",
+                                    society
+                            )
+                            .get();
+
+            QuerySnapshot snapshot =
+                    future.get();
+
+            // -------------------------------------------------
+            // CONVERT MATCHING DOCUMENTS
+            // -------------------------------------------------
+
+            for (DocumentSnapshot document :
+                    snapshot.getDocuments()) {
+
+                try {
+
+                    Owner owner =
+                            document.toObject(
+                                    Owner.class
+                            );
+
+                    if (owner == null) {
+                        continue;
+                    }
+
+                    // -------------------------------------------------
+                    // DOCUMENT ID = EMAIL
+                    // -------------------------------------------------
+
+                    String documentEmail =
+                            document.getId();
+
+                    owner.setId(
+                            documentEmail
+                    );
+
+                    // -------------------------------------------------
+                    // IF EMAIL FIELD IS MISSING
+                    // USE DOCUMENT ID
+                    // -------------------------------------------------
+
+                    if (owner.getEmail() == null ||
+                            owner.getEmail()
+                                    .trim()
+                                    .isEmpty()) {
+
+                        owner.setEmail(
+                                documentEmail
+                        );
+                    }
+
+                    owners.add(owner);
+
+                } catch (Exception e) {
+
+                    System.out.println(
+                            "Error reading owner document: "
+                                    + document.getId()
+                    );
+
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println(
+                    "Owners fetched for society '"
+                            + society
+                            + "': "
+                            + owners.size()
+            );
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error while fetching owners by society."
+            );
+
+            e.printStackTrace();
+        }
+
+        return owners;
+    }
+
+    // =========================================================
+    // GET OWNER BY EMAIL
+    // EMAIL = FIRESTORE DOCUMENT ID
+    // =========================================================
+
+    @Override
+    public Owner getOwnerByEmail(
+            String email) {
+
+        try {
+
+            // -------------------------------------------------
+            // VALIDATE EMAIL
+            // -------------------------------------------------
 
             if (email == null ||
                     email.trim().isEmpty()) {
@@ -236,10 +390,15 @@ public class OwnerDaoImpl implements OwnerDao {
                 return null;
             }
 
-            email = email.trim().toLowerCase();
+            // -------------------------------------------------
+            // NORMALIZE EMAIL
+            // -------------------------------------------------
+
+            email =
+                    email.trim().toLowerCase();
 
             // -------------------------------------------------
-            // Direct document lookup using EMAIL
+            // DIRECT DOCUMENT LOOKUP
             // -------------------------------------------------
 
             DocumentSnapshot document =
@@ -248,6 +407,10 @@ public class OwnerDaoImpl implements OwnerDao {
                             .document(email)
                             .get()
                             .get();
+
+            // -------------------------------------------------
+            // CHECK DOCUMENT
+            // -------------------------------------------------
 
             if (!document.exists()) {
 
@@ -259,26 +422,40 @@ public class OwnerDaoImpl implements OwnerDao {
                 return null;
             }
 
+            // -------------------------------------------------
+            // CONVERT DOCUMENT
+            // -------------------------------------------------
+
             Owner owner =
                     document.toObject(
                             Owner.class
                     );
 
-            if (owner != null) {
+            if (owner == null) {
+                return null;
+            }
 
-                owner.setId(
+            // -------------------------------------------------
+            // SET ID
+            // -------------------------------------------------
+
+            owner.setId(
+                    document.getId()
+            );
+
+            // -------------------------------------------------
+            // IF EMAIL FIELD IS MISSING
+            // USE DOCUMENT ID
+            // -------------------------------------------------
+
+            if (owner.getEmail() == null ||
+                    owner.getEmail()
+                            .trim()
+                            .isEmpty()) {
+
+                owner.setEmail(
                         document.getId()
                 );
-
-                if (owner.getEmail() == null ||
-                        owner.getEmail()
-                                .trim()
-                                .isEmpty()) {
-
-                    owner.setEmail(
-                            document.getId()
-                    );
-                }
             }
 
             return owner;
@@ -311,6 +488,10 @@ public class OwnerDaoImpl implements OwnerDao {
 
         try {
 
+            // -------------------------------------------------
+            // VALIDATE EMAIL
+            // -------------------------------------------------
+
             if (email == null ||
                     email.trim().isEmpty()) {
 
@@ -321,10 +502,15 @@ public class OwnerDaoImpl implements OwnerDao {
                 return false;
             }
 
-            email = email.trim().toLowerCase();
+            // -------------------------------------------------
+            // NORMALIZE EMAIL
+            // -------------------------------------------------
+
+            email =
+                    email.trim().toLowerCase();
 
             // -------------------------------------------------
-            // Check document
+            // CHECK DOCUMENT
             // -------------------------------------------------
 
             DocumentSnapshot document =
@@ -345,7 +531,31 @@ public class OwnerDaoImpl implements OwnerDao {
             }
 
             // -------------------------------------------------
-            // UPDATE
+            // NORMALIZE VALUES
+            // -------------------------------------------------
+
+            if (name != null) {
+                name = name.trim();
+            }
+
+            if (flat != null) {
+                flat = flat.trim();
+            }
+
+            if (mobile != null) {
+                mobile = mobile.trim();
+            }
+
+            if (status != null) {
+                status = status.trim();
+            }
+
+            if (society != null) {
+                society = society.trim();
+            }
+
+            // -------------------------------------------------
+            // UPDATE OWNER
             // -------------------------------------------------
 
             firestore
@@ -370,7 +580,8 @@ public class OwnerDaoImpl implements OwnerDao {
                     .get();
 
             System.out.println(
-                    "Owner updated successfully."
+                    "Owner updated successfully: "
+                            + email
             );
 
             return true;
@@ -393,17 +604,56 @@ public class OwnerDaoImpl implements OwnerDao {
     // =========================================================
 
     @Override
-    public boolean deleteOwner(String email) {
+    public boolean deleteOwner(
+            String email) {
 
         try {
+
+            // -------------------------------------------------
+            // VALIDATE EMAIL
+            // -------------------------------------------------
 
             if (email == null ||
                     email.trim().isEmpty()) {
 
+                System.out.println(
+                        "Owner email is empty."
+                );
+
                 return false;
             }
 
-            email = email.trim().toLowerCase();
+            // -------------------------------------------------
+            // NORMALIZE EMAIL
+            // -------------------------------------------------
+
+            email =
+                    email.trim().toLowerCase();
+
+            // -------------------------------------------------
+            // CHECK DOCUMENT BEFORE DELETE
+            // -------------------------------------------------
+
+            DocumentSnapshot document =
+                    firestore
+                            .collection("Owners")
+                            .document(email)
+                            .get()
+                            .get();
+
+            if (!document.exists()) {
+
+                System.out.println(
+                        "Owner does not exist: "
+                                + email
+                );
+
+                return false;
+            }
+
+            // -------------------------------------------------
+            // DELETE DOCUMENT
+            // -------------------------------------------------
 
             firestore
                     .collection("Owners")

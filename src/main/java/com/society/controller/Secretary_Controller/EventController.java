@@ -1,4 +1,3 @@
-
 package com.society.controller.Secretary_Controller;
 
 import java.util.List;
@@ -8,24 +7,23 @@ import com.society.model.Secretary_model.Event;
 
 public class EventController {
 
-    // =====================================================
+    // =========================================================
     // DAO
-    // =====================================================
+    // =========================================================
 
-    private EventDao eventDao;
+    private final EventDao eventDao;
 
-    // =====================================================
+    // =========================================================
     // CONSTRUCTOR
-    // =====================================================
+    // =========================================================
 
     public EventController() {
-
         eventDao = new EventDao();
     }
 
-    // =====================================================
+    // =========================================================
     // ADD EVENT
-    // =====================================================
+    // =========================================================
 
     public boolean addEvent(
             String eventName,
@@ -34,32 +32,43 @@ public class EventController {
             String venue,
             String status) {
 
-        // =============================================
-        // CREATE EVENT OBJECT
-        // =============================================
+        // Basic validation
+        if (eventName == null || eventName.trim().isEmpty()) {
+            return false;
+        }
 
-        Event event =
-                new Event(
-                        eventName,
-                        date,
-                        time,
-                        venue,
-                        status
-                );
+        if (date == null || date.trim().isEmpty()) {
+            return false;
+        }
 
-        // =============================================
-        // SEND TO DAO
-        // =============================================
+        if (time == null || time.trim().isEmpty()) {
+            return false;
+        }
+
+        if (venue == null || venue.trim().isEmpty()) {
+            return false;
+        }
+
+        if (status == null || status.trim().isEmpty()) {
+            return false;
+        }
+
+        Event event = new Event(
+                eventName.trim(),
+                date.trim(),
+                time.trim(),
+                venue.trim(),
+                status.trim()
+        );
 
         return eventDao.addEvent(event);
     }
 
-    // =====================================================
-    // GET ALL EVENTS
-    // =====================================================
+    // =========================================================
+    // GET ALL EVENTS OF LOGGED-IN SECRETARY'S SOCIETY
+    // =========================================================
 
     public List<Event> getAllEvents() {
-
         return eventDao.getAllEvents();
     }
 }

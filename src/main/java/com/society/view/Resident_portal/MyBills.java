@@ -1,7 +1,8 @@
 package com.society.view.Resident_portal;
 
-import com.society.dao.Resident_dao.MaintenanceDAO;
+import com.society.dao.Secretary_dao.manegedao;
 import com.society.dao.Welcome.UserDao;
+import com.society.model.Secretary_model.Maintenance;
 import com.society.view.ScreenSize;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +24,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.List;
-import java.util.Map;
 
 public class MyBills {
 
@@ -31,14 +31,16 @@ public class MyBills {
     // DAO
     // =========================================================
 
-    private final MaintenanceDAO maintenanceDAO;
+    private final manegedao maintenanceDAO;
 
     // =========================================================
     // CONSTRUCTOR
     // =========================================================
 
     public MyBills() {
-        this.maintenanceDAO = new MaintenanceDAO();
+
+        maintenanceDAO =
+                new manegedao();
     }
 
     // =========================================================
@@ -47,16 +49,55 @@ public class MyBills {
 
     private String getLoggedInResidentEmail() {
 
-        String email = UserDao.getLoggedInEmail();
+        try {
 
-        if (email == null || email.trim().isEmpty()) {
+            String email =
+                    UserDao.getLoggedInEmail();
 
-            throw new IllegalStateException(
-                    "No Resident is currently logged in."
+            if (email == null ||
+                    email.trim().isEmpty()) {
+
+                System.err.println(
+                        "Logged-in resident email is empty."
+                );
+
+                return "";
+            }
+
+            email =
+                    email
+                            .trim()
+                            .toLowerCase();
+
+            System.out.println(
+                    "=========================================="
             );
-        }
 
-        return email.trim().toLowerCase();
+            System.out.println(
+                    "LOGGED-IN RESIDENT"
+            );
+
+            System.out.println(
+                    "Resident Email = "
+                            + email
+            );
+
+            System.out.println(
+                    "=========================================="
+            );
+
+            return email;
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Error while getting logged-in resident email:"
+            );
+
+            e.printStackTrace();
+
+            return "";
+        }
     }
 
     // =========================================================
@@ -66,23 +107,40 @@ public class MyBills {
     public Scene getBillScene(Stage stage) {
 
         // =====================================================
+        // LOGGED-IN RESIDENT
+        // =====================================================
+
+        String residentEmail =
+                getLoggedInResidentEmail();
+
+        // =====================================================
         // SIDEBAR
         // =====================================================
 
-        panel panelobj = new panel(stage);
+        panel panelobj =
+                new panel(stage);
 
-        BorderPane root = new BorderPane();
+        BorderPane root =
+                new BorderPane();
 
-        root.setLeft(panelobj.getSidebar());
+        root.setLeft(
+                panelobj.getSidebar()
+        );
 
         // =====================================================
         // MAIN CONTENT
         // =====================================================
 
-        VBox mainContent = new VBox(20);
+        VBox mainContent =
+                new VBox(20);
 
         mainContent.setPadding(
-                new Insets(30, 40, 30, 40)
+                new Insets(
+                        30,
+                        40,
+                        30,
+                        40
+                )
         );
 
         mainContent.setStyle(
@@ -93,7 +151,10 @@ public class MyBills {
         // TITLE
         // =====================================================
 
-        Label title = new Label("My Bills");
+        Label title =
+                new Label(
+                        "My Bills"
+                );
 
         title.setFont(
                 Font.font(
@@ -103,22 +164,36 @@ public class MyBills {
                 )
         );
 
-        title.setTextFill(Color.WHITE);
-
-        Label subtitle = new Label(
-                "View your society bills and payment status"
+        title.setTextFill(
+                Color.WHITE
         );
+
+        Label subtitle =
+                new Label(
+                        "View your society bills and payment status"
+                );
 
         subtitle.setFont(
-                Font.font("System", 14)
+                Font.font(
+                        "System",
+                        14
+                )
         );
 
-        subtitle.setTextFill(Color.WHITE);
+        subtitle.setTextFill(
+                Color.WHITE
+        );
 
-        VBox heading = new VBox(5);
+        VBox heading =
+                new VBox(5);
 
         heading.setPadding(
-                new Insets(15, 20, 15, 20)
+                new Insets(
+                        15,
+                        20,
+                        15,
+                        20
+                )
         );
 
         heading.getChildren().addAll(
@@ -134,25 +209,29 @@ public class MyBills {
         // SUMMARY CARDS
         // =====================================================
 
-        HBox summaryCards = new HBox(20);
+        HBox summaryCards =
+                new HBox(20);
 
-        VBox totalDue = createSummaryCard(
-                "Total Due",
-                "₹ 0",
-                "Pending amount"
-        );
+        VBox totalDue =
+                createSummaryCard(
+                        "Total Due",
+                        "₹ 0",
+                        "Pending amount"
+                );
 
-        VBox maintenanceDue = createSummaryCard(
-                "Maintenance Due",
-                "₹ 0",
-                "Loading..."
-        );
+        VBox maintenanceDue =
+                createSummaryCard(
+                        "Maintenance Due",
+                        "₹ 0",
+                        "Loading..."
+                );
 
-        VBox electricityDue = createSummaryCard(
-                "Electricity Due",
-                "₹ 0",
-                "No data"
-        );
+        VBox electricityDue =
+                createSummaryCard(
+                        "Electricity Due",
+                        "₹ 0",
+                        "No data"
+                );
 
         summaryCards.getChildren().addAll(
                 totalDue,
@@ -164,7 +243,10 @@ public class MyBills {
         // BILL TITLE
         // =====================================================
 
-        Label billTitle = new Label("Bill History");
+        Label billTitle =
+                new Label(
+                        "Bill History"
+                );
 
         billTitle.setFont(
                 Font.font(
@@ -174,13 +256,16 @@ public class MyBills {
                 )
         );
 
-        billTitle.setTextFill(Color.WHITE);
+        billTitle.setTextFill(
+                Color.WHITE
+        );
 
         // =====================================================
         // TABLE
         // =====================================================
 
-        TableView<Bill> table = new TableView<>();
+        TableView<Bill> table =
+                new TableView<>();
 
         table.setPrefHeight(300);
 
@@ -193,11 +278,14 @@ public class MyBills {
         // =====================================================
 
         TableColumn<Bill, String> typeColumn =
-                new TableColumn<>("Bill Type");
+                new TableColumn<>(
+                        "Bill Type"
+                );
 
         typeColumn.setCellValueFactory(
                 data ->
-                        data.getValue().typeProperty()
+                        data.getValue()
+                                .typeProperty()
         );
 
         typeColumn.setPrefWidth(130);
@@ -207,11 +295,14 @@ public class MyBills {
         // =====================================================
 
         TableColumn<Bill, String> monthColumn =
-                new TableColumn<>("Month");
+                new TableColumn<>(
+                        "Month"
+                );
 
         monthColumn.setCellValueFactory(
                 data ->
-                        data.getValue().monthProperty()
+                        data.getValue()
+                                .monthProperty()
         );
 
         monthColumn.setPrefWidth(130);
@@ -221,25 +312,31 @@ public class MyBills {
         // =====================================================
 
         TableColumn<Bill, String> amountColumn =
-                new TableColumn<>("Amount");
+                new TableColumn<>(
+                        "Amount"
+                );
 
         amountColumn.setCellValueFactory(
                 data ->
-                        data.getValue().amountProperty()
+                        data.getValue()
+                                .amountProperty()
         );
 
         amountColumn.setPrefWidth(130);
 
         // =====================================================
-        // DUE DATE
+        // DATE
         // =====================================================
 
         TableColumn<Bill, String> dueDateColumn =
-                new TableColumn<>("Due Date");
+                new TableColumn<>(
+                        "Date"
+                );
 
         dueDateColumn.setCellValueFactory(
                 data ->
-                        data.getValue().dueDateProperty()
+                        data.getValue()
+                                .dueDateProperty()
         );
 
         dueDateColumn.setPrefWidth(130);
@@ -249,11 +346,14 @@ public class MyBills {
         // =====================================================
 
         TableColumn<Bill, String> statusColumn =
-                new TableColumn<>("Status");
+                new TableColumn<>(
+                        "Status"
+                );
 
         statusColumn.setCellValueFactory(
                 data ->
-                        data.getValue().statusProperty()
+                        data.getValue()
+                                .statusProperty()
         );
 
         statusColumn.setPrefWidth(130);
@@ -271,10 +371,11 @@ public class MyBills {
         );
 
         // =====================================================
-        // FETCH MAINTENANCE
+        // LOAD MAINTENANCE
         // =====================================================
 
         loadMaintenance(
+                residentEmail,
                 table,
                 totalDue,
                 maintenanceDue
@@ -285,17 +386,19 @@ public class MyBills {
         // =====================================================
 
         Button payButton =
-                new Button("Pay Selected Bill");
+                new Button(
+                        "Pay Selected Bill"
+                );
 
         payButton.setPrefHeight(40);
 
         payButton.setPrefWidth(160);
 
         payButton.setStyle(
-                "-fx-background-color: #4e342e;" +
-                "-fx-text-fill: #f3e5e2;" +
-                "-fx-font-weight: bold;" +
-                "-fx-background-radius: 6;"
+                "-fx-background-color: #4e342e;"
+                        + "-fx-text-fill: #f3e5e2;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-background-radius: 6;"
         );
 
         // =====================================================
@@ -305,7 +408,8 @@ public class MyBills {
         payButton.setOnAction(e -> {
 
             Bill selectedBill =
-                    table.getSelectionModel()
+                    table
+                            .getSelectionModel()
                             .getSelectedItem();
 
             if (selectedBill == null) {
@@ -319,7 +423,9 @@ public class MyBills {
                         "No Bill Selected"
                 );
 
-                alert.setHeaderText(null);
+                alert.setHeaderText(
+                        null
+                );
 
                 alert.setContentText(
                         "Please select a bill first."
@@ -334,7 +440,8 @@ public class MyBills {
             // ALREADY PAID
             // =================================================
 
-            if (selectedBill.getStatus()
+            if (selectedBill
+                    .getStatus()
                     .equalsIgnoreCase("Paid")) {
 
                 Alert alert =
@@ -383,10 +490,14 @@ public class MyBills {
                             + selectedBill.getAmount()
                             + "\nMonth: "
                             + selectedBill.getMonth()
-                            + "\nDue Date: "
+                            + "\nDate: "
                             + selectedBill.getDueDate()
                             + "\nStatus: "
                             + selectedBill.getStatus()
+                            + "\nSociety: "
+                            + selectedBill.getSociety()
+                            + "\nSecretary: "
+                            + selectedBill.getSecretaryEmail()
             );
 
             alert.showAndWait();
@@ -396,7 +507,8 @@ public class MyBills {
         // BUTTON BOX
         // =====================================================
 
-        HBox buttonBox = new HBox();
+        HBox buttonBox =
+                new HBox();
 
         buttonBox.setAlignment(
                 Pos.CENTER_RIGHT
@@ -419,7 +531,7 @@ public class MyBills {
         );
 
         // =====================================================
-        // CENTER AREA
+        // CENTER
         // =====================================================
 
         BorderPane mainarea =
@@ -449,160 +561,258 @@ public class MyBills {
     // =========================================================
 
     private void loadMaintenance(
+            String residentEmail,
             TableView<Bill> table,
             VBox totalDue,
-            VBox maintenanceDue
-    ) {
-
-        double totalPendingAmount = 0.0;
-
-        int pendingCount = 0;
+            VBox maintenanceDue) {
 
         try {
 
-            // =================================================
-            // LOGGED-IN RESIDENT
-            // =================================================
-
-            String loggedInEmail =
-                    getLoggedInResidentEmail();
-
             System.out.println(
-                    "=============================================="
+                    "=========================================="
             );
 
             System.out.println(
-                    "FETCHING MAINTENANCE FOR RESIDENT"
+                    "FETCHING SOCIETY MAINTENANCE"
             );
 
             System.out.println(
-                    "Resident Email : "
-                            + loggedInEmail
+                    "Resident Email = "
+                            + residentEmail
             );
 
             // =================================================
-            // FETCH BY RESIDENT EMAIL
+            // EMAIL CHECK
+            // =================================================
+
+            if (residentEmail == null ||
+                    residentEmail.trim().isEmpty()) {
+
+                table.setPlaceholder(
+                        new Label(
+                                "Logged-in resident not found"
+                        )
+                );
+
+                updateCards(
+                        totalDue,
+                        maintenanceDue,
+                        0,
+                        0
+                );
+
+                return;
+            }
+
+            residentEmail =
+                    residentEmail
+                            .trim()
+                            .toLowerCase();
+
+            // =================================================
+            // FETCH MAINTENANCE
             // =================================================
             //
-            // DAO internally:
+            // IMPORTANT:
             //
-            // Residents/{email}
-            //       ↓
-            //      society
-            //       ↓
-            // Maintenance/{secretaryEmail}/records
-            //       ↓
-            // filter by society
+            // Do NOT use:
+            //
+            // manegedao.getMaintenanceByEmail()
+            //
+            // because that is static and incorrect.
+            //
+            // We use the DAO object:
+            //
+            // maintenanceDAO.getMaintenanceByEmail()
             //
             // =================================================
 
-            List<Map<String, Object>> maintenanceList =
-                    maintenanceDAO.getMaintenanceByEmail(
-                            loggedInEmail
-                    );
+            List<Maintenance> maintenanceList =
+                    maintenanceDAO
+                            .getMaintenanceByEmail(
+                                    residentEmail
+                            );
 
             System.out.println(
-                    "Maintenance Records Found : "
+                    "Maintenance records received = "
                             + (
-                            maintenanceList == null
-                                    ? 0
-                                    : maintenanceList.size()
-                    )
+                                    maintenanceList == null
+                                            ? 0
+                                            : maintenanceList.size()
+                            )
             );
 
             // =================================================
             // NO DATA
             // =================================================
 
-            if (maintenanceList == null
-                    || maintenanceList.isEmpty()) {
+            if (maintenanceList == null ||
+                    maintenanceList.isEmpty()) {
 
                 table.setPlaceholder(
                         new Label(
-                                "No maintenance bills found"
+                                "No maintenance bills found for your society"
                         )
                 );
 
-                updateMaintenanceCards(
+                updateCards(
                         totalDue,
                         maintenanceDue,
-                        0.0,
+                        0,
                         0
-                );
-
-                System.out.println(
-                        "No maintenance records found for resident."
                 );
 
                 return;
             }
 
             // =================================================
-            // LOOP MAINTENANCE
+            // CLEAR TABLE
             // =================================================
 
-            for (Map<String, Object> data :
+            table.getItems().clear();
+
+            // =================================================
+            // SUMMARY
+            // =================================================
+
+            double totalPendingAmount =
+                    0.0;
+
+            int pendingCount =
+                    0;
+
+            // =================================================
+            // LOOP
+            // =================================================
+
+            for (Maintenance maintenance :
                     maintenanceList) {
 
-                if (data == null) {
+                if (maintenance == null) {
+
                     continue;
                 }
 
-                String amount =
-                        getValue(
-                                data,
-                                "amount"
+                // -------------------------------------------------
+                // MAINTENANCE ID
+                // -------------------------------------------------
+
+                String maintenanceId =
+                        safeValue(
+                                maintenance
+                                        .getMaintenanceId()
                         );
+
+                // -------------------------------------------------
+                // AMOUNT
+                // -------------------------------------------------
+
+                String amount =
+                        safeValue(
+                                maintenance
+                                        .getAmount()
+                        );
+
+                // -------------------------------------------------
+                // MONTH
+                // -------------------------------------------------
 
                 String month =
-                        getValue(
-                                data,
-                                "month"
+                        safeValue(
+                                maintenance
+                                        .getMonth()
                         );
+
+                // -------------------------------------------------
+                // DATE
+                // -------------------------------------------------
 
                 String date =
-                        getValue(
-                                data,
-                                "date"
+                        safeValue(
+                                maintenance
+                                        .getDate()
                         );
+
+                // -------------------------------------------------
+                // STATUS
+                // -------------------------------------------------
 
                 String status =
-                        getValue(
-                                data,
-                                "status"
+                        normalizeStatus(
+                                maintenance
+                                        .getStatus()
                         );
 
-                // =================================================
+                // -------------------------------------------------
+                // SOCIETY
+                // -------------------------------------------------
+
+                String society =
+                        safeValue(
+                                maintenance
+                                        .getSociety()
+                        );
+
+                // -------------------------------------------------
+                // SECRETARY EMAIL
+                // -------------------------------------------------
+
+                String secretaryEmail =
+                        safeValue(
+                                maintenance
+                                        .getAddedBySecretaryEmail()
+                        );
+
+                // -------------------------------------------------
                 // DEFAULT VALUES
-                // =================================================
+                // -------------------------------------------------
+
+                if (maintenanceId.isEmpty()) {
+
+                    maintenanceId = "-";
+                }
 
                 if (month.isEmpty()) {
+
                     month = "-";
                 }
 
                 if (date.isEmpty()) {
+
                     date = "-";
                 }
 
                 if (status.isEmpty()) {
+
                     status = "Pending";
                 }
 
+                if (society.isEmpty()) {
+
+                    society = "-";
+                }
+
+                if (secretaryEmail.isEmpty()) {
+
+                    secretaryEmail = "-";
+                }
+
                 // =================================================
-                // FORMAT AMOUNT
+                // AMOUNT DISPLAY
                 // =================================================
 
                 String displayAmount;
 
                 if (amount.isEmpty()) {
 
-                    displayAmount = "₹ 0";
+                    displayAmount =
+                            "₹ 0";
 
                 } else if (
-                        amount.startsWith("₹")
-                ) {
+                        amount.startsWith("₹")) {
 
-                    displayAmount = amount;
+                    displayAmount =
+                            amount;
 
                 } else {
 
@@ -611,25 +821,37 @@ public class MyBills {
                 }
 
                 // =================================================
-                // ADD TO TABLE
+                // BILL
                 // =================================================
 
-                table.getItems().add(
+                Bill bill =
                         new Bill(
+                                maintenanceId,
                                 "Maintenance",
                                 month,
                                 displayAmount,
                                 date,
-                                normalizeStatus(status)
-                        )
+                                status,
+                                society,
+                                secretaryEmail
+                        );
+
+                // =================================================
+                // ADD TO TABLE
+                // =================================================
+
+                table.getItems().add(
+                        bill
                 );
 
                 // =================================================
-                // AMOUNT
+                // NUMERIC AMOUNT
                 // =================================================
 
                 double numericAmount =
-                        parseAmount(amount);
+                        parseAmount(
+                                amount
+                        );
 
                 // =================================================
                 // PENDING
@@ -648,7 +870,7 @@ public class MyBills {
             // UPDATE CARDS
             // =================================================
 
-            updateMaintenanceCards(
+            updateCards(
                     totalDue,
                     maintenanceDue,
                     totalPendingAmount,
@@ -656,17 +878,22 @@ public class MyBills {
             );
 
             System.out.println(
-                    "Total Pending Amount : ₹"
+                    "Total Pending Amount = ₹ "
                             + totalPendingAmount
             );
 
             System.out.println(
-                    "Pending Bills : "
+                    "Pending Maintenance Count = "
                             + pendingCount
             );
 
             System.out.println(
-                    "=============================================="
+                    "Total Maintenance Displayed = "
+                            + table.getItems().size()
+            );
+
+            System.out.println(
+                    "=========================================="
             );
 
         } catch (Exception e) {
@@ -679,14 +906,14 @@ public class MyBills {
 
             table.setPlaceholder(
                     new Label(
-                            "Unable to load maintenance bills"
+                            "Error while loading maintenance"
                     )
             );
 
-            updateMaintenanceCards(
+            updateCards(
                     totalDue,
                     maintenanceDue,
-                    0.0,
+                    0,
                     0
             );
         }
@@ -696,21 +923,21 @@ public class MyBills {
     // UPDATE SUMMARY CARDS
     // =========================================================
 
-    private void updateMaintenanceCards(
+    private void updateCards(
             VBox totalDue,
             VBox maintenanceDue,
             double pendingAmount,
-            int pendingCount
-    ) {
+            int pendingCount) {
 
         // =====================================================
-        // MAINTENANCE CARD
+        // MAINTENANCE
         // =====================================================
 
         Label maintenanceAmountLabel =
-                (Label) maintenanceDue
-                        .getChildren()
-                        .get(1);
+                (Label)
+                        maintenanceDue
+                                .getChildren()
+                                .get(1);
 
         maintenanceAmountLabel.setText(
                 formatCurrency(
@@ -719,9 +946,10 @@ public class MyBills {
         );
 
         Label maintenanceDescriptionLabel =
-                (Label) maintenanceDue
-                        .getChildren()
-                        .get(2);
+                (Label)
+                        maintenanceDue
+                                .getChildren()
+                                .get(2);
 
         if (pendingCount == 0) {
 
@@ -748,9 +976,10 @@ public class MyBills {
         // =====================================================
 
         Label totalAmountLabel =
-                (Label) totalDue
-                        .getChildren()
-                        .get(1);
+                (Label)
+                        totalDue
+                                .getChildren()
+                                .get(1);
 
         totalAmountLabel.setText(
                 formatCurrency(
@@ -759,9 +988,10 @@ public class MyBills {
         );
 
         Label totalDescriptionLabel =
-                (Label) totalDue
-                        .getChildren()
-                        .get(2);
+                (Label)
+                        totalDue
+                                .getChildren()
+                                .get(2);
 
         if (pendingAmount > 0) {
 
@@ -778,28 +1008,18 @@ public class MyBills {
     }
 
     // =========================================================
-    // GET VALUE
+    // SAFE VALUE
     // =========================================================
 
-    private String getValue(
-            Map<String, Object> data,
-            String field
-    ) {
-
-        if (data == null) {
-            return "";
-        }
-
-        Object value =
-                data.get(field);
+    private String safeValue(
+            String value) {
 
         if (value == null) {
+
             return "";
         }
 
-        return String.valueOf(
-                value
-        ).trim();
+        return value.trim();
     }
 
     // =========================================================
@@ -807,13 +1027,12 @@ public class MyBills {
     // =========================================================
 
     private double parseAmount(
-            String amount
-    ) {
+            String amount) {
 
         try {
 
-            if (amount == null
-                    || amount.trim().isEmpty()) {
+            if (amount == null ||
+                    amount.trim().isEmpty()) {
 
                 return 0.0;
             }
@@ -830,7 +1049,7 @@ public class MyBills {
 
         } catch (Exception e) {
 
-            System.err.println(
+            System.out.println(
                     "Invalid maintenance amount: "
                             + amount
             );
@@ -840,24 +1059,31 @@ public class MyBills {
     }
 
     // =========================================================
-    // CHECK PENDING STATUS
+    // CHECK PENDING
     // =========================================================
 
     private boolean isPendingStatus(
-            String status
-    ) {
+            String status) {
 
         if (status == null) {
+
             return false;
         }
 
-        String normalized =
-                status.trim()
+        String normalizedStatus =
+                status
+                        .trim()
                         .toLowerCase();
 
-        return normalized.equals("pending")
-                || normalized.equals("unpaid")
-                || normalized.equals("overdue");
+        return normalizedStatus.equals(
+                        "pending"
+                )
+                || normalizedStatus.equals(
+                        "unpaid"
+                )
+                || normalizedStatus.equals(
+                        "overdue"
+                );
     }
 
     // =========================================================
@@ -865,11 +1091,10 @@ public class MyBills {
     // =========================================================
 
     private String normalizeStatus(
-            String status
-    ) {
+            String status) {
 
-        if (status == null
-                || status.trim().isEmpty()) {
+        if (status == null ||
+                status.trim().isEmpty()) {
 
             return "Pending";
         }
@@ -877,27 +1102,39 @@ public class MyBills {
         String value =
                 status.trim();
 
-        if (value.equalsIgnoreCase("pending")) {
+        if (value.equalsIgnoreCase(
+                "pending")) {
+
             return "Pending";
         }
 
-        if (value.equalsIgnoreCase("paid")) {
+        if (value.equalsIgnoreCase(
+                "paid")) {
+
             return "Paid";
         }
 
-        if (value.equalsIgnoreCase("overdue")) {
+        if (value.equalsIgnoreCase(
+                "overdue")) {
+
             return "Overdue";
         }
 
-        if (value.equalsIgnoreCase("unpaid")) {
+        if (value.equalsIgnoreCase(
+                "unpaid")) {
+
             return "Pending";
         }
 
-        if (value.equalsIgnoreCase("open")) {
+        if (value.equalsIgnoreCase(
+                "open")) {
+
             return "Pending";
         }
 
-        if (value.equalsIgnoreCase("in progress")) {
+        if (value.equalsIgnoreCase(
+                "in progress")) {
+
             return "In Progress";
         }
 
@@ -909,10 +1146,10 @@ public class MyBills {
     // =========================================================
 
     private String formatCurrency(
-            double amount
-    ) {
+            double amount) {
 
         if (amount == 0) {
+
             return "₹ 0";
         }
 
@@ -937,8 +1174,7 @@ public class MyBills {
     private VBox createSummaryCard(
             String heading,
             String amount,
-            String description
-    ) {
+            String description) {
 
         VBox card =
                 new VBox(8);
@@ -952,13 +1188,15 @@ public class MyBills {
         card.setPrefHeight(105);
 
         card.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-background-radius: 8;" +
-                "-fx-border-radius: 8;"
+                "-fx-background-color: white;"
+                        + "-fx-background-radius: 8;"
+                        + "-fx-border-radius: 8;"
         );
 
         Label headingLabel =
-                new Label(heading);
+                new Label(
+                        heading
+                );
 
         headingLabel.setTextFill(
                 Color.web("#546E7A")
@@ -973,7 +1211,9 @@ public class MyBills {
         );
 
         Label amountLabel =
-                new Label(amount);
+                new Label(
+                        amount
+                );
 
         amountLabel.setFont(
                 Font.font(
@@ -988,7 +1228,9 @@ public class MyBills {
         );
 
         Label descriptionLabel =
-                new Label(description);
+                new Label(
+                        description
+                );
 
         descriptionLabel.setTextFill(
                 Color.GRAY
@@ -1009,27 +1251,33 @@ public class MyBills {
 
     public static class Bill {
 
+        private final SimpleStringProperty maintenanceId;
         private final SimpleStringProperty type;
-
         private final SimpleStringProperty month;
-
         private final SimpleStringProperty amount;
-
         private final SimpleStringProperty dueDate;
-
         private final SimpleStringProperty status;
+        private final SimpleStringProperty society;
+        private final SimpleStringProperty secretaryEmail;
 
         // =====================================================
         // CONSTRUCTOR
         // =====================================================
 
         public Bill(
+                String maintenanceId,
                 String type,
                 String month,
                 String amount,
                 String dueDate,
-                String status
-        ) {
+                String status,
+                String society,
+                String secretaryEmail) {
+
+            this.maintenanceId =
+                    new SimpleStringProperty(
+                            maintenanceId
+                    );
 
             this.type =
                     new SimpleStringProperty(
@@ -1055,54 +1303,128 @@ public class MyBills {
                     new SimpleStringProperty(
                             status
                     );
+
+            this.society =
+                    new SimpleStringProperty(
+                            society
+                    );
+
+            this.secretaryEmail =
+                    new SimpleStringProperty(
+                            secretaryEmail
+                    );
         }
 
         // =====================================================
-        // PROPERTIES
+        // MAINTENANCE ID
+        // =====================================================
+
+        public StringProperty maintenanceIdProperty() {
+
+            return maintenanceId;
+        }
+
+        public String getMaintenanceId() {
+
+            return maintenanceId.get();
+        }
+
+        // =====================================================
+        // TYPE
         // =====================================================
 
         public StringProperty typeProperty() {
+
             return type;
         }
 
-        public StringProperty monthProperty() {
-            return month;
-        }
-
-        public StringProperty amountProperty() {
-            return amount;
-        }
-
-        public StringProperty dueDateProperty() {
-            return dueDate;
-        }
-
-        public StringProperty statusProperty() {
-            return status;
-        }
-
-        // =====================================================
-        // GETTERS
-        // =====================================================
-
         public String getType() {
+
             return type.get();
         }
 
+        // =====================================================
+        // MONTH
+        // =====================================================
+
+        public StringProperty monthProperty() {
+
+            return month;
+        }
+
         public String getMonth() {
+
             return month.get();
         }
 
+        // =====================================================
+        // AMOUNT
+        // =====================================================
+
+        public StringProperty amountProperty() {
+
+            return amount;
+        }
+
         public String getAmount() {
+
             return amount.get();
         }
 
+        // =====================================================
+        // DATE
+        // =====================================================
+
+        public StringProperty dueDateProperty() {
+
+            return dueDate;
+        }
+
         public String getDueDate() {
+
             return dueDate.get();
         }
 
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        public StringProperty statusProperty() {
+
+            return status;
+        }
+
         public String getStatus() {
+
             return status.get();
+        }
+
+        // =====================================================
+        // SOCIETY
+        // =====================================================
+
+        public StringProperty societyProperty() {
+
+            return society;
+        }
+
+        public String getSociety() {
+
+            return society.get();
+        }
+
+        // =====================================================
+        // SECRETARY EMAIL
+        // =====================================================
+
+        public StringProperty secretaryEmailProperty() {
+
+            return secretaryEmail;
+        }
+
+        public String getSecretaryEmail() {
+
+            return secretaryEmail.get();
         }
     }
 }
