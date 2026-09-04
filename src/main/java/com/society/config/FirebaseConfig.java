@@ -21,7 +21,7 @@ public class FirebaseConfig {
                                 InputStream serviceAccount = FirebaseConfig.class
                                                 .getClassLoader()
                                                 .getResourceAsStream(
-                                                                "java26.json");
+                                                                "java2026.json");
 
                                 if (serviceAccount == null) {
 

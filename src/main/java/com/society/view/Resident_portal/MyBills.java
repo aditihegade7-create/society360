@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Map;
 
-public class MyBills {
+public class Mybills {
 
     // =========================================================
     // LOGGED-IN USER EMAIL
@@ -39,7 +39,7 @@ public class MyBills {
      */
     private final String loggedInEmail;
 
-    public MyBills(String loggedInEmail) {
+    public Mybills(String loggedInEmail) {
 
         if (loggedInEmail == null) {
             this.loggedInEmail = "";
@@ -728,7 +728,7 @@ if (maintenanceBills != null
              * would lose the resident email.
              */
             stage.setScene(
-                    new MyBills(
+                    new Mybills(
                             loggedInEmail
                     ).getBillScene(stage)
             );
@@ -1041,7 +1041,7 @@ if (maintenanceBills != null
                      * after refresh.
                      */
                     stage.setScene(
-                            new MyBills(
+                            new Mybills(
                                     loggedInEmail
                             ).getBillScene(stage)
                     );
@@ -1604,7 +1604,7 @@ if (maintenanceBills != null
                      * Keep loggedInEmail.
                      */
                     stage.setScene(
-                            new MyBills(
+                            new Mybills(
                                     loggedInEmail
                             ).getBillScene(stage)
                     );
